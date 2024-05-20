@@ -8,9 +8,13 @@ import {
 
 export function App() {
   return (
-    <main>
-      <Outlet />
-    </main>
+    <div>
+      {/* <header>Header</header> */}
+      <main>
+        <Outlet />
+      </main>
+      {/* <footer>Footer Content</footer> */}
+    </div>
   )
 }
 
