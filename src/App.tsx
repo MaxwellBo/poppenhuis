@@ -27,7 +27,7 @@ export async function loadDolls(): Promise<Doll[]> {
   return [
     { 
       id: "neil-armstrong", 
-      alt: "Alt text for Barbie doll",
+      alt: "Neil Armstrong's Spacesuit from the Smithsonian Digitization Programs Office and National Air and Space Museum",
       name: "Neil Armstrong", 
       model: "/models/NeilArmstrong.glb",
       poster: "/models/NeilArmstrong.webp",
@@ -36,7 +36,7 @@ export async function loadDolls(): Promise<Doll[]> {
     },
     { 
       id: "neil-armstrong", 
-      alt: "Alt text for Barbie doll",
+      alt: "Neil Armstrong's Spacesuit from the Smithsonian Digitization Programs Office and National Air and Space Museum",
       name: "Neil Armstrong", 
       model: "/models/NeilArmstrong.glb",
       poster: "/models/NeilArmstrong.webp",
@@ -45,7 +45,7 @@ export async function loadDolls(): Promise<Doll[]> {
     },
     { 
       id: "neil-armstrong", 
-      alt: "Alt text for Barbie doll",
+      alt: "Neil Armstrong's Spacesuit from the Smithsonian Digitization Programs Office and National Air and Space Museum",
       name: "Neil Armstrong", 
       model: "/models/NeilArmstrong.glb",
       poster: "/models/NeilArmstrong.webp",
@@ -54,7 +54,7 @@ export async function loadDolls(): Promise<Doll[]> {
     },
     { 
       id: "neil-armstrong", 
-      alt: "Alt text for Barbie doll",
+      alt: "Neil Armstrong's Spacesuit from the Smithsonian Digitization Programs Office and National Air and Space Museum",
       name: "Neil Armstrong", 
       model: "/models/NeilArmstrong.glb",
       poster: "/models/NeilArmstrong.webp",
@@ -75,8 +75,11 @@ export function Doll() {
 
   return (
     <article>
-      <h2>{doll.name}</h2>
-      <Model doll={doll} big />
+      <h2 className='margin-bottom'>{doll.name}</h2>
+      <div className='flex-wrap-row'>
+        <Model doll={doll} big />
+        <DollDescriptionList doll={doll} />
+      </div>
     </article>
   );
 }
@@ -97,10 +100,12 @@ function Model(props: { doll: Doll, big: boolean }) {
   return (
     // @ts-ignore
     <model-viewer 
-      style={ props.big ? { height: '10rem' } : {} }
+      style={ props.big ? { height: '30rem' } : {} }
       alt={props.doll.alt}
       src={props.doll.model} 
       environment-image="/environments/moon_1k.hdr" 
+      interaction-prompt=""
+      progress-bar=""
       poster={props.doll.poster}
       shadow-intensity="1" 
       camera-controls 
@@ -116,7 +121,7 @@ function DollListing(props: { doll: Doll }) {
     <li className="card">
       <div className='center thumbnail'>
         {/* <img src={props.doll.poster} alt={props.doll.alt} /> */}
-        <Model doll={props.doll}  />
+        <Model doll={props.doll} big={false}  />
       </div>
       <a href={`/dolls/${props.doll.id}`}>
         {props.doll.name}
@@ -129,10 +134,12 @@ function DollListing(props: { doll: Doll }) {
 function DollDescriptionList(props: { doll: Doll }) {
   return (
     <dl>
-      <dt>Date of Manufacture</dt>
+      <dt>Date of manufacture</dt>
       <dd>{props.doll.dateOfManufacture}</dd>
-      <dt>Date of Acquisition</dt>
+      <dt>Date of acquisition</dt>
       <dd>{props.doll.dateOfAcquisition}</dd>
+      <dt>Description</dt>
+      <dd>{props.doll.alt}</dd>
     </dl>
   );
 }

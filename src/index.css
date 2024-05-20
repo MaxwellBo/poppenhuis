@@ -13,15 +13,21 @@ body {
   background-color: #fffff8;
 }
 
+.margin-bottom {
+  margin-bottom: 1rem;
+}
+
+.card dl {
+  font-size: 0.7rem;
+}
+
 dl {
   /** Description lists should be displayed as a grid */
   display: grid;
   grid-template-columns: auto auto;
-  /** the columns should autosize */
-  gap: 1em;
-
-  /** The font size should be a bit smaller */
-  font-size: 0.5em;
+  grid-auto-rows: min-content;
+  gap: 0.3ch;
+  column-gap: 1ch;
 }
 
 dl > dt {
@@ -31,6 +37,7 @@ dl > dt {
 }
 
 dl > dd {
+  max-width: 30ch;
   /** Description details should be monospace */
   font-family: 'Inconsolata', monospace;
 }
@@ -62,6 +69,13 @@ dl > dd {
 .thumbnail:hover {
   margin: 0px;
   border: 1px solid #333;
+}
+
+.flex-wrap-row {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  gap: 1ch;
 }
 
 /*
