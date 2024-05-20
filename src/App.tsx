@@ -1,35 +1,79 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
+import {
+  useLoaderData,
+  Outlet
+} from "react-router-dom";
 
-function App() {
-  const [count, setCount] = useState(0)
-
+export function App() {
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <main>
+      <h1>App</h1>
+      <Outlet />
+    </main>
   )
 }
 
-export default App
+interface Doll {
+  id: string;
+  alt: string;
+  name: string;
+  model: string;
+  poster: string;
+}
+
+export async function loadDolls(): Promise<Doll[]> {
+  return [
+    { 
+      id: "neil-armstrong", 
+      alt: "Alt text for Barbie doll",
+      name: "Neil Armstrong", 
+      model: "/models/NeilArmstrong.glb",
+      poster: "/models/NeilArmstrong.webp",
+    },
+  ]
+}
+
+export async function loadDoll({ params }: { params: { id: string } }): Promise<Doll> {
+  const dolls = await loadDolls();
+  return dolls.filter((doll) => doll.id === params.id)[0];
+}
+
+
+export function Doll() {
+  const doll = useLoaderData() as Doll;
+
+  return (
+    <article>
+      <h2>Doll</h2>
+      {JSON.stringify(doll)}
+      {/* @ts-ignore */}
+      <model-viewer 
+        alt={doll.alt}
+        src={doll.model} 
+        ar 
+        environment-image="/environments/moon_1k.hdr" 
+        poster={doll.poster}
+        shadow-intensity="1" 
+        camera-controls touch-action="pan-y" />
+    </article>
+  );
+}
+
+export function DollsListing() {
+  const dolls = useLoaderData() as Doll[];
+
+  return (
+    <section>
+      <h2>Dolls</h2>
+      <ul>
+        {dolls.map((doll) => (
+          <li key={doll.id}>
+            <a href={`/dolls/${doll.id}`}>
+              {doll.name}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
