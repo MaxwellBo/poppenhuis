@@ -5,12 +5,13 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
-import { App, Doll, DollsListing, loadDoll, loadDolls } from './App.tsx';
+import { ErrorPage, App, Doll, DollsListing, loadDoll, loadDolls } from './App.tsx';
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
+    errorElement: <ErrorPage />,
     children: [
       { 
         path: "/", 
@@ -19,6 +20,7 @@ const router = createBrowserRouter([
       {
         path: "dolls/:id",
         element: <Doll />,
+        // @ts-ignore
         loader: loadDoll,
       },
     ]
