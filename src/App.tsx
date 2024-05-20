@@ -70,12 +70,12 @@ export async function loadDoll({ params }: { params: { id: string } }): Promise<
 }
 
 
-export function Doll() {
+export function DollPage() {
   const doll = useLoaderData() as Doll;
 
   return (
-    <article>
-      <h2 className='margin-bottom'>{doll.name}</h2>
+    <article className='doll-page'>
+      <h2 className='margin-bottom monospace'>{doll.name}</h2>
       <div className='flex-wrap-row'>
         <Model doll={doll} big />
         <DollDescriptionList doll={doll} />
@@ -90,7 +90,7 @@ export function DollsListing() {
   return (
     <section>
       <ul className="card-grid">
-        {dolls.map((doll) => <DollListing key={doll.id} doll={doll} />)}
+        {dolls.map((doll) => <DollCard key={doll.id} doll={doll} />)}
       </ul>
     </section>
   );
@@ -116,7 +116,7 @@ function Model(props: { doll: Doll, big: boolean }) {
 }
 
 
-function DollListing(props: { doll: Doll }) {
+function DollCard(props: { doll: Doll }) {
   return (
     <li className="card">
       <div className='center thumbnail'>

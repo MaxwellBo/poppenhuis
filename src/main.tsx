@@ -5,7 +5,7 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
-import { ErrorPage, App, Doll, DollsListing, loadDoll, loadDolls } from './App.tsx';
+import { ErrorPage, App, DollPage, DollsListing, loadDoll, loadDolls } from './App.tsx';
 
 const router = createBrowserRouter([
   {
@@ -19,7 +19,7 @@ const router = createBrowserRouter([
         loader: loadDolls },
       {
         path: "dolls/:id",
-        element: <Doll />,
+        element: <DollPage />,
         // @ts-ignore
         loader: loadDoll,
       },
