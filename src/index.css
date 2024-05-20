@@ -7,7 +7,7 @@ body {
   /** set a nicer serif font */
   font-family: 'Lora', serif;
   /** set a reasonable max-width */
-  max-width: min(80vw, 80ch);
+  max-width: min(80vw, 100ch);
   margin: 5vw auto;
   /** set a nice light tan background color */
   background-color: #fffff8;
@@ -18,6 +18,10 @@ body {
 }
 
 .margin-bottom {
+  margin-bottom: 1rem;
+}
+
+.padding-bottom {
   margin-bottom: 1rem;
 }
 
@@ -41,10 +45,10 @@ dl > dt {
 }
 
 dl > dd {
-  max-width: 30ch;
+  max-width: 40ch;
   /** Description details should be monospace */
   font-family: 'Inconsolata', monospace;
-  font-size: 1.2em;
+  font-size: 1.15em;
 }
 
 .card-grid {

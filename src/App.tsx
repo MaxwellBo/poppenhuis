@@ -2,7 +2,8 @@ import './App.css'
 import {
   useLoaderData,
   useRouteError,
-  Outlet
+  Outlet,
+  Link
 } from "react-router-dom";
 
 export function App() {
@@ -75,6 +76,7 @@ export function DollPage() {
 
   return (
     <article className='doll-page'>
+      <Link to="/">&larr; Back </Link>
       <h2 className='margin-bottom monospace'>{doll.name}</h2>
       <div className='flex-wrap-row'>
         <Model doll={doll} big />
@@ -100,7 +102,7 @@ function Model(props: { doll: Doll, big: boolean }) {
   return (
     // @ts-ignore
     <model-viewer 
-      style={ props.big ? { height: '30rem' } : {} }
+      style={ props.big ? { height: '30rem', margin: 'auto' } : {} }
       alt={props.doll.alt}
       src={props.doll.model} 
       environment-image="/environments/moon_1k.hdr" 
