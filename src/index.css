@@ -1,0 +1,100 @@
+/** Import a nice serif font from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;700&display=swap');
+/** Import a more elegant monospace font from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@400;700&display=swap');
+
+body {
+  /** set a nicer serif font */
+  font-family: 'Lora', serif;
+  /** set a reasonable max-width */
+  max-width: min(80vw, 72ch);
+  margin: 5vw auto;
+  /** set a nice light tan background color */
+  background-color: #fffff8;
+}
+
+dl {
+  /** Description lists should be displayed as a grid */
+  display: grid;
+  grid-template-columns: auto auto;
+  /** the columns should autosize */
+  gap: 1em;
+
+  /** The font size should be a bit smaller */
+  font-size: 0.5em;
+}
+
+dl > dt {
+  /** Description terms should be bold */
+  font-weight: bold;
+
+}
+
+dl > dd {
+  /** Description details should be monospace */
+  font-family: 'Inconsolata', monospace;
+}
+
+.card-grid {
+  /** Display the cards as a grid */
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+  gap: 1em;
+  list-style-type: none;
+}
+
+.card {
+  padding: 1rem;
+  margin: 1px;
+}
+
+.card img {
+  /* aspect-ratio: 4/3;
+  object-fit: cover; */
+  /* set a max width for the image */
+  max-width: 5rem;
+}
+
+.thumbnail {
+  margin: 1px;
+}
+
+.thumbnail:hover {
+  margin: 0px;
+  border: 1px solid #333;
+}
+
+/*
+  Josh's Custom CSS Reset
+  https://www.joshwcomeau.com/css/custom-css-reset/
+*/
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+* {
+  margin: 0;
+}
+html, body {
+  height: 100%;
+}
+body {
+  -webkit-font-smoothing: antialiased;
+}
+img, picture, video, canvas, svg {
+  display: block;
+  max-width: 100%;
+}
+input, button, textarea, select {
+  font: inherit;
+}
+#root, #__next {
+  isolation: isolate;
+}
+
+.center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1ch;
+}
