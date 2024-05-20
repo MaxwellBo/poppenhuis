@@ -33,7 +33,7 @@ export async function loadDolls(): Promise<Doll[]> {
       model: "/models/NeilArmstrong.glb",
       poster: "/models/NeilArmstrong.webp",
       dateOfManufacture: "1969",
-      dateOfAcquisition: "2021",
+      dateOfAcquisition: "N/A",
     },
     { 
       id: "neil-armstrong", 
@@ -42,7 +42,7 @@ export async function loadDolls(): Promise<Doll[]> {
       model: "/models/NeilArmstrong.glb",
       poster: "/models/NeilArmstrong.webp",
       dateOfManufacture: "1969",
-      dateOfAcquisition: "2021",
+      dateOfAcquisition: "N/A",
     },
     { 
       id: "neil-armstrong", 
@@ -51,7 +51,7 @@ export async function loadDolls(): Promise<Doll[]> {
       model: "/models/NeilArmstrong.glb",
       poster: "/models/NeilArmstrong.webp",
       dateOfManufacture: "1969",
-      dateOfAcquisition: "2021",
+      dateOfAcquisition: "N/A",
     },
     { 
       id: "neil-armstrong", 
@@ -60,7 +60,7 @@ export async function loadDolls(): Promise<Doll[]> {
       model: "/models/NeilArmstrong.glb",
       poster: "/models/NeilArmstrong.webp",
       dateOfManufacture: "1969",
-      dateOfAcquisition: "2021",
+      dateOfAcquisition: "N/A",
     },
   ]
 }
@@ -128,7 +128,6 @@ function DollCard(props: { doll: Doll }) {
       <a href={`/dolls/${props.doll.id}`}>
         {props.doll.name}
       </a>
-      <DollDescriptionList doll={props.doll} />
     </li>
   );
 }
@@ -136,12 +135,18 @@ function DollCard(props: { doll: Doll }) {
 function DollDescriptionList(props: { doll: Doll }) {
   return (
     <dl>
+      <dt>ID</dt>
+      <dd>{props.doll.id}</dd>
       <dt>Date of manufacture</dt>
       <dd>{props.doll.dateOfManufacture}</dd>
       <dt>Date of acquisition</dt>
       <dd>{props.doll.dateOfAcquisition}</dd>
       <dt>Description</dt>
       <dd>{props.doll.alt}</dd>
+      <dt>Model</dt>
+      <dd>{props.doll.model}</dd>
+      <dt>Poster</dt>
+      <dd>{props.doll.poster}</dd>
     </dl>
   );
 }
