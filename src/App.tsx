@@ -173,7 +173,7 @@ export function User() {
     <article>
       <header>
         <h1>
-          <Link to="/">dollhouse</Link> / {user.name}
+          <Link to="/">poppenhuis</Link> / {user.name}
         </h1>
         <div className='padding-bottom-1rem'>{user.bio}</div>
       </header>
@@ -189,7 +189,7 @@ export function Collection() {
   return <article>
     <header>
       <h1>
-        <Link to="/">dollhouse</Link> / <Link to={`/${user.id}`}>{user.name}</Link> / {collection.name}
+        <Link to="/">poppenhuis</Link> / <Link to={`/${user.id}`}>{user.name}</Link> / {collection.name}
       </h1>
     </header>
     <Items collection={collection} user={user} />
@@ -271,7 +271,7 @@ export function Item() {
     <article className='item-page'>
       <header>
         <h1>
-          <Link to="/">dollhouse</Link> / <Link to={`/${user.id}`}>{user.name}</Link> / <Link to={`/${user.id}/${collection.id}`}>{collection.name}</Link> / {item.name}
+          <Link to="/">poppenhuis</Link> / <Link to={`/${user.id}`}>{user.name}</Link> / <Link to={`/${user.id}/${collection.id}`}>{collection.name}</Link> / {item.name}
         </h1>
       </header>
       <div className='flex-wrap-row'>
@@ -357,14 +357,14 @@ export function Users() {
     <article>
       <header>
         <h1>
-          dollhouse
+          poppenhuis
         </h1>
       </header>
       <p className="short">
-        dollhouse is a site for displaying collections of 3D models, inspired by <a href="https://www.are.na/">are.na</a>.
+        poppenhuis (<i>Dutch for "dollhouse"</i>) is a site for displaying collections of 3D models, inspired by <a href="https://www.are.na/">are.na</a>.
         <br />
         <br />
-        This site is very <a href="https://www.robinsloan.com/notes/home-cooked-app/">"bespoke"</a> in its construction.
+        The site is very <a href="https://www.robinsloan.com/notes/home-cooked-app/">"bespoke"</a> in its construction.
         It will never support accounts or file uploads, so please reach out to <a href="https://twitter.com/_max_bo_">me</a> if you'd like me to host your collection.
         <br />
         <br />
