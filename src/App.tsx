@@ -320,9 +320,9 @@ function ItemDescriptionList(props: { item: Item, collection: Collection, user: 
       <dt>Date captured</dt>
       <dd>{props.item.captureDate}</dd>
 
-      <dt>Location</dt>
+      <dt>Capture location</dt>
       <dd>{props.item.captureLocation}</dd>
-      <dt>Capture Lat/Long</dt>
+      <dt>Capture lat/long</dt>
       <dd>{props.item.captureLatLong}</dd>
       <dt>Capture device</dt>
       <dd>{props.item.captureDevice}</dd>
