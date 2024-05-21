@@ -8,7 +8,7 @@ body {
   font-family: 'Gerogia', 'Lora', serif;
   /** set a reasonable max-width */
   max-width: min(80vw, 100ch);
-  margin: 1vw auto;
+  margin: 2vw auto;
   /** set a nice light tan background color */
   background-color: #fffff8;
 }
