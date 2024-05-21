@@ -120,10 +120,7 @@ export function Collection() {
     <h2>
       <Link to={`/${user.id}`}>{user.name}</Link> / {collection.name}
     </h2>
-    <ul className="card-grid">
-      {collection.items.map((item) => 
-        <ItemCard key={item.id} item={item} collection={collection} user={user} />)}
-    </ul>
+    <Items collection={collection} user={user} />
   </article>
 }
 
@@ -133,11 +130,20 @@ export function CollectionRow(props: { collection: Collection, user: User }) {
       <h3>
         <Link to={`/${props.user.id}/${props.collection.id}`}>{props.collection.name}</Link>
       </h3>
-      <ul className="card-grid">
-        {props.collection.items.map((item) => 
-        <ItemCard key={item.id} item={item} collection={props.collection} user={props.user} />)}
-      </ul>
+      <Items {...props} />
     </article>
+  );
+}
+
+export function Items(props: { collection: Collection, user: User }) {
+  return (
+    <ul className='card-grid'>
+      {props.collection.items.map((item) => (
+        <li key={item.id}>
+          <ItemCard item={item} collection={props.collection} user={props.user} />
+        </li>
+      ))}
+    </ul>
   );
 }
 
@@ -163,6 +169,11 @@ function Model(props: { item: Item, big: boolean }) {
 export function Item() {
   const { item, user, collection } = useLoaderData() as Awaited<ReturnType<typeof loadItem>>;
 
+  const collectionWithoutThisItem = {
+    ...collection,
+    items: collection.items.filter((i) => i.id !== item.id)
+  }
+
   return (
     <article className='item-page'>
       <h2>
@@ -172,6 +183,7 @@ export function Item() {
         <Model item={item} big />
         <ItemDescriptionList item={item} />
       </div>
+      <Items collection={collectionWithoutThisItem} user={user} />
     </article>
   );
 }
