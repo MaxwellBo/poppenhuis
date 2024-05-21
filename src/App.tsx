@@ -108,7 +108,7 @@ function Model(props: { doll: Doll, big: boolean }) {
   return (
     // @ts-ignore
     <model-viewer 
-      style={ props.big ? { height: '40rem', margin: 'auto' } : { height: "20rem", width: "20rem" } }
+      style={ props.big ? { height: '40rem', width: "40rem", margin: 'auto' } : { height: "20rem", width: "20rem" } }
       alt={props.doll.description}
       src={props.doll.model} 
       environment-image="/environments/moon_1k.hdr" 
