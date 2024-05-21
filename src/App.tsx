@@ -219,11 +219,26 @@ export function Items(props: { collection: Collection, user: User }) {
   );
 }
 
-function Model(props: { item: Item, big: boolean }) {
+type ModelSize = 'small' | 'normal' | 'big';
+
+function getStyleForModelSize(size: ModelSize | undefined) {
+  switch(size) {
+    case 'small':
+      return { height: "5rem", width: "5rem" };
+    case 'big':
+      return { height: '30rem', width: "40rem", margin: 'auto' };
+    case 'normal':
+    default:
+      return { height: "20rem", width: "20rem" };
+  }
+}
+
+function Model(props: { item: Item, size?: ModelSize }) {
   return (
     // @ts-ignore
     <model-viewer 
-      style={ props.big ? { height: '30rem', width: "40rem", margin: 'auto' } : { height: "20rem", width: "20rem" } }
+      key={props.item.model}
+      style={getStyleForModelSize(props.size)}
       alt={props.item.itemDescription}
       src={props.item.model} 
       environment-image="/environments/moon_1k.hdr" 
@@ -249,6 +264,9 @@ export function Item() {
     items: collection.items.filter((i) => i.id !== item.id)
   }
 
+  const previousItem: Item | undefined = collection.items.find((i, index) => collection.items[index + 1]?.id === item.id);
+  const nextItem: Item | undefined  = collection.items.find((i, index) => collection.items[index - 1]?.id === item.id);
+
   return (
     <article className='item-page'>
       <header>
@@ -257,8 +275,10 @@ export function Item() {
         </h1>
       </header>
       <div className='flex-wrap-row'>
-        <Model item={item} big />
+        <Model item={item} size='big' />
         <ItemDescriptionList item={item} collection={collection} user={user} />
+        {previousItem && <ItemCard item={previousItem} collection={collection} user={user} altName="Previous" size='small' />}
+        {nextItem && <ItemCard item={nextItem} collection={collection} user={user} altName="Next" size='small' />}
       </div>
       <Items collection={collectionWithoutThisItem} user={user} />
     </article>
@@ -266,15 +286,15 @@ export function Item() {
 }
 
 
-function ItemCard(props: { item: Item, collection: Collection, user: User }) {
+function ItemCard(props: { item: Item, collection: Collection, user: User, altName?: string, size?: ModelSize }) {
   return (
     <div className="card">
       <div className='center thumbnail'>
         {/* <img src={props.item.poster} alt={props.item.alt} /> */}
-        <Model item={props.item} big={false}  />
+        <Model item={props.item} size={props.size ?? 'normal'}  />
       </div>
       <a href={`/${props.user.id}/${props.collection.id}/${props.item.id}`}>
-        {props.item.name}
+        {props.altName ?? props.item.name}
       </a>
     </div>
   );
