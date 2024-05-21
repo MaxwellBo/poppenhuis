@@ -20,16 +20,18 @@ interface Collection {
 
 interface Item {
   id: string;
-  description?: string;
+  itemDescription?: string;
   name: string;
   model: string;
   poster?: string;
-  dateManufactured?: string;
+  manufacturedDate?: string;
   dateAcquired?: string;
-  dateCaptured?: string;
+  captureDate?: string;
   captureApp?: string;
+  captureDevice?: string;
   captureMethod?: string;
-  latLong?: string;
+  captureLatLong?: string;
+  captureLocation?: string;
 }
 
 
@@ -44,34 +46,47 @@ const DATABASE: User[] = [
         items: [
           {
             id: "hamish",
-            name: "Hamish Bultitude",
+            name: "Hamish",
             model: "/models/Hamish.glb",
-            dateManufactured: "1999?",
             captureApp: "Polycam",
-            dateCaptured: "2023 August 26 4:43PM",
+            captureDate: "2023 August 26 4:43PM",
             captureMethod: "LiDAR",
-            latLong: "35.29 S, 149.12 E",
+            captureLatLong: "35.29 S, 149.12 E",
+            captureDevice: "Apple iPhone 13 Pro"
           },
           {
             id: "issy",
-            name: "Islwyn Wilson",
+            name: "Islwyn",
             captureApp: "Polycam",
             model: "/models/Issy.glb",
             captureMethod: "LiDAR",
+            captureDevice: "Apple iPhone 13 Pro",
+            captureLocation: "West End",
+            captureLatLong: "27.48 S, 153.01 E",
+            captureDate: "2023 April 26 9:00PM"
           },
           {
             id: "lou-nathan",
             name: "Lou & Nathan",
+            itemDescription: "We were at the park",
             captureApp: "Polycam",
             captureMethod: "LiDAR",
             model: "/models/LouNathan.glb",
+            captureDevice: "Apple iPhone 13 Pro",
+            captureDate: "2023 April 9 3:55 PM",
+            captureLatLong: "33.89 S, 151.18 E",
+            captureLocation: "Newtown"
           },
           {
             id: "jack",
-            name: "Jack She",
+            name: "Jack",
             captureApp: "Polycam",
             captureMethod: "LiDAR",
             model: "/models/Jack.glb",
+            captureDevice: "Apple iPhone 13 Pro",
+            captureDate: "2023 April 8 10:16 PM",
+            captureLocation: "Sydney",
+            captureLatLong: "33.88 S, 151.21 E"
           },
           {
             id: "casey",
@@ -79,6 +94,9 @@ const DATABASE: User[] = [
             captureApp: "Polycam",
             captureMethod: "LiDAR",
             model: "/models/Casey.glb",
+            captureDate: "2024 May 21",
+            captureDevice: "Apple iPhone 13 Pro",
+            captureLocation: "Canva, Surry Hills"
           },
           {
             id: "fran",
@@ -86,13 +104,20 @@ const DATABASE: User[] = [
             captureApp: "Polycam",
             captureMethod: "LiDAR",
             model: "/models/Fran.glb",
+            captureDevice: "Apple iPhone 13 Pro",
+            captureLocation: "Chippendale",
+            captureDate: "2023 April 18 9:09 PM"
           },
           {
             id: "roman",
             name: "Roman",
+            itemDescription: "The Thinker",
             captureApp: "Polycam",
             captureMethod: "LiDAR",
             model: "/models/Roman.glb",
+            captureDate: "2024 May 21",
+            captureDevice: "Apple iPhone 13 Pro",
+            captureLocation: "Canva, Surry Hills"
           }
         ]
       }
@@ -178,7 +203,7 @@ function Model(props: { item: Item, big: boolean }) {
     // @ts-ignore
     <model-viewer 
       style={ props.big ? { height: '40rem', width: "40rem", margin: 'auto' } : { height: "20rem", width: "20rem" } }
-      alt={props.item.description}
+      alt={props.item.itemDescription}
       src={props.item.model} 
       environment-image="/environments/moon_1k.hdr" 
       interaction-prompt=""
@@ -219,7 +244,7 @@ export function Item() {
 
 function ItemCard(props: { item: Item, collection: Collection, user: User }) {
   return (
-    <li className="card">
+    <div className="card">
       <div className='center thumbnail'>
         {/* <img src={props.item.poster} alt={props.item.alt} /> */}
         <Model item={props.item} big={false}  />
@@ -227,7 +252,7 @@ function ItemCard(props: { item: Item, collection: Collection, user: User }) {
       <a href={`/${props.user.id}/${props.collection.id}/${props.item.id}`}>
         {props.item.name}
       </a>
-    </li>
+    </div>
   );
 }
 
@@ -240,22 +265,31 @@ function ItemDescriptionList(props: { item: Item, collection: Collection, user: 
       <dd>{props.collection.id}</dd>
       <dt>Item ID</dt>
       <dd>{props.item.id}</dd>
+      
+      <dt>Description</dt>
+      <dd>{props.item.itemDescription}</dd>
+
       <dt>Date manufactured</dt>
-      <dd>{props.item.dateManufactured}</dd>
+      <dd>{props.item.manufacturedDate}</dd>
       <dt>Date acquired</dt>
       <dd>{props.item.dateAcquired}</dd>
       <dt>Date captured</dt>
-      <dd>{props.item.dateCaptured}</dd>
+      <dd>{props.item.captureDate}</dd>
+
+      <dt>Location</dt>
+      <dd>{props.item.captureLocation}</dd>
+      <dt>Capture Lat/Long</dt>
+      <dd>{props.item.captureLatLong}</dd>
+      <dt>Capture device</dt>
+      <dd>{props.item.captureDevice}</dd>
       <dt>Capture method</dt>
       <dd>{props.item.captureMethod}</dd>
-      <dt>Description</dt>
-      <dd>{props.item.description}</dd>
+
       <dt>Model</dt>
       <dd>{props.item.model}</dd>
       <dt>Poster</dt>
       <dd>{props.item.poster}</dd>
-      <dt>Lat/Long</dt>
-      <dd>{props.item.latLong}</dd>
+
     </dl>
   );
 }
