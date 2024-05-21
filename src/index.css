@@ -5,7 +5,7 @@
 
 body {
   /** set a nicer serif font */
-  font-family: 'Lora', serif;
+  font-family: 'Gerogia', 'Lora', serif;
   /** set a reasonable max-width */
   max-width: min(80vw, 100ch);
   margin: 5vw auto;
