@@ -27,6 +27,7 @@ interface Item {
   dateManufactured?: string;
   dateAcquired?: string;
   dateCaptured?: string;
+  captureApp?: string;
   captureMethod?: string;
   latLong?: string;
 }
@@ -46,6 +47,7 @@ const DATABASE: User[] = [
             name: "Hamish Bultitude",
             model: "/models/Hamish.glb",
             dateManufactured: "1999?",
+            captureApp: "Polycam",
             dateCaptured: "2023 August 26 4:43PM",
             captureMethod: "LiDAR",
             latLong: "35.29 S, 149.12 E",
@@ -53,20 +55,44 @@ const DATABASE: User[] = [
           {
             id: "issy",
             name: "Islwyn Wilson",
+            captureApp: "Polycam",
             model: "/models/Issy.glb",
             captureMethod: "LiDAR",
           },
           {
             id: "lou-nathan",
             name: "Lou & Nathan",
+            captureApp: "Polycam",
             captureMethod: "LiDAR",
             model: "/models/LouNathan.glb",
           },
           {
             id: "jack",
             name: "Jack She",
+            captureApp: "Polycam",
             captureMethod: "LiDAR",
             model: "/models/Jack.glb",
+          },
+          {
+            id: "casey",
+            name: "Casey",
+            captureApp: "Polycam",
+            captureMethod: "LiDAR",
+            model: "/models/Casey.glb",
+          },
+          {
+            id: "fran",
+            name: "Fran",
+            captureApp: "Polycam",
+            captureMethod: "LiDAR",
+            model: "/models/Fran.glb",
+          },
+          {
+            id: "roman",
+            name: "Roman",
+            captureApp: "Polycam",
+            captureMethod: "LiDAR",
+            model: "/models/Roman.glb",
           }
         ]
       }
@@ -159,6 +185,8 @@ function Model(props: { item: Item, big: boolean }) {
       progress-bar=""
       poster={props.item.poster}
       shadow-intensity="1" 
+      auto-rotate-delay="0"
+      rotation-per-second="30deg"
       camera-controls 
       auto-rotate
       touch-action="pan-y" 
