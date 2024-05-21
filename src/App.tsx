@@ -181,7 +181,7 @@ export function Item() {
       </h2>
       <div className='flex-wrap-row'>
         <Model item={item} big />
-        <ItemDescriptionList item={item} />
+        <ItemDescriptionList item={item} collection={collection} user={user} />
       </div>
       <Items collection={collectionWithoutThisItem} user={user} />
     </article>
@@ -203,10 +203,14 @@ function ItemCard(props: { item: Item, collection: Collection, user: User }) {
   );
 }
 
-function ItemDescriptionList(props: { item: Item }) {
+function ItemDescriptionList(props: { item: Item, collection: Collection, user: User }) {
   return (
     <dl>
-      <dt>ID</dt>
+      <dt>User ID</dt>
+      <dd>{props.user.id}</dd>
+      <dt>Collection ID</dt>
+      <dd>{props.collection.id}</dd>
+      <dt>Item ID</dt>
       <dd>{props.item.id}</dd>
       <dt>Date manufactured</dt>
       <dd>{props.item.dateManufactured}</dd>
