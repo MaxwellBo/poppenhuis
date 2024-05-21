@@ -17,12 +17,24 @@ body {
   font-family: 'Inconsolata', monospace;
 }
 
-.margin-bottom {
+h1 {
+  padding-bottom: 1.5rem;
+}
+
+h2 {
+  padding-bottom: 1rem;
+}
+
+.padding-bottom-2rem {
+  margin-bottom: 2rem;
+}
+
+.padding-bottom-1rem {
   margin-bottom: 1rem;
 }
 
-.padding-bottom {
-  margin-bottom: 1rem;
+.padding-bottom-05rem {
+  margin-bottom: 0.5rem;
 }
 
 .card dl {
@@ -78,6 +90,10 @@ dl > dd {
   flex-wrap: wrap;
   flex-direction: row;
   gap: 1ch;
+}
+
+.short {
+  max-width: 40ch;
 }
 
 

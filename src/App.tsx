@@ -310,7 +310,7 @@ export function App() {
     <div>
       <header>
         <h1>
-          <Link to="/">dollhouse</Link>
+          <Link to="/">the dollhouse</Link>
         </h1>
       </header>
       <main>
@@ -325,13 +325,25 @@ export function Users() {
   const users = useLoaderData() as Awaited<ReturnType<typeof loadUsers>>;
 
   return (
-    <ul>
-      {users.map((user) => (
-        <li key={user.id}>
-          <Link to={user.id}>{user.name}</Link>
-        </li>
-      ))}
-    </ul>
+    <>
+      <p className="short">
+        the dollhouse is a site for displaying collections of 3D models, inspired by <a href="https://www.are.na/">are.na</a>.
+        <br />
+        <br />
+        This site is very <a href="https://www.robinsloan.com/notes/home-cooked-app/">"bespoke"</a> in its construction.
+        It will never support accounts or file uploads, so please reach out to <a href="https://twitter.com/_max_bo_">me</a> if you'd like me to host your collection.
+        <br />
+        <br />
+        The following users have collections:
+      </p>
+      <ul>
+        {users.map((user) => (
+          <li key={user.id}>
+            <Link to={user.id}>{user.name}</Link>
+          </li>
+        ))}
+      </ul>
+    </>
   );
 }
 
