@@ -11,6 +11,7 @@ body {
   margin: 2vw auto;
   /** set a nice light tan background color */
   background-color: #fffff8;
+  text-transform: lowercase;
 }
 
 .monospace {
