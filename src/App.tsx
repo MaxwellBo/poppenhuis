@@ -9,6 +9,7 @@ import {
 interface User {
   id: string;
   name: string;
+  bio: JSX.Element;
   collections: Collection[];
 }
 
@@ -39,6 +40,9 @@ const DATABASE: User[] = [
   { 
     id: "mbo",
     name: "Max Bo",
+    bio: <p>
+      <a href="https://maxbo.me">maxbo.me</a>, <a href="https://twitter.com/_max_bo_">twitter</a>
+    </p>,
     collections: [
       {
         id: "friends",
@@ -168,6 +172,7 @@ export function User() {
   return (
     <article>
       <h2>{user.name}</h2>
+      <div className='padding-bottom-1rem'>{user.bio}</div>
       {user.collections.map((collection) =>
         <CollectionRow key={collection.id} collection={collection} user={user} />)}
     </article>
