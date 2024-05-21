@@ -223,12 +223,13 @@ function Model(props: { item: Item, big: boolean }) {
   return (
     // @ts-ignore
     <model-viewer 
-      style={ props.big ? { height: '40rem', width: "40rem", margin: 'auto' } : { height: "20rem", width: "20rem" } }
+      style={ props.big ? { height: '30rem', width: "40rem", margin: 'auto' } : { height: "20rem", width: "20rem" } }
       alt={props.item.itemDescription}
       src={props.item.model} 
       environment-image="/environments/moon_1k.hdr" 
       interaction-prompt=""
       progress-bar=""
+      loading="eager"
       poster={props.item.poster}
       shadow-intensity="1" 
       auto-rotate-delay="0"
