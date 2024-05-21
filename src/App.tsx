@@ -264,8 +264,8 @@ export function Item() {
     items: collection.items.filter((i) => i.id !== item.id)
   }
 
-  const previousItem: Item | undefined = collection.items.find((i, index) => collection.items[index + 1]?.id === item.id);
-  const nextItem: Item | undefined  = collection.items.find((i, index) => collection.items[index - 1]?.id === item.id);
+  const previousItem: Item | undefined = collection.items.find((_, index) => collection.items[index + 1]?.id === item.id);
+  const nextItem: Item | undefined  = collection.items.find((_, index) => collection.items[index - 1]?.id === item.id);
 
   return (
     <article className='item-page' key={item.id}>
@@ -277,8 +277,8 @@ export function Item() {
       <div className='flex-wrap-row'>
         <Model item={item} size='big' />
         <ItemDescriptionList item={item} collection={collection} user={user} />
-        {previousItem && <ItemCard item={previousItem} collection={collection} user={user} altName="Previous" size='small' />}
-        {nextItem && <ItemCard item={nextItem} collection={collection} user={user} altName="Next" size='small' />}
+        {previousItem && <ItemCard item={previousItem} collection={collection} user={user} altName="← previous" size='small' />}
+        {nextItem && <ItemCard item={nextItem} collection={collection} user={user} altName="next →" size='small' />}
       </div>
       <Items collection={collectionWithoutThisItem} user={user} />
     </article>
