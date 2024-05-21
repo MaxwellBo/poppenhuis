@@ -171,8 +171,12 @@ export function User() {
 
   return (
     <article>
-      <h2>{user.name}</h2>
-      <div className='padding-bottom-1rem'>{user.bio}</div>
+      <header>
+        <h1>
+          <Link to="/">dollhouse</Link> / {user.name}
+        </h1>
+        <div className='padding-bottom-1rem'>{user.bio}</div>
+      </header>
       {user.collections.map((collection) =>
         <CollectionRow key={collection.id} collection={collection} user={user} />)}
     </article>
@@ -183,9 +187,11 @@ export function Collection() {
   const { collection, user } = useLoaderData() as Awaited<ReturnType<typeof loadCollection>>;
 
   return <article>
-    <h2>
-      <Link to={`/${user.id}`}>{user.name}</Link> / {collection.name}
-    </h2>
+    <header>
+      <h1>
+        <Link to="/">dollhouse</Link> / <Link to={`/${user.id}`}>{user.name}</Link> / {collection.name}
+      </h1>
+    </header>
     <Items collection={collection} user={user} />
   </article>
 }
@@ -244,9 +250,11 @@ export function Item() {
 
   return (
     <article className='item-page'>
-      <h2>
-        <Link to={`/${user.id}`}>{user.name}</Link> / <Link to={`/${user.id}/${collection.id}`}>{collection.name}</Link> / {item.name}
-      </h2>
+      <header>
+        <h1>
+          <Link to="/">dollhouse</Link> / <Link to={`/${user.id}`}>{user.name}</Link> / <Link to={`/${user.id}/${collection.id}`}>{collection.name}</Link> / {item.name}
+        </h1>
+      </header>
       <div className='flex-wrap-row'>
         <Model item={item} big />
         <ItemDescriptionList item={item} collection={collection} user={user} />
@@ -313,15 +321,10 @@ export function App() {
 
   return (
     <div>
-      <header>
-        <h1>
-          <Link to="/">the dollhouse</Link>
-        </h1>
-      </header>
       <main>
         <Outlet />
       </main>
-      {/* <footer>Footer Content</footer> */}
+      <footer></footer>
     </div>
   )
 }
@@ -330,9 +333,14 @@ export function Users() {
   const users = useLoaderData() as Awaited<ReturnType<typeof loadUsers>>;
 
   return (
-    <>
+    <article>
+      <header>
+        <h1>
+          dollhouse
+        </h1>
+      </header>
       <p className="short">
-        the dollhouse is a site for displaying collections of 3D models, inspired by <a href="https://www.are.na/">are.na</a>.
+        dollhouse is a site for displaying collections of 3D models, inspired by <a href="https://www.are.na/">are.na</a>.
         <br />
         <br />
         This site is very <a href="https://www.robinsloan.com/notes/home-cooked-app/">"bespoke"</a> in its construction.
@@ -348,7 +356,7 @@ export function Users() {
           </li>
         ))}
       </ul>
-    </>
+    </article>
   );
 }
 
