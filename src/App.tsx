@@ -293,9 +293,9 @@ function ItemCard(props: { item: Item, collection: Collection, user: User, altNa
         {/* <img src={props.item.poster} alt={props.item.alt} /> */}
         <Model item={props.item} size={props.size ?? 'normal'}  />
       </div>
-      <a href={`/${props.user.id}/${props.collection.id}/${props.item.id}`}>
+      <Link to={`/${props.user.id}/${props.collection.id}/${props.item.id}`}>
         {props.altName ?? props.item.name}
-      </a>
+      </Link>
     </div>
   );
 }
