@@ -5,7 +5,7 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
-import { ErrorPage, App, DollPage, DollsListing, loadDoll, loadDolls } from './App.tsx';
+import { ErrorPage, App, ItemPage, ItemsListing, loadItem, loadItems } from './App.tsx';
 
 const router = createBrowserRouter([
   {
@@ -15,13 +15,13 @@ const router = createBrowserRouter([
     children: [
       { 
         path: "/", 
-        element: <DollsListing />, 
-        loader: loadDolls },
+        element: <ItemsListing />, 
+        loader: loadItems },
       {
-        path: "dolls/:id",
-        element: <DollPage />,
+        path: "items/:id",
+        element: <ItemPage />,
         // @ts-ignore
-        loader: loadDoll,
+        loader: loadItem,
       },
     ]
   },

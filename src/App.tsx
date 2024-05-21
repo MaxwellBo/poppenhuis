@@ -18,7 +18,7 @@ export function App() {
   )
 }
 
-interface Doll {
+interface Item {
   id: string;
   description?: string;
   name: string;
@@ -31,7 +31,7 @@ interface Doll {
   latLong?: string;
 }
 
-export async function loadDolls(): Promise<Doll[]> {
+export async function loadItems(): Promise<Item[]> {
   return [
     { 
       id: "neil-armstrong", 
@@ -71,50 +71,50 @@ export async function loadDolls(): Promise<Doll[]> {
   ]
 }
 
-export async function loadDoll({ params }: { params: { id: string } }): Promise<Doll> {
-  const dolls = await loadDolls();
-  return dolls.filter((doll) => doll.id === params.id)[0];
+export async function loadItem({ params }: { params: { id: string } }): Promise<Item> {
+  const items = await loadItems();
+  return items.filter((item) => item.id === params.id)[0];
 }
 
 
-export function DollPage() {
-  const doll = useLoaderData() as Doll;
+export function ItemPage() {
+  const item = useLoaderData() as Item;
 
   return (
-    <article className='doll-page'>
+    <article className='item-page'>
       <Link to="/">&larr; Back </Link>
-      <h2 className='margin-bottom monospace'>{doll.name}</h2>
+      <h2 className='margin-bottom monospace'>{item.name}</h2>
       <div className='flex-wrap-row'>
-        <Model doll={doll} big />
-        <DollDescriptionList doll={doll} />
+        <Model item={item} big />
+        <ItemDescriptionList item={item} />
       </div>
     </article>
   );
 }
 
-export function DollsListing() {
-  const dolls = useLoaderData() as Doll[];
+export function ItemsListing() {
+  const items = useLoaderData() as Item[];
 
   return (
     <section>
       <ul className="card-grid">
-        {dolls.map((doll) => <DollCard key={doll.id} doll={doll} />)}
+        {items.map((item) => <ItemCard key={item.id} item={item} />)}
       </ul>
     </section>
   );
 }
 
-function Model(props: { doll: Doll, big: boolean }) {
+function Model(props: { item: Item, big: boolean }) {
   return (
     // @ts-ignore
     <model-viewer 
       style={ props.big ? { height: '40rem', width: "40rem", margin: 'auto' } : { height: "20rem", width: "20rem" } }
-      alt={props.doll.description}
-      src={props.doll.model} 
+      alt={props.item.description}
+      src={props.item.model} 
       environment-image="/environments/moon_1k.hdr" 
       interaction-prompt=""
       progress-bar=""
-      poster={props.doll.poster}
+      poster={props.item.poster}
       shadow-intensity="1" 
       camera-controls 
       auto-rotate
@@ -124,41 +124,41 @@ function Model(props: { doll: Doll, big: boolean }) {
 }
 
 
-function DollCard(props: { doll: Doll }) {
+function ItemCard(props: { item: Item }) {
   return (
     <li className="card">
       <div className='center thumbnail'>
-        {/* <img src={props.doll.poster} alt={props.doll.alt} /> */}
-        <Model doll={props.doll} big={false}  />
+        {/* <img src={props.item.poster} alt={props.item.alt} /> */}
+        <Model item={props.item} big={false}  />
       </div>
-      <a href={`/dolls/${props.doll.id}`}>
-        {props.doll.name}
+      <a href={`/items/${props.item.id}`}>
+        {props.item.name}
       </a>
     </li>
   );
 }
 
-function DollDescriptionList(props: { doll: Doll }) {
+function ItemDescriptionList(props: { item: Item }) {
   return (
     <dl>
       <dt>ID</dt>
-      <dd>{props.doll.id}</dd>
+      <dd>{props.item.id}</dd>
       <dt>Date manufactured</dt>
-      <dd>{props.doll.dateManufactured}</dd>
+      <dd>{props.item.dateManufactured}</dd>
       <dt>Date acquired</dt>
-      <dd>{props.doll.dateAcquired}</dd>
+      <dd>{props.item.dateAcquired}</dd>
       <dt>Date captured</dt>
-      <dd>{props.doll.dateCaptured}</dd>
+      <dd>{props.item.dateCaptured}</dd>
       <dt>Capture method</dt>
-      <dd>{props.doll.captureMethod}</dd>
+      <dd>{props.item.captureMethod}</dd>
       <dt>Description</dt>
-      <dd>{props.doll.description}</dd>
+      <dd>{props.item.description}</dd>
       <dt>Model</dt>
-      <dd>{props.doll.model}</dd>
+      <dd>{props.item.model}</dd>
       <dt>Poster</dt>
-      <dd>{props.doll.poster}</dd>
+      <dd>{props.item.poster}</dd>
       <dt>Lat/Long</dt>
-      <dd>{props.doll.latLong}</dd>
+      <dd>{props.item.latLong}</dd>
     </dl>
   );
 }
