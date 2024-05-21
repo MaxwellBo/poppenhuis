@@ -64,13 +64,6 @@ dl > dd {
   margin: 1px;
 }
 
-.card img {
-  /* aspect-ratio: 4/3;
-  object-fit: cover; */
-  /* set a max width for the image */
-  max-width: 5rem;
-}
-
 .thumbnail {
   margin: 1px;
 }

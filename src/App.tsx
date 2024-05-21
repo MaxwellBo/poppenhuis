@@ -20,52 +20,54 @@ export function App() {
 
 interface Doll {
   id: string;
-  alt: string;
+  description?: string;
   name: string;
   model: string;
-  poster: string;
-  dateOfManufacture?: string;
-  dateOfAcquisition?: string;
+  poster?: string;
+  dateManufactured?: string;
+  dateAcquired?: string;
+  dateCaptured?: string;
+  captureMethod?: string;
+  latLong?: string;
 }
 
 export async function loadDolls(): Promise<Doll[]> {
   return [
     { 
       id: "neil-armstrong", 
-      alt: "Neil Armstrong's Spacesuit from the Smithsonian Digitization Programs Office and National Air and Space Museum",
       name: "Neil Armstrong", 
+      description: "Neil Armstrong's Spacesuit from the Smithsonian Digitization Programs Office and National Air and Space Museum",
       model: "/models/NeilArmstrong.glb",
       poster: "/models/NeilArmstrong.webp",
-      dateOfManufacture: "1969",
-      dateOfAcquisition: "N/A",
+      dateManufactured: "1969",
     },
-    { 
-      id: "neil-armstrong", 
-      alt: "Neil Armstrong's Spacesuit from the Smithsonian Digitization Programs Office and National Air and Space Museum",
-      name: "Neil Armstrong", 
-      model: "/models/NeilArmstrong.glb",
-      poster: "/models/NeilArmstrong.webp",
-      dateOfManufacture: "1969",
-      dateOfAcquisition: "N/A",
+    {
+      id: "hamish",
+      name: "Hamish Bultitude",
+      model: "/models/Hamish.glb",
+      dateManufactured: "1999?",
+      dateCaptured: "2023 August 26 4:43PM",
+      captureMethod: "LiDAR",
+      latLong: "35.29 S, 149.12 E",
     },
-    { 
-      id: "neil-armstrong", 
-      alt: "Neil Armstrong's Spacesuit from the Smithsonian Digitization Programs Office and National Air and Space Museum",
-      name: "Neil Armstrong", 
-      model: "/models/NeilArmstrong.glb",
-      poster: "/models/NeilArmstrong.webp",
-      dateOfManufacture: "1969",
-      dateOfAcquisition: "N/A",
+    {
+      id: "issy",
+      name: "Islwyn Wilson",
+      model: "/models/Issy.glb",
+      captureMethod: "LiDAR",
     },
-    { 
-      id: "neil-armstrong", 
-      alt: "Neil Armstrong's Spacesuit from the Smithsonian Digitization Programs Office and National Air and Space Museum",
-      name: "Neil Armstrong", 
-      model: "/models/NeilArmstrong.glb",
-      poster: "/models/NeilArmstrong.webp",
-      dateOfManufacture: "1969",
-      dateOfAcquisition: "N/A",
+    {
+      id: "lou-nathan",
+      name: "Lou & Nathan",
+      captureMethod: "LiDAR",
+      model: "/models/LouNathan.glb",
     },
+    {
+      id: "jack",
+      name: "Jack She",
+      captureMethod: "LiDAR",
+      model: "/models/Jack.glb",
+    }
   ]
 }
 
@@ -106,8 +108,8 @@ function Model(props: { doll: Doll, big: boolean }) {
   return (
     // @ts-ignore
     <model-viewer 
-      style={ props.big ? { height: '30rem', margin: 'auto' } : {} }
-      alt={props.doll.alt}
+      style={ props.big ? { height: '40rem', margin: 'auto' } : { height: "20rem", width: "20rem" } }
+      alt={props.doll.description}
       src={props.doll.model} 
       environment-image="/environments/moon_1k.hdr" 
       interaction-prompt=""
@@ -141,16 +143,22 @@ function DollDescriptionList(props: { doll: Doll }) {
     <dl>
       <dt>ID</dt>
       <dd>{props.doll.id}</dd>
-      <dt>Date of manufacture</dt>
-      <dd>{props.doll.dateOfManufacture}</dd>
-      <dt>Date of acquisition</dt>
-      <dd>{props.doll.dateOfAcquisition}</dd>
+      <dt>Date manufactured</dt>
+      <dd>{props.doll.dateManufactured}</dd>
+      <dt>Date acquired</dt>
+      <dd>{props.doll.dateAcquired}</dd>
+      <dt>Date captured</dt>
+      <dd>{props.doll.dateCaptured}</dd>
+      <dt>Capture method</dt>
+      <dd>{props.doll.captureMethod}</dd>
       <dt>Description</dt>
-      <dd>{props.doll.alt}</dd>
+      <dd>{props.doll.description}</dd>
       <dt>Model</dt>
       <dd>{props.doll.model}</dd>
       <dt>Poster</dt>
       <dd>{props.doll.poster}</dd>
+      <dt>Lat/Long</dt>
+      <dd>{props.doll.latLong}</dd>
     </dl>
   );
 }
