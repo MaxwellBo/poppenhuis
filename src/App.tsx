@@ -89,6 +89,16 @@ const DATABASE: User[] = [
             captureLatLong: "33.88 S, 151.21 E"
           },
           {
+            id: "jackie",
+            name: "Jackie",
+            captureApp: "Polycam",
+            captureMethod: "LiDAR",
+            model: "/models/Jackie.glb",
+            captureDevice: "Apple iPhone 13 Pro",
+            captureDate: "2024 May 21 8:00 PM",
+            captureLocation: "Darlinghurst",
+          },
+          {
             id: "casey",
             name: "Casey",
             captureApp: "Polycam",
