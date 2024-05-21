@@ -361,7 +361,10 @@ export function Users() {
         </h1>
       </header>
       <p className="short">
-        poppenhuis (<i>Dutch for "dollhouse"</i>) is a site for displaying collections of 3D models, inspired by <a href="https://www.are.na/">are.na</a>.
+        poppenhuis (<i>Dutch for "dollhouse"</i>) is a site for displaying collections of 3D models.
+        <br />
+        <br />
+        It was inspired by <a href="https://www.are.na/">are.na</a> and the wonderful <a href="https://www.dayroselane.com/hydrants">Hydrant Directory</a>.
         <br />
         <br />
         The site is very <a href="https://www.robinsloan.com/notes/home-cooked-app/">"bespoke"</a> in its construction.
