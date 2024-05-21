@@ -6,16 +6,16 @@ import {
   Link
 } from "react-router-dom";
 
-export function App() {
-  return (
-    <div>
-      {/* <header>Header</header> */}
-      <main>
-        <Outlet />
-      </main>
-      {/* <footer>Footer Content</footer> */}
-    </div>
-  )
+interface User {
+  id: string;
+  name: string;
+  collections: Collection[];
+}
+
+interface Collection {
+  id: string;
+  name: string;
+  items: Item[];
 }
 
 interface Item {
@@ -31,76 +31,113 @@ interface Item {
   latLong?: string;
 }
 
-export async function loadItems(): Promise<Item[]> {
-  return [
-    { 
-      id: "neil-armstrong", 
-      name: "Neil Armstrong", 
-      description: "Neil Armstrong's Spacesuit from the Smithsonian Digitization Programs Office and National Air and Space Museum",
-      model: "/models/NeilArmstrong.glb",
-      poster: "/models/NeilArmstrong.webp",
-      dateManufactured: "1969",
-    },
-    {
-      id: "hamish",
-      name: "Hamish Bultitude",
-      model: "/models/Hamish.glb",
-      dateManufactured: "1999?",
-      dateCaptured: "2023 August 26 4:43PM",
-      captureMethod: "LiDAR",
-      latLong: "35.29 S, 149.12 E",
-    },
-    {
-      id: "issy",
-      name: "Islwyn Wilson",
-      model: "/models/Issy.glb",
-      captureMethod: "LiDAR",
-    },
-    {
-      id: "lou-nathan",
-      name: "Lou & Nathan",
-      captureMethod: "LiDAR",
-      model: "/models/LouNathan.glb",
-    },
-    {
-      id: "jack",
-      name: "Jack She",
-      captureMethod: "LiDAR",
-      model: "/models/Jack.glb",
-    }
-  ]
+
+const DATABASE: User[] = [
+  { 
+    id: "mbo",
+    name: "Max Bo",
+    collections: [
+      {
+        id: "friends",
+        name: "Friends",
+        items: [
+          {
+            id: "hamish",
+            name: "Hamish Bultitude",
+            model: "/models/Hamish.glb",
+            dateManufactured: "1999?",
+            dateCaptured: "2023 August 26 4:43PM",
+            captureMethod: "LiDAR",
+            latLong: "35.29 S, 149.12 E",
+          },
+          {
+            id: "issy",
+            name: "Islwyn Wilson",
+            model: "/models/Issy.glb",
+            captureMethod: "LiDAR",
+          },
+          {
+            id: "lou-nathan",
+            name: "Lou & Nathan",
+            captureMethod: "LiDAR",
+            model: "/models/LouNathan.glb",
+          },
+          {
+            id: "jack",
+            name: "Jack She",
+            captureMethod: "LiDAR",
+            model: "/models/Jack.glb",
+          }
+        ]
+      }
+    ]
+  }
+]
+
+export async function loadUsers() {
+  return DATABASE;
 }
 
-export async function loadItem({ params }: { params: { id: string } }): Promise<Item> {
-  const items = await loadItems();
-  return items.filter((item) => item.id === params.id)[0];
+export async function loadUser( { params }: { params: { userId: User['id'] } }) {
+  const user = DATABASE.find((user) => user.id === params.userId);
+  if (!user) throw new Error("User not found");
+  return user;
 }
 
+export async function loadCollection( { params }: { params: { userId: User['id'], collectionId: Collection['id'] } }) {
+  const user = await loadUser({ params });
 
-export function ItemPage() {
-  const item = useLoaderData() as Item;
+  const collection = user.collections.find((collection) => collection.id === params.collectionId);
+  if (!collection) throw new Error("Collection not found");
+
+  return { collection, user };
+}
+
+export async function loadItem( { params }: { params: { userId: User['id'], collectionId: Collection['id'], itemId: Item['id'] } }) {
+  const { collection, user } = await loadCollection({ params });
+  const item = collection.items.find((item) => item.id === params.itemId);
+  if (!item) throw new Error("Item not found");
+
+  return { collection, user, item };
+}
+
+export function User() {
+  const user = useLoaderData() as User;
 
   return (
-    <article className='item-page'>
-      <Link to="/">&larr; Back </Link>
-      <h2 className='margin-bottom monospace'>{item.name}</h2>
-      <div className='flex-wrap-row'>
-        <Model item={item} big />
-        <ItemDescriptionList item={item} />
-      </div>
+    <article>
+      <h2>{user.name}</h2>
+      {user.collections.map((collection) =>
+        <CollectionRow key={collection.id} collection={collection} user={user} />)}
     </article>
   );
 }
 
-export function ItemsListing() {
-  const items = useLoaderData() as Item[];
+export function Collection() {
+  const { collection, user } = useLoaderData() as Awaited<ReturnType<typeof loadCollection>>;
 
+  return <article>
+    <h2>
+      <Link to={`/${user.id}`}>{user.name}</Link> / {collection.name}
+    </h2>
+    <ul className="card-grid">
+      {collection.items.map((item) => 
+        <ItemCard key={item.id} item={item} collection={collection} user={user} />)}
+    </ul>
+  </article>
+}
+
+export function CollectionRow(props: { collection: Collection, user: User }) {
   return (
-    <section>
+    <article>
+      <h3>
+        <Link to={`/${props.user.id}/${props.collection.id}`}>{props.collection.name}</Link>
+      </h3>
       <ul className="card-grid">
-        {items.map((item) => <ItemCard key={item.id} item={item} />)}
+        {props.collection.items.map((item) => 
+        <ItemCard key={item.id} item={item} collection={props.collection} user={props.user} />)}
       </ul>
-    </section>
+    </article>
   );
 }
 
@@ -123,15 +160,31 @@ function Model(props: { item: Item, big: boolean }) {
   );
 }
 
+export function Item() {
+  const { item, user, collection } = useLoaderData() as Awaited<ReturnType<typeof loadItem>>;
 
-function ItemCard(props: { item: Item }) {
+  return (
+    <article className='item-page'>
+      <h2>
+        <Link to={`/${user.id}`}>{user.name}</Link> / <Link to={`/${user.id}/${collection.id}`}>{collection.name}</Link> / {item.name}
+      </h2>
+      <div className='flex-wrap-row'>
+        <Model item={item} big />
+        <ItemDescriptionList item={item} />
+      </div>
+    </article>
+  );
+}
+
+
+function ItemCard(props: { item: Item, collection: Collection, user: User }) {
   return (
     <li className="card">
       <div className='center thumbnail'>
         {/* <img src={props.item.poster} alt={props.item.alt} /> */}
         <Model item={props.item} big={false}  />
       </div>
-      <a href={`/items/${props.item.id}`}>
+      <a href={`/${props.user.id}/${props.collection.id}/${props.item.id}`}>
         {props.item.name}
       </a>
     </li>
@@ -160,6 +213,37 @@ function ItemDescriptionList(props: { item: Item }) {
       <dt>Lat/Long</dt>
       <dd>{props.item.latLong}</dd>
     </dl>
+  );
+}
+
+export function App() {
+
+  return (
+    <div>
+      <header>
+        <h1>
+          <Link to="/">dollhouse</Link>
+        </h1>
+      </header>
+      <main>
+        <Outlet />
+      </main>
+      {/* <footer>Footer Content</footer> */}
+    </div>
+  )
+}
+
+export function Users() {
+  const users = useLoaderData() as Awaited<ReturnType<typeof loadUsers>>;
+
+  return (
+    <ul>
+      {users.map((user) => (
+        <li key={user.id}>
+          <Link to={user.id}>{user.name}</Link>
+        </li>
+      ))}
+    </ul>
   );
 }
 

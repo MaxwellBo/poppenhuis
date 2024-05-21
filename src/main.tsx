@@ -5,21 +5,36 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
-import { ErrorPage, App, ItemPage, ItemsListing, loadItem, loadItems } from './App.tsx';
+import { ErrorPage, App, loadUser, loadUsers, User, loadItem, Item, Users, loadCollection, Collection } from './App.tsx';
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
+    // @ts-ignore
     errorElement: <ErrorPage />,
     children: [
-      { 
-        path: "/", 
-        element: <ItemsListing />, 
-        loader: loadItems },
       {
-        path: "items/:id",
-        element: <ItemPage />,
+        path: "",
+        element: <Users />,
+        // @ts-ignore
+        loader: loadUsers,
+      },
+      {
+        path: ":userId",
+        element: <User />,
+        // @ts-ignore
+        loader: loadUser,
+      },
+      {
+        path: ":userId/:collectionId",
+        element: <Collection />,
+        // @ts-ignore
+        loader: loadCollection,
+      },
+      {
+        path: ":userId/:collectionId/:itemId",
+        element: <Item />,
         // @ts-ignore
         loader: loadItem,
       },
