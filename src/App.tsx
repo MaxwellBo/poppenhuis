@@ -198,7 +198,7 @@ export function Collection() {
 
 export function CollectionRow(props: { collection: Collection, user: User }) {
   return (
-    <article key={props.collection.id}>
+    <article>
       <h3>
         <Link to={`/${props.user.id}/${props.collection.id}`}>{props.collection.name}</Link>
       </h3>
@@ -268,7 +268,7 @@ export function Item() {
   const nextItem: Item | undefined  = collection.items.find((_, index) => collection.items[index - 1]?.id === item.id);
 
   return (
-    <article className='item-page' key={item.id}>
+    <article className='item-page'>
       <header>
         <h1>
           <Link to="/">dollhouse</Link> / <Link to={`/${user.id}`}>{user.name}</Link> / <Link to={`/${user.id}/${collection.id}`}>{collection.name}</Link> / {item.name}
