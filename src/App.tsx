@@ -74,7 +74,7 @@ interface Item {
 
 
 const FIRST_PARTY_MANIFEST: Manifest = [
-  { 
+  {
     id: "mbo",
     name: "Max Bo",
     bio: <p>
@@ -190,11 +190,11 @@ export async function loadUsers({ request }: { request: Request }) {
       console.error(e);
     }
   }
-  
+
   return [...FIRST_PARTY_MANIFEST, ...thirdPartyManifest];
 }
 
-export async function loadUser( { params, request }: { params: { userId: User['id'] }, request: Request }) {
+export async function loadUser({ params, request }: { params: { userId: User['id'] }, request: Request }) {
 
   const users = await loadUsers({ request });
   const user = users.find((user) => user.id === params.userId);
@@ -202,7 +202,7 @@ export async function loadUser( { params, request }: { params: { userId: User['i
   return user;
 }
 
-export async function loadCollection( { params, request }: { params: { userId: User['id'], collectionId: Collection['id'] }, request: Request }) {
+export async function loadCollection({ params, request }: { params: { userId: User['id'], collectionId: Collection['id'] }, request: Request }) {
   const user = await loadUser({ params, request });
 
   const collection = user.collections.find((collection) => collection.id === params.collectionId);
@@ -211,7 +211,7 @@ export async function loadCollection( { params, request }: { params: { userId: U
   return { collection, user };
 }
 
-export async function loadItem( { params, request }: { params: { userId: User['id'], collectionId: Collection['id'], itemId: Item['id'] }, request: Request }) {
+export async function loadItem({ params, request }: { params: { userId: User['id'], collectionId: Collection['id'], itemId: Item['id'] }, request: Request }) {
   const { collection, user } = await loadCollection({ params, request });
   const item = collection.items.find((item) => item.id === params.itemId);
   if (!item) throw new Error("Item not found");
@@ -275,7 +275,7 @@ export function Items(props: { collection: Collection, user: User }) {
 type ModelSize = 'small' | 'normal' | 'big';
 
 function getStyleForModelSize(size: ModelSize | undefined) {
-  switch(size) {
+  switch (size) {
     case 'small':
       return { height: "5rem", width: "5rem" };
     case 'big':
@@ -289,22 +289,22 @@ function getStyleForModelSize(size: ModelSize | undefined) {
 function Model(props: { item: Item, size?: ModelSize }) {
   return (
     // @ts-ignore
-    <model-viewer 
+    <model-viewer
       key={props.item.model}
       style={getStyleForModelSize(props.size)}
       alt={props.item.itemDescription}
-      src={props.item.model} 
-      environment-image="/environments/moon_1k.hdr" 
+      src={props.item.model}
+      environment-image="/environments/moon_1k.hdr"
       interaction-prompt=""
       progress-bar=""
       loading="eager"
       poster={props.item.poster}
-      shadow-intensity="1" 
+      shadow-intensity="1"
       auto-rotate-delay="0"
       rotation-per-second="30deg"
-      camera-controls 
+      camera-controls
       auto-rotate
-      touch-action="pan-y" 
+      touch-action="pan-y"
     />
   );
 }
@@ -318,7 +318,7 @@ export function Item() {
   }
 
   const previousItem: Item | undefined = collection.items.find((_, index) => collection.items[index + 1]?.id === item.id);
-  const nextItem: Item | undefined  = collection.items.find((_, index) => collection.items[index - 1]?.id === item.id);
+  const nextItem: Item | undefined = collection.items.find((_, index) => collection.items[index - 1]?.id === item.id);
 
   return (
     <article className='item-page'>
@@ -344,7 +344,7 @@ function ItemCard(props: { item: Item, collection: Collection, user: User, altNa
     <div className="card">
       <div className='center thumbnail'>
         {/* <img src={props.item.poster} alt={props.item.alt} /> */}
-        <Model item={props.item} size={props.size ?? 'normal'}  />
+        <Model item={props.item} size={props.size ?? 'normal'} />
       </div>
       <QueryPreservingLink to={`/${props.user.id}/${props.collection.id}/${props.item.id}`}>
         {props.altName ?? props.item.name}
@@ -367,7 +367,7 @@ function ItemDescriptionList(props: { item: Item, collection: Collection, user: 
       <dd>{props.collection.id}</dd>
       <dt>Item ID</dt>
       <dd>{props.item.id}</dd>
-      
+
       <dt>Description</dt>
       <dd>{props.item.itemDescription}</dd>
 
@@ -412,26 +412,6 @@ const EXAMPLE_MANIFEST_URL = 'https://raw.githubusercontent.com/MaxwellBo/maxwel
 
 export function Users() {
   const users = useLoaderData() as Awaited<ReturnType<typeof loadUsers>>;
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [manifest, setManifest] = React.useState<string>(searchParams.get('manifest') ?? '');
-  const [fetchResult, setFetchResult] = React.useState<string | undefined>(undefined);
-  const [fetchStatus, setFetchStatus] = React.useState<JSX.Element>(<div />);
-
-  const loadManifest = async (url: string) => {
-    try {
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error(`Failed to fetch manifest: ${response.statusText}`);
-      }
-      setFetchResult(JSON.stringify(await response.json(), null, 2));
-      setFetchStatus(<span className='green'>SUCCESS, 3rd-party manifest spliced into the 1st-party manifest</span>);
-      setSearchParams({ manifest: url });
-    } catch (e) {
-      setFetchStatus(<span className='red'>{"ERROR: " + (e as any).message}</span>);
-      setFetchResult(undefined);
-    }
-  }
-
 
   return (
     <article>
@@ -457,8 +437,39 @@ export function Users() {
         ))}
       </ul>
       <br />
+      <details>
+        <summary>Want to host your own content here?</summary>
+        <ThirdPartyManifests />
+      </details>
+    </article>
+  );
+}
+
+function ThirdPartyManifests() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [manifest, setManifest] = React.useState<string>(searchParams.get('manifest') ?? '');
+  const [fetchResult, setFetchResult] = React.useState<string | undefined>(undefined);
+  const [fetchStatus, setFetchStatus] = React.useState<JSX.Element>(<div />);
+
+  const loadManifest = async (url: string) => {
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch manifest: ${response.statusText}`);
+      }
+      setFetchResult(JSON.stringify(await response.json(), null, 2));
+      setFetchStatus(<span className='green'>SUCCESS, 3rd-party manifest spliced into the 1st-party manifest</span>);
+      setSearchParams({ manifest: url });
+    } catch (e) {
+      setFetchStatus(<span className='red'>{"ERROR: " + (e as any).message}</span>);
+      setFetchResult(undefined);
+    }
+  }
+
+  return (
+    <>
       <h3>3rd party manifests</h3>
-      You can view and share your own content on this site with manifest files. 
+      You can view and share your own content on this site with manifest files.
       <br />
       <br />
       Your 3rd party manifest will be merged with the site's 1st party manifest, and the manifest URL will be stored in <code>?manifest=</code> query param so you can share your collections with others.
@@ -481,9 +492,8 @@ export function Users() {
       <br />
       {fetchStatus}
       <pre className='truncate border'>{fetchResult}</pre>
-      
-    </article>
-  );
+    </>
+  )
 }
 
 export function ErrorPage() {
