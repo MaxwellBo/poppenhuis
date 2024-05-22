@@ -351,11 +351,11 @@ export function CollectionRow(props: { collection: Collection, user: User }) {
   );
 }
 
-export function Items(props: { collection: Collection, user: User }) {
+export function Items(props: { collection: Collection, user: User, highlighted?: Item['id'] }) {
   return (
     <ul className='card-grid'>
       {props.collection.items.map((item) => (
-        <li key={item.id}>
+        <li key={item.id} className={item.id === props.highlighted ? 'highlight' : undefined}>
           <ItemCard item={item} collection={props.collection} user={props.user} />
         </li>
       ))}
@@ -427,7 +427,7 @@ export function Item() {
         {nextItem ?
           <ItemCard item={nextItem} collection={collection} user={user} altName="next →" size='small' /> : <div />}
       </div>
-      <Items collection={collection} user={user} />
+      <Items collection={collection} user={user} highlighted={item.id} />
     </article>
   );
 }

@@ -136,6 +136,11 @@ dl > dd {
   max-width: 40ch;
 }
 
+.highlight {
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
 .truncate {
   max-height: 24rem;
   overflow-y: auto;
