@@ -470,10 +470,10 @@ function ItemDescriptionList(props: { item: Item, collection: Collection, user: 
       <dd>{props.item.captureDevice}</dd>
       <dt>Capture method</dt>
       <dd>{props.item.captureMethod}</dd>
-      <dt>Vertices</dt>
-      <dd>{props.item.vertices}</dd>
       <dt>Model</dt>
       <dd>{props.item.model}</dd>
+      <dt>Vertices</dt>
+      <dd>{props.item.vertices}</dd>
       <dt>Poster</dt>
       <dd>{props.item.poster}</dd>
 
