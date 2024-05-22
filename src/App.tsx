@@ -461,7 +461,7 @@ export function Users() {
       You can view and share your own content on this site with manifest files. 
       <br />
       <br />
-      Your 3rd party manifest will be merged with the site's 1st party manifest.
+      Your 3rd party manifest will be merged with the site's 1st party manifest, and the manifest URL will be stored in <code>?manifest=</code> query param so you can share your collections with others.
       <br />
       <br />
       <details>
@@ -470,12 +470,12 @@ export function Users() {
       </details>
       <input style={{ width: "80%", fontSize: 13 }} placeholder={EXAMPLE_MANIFEST_URL} value={manifest} onChange={e => setManifest(e.target.value)} />
       <br />
-      <button disabled={!manifest} onClick={() => loadManifest(manifest)}>Try and load custom manifest</button>
+      <button disabled={!manifest} onClick={() => loadManifest(manifest)}>Load custom manifest</button>
       <br />
       <button onClick={() => {
         setManifest(EXAMPLE_MANIFEST_URL)
         loadManifest(EXAMPLE_MANIFEST_URL)
-      }}>Try and load placeholder manifest</button>
+      }}>Load placeholder manifest</button>
 
       <br />
       <br />
