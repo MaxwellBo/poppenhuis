@@ -87,6 +87,21 @@ dl > dd {
   gap: 1ch;
 }
 
+.item-hero > *:nth-child(1) {
+  grid-area: previous;
+}
+
+.item-hero > *:nth-child(2) {
+  grid-area: model;
+}
+
+.item-hero > *:nth-child(3) {
+  grid-area: meta;
+}
+
+.item-hero > *:nth-child(4) {
+  grid-area: next;
+}
 
 @media (max-width: 1200px) {
   .item-hero {
@@ -94,27 +109,26 @@ dl > dd {
     grid-template-rows: auto;
     grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
     grid-template-areas: 
-      "previous next"
-      "model meta";
+      "model meta"
+      "previous next";
     gap: 1ch;
     align-items: center;
     justify-items: center;
   }
+}
 
-  .item-hero > *:nth-child(1) {
-    grid-area: previous;
-  }
-
-  .item-hero > *:nth-child(2) {
-    grid-area: model;
-  }
-
-  .item-hero > *:nth-child(3) {
-    grid-area: meta;
-  }
-
-  .item-hero > *:nth-child(4) {
-    grid-area: next;
+@media (max-width: 800px) {
+  .item-hero {
+    display: grid;
+    grid-template-rows: auto;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    grid-template-areas: 
+      "model model"
+      "previous next"
+      "meta meta";
+    gap: 1ch;
+    align-items: center;
+    justify-items: center;
   }
 }
 
