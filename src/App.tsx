@@ -468,6 +468,11 @@ function ThirdPartyManifests() {
 
   return (
     <>
+      <h3>1st party manifest</h3>
+      This site is a <a href="https://www.robinsloan.com/notes/home-cooked-app/">homecooked meal</a>, built primarily for my friends and family.
+      Reach out to <a href="https://twitter.com/_max_bo_">me on Twitter</a> if you'd like me to host your collection.
+      <br />
+      <br />
       <h3>3rd party manifests</h3>
       You can view and share your own content on this site with manifest files.
       <br />
