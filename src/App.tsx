@@ -83,6 +83,52 @@ const FIRST_PARTY_MANIFEST: Manifest = [
     </p>,
     collections: [
       {
+        id: "pedals",
+        name: "Pedals",
+        items: [
+          {
+            id: "plumes",
+            name: "Plumes",
+            model: "/models/plumes.glb",
+            description: "EarthQuaker Devices Plumes Small Signal Shredder",
+            dateAcquired: "2022",
+            captureDevice: "Apple iPhone 13 Pro",
+            captureMethod: "LiDAR",
+            captureApp: "Polycam",
+          },
+          {
+            id: "elcap",
+            name: "El Capistan",
+            model: "/models/elcap.glb",
+            description: "Strymon El Capistan dTape Echo",
+            dateAcquired: "2022",
+            captureDevice: "Apple iPhone 13 Pro",
+            captureMethod: "LiDAR",
+            captureApp: "Polycam",
+          },
+          {
+            id: "multistomp",
+            name: "MS-70CDR",
+            model: "/models/multistomp.glb",
+            description: "Zoom MS-70CDR MultiStomp",
+            dateAcquired: "2022",
+            captureDevice: "Apple iPhone 13 Pro",
+            captureMethod: "LiDAR",
+            captureApp: "Polycam",
+          },
+          {
+            id: "avrun",
+            name: "Avalanche Run",
+            model: "/models/avrun.glb",
+            description: "EarthQuaker Devices Avalanche Run Stereo Delay & Reverb",
+            dateAcquired: "2022",
+            captureDevice: "Apple iPhone 13 Pro",
+            captureMethod: "LiDAR",
+            captureApp: "Polycam",
+          },
+        ]
+      },
+      {
         id: "friends",
         name: "Friends",
         items: [
