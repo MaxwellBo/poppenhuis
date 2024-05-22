@@ -26,21 +26,27 @@ interface Collection {
 }
 
 interface Item {
+  // Existential details
   id: string;
   name: string;
   model: string;
-  description?: string;
   poster?: string;
+  description?: string;
+  // Dates
   modelDate?: string;
   manufactureDate?: string;
-  dateAcquired?: string;
+  acquisitionDate?: string;
   captureDate?: string;
+  // Capture details
   captureApp?: string;
   captureDevice?: string;
   captureMethod?: string;
   captureLatLong?: string;
   captureLocation?: string;
-  vertices?: string
+  // Custom fields
+  customFields?: {
+    [key: string]: string | undefined;
+  }
 }
 
 const MANIFEST_SCHEMA = `
@@ -60,21 +66,24 @@ interface Collection {
 }
 
 interface Item {
+  // Existential details
   id: string;
   name: string;
   model: string;
-  description?: string;
   poster?: string;
+  description?: string;
+  // Dates
   modelDate?: string;
   manufactureDate?: string;
-  dateAcquired?: string;
+  acquisitionDate?: string;
   captureDate?: string;
+  // Capture details
   captureApp?: string;
   captureDevice?: string;
   captureMethod?: string;
-  captureLatLong?: string;
   captureLocation?: string;
-  vertices?: string;
+  // Custom fields
+  [key: string]: string | undefined;
 }
 `
 
@@ -97,7 +106,7 @@ const FIRST_PARTY_MANIFEST: Manifest = [
             model: "/models/plumes.glb",
             description: "EarthQuaker Devices Plumes Small Signal Shredder",
             modelDate: "2019",
-            dateAcquired: "2022",
+            acquisitionDate: "2022",
             captureDate: "2024 May 22",
             captureLocation: "Darlinghurst",
             captureDevice: "Apple iPhone 13 Pro",
@@ -109,7 +118,7 @@ const FIRST_PARTY_MANIFEST: Manifest = [
             name: "El Capistan",
             model: "/models/elcap.glb",
             description: "Strymon El Capistan dTape Echo",
-            dateAcquired: "2022",
+            acquisitionDate: "2022",
             captureDate: "2024 May 22",
             captureLocation: "Darlinghurst",
             captureDevice: "Apple iPhone 13 Pro",
@@ -121,7 +130,7 @@ const FIRST_PARTY_MANIFEST: Manifest = [
             name: "MS-70CDR",
             model: "/models/multistomp.glb",
             description: "Zoom MS-70CDR MultiStomp",
-            dateAcquired: "2022",
+            acquisitionDate: "2022",
             captureDate: "2024 May 22",
             captureLocation: "Darlinghurst",
             captureDevice: "Apple iPhone 13 Pro",
@@ -134,7 +143,7 @@ const FIRST_PARTY_MANIFEST: Manifest = [
             model: "/models/avrun.glb",
             description: "EarthQuaker Devices Avalanche Run V2 Stereo Delay & Reverb",
             modelDate: "2017",
-            dateAcquired: "2022",
+            acquisitionDate: "2022",
             captureDate: "2024 May 22",
             captureLocation: "Darlinghurst",
             captureDevice: "Apple iPhone 13 Pro",
@@ -154,7 +163,6 @@ const FIRST_PARTY_MANIFEST: Manifest = [
             captureApp: "Polycam",
             captureDate: "2023 August 26 4:43PM",
             captureMethod: "LiDAR",
-            captureLatLong: "35.29 S, 149.12 E",
             captureDevice: "Apple iPhone 13 Pro"
           },
           {
@@ -166,7 +174,9 @@ const FIRST_PARTY_MANIFEST: Manifest = [
             captureMethod: "Photo mode",
             captureDate: "2024 May 22, 10:22PM",
             captureDevice: "Apple iPhone 11 Pro Max",
-            vertices: "25.4k",
+            customFields: {
+              vertices: "25.4k",
+            }
           },
           {
             id: "issy",
@@ -443,6 +453,16 @@ function QueryPreservingLink(props: { to: string, children: React.ReactNode }) {
 }
 
 function ItemDescriptionList(props: { item: Item, collection: Collection, user: User }) {
+  const { captureLocation, captureLatLong } = props.item;
+  let location;
+  if (captureLocation && captureLatLong) {
+    location = `${captureLocation} (${captureLatLong})`;
+  } else if (captureLocation) {
+    location = captureLocation;
+  } else if (captureLatLong) {
+    location = captureLatLong;
+  }
+
   return (
     <dl>
       <dt>User ID</dt>
@@ -451,32 +471,26 @@ function ItemDescriptionList(props: { item: Item, collection: Collection, user: 
       <dd>{props.collection.id}</dd>
       <dt>Item ID</dt>
       <dd>{props.item.id}</dd>
-
       <dt>Description</dt>
       <dd>{props.item.description}</dd>
-
-      <dt>Date manufactured</dt>
+      <dt>Model date</dt>
+      <dd>{props.item.modelDate}</dd>
+      <dt>Manufacture date</dt>
       <dd>{props.item.manufactureDate}</dd>
-      <dt>Date acquired</dt>
-      <dd>{props.item.dateAcquired}</dd>
-      <dt>Date captured</dt>
+      <dt>Acquisition date</dt>
+      <dd>{props.item.acquisitionDate}</dd>
+      <dt>Capture date</dt>
       <dd>{props.item.captureDate}</dd>
-
       <dt>Capture location</dt>
-      <dd>{props.item.captureLocation}</dd>
-      <dt>Capture lat/long</dt>
-      <dd>{props.item.captureLatLong}</dd>
+      <dd>{location}</dd>
       <dt>Capture device</dt>
       <dd>{props.item.captureDevice}</dd>
       <dt>Capture method</dt>
       <dd>{props.item.captureMethod}</dd>
       <dt>Model</dt>
       <dd>{props.item.model}</dd>
-      <dt>Vertices</dt>
-      <dd>{props.item.vertices}</dd>
       <dt>Poster</dt>
       <dd>{props.item.poster}</dd>
-
     </dl>
   );
 }
