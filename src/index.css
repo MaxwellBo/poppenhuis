@@ -22,6 +22,10 @@ h2 {
   padding-bottom: 1rem;
 }
 
+h3 {
+  padding-bottom: 0.5rem;
+}
+
 .padding-bottom-1rem {
   margin-bottom: 1rem;
 }
@@ -86,6 +90,26 @@ dl > dd {
   max-width: 40ch;
 }
 
+.truncate {
+  max-height: 12em; /* Adjust the value if necessary based on actual line height */
+  overflow-y: auto;
+}
+
+.border {
+  border: 1px solid #333;
+}
+
+.red {
+  color: red;
+}
+
+.green {
+  color: green;
+}
+
+pre {
+  text-transform: none;
+}
 
 /*
   Josh's Custom CSS Reset

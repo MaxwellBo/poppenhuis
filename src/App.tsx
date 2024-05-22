@@ -1,15 +1,19 @@
+import React from 'react';
 import './App.css'
 import {
   useLoaderData,
   useRouteError,
   Outlet,
-  Link
+  Link,
+  useSearchParams
 } from "react-router-dom";
+
+type Manifest = User[];
 
 interface User {
   id: string;
   name: string;
-  bio: JSX.Element;
+  bio: JSX.Element | string;
   collections: Collection[];
 }
 
@@ -35,8 +39,41 @@ interface Item {
   captureLocation?: string;
 }
 
+const MANIFEST_SCHEMA = `
+type Manifest = User[];
 
-const DATABASE: User[] = [
+interface User {
+  id: string;
+  name: string;
+  bio: JSX.Element | string;
+  collections: Collection[];
+}
+
+interface Collection {
+  id: string;
+  name: string;
+  items: Item[];
+}
+
+interface Item {
+  id: string;
+  itemDescription?: string;
+  name: string;
+  model: string;
+  poster?: string;
+  manufacturedDate?: string;
+  dateAcquired?: string;
+  captureDate?: string;
+  captureApp?: string;
+  captureDevice?: string;
+  captureMethod?: string;
+  captureLatLong?: string;
+  captureLocation?: string;
+}
+`
+
+
+const FIRST_PARTY_MANIFEST: Manifest = [
   { 
     id: "mbo",
     name: "Max Bo",
@@ -139,18 +176,34 @@ const DATABASE: User[] = [
   }
 ]
 
-export async function loadUsers() {
-  return DATABASE;
+export async function loadUsers({ request }: { request: Request }) {
+  let thirdPartyManifest: Manifest = [];
+
+  const manfiestUrl = new URL(request.url).searchParams.get('manifest');
+  if (manfiestUrl) {
+    try {
+      const response = await fetch(manfiestUrl);
+      if (response.ok) {
+        thirdPartyManifest = await response.json();
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }
+  
+  return [...FIRST_PARTY_MANIFEST, ...thirdPartyManifest];
 }
 
-export async function loadUser( { params }: { params: { userId: User['id'] } }) {
-  const user = DATABASE.find((user) => user.id === params.userId);
+export async function loadUser( { params, request }: { params: { userId: User['id'] }, request: Request }) {
+
+  const users = await loadUsers({ request });
+  const user = users.find((user) => user.id === params.userId);
   if (!user) throw new Error("User not found");
   return user;
 }
 
-export async function loadCollection( { params }: { params: { userId: User['id'], collectionId: Collection['id'] } }) {
-  const user = await loadUser({ params });
+export async function loadCollection( { params, request }: { params: { userId: User['id'], collectionId: Collection['id'] }, request: Request }) {
+  const user = await loadUser({ params, request });
 
   const collection = user.collections.find((collection) => collection.id === params.collectionId);
   if (!collection) throw new Error("Collection not found");
@@ -158,8 +211,8 @@ export async function loadCollection( { params }: { params: { userId: User['id']
   return { collection, user };
 }
 
-export async function loadItem( { params }: { params: { userId: User['id'], collectionId: Collection['id'], itemId: Item['id'] } }) {
-  const { collection, user } = await loadCollection({ params });
+export async function loadItem( { params, request }: { params: { userId: User['id'], collectionId: Collection['id'], itemId: Item['id'] }, request: Request }) {
+  const { collection, user } = await loadCollection({ params, request });
   const item = collection.items.find((item) => item.id === params.itemId);
   if (!item) throw new Error("Item not found");
 
@@ -173,7 +226,7 @@ export function User() {
     <article>
       <header>
         <h1>
-          <Link to="/">poppenhuis</Link> / {user.name}
+          <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / {user.name}
         </h1>
         <div className='padding-bottom-1rem'>{user.bio}</div>
       </header>
@@ -189,7 +242,7 @@ export function Collection() {
   return <article>
     <header>
       <h1>
-        <Link to="/">poppenhuis</Link> / <Link to={`/${user.id}`}>{user.name}</Link> / {collection.name}
+        <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / {collection.name}
       </h1>
     </header>
     <Items collection={collection} user={user} />
@@ -200,7 +253,7 @@ export function CollectionRow(props: { collection: Collection, user: User }) {
   return (
     <article>
       <h3>
-        <Link to={`/${props.user.id}/${props.collection.id}`}>{props.collection.name}</Link>
+        <QueryPreservingLink to={`/${props.user.id}/${props.collection.id}`}>{props.collection.name}</QueryPreservingLink>
       </h3>
       <Items {...props} />
     </article>
@@ -271,7 +324,7 @@ export function Item() {
     <article className='item-page'>
       <header>
         <h1>
-          <Link to="/">poppenhuis</Link> / <Link to={`/${user.id}`}>{user.name}</Link> / <Link to={`/${user.id}/${collection.id}`}>{collection.name}</Link> / {item.name}
+          <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}/${collection.id}`}>{collection.name}</QueryPreservingLink> / {item.name}
         </h1>
       </header>
       <div className='flex-wrap-row'>
@@ -293,11 +346,16 @@ function ItemCard(props: { item: Item, collection: Collection, user: User, altNa
         {/* <img src={props.item.poster} alt={props.item.alt} /> */}
         <Model item={props.item} size={props.size ?? 'normal'}  />
       </div>
-      <Link to={`/${props.user.id}/${props.collection.id}/${props.item.id}`}>
+      <QueryPreservingLink to={`/${props.user.id}/${props.collection.id}/${props.item.id}`}>
         {props.altName ?? props.item.name}
-      </Link>
+      </QueryPreservingLink>
     </div>
   );
+}
+
+function QueryPreservingLink(props: { to: string, children: React.ReactNode }) {
+  const [searchParams] = useSearchParams();
+  return <Link to={{ pathname: props.to, search: searchParams.toString() }}>{props.children}</Link>
 }
 
 function ItemDescriptionList(props: { item: Item, collection: Collection, user: User }) {
@@ -350,8 +408,30 @@ export function App() {
   )
 }
 
+const EXAMPLE_MANIFEST_URL = 'https://raw.githubusercontent.com/MaxwellBo/maxwellbo.github.io/master/poppenhuis-manifest.json'
+
 export function Users() {
   const users = useLoaderData() as Awaited<ReturnType<typeof loadUsers>>;
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [manifest, setManifest] = React.useState<string>(searchParams.get('manifest') ?? '');
+  const [fetchResult, setFetchResult] = React.useState<string | undefined>(undefined);
+  const [fetchStatus, setFetchStatus] = React.useState<JSX.Element>(<div />);
+
+  const loadManifest = async (url: string) => {
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch manifest: ${response.statusText}`);
+      }
+      setFetchResult(JSON.stringify(await response.json(), null, 2));
+      setFetchStatus(<span className='green'>SUCCESS, 3rd manifest spliced into the 1st party manifest</span>);
+      setSearchParams({ manifest: url });
+    } catch (e) {
+      setFetchStatus(<span className='red'>{"ERROR: " + (e as any).message}</span>);
+      setFetchResult(undefined);
+    }
+  }
+
 
   return (
     <article>
@@ -367,19 +447,41 @@ export function Users() {
         It was inspired by <a href="https://www.are.na/">are.na</a> and the wonderful <a href="https://www.dayroselane.com/hydrants">Hydrant Directory</a>.
         <br />
         <br />
-        The site is very <a href="https://www.robinsloan.com/notes/home-cooked-app/">"bespoke"</a> in its construction.
-        It will never support accounts or file uploads, so please reach out to <a href="https://twitter.com/_max_bo_">me</a> if you'd like me to host your collection.
-        <br />
-        <br />
         The following users have collections:
       </p>
       <ul>
         {users.map((user) => (
           <li key={user.id}>
-            <Link to={user.id}>{user.name}</Link>
+            <QueryPreservingLink to={user.id}>{user.name}</QueryPreservingLink>
           </li>
         ))}
       </ul>
+      <br />
+      <h3>3rd party manifests</h3>
+      You can view and share your own content on this site with manifest files. 
+      <br />
+      <br />
+      Your 3rd party manifest will be merged with the site's 1st party manifest.
+      <br />
+      <br />
+      <details>
+        <summary>Manifest schema</summary>
+        <pre>{MANIFEST_SCHEMA}</pre>
+      </details>
+      <input style={{ width: "80%", fontSize: 13 }} placeholder={EXAMPLE_MANIFEST_URL} value={manifest} onChange={e => setManifest(e.target.value)} />
+      <br />
+      <button disabled={!manifest} onClick={() => loadManifest(manifest)}>Try and load custom manifest</button>
+      <br />
+      <button onClick={() => {
+        setManifest(EXAMPLE_MANIFEST_URL)
+        loadManifest(EXAMPLE_MANIFEST_URL)
+      }}>Try and load placeholder manifest</button>
+
+      <br />
+      <br />
+      {fetchStatus}
+      <pre className='truncate border'>{fetchResult}</pre>
+      
     </article>
   );
 }
