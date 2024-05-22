@@ -38,7 +38,7 @@ dl {
   /** Description lists should be displayed as a grid */
   display: grid;
   grid-template-columns: auto auto;
-  grid-auto-rows: min-content;
+  /* grid-auto-rows: min-content; */
   gap: 0.3ch;
   column-gap: 1ch;
 }
@@ -79,11 +79,43 @@ dl > dd {
   border: 1px solid #333;
 }
 
-.flex-wrap-row {
+.item-hero {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   flex-direction: row;
+  align-items: center;
   gap: 1ch;
+}
+
+
+@media (max-width: 1200px) {
+  .item-hero {
+    display: grid;
+    grid-template-rows: auto;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    grid-template-areas: 
+      "previous next"
+      "model meta";
+    gap: 1ch;
+    align-items: center;
+    justify-items: center;
+  }
+
+  .item-hero > *:nth-child(1) {
+    grid-area: previous;
+  }
+
+  .item-hero > *:nth-child(2) {
+    grid-area: model;
+  }
+
+  .item-hero > *:nth-child(3) {
+    grid-area: meta;
+  }
+
+  .item-hero > *:nth-child(4) {
+    grid-area: next;
+  }
 }
 
 .short {
@@ -111,6 +143,14 @@ pre {
   text-transform: none;
 }
 
+.center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1ch;
+}
+
 /*
   Josh's Custom CSS Reset
   https://www.joshwcomeau.com/css/custom-css-reset/
@@ -136,12 +176,4 @@ input, button, textarea, select {
 }
 #root, #__next {
   isolation: isolate;
-}
-
-.center {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 1ch;
 }

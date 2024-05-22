@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './App.css'
 import {
   useLoaderData,
   useRouteError,
   Outlet,
   Link,
-  useSearchParams
+  useSearchParams,
+  useLocation
 } from "react-router-dom";
 
 type Manifest = User[];
@@ -279,7 +280,7 @@ function getStyleForModelSize(size: ModelSize | undefined) {
     case 'small':
       return { height: "5rem", width: "5rem" };
     case 'big':
-      return { height: '30rem', width: "40rem", margin: 'auto' };
+      return { height: '30rem', width: "40rem" };
     case 'normal':
     default:
       return { height: "20rem", width: "20rem" };
@@ -312,28 +313,27 @@ function Model(props: { item: Item, size?: ModelSize }) {
 export function Item() {
   const { item, user, collection } = useLoaderData() as Awaited<ReturnType<typeof loadItem>>;
 
-  const collectionWithoutThisItem = {
-    ...collection,
-    items: collection.items.filter((i) => i.id !== item.id)
-  }
-
   const previousItem: Item | undefined = collection.items.find((_, index) => collection.items[index + 1]?.id === item.id);
   const nextItem: Item | undefined = collection.items.find((_, index) => collection.items[index - 1]?.id === item.id);
 
   return (
-    <article className='item-page'>
+    <article>
       <header>
         <h1>
           <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}/${collection.id}`}>{collection.name}</QueryPreservingLink> / {item.name}
         </h1>
       </header>
-      <div className='flex-wrap-row'>
+      <div className='previous-next'>
+      </div>
+      <div className='item-hero'>
+        {previousItem ?
+            <ItemCard item={previousItem} collection={collection} user={user} altName="← previous" size='small' /> : <div />}
         <Model item={item} size='big' />
         <ItemDescriptionList item={item} collection={collection} user={user} />
-        {previousItem && <ItemCard item={previousItem} collection={collection} user={user} altName="← previous" size='small' />}
-        {nextItem && <ItemCard item={nextItem} collection={collection} user={user} altName="next →" size='small' />}
+        {nextItem ?
+            <ItemCard item={nextItem} collection={collection} user={user} altName="next →" size='small' /> : <div />}
       </div>
-      <Items collection={collectionWithoutThisItem} user={user} />
+      <Items collection={collection} user={user} />
     </article>
   );
 }
@@ -396,10 +396,21 @@ function ItemDescriptionList(props: { item: Item, collection: Collection, user: 
   );
 }
 
+export default function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+}
+
 export function App() {
 
   return (
     <div>
+      <ScrollToTop />
       <main>
         <Outlet />
       </main>
