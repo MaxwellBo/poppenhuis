@@ -30,7 +30,8 @@ interface Item {
   model: string;
   description?: string;
   poster?: string;
-  manufacturedDate?: string;
+  modelDate?: string;
+  manufactureDate?: string;
   dateAcquired?: string;
   captureDate?: string;
   captureApp?: string;
@@ -62,7 +63,8 @@ interface Item {
   model: string;
   description?: string;
   poster?: string;
-  manufacturedDate?: string;
+  modelDate?: string;
+  manufactureDate?: string;
   dateAcquired?: string;
   captureDate?: string;
   captureApp?: string;
@@ -91,6 +93,7 @@ const FIRST_PARTY_MANIFEST: Manifest = [
             name: "Plumes",
             model: "/models/plumes.glb",
             description: "EarthQuaker Devices Plumes Small Signal Shredder",
+            modelDate: "2019",
             dateAcquired: "2022",
             captureDate: "2024 May 22",
             captureLocation: "Darlinghurst",
@@ -126,7 +129,8 @@ const FIRST_PARTY_MANIFEST: Manifest = [
             id: "avrun",
             name: "Avalanche Run",
             model: "/models/avrun.glb",
-            description: "EarthQuaker Devices Avalanche Run Stereo Delay & Reverb",
+            description: "EarthQuaker Devices Avalanche Run V2 Stereo Delay & Reverb",
+            modelDate: "2017",
             dateAcquired: "2022",
             captureDate: "2024 May 22",
             captureLocation: "Darlinghurst",
@@ -426,7 +430,7 @@ function ItemDescriptionList(props: { item: Item, collection: Collection, user: 
       <dd>{props.item.description}</dd>
 
       <dt>Date manufactured</dt>
-      <dd>{props.item.manufacturedDate}</dd>
+      <dd>{props.item.manufactureDate}</dd>
       <dt>Date acquired</dt>
       <dd>{props.item.dateAcquired}</dd>
       <dt>Date captured</dt>
