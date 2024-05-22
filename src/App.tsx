@@ -40,6 +40,7 @@ interface Item {
   captureMethod?: string;
   captureLatLong?: string;
   captureLocation?: string;
+  vertices?: string
 }
 
 const MANIFEST_SCHEMA = `
@@ -73,6 +74,7 @@ interface Item {
   captureMethod?: string;
   captureLatLong?: string;
   captureLocation?: string;
+  vertices?: string;
 }
 `
 
@@ -154,6 +156,17 @@ const FIRST_PARTY_MANIFEST: Manifest = [
             captureMethod: "LiDAR",
             captureLatLong: "35.29 S, 149.12 E",
             captureDevice: "Apple iPhone 13 Pro"
+          },
+          {
+            id: "dragan",
+            description: "A man sitting and playing the accordion with partial surroundings included.",
+            name: "Dragan",
+            model: "/models/Dragan.glb",
+            captureApp: "Polycam",
+            captureMethod: "Photo mode",
+            captureDate: "2024 May 22, 10:22PM",
+            captureDevice: "Apple iPhone 11 Pro Max",
+            vertices: "25.4k",
           },
           {
             id: "issy",
@@ -457,7 +470,8 @@ function ItemDescriptionList(props: { item: Item, collection: Collection, user: 
       <dd>{props.item.captureDevice}</dd>
       <dt>Capture method</dt>
       <dd>{props.item.captureMethod}</dd>
-
+      <dt>Vertices</dt>
+      <dd>{props.item.vertices}</dd>
       <dt>Model</dt>
       <dd>{props.item.model}</dd>
       <dt>Poster</dt>
