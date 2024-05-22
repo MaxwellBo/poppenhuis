@@ -25,9 +25,9 @@ interface Collection {
 
 interface Item {
   id: string;
-  itemDescription?: string;
   name: string;
   model: string;
+  description?: string;
   poster?: string;
   manufacturedDate?: string;
   dateAcquired?: string;
@@ -57,9 +57,9 @@ interface Collection {
 
 interface Item {
   id: string;
-  itemDescription?: string;
   name: string;
   model: string;
+  description?: string;
   poster?: string;
   manufacturedDate?: string;
   dateAcquired?: string;
@@ -109,7 +109,7 @@ const FIRST_PARTY_MANIFEST: Manifest = [
           {
             id: "lou-nathan",
             name: "Lou & Nathan",
-            itemDescription: "We were at the park",
+            description: "We were at the park",
             captureApp: "Polycam",
             captureMethod: "LiDAR",
             model: "/models/LouNathan.glb",
@@ -162,7 +162,7 @@ const FIRST_PARTY_MANIFEST: Manifest = [
           {
             id: "roman",
             name: "Roman",
-            itemDescription: "The Thinker",
+            description: "The Thinker",
             captureApp: "Polycam",
             captureMethod: "LiDAR",
             model: "/models/Roman.glb",
@@ -292,7 +292,7 @@ function Model(props: { item: Item, size?: ModelSize }) {
     <model-viewer
       key={props.item.model}
       style={getStyleForModelSize(props.size)}
-      alt={props.item.itemDescription}
+      alt={props.item.description}
       src={props.item.model}
       environment-image="/environments/moon_1k.hdr"
       interaction-prompt=""
@@ -369,7 +369,7 @@ function ItemDescriptionList(props: { item: Item, collection: Collection, user: 
       <dd>{props.item.id}</dd>
 
       <dt>Description</dt>
-      <dd>{props.item.itemDescription}</dd>
+      <dd>{props.item.description}</dd>
 
       <dt>Date manufactured</dt>
       <dd>{props.item.manufacturedDate}</dd>
