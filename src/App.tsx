@@ -424,7 +424,7 @@ export function Users() {
         throw new Error(`Failed to fetch manifest: ${response.statusText}`);
       }
       setFetchResult(JSON.stringify(await response.json(), null, 2));
-      setFetchStatus(<span className='green'>SUCCESS, 3rd manifest spliced into the 1st party manifest</span>);
+      setFetchStatus(<span className='green'>SUCCESS, 3rd-party manifest spliced into the 1st-party manifest</span>);
       setSearchParams({ manifest: url });
     } catch (e) {
       setFetchStatus(<span className='red'>{"ERROR: " + (e as any).message}</span>);

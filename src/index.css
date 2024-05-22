@@ -91,7 +91,7 @@ dl > dd {
 }
 
 .truncate {
-  max-height: 12em; /* Adjust the value if necessary based on actual line height */
+  max-height: 24rem;
   overflow-y: auto;
 }
 
