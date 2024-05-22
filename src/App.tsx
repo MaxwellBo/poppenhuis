@@ -278,7 +278,7 @@ type ModelSize = 'small' | 'normal' | 'big';
 function getStyleForModelSize(size: ModelSize | undefined) {
   switch (size) {
     case 'small':
-      return { height: "5rem", width: "5rem" };
+      return { height: "6rem", width: "6rem" };
     case 'big':
       return { height: '30rem', width: "40rem" };
     case 'normal':
