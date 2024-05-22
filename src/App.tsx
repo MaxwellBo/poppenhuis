@@ -435,7 +435,7 @@ export function Users() {
         poppenhuis (<i>Dutch for "dollhouse"</i>) is a site for displaying collections of 3D models.
         <br />
         <br />
-        It was inspired by <a href="https://www.are.na/">are.na</a> and the wonderful <a href="https://www.dayroselane.com/hydrants">Hydrant Directory</a>.
+        It was inspired by <a href="https://www.are.na/">are.na</a> and the wonderful <a href="https://www.dayroselane.com/hydrants">Hydrant&nbsp;Directory</a>.
         <br />
         <br />
         The following users have collections:
