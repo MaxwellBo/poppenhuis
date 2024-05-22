@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { Helmet } from "react-helmet";
 import './App.css'
 import {
   useLoaderData,
@@ -283,8 +284,10 @@ export function User() {
 
   return (
     <article>
-      <title>{user.name} - poppenhuis</title>
-      <meta name="description" content={`Collections of 3D models by ${user.name}`} />
+      <Helmet>
+        <title>{user.name} - poppenhuis</title>
+        <meta name="description" content={`Collections of 3D models by ${user.name}`} />
+      </Helmet>
       <header>
         <h1>
           <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / {user.name}
@@ -301,8 +304,10 @@ export function Collection() {
   const { collection, user } = useLoaderData() as Awaited<ReturnType<typeof loadCollection>>;
 
   return <article>
-    <title>{collection.name} - poppenhuis</title>
-    <meta name="description" content={`Collection of 3D models by ${user.name}`} />
+    <Helmet>
+      <title>{collection.name} - poppenhuis</title>
+      <meta name="description" content={`Collection of 3D models by ${user.name}`} />
+    </Helmet>
     <header>
       <h1>
         <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / {collection.name}
@@ -380,8 +385,10 @@ export function Item() {
 
   return (
     <article>
-      <title>{item.name} - poppenhuis</title>
-      <meta name="description" content={item.description} />
+      <Helmet>
+        <title>{item.name} - poppenhuis</title>
+        <meta name="description" content={item.description} />
+      </Helmet>
       <header>
         <h1>
           <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}/${collection.id}`}>{collection.name}</QueryPreservingLink> / {item.name}
@@ -391,11 +398,11 @@ export function Item() {
       </div>
       <div className='item-hero'>
         {previousItem ?
-            <ItemCard item={previousItem} collection={collection} user={user} altName="← previous" size='small' /> : <div />}
+          <ItemCard item={previousItem} collection={collection} user={user} altName="← previous" size='small' /> : <div />}
         <Model item={item} size='big' />
         <ItemDescriptionList item={item} collection={collection} user={user} />
         {nextItem ?
-            <ItemCard item={nextItem} collection={collection} user={user} altName="next →" size='small' /> : <div />}
+          <ItemCard item={nextItem} collection={collection} user={user} altName="next →" size='small' /> : <div />}
       </div>
       <Items collection={collection} user={user} />
     </article>
@@ -490,6 +497,10 @@ export function Users() {
 
   return (
     <article>
+      <Helmet>
+        <title>poppenhuis</title>
+        <meta name="description" content={`a dollhouse`} />
+      </Helmet>
       <header>
         <h1>
           poppenhuis
