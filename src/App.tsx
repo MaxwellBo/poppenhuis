@@ -81,9 +81,12 @@ interface Item {
   captureApp?: string;
   captureDevice?: string;
   captureMethod?: string;
+  captureLatLong?: string;
   captureLocation?: string;
   // Custom fields
-  [key: string]: string | undefined;
+  customFields?: {
+    [key: string]: string | undefined;
+  }
 }
 `
 
