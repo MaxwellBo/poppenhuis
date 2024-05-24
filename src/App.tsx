@@ -489,6 +489,15 @@ function ItemDescriptionList(props: { item: Item, collection: Collection, user: 
     location = captureLatLong;
   }
 
+  const customFields = props.item.customFields ? Object.entries(props.item.customFields).map(([key, value]) => {
+    return (
+      <React.Fragment key={key}>
+        <dt>{key}</dt>
+        <dd>{value}</dd>
+      </React.Fragment>
+    )
+  }) : null;
+
   return (
     <dl>
       <dt>User ID</dt>
@@ -515,8 +524,11 @@ function ItemDescriptionList(props: { item: Item, collection: Collection, user: 
       <dd>{props.item.captureMethod}</dd>
       <dt>Model</dt>
       <dd>{props.item.model}</dd>
-      <dt>Poster</dt>
-      <dd>{props.item.poster}</dd>
+      {props.item.poster && <>
+        <dt>Poster</dt>
+        <dd>{props.item.poster}</dd>
+      </>}
+      {customFields}        
     </dl>
   );
 }
@@ -584,7 +596,7 @@ export function Users() {
       <details>
         <summary>Notes on construction</summary>
         I deliberately built this as an SPA with just a <a href="https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts">out-of-the-box Vite React template</a>. I know they're not exactly in vogue right now with <a href="https://nextjs.org/">Next.js</a> being all the rage.
-        But an SPA lends itself to being snapshotable and archivable with a simple <a href="https://www.gnu.org/software/wget/manual/html_node/Recursive-Retrieval-Options.html"><code>wget --recursive</code></a>.
+        But an SPA lends itself to being snapshotable/archivable with a simple <a href="https://www.gnu.org/software/wget/manual/html_node/Recursive-Retrieval-Options.html"><code>wget --recursive</code></a>.
       </details>
       <br />
       <small>c. 2024, <a href="https://github.com/MaxwellBo/poppenhuis">Source code</a>, <a href="https://maxbo.me">Max Bo</a></small>
