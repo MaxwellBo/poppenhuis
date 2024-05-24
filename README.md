@@ -2,6 +2,12 @@
 
 a dollhouse
 
+The vast majority of meaningful code existing in:
+
+- [`poppenhuis/src/App.tsx`](https://github.com/MaxwellBo/poppenhuis/blob/master/src/App.tsx)
+- [`poppenhuis/src/index.tsx`](https://github.com/MaxwellBo/poppenhuis/blob/master/src/index.tsx)
+- [`poppenhuis/src/manifest.tsx`](https://github.com/MaxwellBo/poppenhuis/blob/master/src/manifest.tsx)
+
 
 ## React + TypeScript + Vite
 
