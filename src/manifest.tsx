@@ -1,18 +1,19 @@
-import React from "react";
-
-
 type Manifest = User[];
+
 export interface User {
   id: string;
   name: string;
   bio: JSX.Element | string;
   collections: Collection[];
 }
+
 export interface Collection {
   id: string;
   name: string;
+  description?: string;
   items: Item[];
 }
+
 export interface Item {
   // Existential details
   id: string;
@@ -77,6 +78,7 @@ interface Item {
   }
 }
 `;
+
 const FIRST_PARTY_MANIFEST: Manifest = [
   {
     id: "mbo",
@@ -88,6 +90,7 @@ const FIRST_PARTY_MANIFEST: Manifest = [
       {
         id: "pedals",
         name: "Pedals",
+        description: "I have a small collection of guitar pedals. I don't really use them anymore. I should probably sell them.",
         items: [
           {
             id: "plumes",
@@ -290,7 +293,6 @@ export async function loadUsers({ request }: { request: Request; }) {
 }
 
 export async function loadUser({ params, request }: { params: { userId: User['id']; }; request: Request; }) {
-
   const users = await loadUsers({ request });
   const user = users.find((user) => user.id === params.userId);
   if (!user) throw new Error("User not found");
@@ -299,10 +301,8 @@ export async function loadUser({ params, request }: { params: { userId: User['id
 
 export async function loadCollection({ params, request }: { params: { userId: User['id']; collectionId: Collection['id']; }; request: Request; }) {
   const user = await loadUser({ params, request });
-
   const collection = user.collections.find((collection) => collection.id === params.collectionId);
   if (!collection) throw new Error("Collection not found");
-
   return { collection, user };
 }
 
@@ -310,6 +310,5 @@ export async function loadItem({ params, request }: { params: { userId: User['id
   const { collection, user } = await loadCollection({ params, request });
   const item = collection.items.find((item) => item.id === params.itemId);
   if (!item) throw new Error("Item not found");
-
   return { collection, user, item };
 }

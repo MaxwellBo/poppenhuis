@@ -52,7 +52,10 @@ export function UsersView() {
         </h1>
       </header>
       <p className="short">
-        poppenhuis (<i>Dutch for "dollhouse"</i>) is a site for displaying collections of 3D models.
+        poppenhuis (<i>Dutch for "dollhouse"</i>) is a site for displaying collections of 3D model scans.
+        <br />
+        <br />
+        The scan collections can be of anything: pottery, sculptures, guitars, cars, cakes, plants, etc.
         <br />
         <br />
         It was inspired by <a href="https://www.are.na/">are.na</a> and the wonderful <a href="https://www.dayroselane.com/hydrants">Hydrant&nbsp;Directory</a>.
@@ -110,8 +113,11 @@ function ThirdPartyManifests() {
     <>
       <h3>1st party manifest</h3>
       This site is a <a href="https://www.robinsloan.com/notes/home-cooked-app/">homecooked meal</a>, built primarily for my friends and family.
-      Reach out to <a href="https://twitter.com/_max_bo_">me on Twitter</a> if you'd like me to host your collection.
-      <br />
+      If you'd like me to host your collection either:
+      <ul>
+        <li>submit a PR modifying <a href="https://github.com/MaxwellBo/poppenhuis/blob/master/src/manifest.tsx"><code>//src/manifest.tsx</code></a> and <a href="https://github.com/MaxwellBo/poppenhuis/tree/master/public/models"><code>//public/models</code></a>.</li>
+        <li>reach out to <a href="https://twitter.com/_max_bo_">me on Twitter</a> and send me a <code>.zip</code> folder of your models and a Google Sheet of your metadata, and I'll upload it for you if you're not technically inclined.</li>
+      </ul>
       <br />
       <h3>3rd party manifests</h3>
       You can view and share your own content on this site with manifest files.
@@ -175,6 +181,7 @@ export function CollectionView() {
         <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / {collection.name}
       </h1>
     </header>
+    {collection.description && <p>{collection.description}</p>}
     <Items collection={collection} user={user} />
   </article>
 }
