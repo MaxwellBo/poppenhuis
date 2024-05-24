@@ -558,6 +558,12 @@ export function Users() {
         <summary>Want to host your own content here?</summary>
         <ThirdPartyManifests />
       </details>
+      <details>
+        <summary>Notes on construction</summary>
+        I deliberately built this as an SPA with just a <a href="https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts">out-of-the-box Vite React template</a>. I know they're not exactly in vogue right now with <a href="https://nextjs.org/">Next.js</a> being all the rage.
+        But an SPA lends itself to being snapshotable and archivable with a simple <code>wget --recursive</code>.
+
+      </details>
       <br />
       <small>c. 2024, <a href="https://github.com/MaxwellBo/poppenhuis">Source code</a>, <a href="https://maxbo.me">Max Bo</a></small>
     </article>
