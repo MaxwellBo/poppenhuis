@@ -226,6 +226,15 @@ const FIRST_PARTY_MANIFEST: Manifest = [
             captureLocation: "Canva, Surry Hills",
             releaseDate: "1999"
           },
+          { 
+            id: "tom",
+            name: "Tom",
+            captureMethod: "LiDAR",
+            model: "/models/Tom.glb",
+            captureDevice: "Apple iPhone 13 Pro",
+            captureDate: "2024 May 24 12:36 PM",
+            captureLocation: "Canva, Surry Hills",
+          },
           {
             id: "jackie",
             name: "Jackie",
