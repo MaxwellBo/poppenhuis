@@ -10,6 +10,335 @@ import {
   useLocation
 } from "react-router-dom";
 
+export function App() {
+  return (
+    <div>
+      <ScrollToTop />
+      <main>
+        <Outlet />
+      </main>
+      <footer></footer>
+    </div>
+  )
+}
+
+export function ErrorPage() {
+  const error: any = useRouteError();
+
+  return (
+    <div id="error-page">
+      <h1>Oops!</h1>
+      <p>Sorry, an unexpected error has occurred.</p>
+      <p>
+        <i>{error.statusText || error.message}</i>
+      </p>
+    </div>
+  );
+}
+
+export function Users() {
+  const users = useLoaderData() as Awaited<ReturnType<typeof loadUsers>>;
+
+  return (
+    <article>
+      <Helmet>
+        <title>poppenhuis</title>
+        <meta name="description" content={`a dollhouse`} />
+      </Helmet>
+      <header>
+        <h1>
+          poppenhuis
+        </h1>
+      </header>
+      <p className="short">
+        poppenhuis (<i>Dutch for "dollhouse"</i>) is a site for displaying collections of 3D models.
+        <br />
+        <br />
+        It was inspired by <a href="https://www.are.na/">are.na</a> and the wonderful <a href="https://www.dayroselane.com/hydrants">Hydrant&nbsp;Directory</a>.
+        <br />
+        <br />
+        The following users have collections:
+      </p>
+      <ul>
+        {users.map((user) => (
+          <li key={user.id}>
+            <QueryPreservingLink to={user.id}>{user.name}</QueryPreservingLink>
+          </li>
+        ))}
+      </ul>
+      <br />
+      <details>
+        <summary>Want to host your own content here?</summary>
+        <ThirdPartyManifests />
+      </details>
+      <details>
+        <summary>Notes on construction</summary>
+        I deliberately built this as an SPA with just a <a href="https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts">out-of-the-box Vite React template</a>. I know they're not exactly in vogue right now with <a href="https://nextjs.org/">Next.js</a> being all the rage.
+        But an SPA lends itself to being snapshotable/archivable with a simple <a href="https://www.gnu.org/software/wget/manual/html_node/Recursive-Retrieval-Options.html"><code>wget --recursive</code></a>.
+      </details>
+      <br />
+      <small>c. 2024, <a href="https://github.com/MaxwellBo/poppenhuis">Source code</a>, <a href="https://maxbo.me">Max Bo</a></small>
+    </article>
+  );
+}
+
+const EXAMPLE_MANIFEST_URL = 'https://raw.githubusercontent.com/MaxwellBo/maxwellbo.github.io/master/poppenhuis-manifest.json'
+
+function ThirdPartyManifests() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [manifest, setManifest] = React.useState<string>(searchParams.get('manifest') ?? '');
+  const [fetchResult, setFetchResult] = React.useState<string | undefined>(undefined);
+  const [fetchStatus, setFetchStatus] = React.useState<JSX.Element>(<div />);
+
+  const loadManifest = async (url: string) => {
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch manifest: ${response.statusText}`);
+      }
+      setFetchResult(JSON.stringify(await response.json(), null, 2));
+      setFetchStatus(<span className='green'>SUCCESS, 3rd-party manifest spliced into the 1st-party manifest</span>);
+      setSearchParams({ manifest: url });
+    } catch (e) {
+      setFetchStatus(<span className='red'>{"ERROR: " + (e as any).message}</span>);
+      setFetchResult(undefined);
+    }
+  }
+
+  return (
+    <>
+      <h3>1st party manifest</h3>
+      This site is a <a href="https://www.robinsloan.com/notes/home-cooked-app/">homecooked meal</a>, built primarily for my friends and family.
+      Reach out to <a href="https://twitter.com/_max_bo_">me on Twitter</a> if you'd like me to host your collection.
+      <br />
+      <br />
+      <h3>3rd party manifests</h3>
+      You can view and share your own content on this site with manifest files.
+      <br />
+      <br />
+      Your 3rd party manifest will be merged with the site's 1st party manifest, and the manifest URL will be stored in <code>?manifest=</code> query param so you can share your collections with others.
+      <br />
+      <br />
+      <details>
+        <summary>Manifest schema</summary>
+        <pre>{MANIFEST_SCHEMA}</pre>
+      </details>
+      <input style={{ width: "80%", fontSize: 13 }} placeholder={EXAMPLE_MANIFEST_URL} value={manifest} onChange={e => setManifest(e.target.value)} />
+      <br />
+      <button disabled={!manifest} onClick={() => loadManifest(manifest)}>Load custom manifest</button>
+      <br />
+      <button onClick={() => {
+        setManifest(EXAMPLE_MANIFEST_URL)
+        loadManifest(EXAMPLE_MANIFEST_URL)
+      }}>Load placeholder manifest</button>
+
+      <br />
+      <br />
+      {fetchStatus}
+      <pre className='truncate border'>{fetchResult}</pre>
+    </>
+  )
+}
+
+export function User() {
+  const user = useLoaderData() as User;
+
+  return (
+    <article>
+      <Helmet>
+        <title>{user.name} - poppenhuis</title>
+        <meta name="description" content={`Collections of 3D models by ${user.name}`} />
+      </Helmet>
+      <header>
+        <h1>
+          <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / {user.name}
+        </h1>
+        <div className='padding-bottom-1rem'>{user.bio}</div>
+      </header>
+      {user.collections.map((collection) =>
+        <CollectionRow key={collection.id} collection={collection} user={user} />)}
+    </article>
+  );
+}
+
+export function Collection() {
+  const { collection, user } = useLoaderData() as Awaited<ReturnType<typeof loadCollection>>;
+
+  return <article>
+    <Helmet>
+      <title>{collection.name} - poppenhuis</title>
+      <meta name="description" content={`Collection of 3D models by ${user.name}`} />
+    </Helmet>
+    <header>
+      <h1>
+        <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / {collection.name}
+      </h1>
+    </header>
+    <Items collection={collection} user={user} />
+  </article>
+}
+
+export function CollectionRow(props: { collection: Collection, user: User }) {
+  return (
+    <article>
+      <h3>
+        <QueryPreservingLink to={`/${props.user.id}/${props.collection.id}`}>{props.collection.name}</QueryPreservingLink>
+      </h3>
+      <Items {...props} />
+    </article>
+  );
+}
+
+export function Items(props: { collection: Collection, user: User, highlighted?: Item['id'] }) {
+  return (
+    <ul className='card-grid'>
+      {props.collection.items.map((item) => (
+        <li key={item.id} className={item.id === props.highlighted ? 'highlight' : undefined}>
+          <ItemCard item={item} collection={props.collection} user={props.user} />
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function ItemCard(props: { item: Item, collection: Collection, user: User, altName?: string, size?: ModelSize }) {
+  return (
+    <div className="card">
+      <div className='center thumbnail'>
+        <Model item={props.item} size={props.size ?? 'normal'} />
+      </div>
+      <QueryPreservingLink to={`/${props.user.id}/${props.collection.id}/${props.item.id}`}>
+        {props.altName ?? props.item.name}
+      </QueryPreservingLink>
+    </div>
+  );
+}
+
+export function Item() {
+  const { item, user, collection } = useLoaderData() as Awaited<ReturnType<typeof loadItem>>;
+
+  const previousItem: Item | undefined = collection.items.find((_, index) => collection.items[index + 1]?.id === item.id);
+  const nextItem: Item | undefined = collection.items.find((_, index) => collection.items[index - 1]?.id === item.id);
+
+  return (
+    <article>
+      <Helmet>
+        <title>{item.name} - poppenhuis</title>
+        <meta name="description" content={item.description} />
+      </Helmet>
+      <header>
+        <h1>
+          <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}/${collection.id}`}>{collection.name}</QueryPreservingLink> / {item.name}
+        </h1>
+      </header>
+      <div className='previous-next'>
+      </div>
+      <div className='item-hero'>
+        {previousItem ?
+          <ItemCard item={previousItem} collection={collection} user={user} altName="← previous" size='small' /> : <div />}
+        <Model item={item} size='big' />
+        <ItemDescriptionList item={item} collection={collection} user={user} />
+        {nextItem ?
+          <ItemCard item={nextItem} collection={collection} user={user} altName="next →" size='small' /> : <div />}
+      </div>
+      <Items collection={collection} user={user} highlighted={item.id} />
+    </article>
+  );
+}
+
+function ItemDescriptionList(props: { item: Item, collection: Collection, user: User }) {
+  const { captureLocation, captureLatLong } = props.item;
+  let location;
+  if (captureLocation && captureLatLong) {
+    location = `${captureLocation} (${captureLatLong})`;
+  } else if (captureLocation) {
+    location = captureLocation;
+  } else if (captureLatLong) {
+    location = captureLatLong;
+  }
+
+  const customFields = props.item.customFields ? Object.entries(props.item.customFields).map(([key, value]) => {
+    return (
+      <React.Fragment key={key}>
+        <dt>{key}</dt>
+        <dd>{value}</dd>
+      </React.Fragment>
+    )
+  }) : null;
+
+  return (
+    <dl>
+      <dt>User ID</dt>
+      <dd>{props.user.id}</dd>
+      <dt>Collection ID</dt>
+      <dd>{props.collection.id}</dd>
+      <dt>Item ID</dt>
+      <dd>{props.item.id}</dd>
+      <dt>Description</dt>
+      <dd>{props.item.description}</dd>
+      <dt>Release date</dt>
+      <dd>{props.item.releaseDate}</dd>
+      <dt>Manufacture date</dt>
+      <dd>{props.item.manufactureDate}</dd>
+      <dt>Acquisition date</dt>
+      <dd>{props.item.acquisitionDate}</dd>
+      <dt>Capture date</dt>
+      <dd>{props.item.captureDate}</dd>
+      <dt>Capture location</dt>
+      <dd>{location}</dd>
+      <dt>Capture device</dt>
+      <dd>{props.item.captureDevice}</dd>
+      <dt>Capture method</dt>
+      <dd>{props.item.captureMethod}</dd>
+      <dt>Model</dt>
+      <dd>{props.item.model}</dd>
+      {props.item.poster && <>
+        <dt>Poster</dt>
+        <dd>{props.item.poster}</dd>
+      </>}
+      {customFields}        
+    </dl>
+  );
+}
+
+type ModelSize = 'small' | 'normal' | 'big';
+
+function getStyleForModelSize(size: ModelSize | undefined) {
+  switch (size) {
+    case 'small':
+      return { height: "6rem", width: "6rem" };
+    case 'big':
+      return { height: '30rem', width: "40rem" };
+    case 'normal':
+    default:
+      return { height: "20rem", width: "20rem" };
+  }
+}
+
+function Model(props: { item: Item, size?: ModelSize }) {
+  return (
+    // @ts-ignore
+    <model-viewer
+      key={props.item.model}
+      style={getStyleForModelSize(props.size)}
+      alt={props.item.description}
+      src={props.item.model}
+      environment-image="/environments/moon_1k.hdr"
+      interaction-prompt=""
+      progress-bar=""
+      loading="eager"
+      poster={props.item.poster}
+      shadow-intensity="1"
+      auto-rotate-delay="0"
+      rotation-per-second="30deg"
+      camera-controls
+      auto-rotate
+      touch-action="pan-y"
+    />
+  );
+}
+
+
 type Manifest = User[];
 
 interface User {
@@ -328,212 +657,9 @@ export async function loadItem({ params, request }: { params: { userId: User['id
   return { collection, user, item };
 }
 
-export function User() {
-  const user = useLoaderData() as User;
+// UTILS
 
-  return (
-    <article>
-      <Helmet>
-        <title>{user.name} - poppenhuis</title>
-        <meta name="description" content={`Collections of 3D models by ${user.name}`} />
-      </Helmet>
-      <header>
-        <h1>
-          <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / {user.name}
-        </h1>
-        <div className='padding-bottom-1rem'>{user.bio}</div>
-      </header>
-      {user.collections.map((collection) =>
-        <CollectionRow key={collection.id} collection={collection} user={user} />)}
-    </article>
-  );
-}
-
-export function Collection() {
-  const { collection, user } = useLoaderData() as Awaited<ReturnType<typeof loadCollection>>;
-
-  return <article>
-    <Helmet>
-      <title>{collection.name} - poppenhuis</title>
-      <meta name="description" content={`Collection of 3D models by ${user.name}`} />
-    </Helmet>
-    <header>
-      <h1>
-        <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / {collection.name}
-      </h1>
-    </header>
-    <Items collection={collection} user={user} />
-  </article>
-}
-
-export function CollectionRow(props: { collection: Collection, user: User }) {
-  return (
-    <article>
-      <h3>
-        <QueryPreservingLink to={`/${props.user.id}/${props.collection.id}`}>{props.collection.name}</QueryPreservingLink>
-      </h3>
-      <Items {...props} />
-    </article>
-  );
-}
-
-export function Items(props: { collection: Collection, user: User, highlighted?: Item['id'] }) {
-  return (
-    <ul className='card-grid'>
-      {props.collection.items.map((item) => (
-        <li key={item.id} className={item.id === props.highlighted ? 'highlight' : undefined}>
-          <ItemCard item={item} collection={props.collection} user={props.user} />
-        </li>
-      ))}
-    </ul>
-  );
-}
-
-type ModelSize = 'small' | 'normal' | 'big';
-
-function getStyleForModelSize(size: ModelSize | undefined) {
-  switch (size) {
-    case 'small':
-      return { height: "6rem", width: "6rem" };
-    case 'big':
-      return { height: '30rem', width: "40rem" };
-    case 'normal':
-    default:
-      return { height: "20rem", width: "20rem" };
-  }
-}
-
-function Model(props: { item: Item, size?: ModelSize }) {
-  return (
-    // @ts-ignore
-    <model-viewer
-      key={props.item.model}
-      style={getStyleForModelSize(props.size)}
-      alt={props.item.description}
-      src={props.item.model}
-      environment-image="/environments/moon_1k.hdr"
-      interaction-prompt=""
-      progress-bar=""
-      loading="eager"
-      poster={props.item.poster}
-      shadow-intensity="1"
-      auto-rotate-delay="0"
-      rotation-per-second="30deg"
-      camera-controls
-      auto-rotate
-      touch-action="pan-y"
-    />
-  );
-}
-
-export function Item() {
-  const { item, user, collection } = useLoaderData() as Awaited<ReturnType<typeof loadItem>>;
-
-  const previousItem: Item | undefined = collection.items.find((_, index) => collection.items[index + 1]?.id === item.id);
-  const nextItem: Item | undefined = collection.items.find((_, index) => collection.items[index - 1]?.id === item.id);
-
-  return (
-    <article>
-      <Helmet>
-        <title>{item.name} - poppenhuis</title>
-        <meta name="description" content={item.description} />
-      </Helmet>
-      <header>
-        <h1>
-          <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}/${collection.id}`}>{collection.name}</QueryPreservingLink> / {item.name}
-        </h1>
-      </header>
-      <div className='previous-next'>
-      </div>
-      <div className='item-hero'>
-        {previousItem ?
-          <ItemCard item={previousItem} collection={collection} user={user} altName="← previous" size='small' /> : <div />}
-        <Model item={item} size='big' />
-        <ItemDescriptionList item={item} collection={collection} user={user} />
-        {nextItem ?
-          <ItemCard item={nextItem} collection={collection} user={user} altName="next →" size='small' /> : <div />}
-      </div>
-      <Items collection={collection} user={user} highlighted={item.id} />
-    </article>
-  );
-}
-
-
-function ItemCard(props: { item: Item, collection: Collection, user: User, altName?: string, size?: ModelSize }) {
-  return (
-    <div className="card">
-      <div className='center thumbnail'>
-        {/* <img src={props.item.poster} alt={props.item.alt} /> */}
-        <Model item={props.item} size={props.size ?? 'normal'} />
-      </div>
-      <QueryPreservingLink to={`/${props.user.id}/${props.collection.id}/${props.item.id}`}>
-        {props.altName ?? props.item.name}
-      </QueryPreservingLink>
-    </div>
-  );
-}
-
-function QueryPreservingLink(props: { to: string, children: React.ReactNode }) {
-  const [searchParams] = useSearchParams();
-  return <Link to={{ pathname: props.to, search: searchParams.toString() }}>{props.children}</Link>
-}
-
-function ItemDescriptionList(props: { item: Item, collection: Collection, user: User }) {
-  const { captureLocation, captureLatLong } = props.item;
-  let location;
-  if (captureLocation && captureLatLong) {
-    location = `${captureLocation} (${captureLatLong})`;
-  } else if (captureLocation) {
-    location = captureLocation;
-  } else if (captureLatLong) {
-    location = captureLatLong;
-  }
-
-  const customFields = props.item.customFields ? Object.entries(props.item.customFields).map(([key, value]) => {
-    return (
-      <React.Fragment key={key}>
-        <dt>{key}</dt>
-        <dd>{value}</dd>
-      </React.Fragment>
-    )
-  }) : null;
-
-  return (
-    <dl>
-      <dt>User ID</dt>
-      <dd>{props.user.id}</dd>
-      <dt>Collection ID</dt>
-      <dd>{props.collection.id}</dd>
-      <dt>Item ID</dt>
-      <dd>{props.item.id}</dd>
-      <dt>Description</dt>
-      <dd>{props.item.description}</dd>
-      <dt>Release date</dt>
-      <dd>{props.item.releaseDate}</dd>
-      <dt>Manufacture date</dt>
-      <dd>{props.item.manufactureDate}</dd>
-      <dt>Acquisition date</dt>
-      <dd>{props.item.acquisitionDate}</dd>
-      <dt>Capture date</dt>
-      <dd>{props.item.captureDate}</dd>
-      <dt>Capture location</dt>
-      <dd>{location}</dd>
-      <dt>Capture device</dt>
-      <dd>{props.item.captureDevice}</dd>
-      <dt>Capture method</dt>
-      <dd>{props.item.captureMethod}</dd>
-      <dt>Model</dt>
-      <dd>{props.item.model}</dd>
-      {props.item.poster && <>
-        <dt>Poster</dt>
-        <dd>{props.item.poster}</dd>
-      </>}
-      {customFields}        
-    </dl>
-  );
-}
-
-export default function ScrollToTop() {
+function ScrollToTop() {
   const { pathname } = useLocation();
 
   useEffect(() => {
@@ -543,133 +669,9 @@ export default function ScrollToTop() {
   return null;
 }
 
-export function App() {
 
-  return (
-    <div>
-      <ScrollToTop />
-      <main>
-        <Outlet />
-      </main>
-      <footer></footer>
-    </div>
-  )
-}
 
-const EXAMPLE_MANIFEST_URL = 'https://raw.githubusercontent.com/MaxwellBo/maxwellbo.github.io/master/poppenhuis-manifest.json'
-
-export function Users() {
-  const users = useLoaderData() as Awaited<ReturnType<typeof loadUsers>>;
-
-  return (
-    <article>
-      <Helmet>
-        <title>poppenhuis</title>
-        <meta name="description" content={`a dollhouse`} />
-      </Helmet>
-      <header>
-        <h1>
-          poppenhuis
-        </h1>
-      </header>
-      <p className="short">
-        poppenhuis (<i>Dutch for "dollhouse"</i>) is a site for displaying collections of 3D models.
-        <br />
-        <br />
-        It was inspired by <a href="https://www.are.na/">are.na</a> and the wonderful <a href="https://www.dayroselane.com/hydrants">Hydrant&nbsp;Directory</a>.
-        <br />
-        <br />
-        The following users have collections:
-      </p>
-      <ul>
-        {users.map((user) => (
-          <li key={user.id}>
-            <QueryPreservingLink to={user.id}>{user.name}</QueryPreservingLink>
-          </li>
-        ))}
-      </ul>
-      <br />
-      <details>
-        <summary>Want to host your own content here?</summary>
-        <ThirdPartyManifests />
-      </details>
-      <details>
-        <summary>Notes on construction</summary>
-        I deliberately built this as an SPA with just a <a href="https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts">out-of-the-box Vite React template</a>. I know they're not exactly in vogue right now with <a href="https://nextjs.org/">Next.js</a> being all the rage.
-        But an SPA lends itself to being snapshotable/archivable with a simple <a href="https://www.gnu.org/software/wget/manual/html_node/Recursive-Retrieval-Options.html"><code>wget --recursive</code></a>.
-      </details>
-      <br />
-      <small>c. 2024, <a href="https://github.com/MaxwellBo/poppenhuis">Source code</a>, <a href="https://maxbo.me">Max Bo</a></small>
-    </article>
-  );
-}
-
-function ThirdPartyManifests() {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [manifest, setManifest] = React.useState<string>(searchParams.get('manifest') ?? '');
-  const [fetchResult, setFetchResult] = React.useState<string | undefined>(undefined);
-  const [fetchStatus, setFetchStatus] = React.useState<JSX.Element>(<div />);
-
-  const loadManifest = async (url: string) => {
-    try {
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error(`Failed to fetch manifest: ${response.statusText}`);
-      }
-      setFetchResult(JSON.stringify(await response.json(), null, 2));
-      setFetchStatus(<span className='green'>SUCCESS, 3rd-party manifest spliced into the 1st-party manifest</span>);
-      setSearchParams({ manifest: url });
-    } catch (e) {
-      setFetchStatus(<span className='red'>{"ERROR: " + (e as any).message}</span>);
-      setFetchResult(undefined);
-    }
-  }
-
-  return (
-    <>
-      <h3>1st party manifest</h3>
-      This site is a <a href="https://www.robinsloan.com/notes/home-cooked-app/">homecooked meal</a>, built primarily for my friends and family.
-      Reach out to <a href="https://twitter.com/_max_bo_">me on Twitter</a> if you'd like me to host your collection.
-      <br />
-      <br />
-      <h3>3rd party manifests</h3>
-      You can view and share your own content on this site with manifest files.
-      <br />
-      <br />
-      Your 3rd party manifest will be merged with the site's 1st party manifest, and the manifest URL will be stored in <code>?manifest=</code> query param so you can share your collections with others.
-      <br />
-      <br />
-      <details>
-        <summary>Manifest schema</summary>
-        <pre>{MANIFEST_SCHEMA}</pre>
-      </details>
-      <input style={{ width: "80%", fontSize: 13 }} placeholder={EXAMPLE_MANIFEST_URL} value={manifest} onChange={e => setManifest(e.target.value)} />
-      <br />
-      <button disabled={!manifest} onClick={() => loadManifest(manifest)}>Load custom manifest</button>
-      <br />
-      <button onClick={() => {
-        setManifest(EXAMPLE_MANIFEST_URL)
-        loadManifest(EXAMPLE_MANIFEST_URL)
-      }}>Load placeholder manifest</button>
-
-      <br />
-      <br />
-      {fetchStatus}
-      <pre className='truncate border'>{fetchResult}</pre>
-    </>
-  )
-}
-
-export function ErrorPage() {
-  const error: any = useRouteError();
-
-  return (
-    <div id="error-page">
-      <h1>Oops!</h1>
-      <p>Sorry, an unexpected error has occurred.</p>
-      <p>
-        <i>{error.statusText || error.message}</i>
-      </p>
-    </div>
-  );
+function QueryPreservingLink(props: { to: string, children: React.ReactNode }) {
+  const [searchParams] = useSearchParams();
+  return <Link to={{ pathname: props.to, search: searchParams.toString() }}>{props.children}</Link>
 }
