@@ -216,6 +216,17 @@ const FIRST_PARTY_MANIFEST: Manifest = [
             captureLatLong: "33.88 S, 151.21 E"
           },
           {
+            id: "sam",
+            name: "Sam",
+            captureApp: "Polycam",
+            captureMethod: "LiDAR",
+            model: "/models/Sam.glb",
+            captureDevice: "Apple iPhone 13 Pro",
+            captureDate: "2024 May 24 12:27 PM",
+            captureLocation: "Canva, Surry Hills",
+            releaseDate: "1999"
+          },
+          {
             id: "jackie",
             name: "Jackie",
             captureApp: "Polycam",
