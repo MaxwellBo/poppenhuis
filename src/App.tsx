@@ -109,6 +109,7 @@ const FIRST_PARTY_MANIFEST: Manifest = [
             model: "/models/plumes.glb",
             description: "EarthQuaker Devices Plumes Small Signal Shredder",
             releaseDate: "2019",
+            manufactureDate: "2019",
             acquisitionDate: "2022",
             captureDate: "2024 May 22",
             captureLocation: "Darlinghurst",
@@ -146,6 +147,7 @@ const FIRST_PARTY_MANIFEST: Manifest = [
             model: "/models/avrun.glb",
             description: "EarthQuaker Devices Avalanche Run V2 Stereo Delay & Reverb",
             releaseDate: "2017",
+            manufactureDate: "2017",
             acquisitionDate: "2022",
             captureDate: "2024 May 22",
             captureLocation: "Darlinghurst",
@@ -224,7 +226,8 @@ const FIRST_PARTY_MANIFEST: Manifest = [
             captureDevice: "Apple iPhone 13 Pro",
             captureDate: "2024 May 24 12:27 PM",
             captureLocation: "Canva, Surry Hills",
-            releaseDate: "1999"
+            releaseDate: "1999",
+            manufactureDate: "1999"
           },
           { 
             id: "tom",
