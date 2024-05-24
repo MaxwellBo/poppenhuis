@@ -558,6 +558,8 @@ export function Users() {
         <summary>Want to host your own content here?</summary>
         <ThirdPartyManifests />
       </details>
+      <br />
+      <small>c. 2024, <a href="https://github.com/MaxwellBo/poppenhuis">Source code</a>, <a href="https://maxbo.me">Max Bo</a></small>
     </article>
   );
 }
