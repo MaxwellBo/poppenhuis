@@ -182,7 +182,7 @@ export function CollectionView() {
       </h1>
     </header>
     {collection.description && <p>{collection.description}</p>}
-    <Items collection={collection} user={user} />
+    <ItemCards collection={collection} user={user} />
   </article>
 }
 
@@ -192,12 +192,12 @@ export function CollectionRow(props: { collection: Collection, user: User }) {
       <h3>
         <QueryPreservingLink to={`/${props.user.id}/${props.collection.id}`}>{props.collection.name}</QueryPreservingLink>
       </h3>
-      <Items {...props} />
+      <ItemCards {...props} />
     </article>
   );
 }
 
-export function Items(props: { collection: Collection, user: User, highlighted?: Item['id'] }) {
+export function ItemCards(props: { collection: Collection, user: User, highlighted?: Item['id'] }) {
   return (
     <ul className='card-grid'>
       {props.collection.items.map((item) => (
