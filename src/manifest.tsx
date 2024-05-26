@@ -151,6 +151,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
       {
         id: "friends",
         name: "Friends",
+        description: "always appreciated",
         items: [
           {
             id: "hamish",

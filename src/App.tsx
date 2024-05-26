@@ -181,7 +181,7 @@ export function CollectionView() {
         <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / {collection.name} ({collection.items.length})
       </h1>
     </header>
-    {collection.description && <p className='short'>collection.description</p>}
+    {collection.description && <p className='short'>{collection.description}</p>}
     <ItemCards collection={collection} user={user} />
   </article>
 }
@@ -193,7 +193,7 @@ export function CollectionRow(props: { collection: Collection, user: User }) {
       <h3>
         <QueryPreservingLink to={`/${user.id}/${collection.id}`}>{collection.name}</QueryPreservingLink> ({collection.items.length})
       </h3>
-    {collection.description && <p className='short'>collection.description</p>}
+      {collection.description && <p className='short'>{collection.description}</p>}
       <ItemCards {...props} limit={6} />
     </article>
   );
