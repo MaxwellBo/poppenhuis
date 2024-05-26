@@ -197,9 +197,9 @@ export function CollectionRow(props: { collection: Collection, user: User }) {
 }
 
 export function ItemCards(props: { collection: Collection, user: User, highlighted?: Item['id'], limit?: number }) {
-  const showSeeMore = props.limit && props.collection.items.length > props.limit;
   const { highlighted, limit, collection, user } = props;
   const { items } = collection;
+  const showSeeMore = limit && items.length > limit;
 
   let truncatedItems: Item[] = [];
   // if there's a both a highlight AND a limit, we use a more complex heuristic to choose which items to show
@@ -230,7 +230,7 @@ export function ItemCards(props: { collection: Collection, user: User, highlight
       </ul>
       {showSeeMore && 
         <div className='center'>
-          <QueryPreservingLink to={`/${user.id}/${collection.id}`}>See more {collection.name} →</QueryPreservingLink>
+          <QueryPreservingLink to={`/${user.id}/${collection.id}`}>See all {collection.name} →</QueryPreservingLink>
         </div>}
     </>
   );
