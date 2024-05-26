@@ -3,6 +3,11 @@
 /** Import a more elegant monospace font from Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@400;700&display=swap');
 
+footer {
+  padding-top: 2ch;
+  padding-bottom: 1ch;
+}
+
 body {
   /** set a nicer serif font */
   font-family: 'Gerogia', 'Lora', serif;
