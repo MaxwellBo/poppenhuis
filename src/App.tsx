@@ -114,7 +114,7 @@ function ThirdPartyManifests() {
       <h3>1st party manifest</h3>
       If you'd like me to host your collection either:
       <ul>
-        <li>submit a GitHub PR modifying <a href="https://github.com/MaxwellBo/poppenhuis/blob/master/src/manifest.tsx"><code>//src/manifest.tsx</code></a> and <a href="https://github.com/MaxwellBo/poppenhuis/tree/master/public/models"><code>//public/models</code></a>.</li>
+        <li>submit a GitHub PR to <a href="https://github.com/MaxwellBo/poppenhuis">the repo</a> modifying <a href="https://github.com/MaxwellBo/poppenhuis/blob/master/src/manifest.tsx"><code>//src/manifest.tsx</code></a> and <a href="https://github.com/MaxwellBo/poppenhuis/tree/master/public/models"><code>//public/models</code></a>.</li>
         <li>reach out to <a href="https://twitter.com/_max_bo_">me on Twitter</a> and send me a <code>.zip</code> folder of your models and a Google Sheet of your metadata. I'll upload it for you if you're not technically inclined.</li>
       </ul>
       <br />
@@ -339,7 +339,6 @@ function Model(props: { item: Item, size?: ModelSize }) {
       style={getStyleForModelSize(props.size)}
       alt={props.item.description}
       src={props.item.model}
-      environment-image="/environments/moon_1k.hdr"
       interaction-prompt=""
       progress-bar=""
       loading="eager"

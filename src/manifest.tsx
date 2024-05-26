@@ -3,7 +3,7 @@ type Manifest = User[];
 export interface User {
   id: string;
   name: string;
-  bio: JSX.Element | string;
+  bio: string | JSX.Element; // JSX.Elements cannot be used with 3rd party manifests
   collections: Collection[];
 }
 
@@ -44,13 +44,14 @@ type Manifest = User[];
 interface User {
   id: string;
   name: string;
-  bio: JSX.Element | string;
+  bio: string | JSX.Element; // JSX.Elements cannot be used with 3rd party manifests
   collections: Collection[];
 }
 
 interface Collection {
   id: string;
   name: string;
+  description?: string;
   items: Item[];
 }
 
