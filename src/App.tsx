@@ -167,6 +167,7 @@ export function UserView() {
   );
 }
 
+
 export function CollectionView() {
   const { collection, user } = useLoaderData() as Awaited<ReturnType<typeof loadCollection>>;
 
@@ -177,20 +178,22 @@ export function CollectionView() {
     </Helmet>
     <header>
       <h1>
-        <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / {collection.name}
+        <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / {collection.name} ({collection.items.length})
       </h1>
     </header>
-    {collection.description && <p>{collection.description}</p>}
+    {collection.description && <p className='short'>collection.description</p>}
     <ItemCards collection={collection} user={user} />
   </article>
 }
 
 export function CollectionRow(props: { collection: Collection, user: User }) {
+  const { collection, user } = props;
   return (
     <article>
       <h3>
-        <QueryPreservingLink to={`/${props.user.id}/${props.collection.id}`}>{props.collection.name}</QueryPreservingLink>
+        <QueryPreservingLink to={`/${user.id}/${collection.id}`}>{collection.name}</QueryPreservingLink> ({collection.items.length})
       </h3>
+    {collection.description && <p className='short'>collection.description</p>}
       <ItemCards {...props} limit={6} />
     </article>
   );
@@ -266,6 +269,7 @@ export function ItemView() {
           <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}/${collection.id}`}>{collection.name}</QueryPreservingLink> / {item.name}
         </h1>
       </header>
+      {item.description && <pre className="short">{item.description}</pre>}
       <div className='previous-next'>
       </div>
       <div className='item-hero'>
@@ -309,8 +313,8 @@ function ItemDescriptionList(props: { item: Item, collection: Collection, user: 
       <dd>{props.collection.id}</dd>
       <dt>Item ID</dt>
       <dd>{props.item.id}</dd>
-      <dt>Description</dt>
-      <dd>{props.item.description}</dd>
+      {/* <dt>Description</dt>
+      <dd>{props.item.description}</dd> */}
       <dt>Release date</dt>
       <dd>{props.item.releaseDate}</dd>
       <dt>Manufacture date</dt>

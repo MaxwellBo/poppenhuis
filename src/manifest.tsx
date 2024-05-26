@@ -91,7 +91,8 @@ const FIRST_PARTY_MANIFEST: Manifest = [
       {
         id: "pedals",
         name: "Pedals",
-        description: "I have a small collection of guitar pedals. I don't really use them anymore. I should probably sell them.",
+        description: `I have a small collection of guitar pedals from an era where I was trying to get into the electric guitar. 
+My abject failure to use them properly convinced me to stick to the classical guitar`,
         items: [
           {
             id: "plumes",
