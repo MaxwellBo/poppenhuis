@@ -60,7 +60,7 @@ dl > dd {
 .card-grid {
   /** Display the cards as a grid */
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
   gap: 1em;
   list-style-type: none;
 }

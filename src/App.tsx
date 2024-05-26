@@ -191,7 +191,7 @@ export function CollectionRow(props: { collection: Collection, user: User }) {
       <h3>
         <QueryPreservingLink to={`/${props.user.id}/${props.collection.id}`}>{props.collection.name}</QueryPreservingLink>
       </h3>
-      <ItemCards {...props} limit={5} />
+      <ItemCards {...props} limit={6} />
     </article>
   );
 }
@@ -276,7 +276,7 @@ export function ItemView() {
         {nextItem ?
           <ItemCard item={nextItem} collection={collection} user={user} altName="next →" size='small' /> : <div />}
       </div>
-      <ItemCards collection={collection} user={user} highlighted={item.id} limit={5} />
+      <ItemCards collection={collection} user={user} highlighted={item.id} limit={6} />
     </article>
   );
 }
@@ -346,7 +346,7 @@ function getStyleForModelSize(size: ModelSize | undefined) {
       return { height: '30rem', width: "40rem" };
     case 'normal':
     default:
-      return { height: "20rem", width: "20rem" };
+      return { height: "16rem", width: "16rem" };
   }
 }
 
