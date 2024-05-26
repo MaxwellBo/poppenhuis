@@ -68,16 +68,13 @@ dl > dd {
   list-style-type: none;
 }
 
-.thumbnail {
-  padding: 1px;
+.thumbnail model-viewer:hover {
+  padding: 0px;
 }
 
-.thumbnail:hover {
+.thumbnail model-viewer:hover {
   padding: 0px;
   border: 1px solid #333;
-}
-
-model-viewer:hover {
   z-index: 9;
 }
 
