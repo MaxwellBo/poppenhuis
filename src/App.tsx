@@ -347,7 +347,7 @@ function getStyleForModelSize(size: ModelSize | undefined) {
     case 'small':
       return { height: "6rem", width: "6rem" };
     case 'big':
-      return { height: '30rem', width: "40rem" };
+      return { height: '35rem', width: "35rem" };
     case 'normal':
     default:
       return { height: "16rem", width: "16rem" };
