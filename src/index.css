@@ -77,6 +77,10 @@ dl > dd {
   border: 1px solid #333;
 }
 
+model-viewer:hover {
+  z-index: 9;
+}
+
 .item-hero {
   display: flex;
   flex-wrap: nowrap;
