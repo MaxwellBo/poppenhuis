@@ -58,24 +58,17 @@ dl > dd {
 }
 
 .card-grid {
-  /** Display the cards as a grid */
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
-  gap: 1em;
   list-style-type: none;
 }
 
-.card {
-  padding: 1rem;
-  margin: 1px;
-}
-
 .thumbnail {
-  margin: 1px;
+  padding: 1px;
 }
 
 .thumbnail:hover {
-  margin: 0px;
+  padding: 0px;
   border: 1px solid #333;
 }
 
