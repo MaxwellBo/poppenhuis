@@ -85,6 +85,10 @@ dl > dd {
   gap: 1ch;
 }
 
+.collection-row {
+  padding-bottom: 3ch;
+}
+
 .item-hero > *:nth-child(1) {
   grid-area: previous;
 }

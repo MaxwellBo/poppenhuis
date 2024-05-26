@@ -189,7 +189,7 @@ export function CollectionView() {
 export function CollectionRow(props: { collection: Collection, user: User }) {
   const { collection, user } = props;
   return (
-    <article>
+    <article className='collection-row'>
       <h3>
         <QueryPreservingLink to={`/${user.id}/${collection.id}`}>{collection.name}</QueryPreservingLink> ({collection.items.length})
       </h3>
