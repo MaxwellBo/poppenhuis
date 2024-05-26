@@ -269,7 +269,7 @@ export function ItemView() {
           <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}/${collection.id}`}>{collection.name}</QueryPreservingLink> / {item.name}
         </h1>
       </header>
-      <p>{item.description ?? "∅"}</p>
+      <p>{item.description}</p>
       <div className='previous-next'>
       </div>
       <div className='item-hero'>
