@@ -197,21 +197,40 @@ export function CollectionRow(props: { collection: Collection, user: User }) {
 }
 
 export function ItemCards(props: { collection: Collection, user: User, highlighted?: Item['id'], limit?: number }) {
-  const items = props.limit ? props.collection.items.slice(0, props.limit) : props.collection.items;
   const showSeeMore = props.limit && props.collection.items.length > props.limit;
+  const { highlighted, limit, collection, user } = props;
+  const { items } = collection;
+
+  let truncatedItems: Item[] = [];
+  // if there's a both a highlight AND a limit, we use a more complex heuristic to choose which items to show
+  // Assume limit=5, highlighted=4, items.length=10
+  // We want to show elements 0, 1, 2, 3, 4
+  // But if limit=5, highlighted=5, items.length=10
+  // We want to show elements 5, 6, 7, 8, 9
+  if (highlighted && limit) {
+    const highlightedIndex = items.findIndex((item: Item) => item.id === highlighted);
+    const start = Math.floor(highlightedIndex / limit) * limit;
+    const end = start + limit;
+    truncatedItems = items.slice(start, end);
+  } else if (limit) {
+    // otherwise we just want to truncate to the limit
+    truncatedItems = items.slice(0, limit);
+  } else {
+    truncatedItems = items;
+  }
 
   return (
     <>
       <ul className='card-grid'>
-        {items.map((item) => (
-          <li key={item.id} className={item.id === props.highlighted ? 'highlight' : undefined}>
-            <ItemCard item={item} collection={props.collection} user={props.user} />
+        {truncatedItems.map((item) => (
+          <li key={item.id} className={item.id === highlighted ? 'highlight' : undefined}>
+            <ItemCard item={item} collection={collection} user={user} />
           </li>
         ))}
       </ul>
       {showSeeMore && 
         <div className='center'>
-          <QueryPreservingLink to={`/${props.user.id}/${props.collection.id}`}>See more {props.collection.name} →</QueryPreservingLink>
+          <QueryPreservingLink to={`/${user.id}/${collection.id}`}>See more {collection.name} →</QueryPreservingLink>
         </div>}
     </>
   );
@@ -257,7 +276,7 @@ export function ItemView() {
         {nextItem ?
           <ItemCard item={nextItem} collection={collection} user={user} altName="next →" size='small' /> : <div />}
       </div>
-      <ItemCards collection={collection} user={user} highlighted={item.id} />
+      <ItemCards collection={collection} user={user} highlighted={item.id} limit={5} />
     </article>
   );
 }
