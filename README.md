@@ -1,8 +1,8 @@
 # poppenhuis
 
-a dollhouse
+a dollhouse.
 
-The vast majority of meaningful code existing in:
+The vast majority of meaningful code resides in:
 
 - [`//src/App.tsx`](https://github.com/MaxwellBo/poppenhuis/blob/master/src/App.tsx)
 - [`//src/index.tsx`](https://github.com/MaxwellBo/poppenhuis/blob/master/src/index.tsx)

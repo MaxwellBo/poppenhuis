@@ -112,11 +112,10 @@ function ThirdPartyManifests() {
   return (
     <>
       <h3>1st party manifest</h3>
-      This site is a <a href="https://www.robinsloan.com/notes/home-cooked-app/">homecooked meal</a>, built primarily for my friends and family.
       If you'd like me to host your collection either:
       <ul>
-        <li>submit a PR modifying <a href="https://github.com/MaxwellBo/poppenhuis/blob/master/src/manifest.tsx"><code>//src/manifest.tsx</code></a> and <a href="https://github.com/MaxwellBo/poppenhuis/tree/master/public/models"><code>//public/models</code></a>.</li>
-        <li>reach out to <a href="https://twitter.com/_max_bo_">me on Twitter</a> and send me a <code>.zip</code> folder of your models and a Google Sheet of your metadata, and I'll upload it for you if you're not technically inclined.</li>
+        <li>submit a GitHub PR modifying <a href="https://github.com/MaxwellBo/poppenhuis/blob/master/src/manifest.tsx"><code>//src/manifest.tsx</code></a> and <a href="https://github.com/MaxwellBo/poppenhuis/tree/master/public/models"><code>//public/models</code></a>.</li>
+        <li>reach out to <a href="https://twitter.com/_max_bo_">me on Twitter</a> and send me a <code>.zip</code> folder of your models and a Google Sheet of your metadata. I'll upload it for you if you're not technically inclined.</li>
       </ul>
       <br />
       <h3>3rd party manifests</h3>
@@ -192,20 +191,29 @@ export function CollectionRow(props: { collection: Collection, user: User }) {
       <h3>
         <QueryPreservingLink to={`/${props.user.id}/${props.collection.id}`}>{props.collection.name}</QueryPreservingLink>
       </h3>
-      <ItemCards {...props} />
+      <ItemCards {...props} limit={5} />
     </article>
   );
 }
 
-export function ItemCards(props: { collection: Collection, user: User, highlighted?: Item['id'] }) {
+export function ItemCards(props: { collection: Collection, user: User, highlighted?: Item['id'], limit?: number }) {
+  const items = props.limit ? props.collection.items.slice(0, props.limit) : props.collection.items;
+  const showSeeMore = props.limit && props.collection.items.length > props.limit;
+
   return (
-    <ul className='card-grid'>
-      {props.collection.items.map((item) => (
-        <li key={item.id} className={item.id === props.highlighted ? 'highlight' : undefined}>
-          <ItemCard item={item} collection={props.collection} user={props.user} />
-        </li>
-      ))}
-    </ul>
+    <>
+      <ul className='card-grid'>
+        {items.map((item) => (
+          <li key={item.id} className={item.id === props.highlighted ? 'highlight' : undefined}>
+            <ItemCard item={item} collection={props.collection} user={props.user} />
+          </li>
+        ))}
+      </ul>
+      {showSeeMore && 
+        <div className='center'>
+          <QueryPreservingLink to={`/${props.user.id}/${props.collection.id}`}>See more {props.collection.name} →</QueryPreservingLink>
+        </div>}
+    </>
   );
 }
 
@@ -249,7 +257,7 @@ export function ItemView() {
         {nextItem ?
           <ItemCard item={nextItem} collection={collection} user={user} altName="next →" size='small' /> : <div />}
       </div>
-      <Items collection={collection} user={user} highlighted={item.id} />
+      <ItemCards collection={collection} user={user} highlighted={item.id} />
     </article>
   );
 }
