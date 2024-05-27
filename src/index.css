@@ -79,8 +79,8 @@ dl > dd {
   padding-top: 3ch;
 }
 
-.thumbnail model-viewer:hover {
-  padding: 0px;
+.thumbnail model-viewer {
+  padding: 1px;
 }
 
 .thumbnail model-viewer:hover {
