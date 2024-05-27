@@ -68,6 +68,17 @@ dl > dd {
   list-style-type: none;
 }
 
+/* don't show the card grid under 800px screen width */
+@media (max-width: 800px) {
+  .item-view .card-grid {
+    display: none;
+  }
+}
+
+.see-more {
+  padding-top: 3ch;
+}
+
 .thumbnail model-viewer:hover {
   padding: 0px;
 }
@@ -106,7 +117,7 @@ dl > dd {
   grid-area: next;
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 1100px) {
   .item-hero {
     display: grid;
     grid-template-rows: auto;

@@ -171,7 +171,7 @@ export function UserView() {
 export function CollectionView() {
   const { collection, user } = useLoaderData() as Awaited<ReturnType<typeof loadCollection>>;
 
-  return <article>
+  return <article className='collection-view'>
     <Helmet>
       <title>{collection.name} - poppenhuis</title>
       <meta name="description" content={`Collection of 3D models by ${user.name}`} />
@@ -232,7 +232,7 @@ export function ItemCards(props: { collection: Collection, user: User, highlight
         ))}
       </ul>
       {showSeeMore && 
-        <div className='center'>
+        <div className='center see-more'>
           <QueryPreservingLink to={`/${user.id}/${collection.id}`}>See all {collection.name} →</QueryPreservingLink>
         </div>}
     </>
@@ -259,7 +259,7 @@ export function ItemView() {
   const nextItem: Item | undefined = collection.items.find((_, index) => collection.items[index - 1]?.id === item.id);
 
   return (
-    <article>
+    <article className='item-view'>
       <Helmet>
         <title>{item.name} - poppenhuis</title>
         <meta name="description" content={item.description} />
