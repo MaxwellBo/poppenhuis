@@ -364,9 +364,8 @@ function Model(props: { item: Item, size?: ModelSize }) {
       src={props.item.model}
       interaction-prompt=""
       progress-bar=""
-      loading="eager"
+      loading="auto"
       poster={props.item.poster}
-      shadow-intensity="1"
       auto-rotate-delay="0"
       rotation-per-second="30deg"
       camera-controls
