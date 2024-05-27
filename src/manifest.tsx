@@ -270,6 +270,17 @@ My abject failure to use them properly convinced me to stick to the classical gu
             captureDate: "2024 May 21",
             captureDevice: "Apple iPhone 13 Pro",
             captureLocation: "Canva, Surry Hills"
+          },
+          { 
+            id: "james",
+            name: "James",
+            captureApp: "Polycam",
+            captureMethod: "LiDAR",
+            model: "/models/James.glb",
+            captureDevice: "Apple iPhone 13 Pro",
+            captureLocation: "Some boat in the middle of Sydney Harbour",
+            captureLatLong: "33.86 S, 151.20 E",
+            captureDate: "2024 May 24 4:58PM"
           }
         ]
       }
@@ -306,6 +317,16 @@ export async function loadCollection({ params, request }: { params: { userId: Us
   const user = await loadUser({ params, request });
   const collection = user.collections.find((collection) => collection.id === params.collectionId);
   if (!collection) throw new Error("Collection not found");
+  
+  // sort by capture date lexiographically
+  collection.items.sort((a, b) => {
+    if (a.captureDate && b.captureDate) {
+      // reverse
+      return -a.captureDate.localeCompare(b.captureDate);
+    }
+    return 0;
+  });
+
   return { collection, user };
 }
 
