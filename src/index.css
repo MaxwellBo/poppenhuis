@@ -10,7 +10,7 @@ footer {
 
 body {
   /** set a nicer serif font */
-  font-family: 'Gerogia', 'Lora', serif;
+  font-family: 'Lora', serif;
   /** set a reasonable max-width */
   max-width: min(80vw, 100ch);
   margin: 2vw auto;
