@@ -97,7 +97,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
           {
             id: "plumes",
             name: "Plumes",
-            model: "/models/plumes.glb",
+            model: "/models/mbo/pedals/plumes.glb",
             description: "EarthQuaker Devices Plumes Small Signal Shredder",
             releaseDate: "2019",
             manufactureDate: "2019",
@@ -111,7 +111,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
           {
             id: "elcap",
             name: "El Capistan",
-            model: "/models/elcap.glb",
+            model: "/models/mbo/pedals/elcap.glb",
             description: "Strymon El Capistan dTape Echo",
             acquisitionDate: "2022",
             captureDate: "2024 May 22",
@@ -123,7 +123,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
           {
             id: "multistomp",
             name: "MS-70CDR",
-            model: "/models/multistomp.glb",
+            model: "/models/mbo/pedals/multistomp.glb",
             description: "Zoom MS-70CDR MultiStomp",
             acquisitionDate: "2022",
             captureDate: "2024 May 22",
@@ -135,7 +135,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
           {
             id: "avrun",
             name: "Avalanche Run",
-            model: "/models/avrun.glb",
+            model: "/models/mbo/pedals/avrun.glb",
             description: "EarthQuaker Devices Avalanche Run V2 Stereo Delay & Reverb",
             releaseDate: "2017",
             manufactureDate: "2017",
@@ -149,6 +149,30 @@ My abject failure to use them properly convinced me to stick to the classical gu
         ]
       },
       {
+        id: "guitars",
+        name: "Guitars",
+        description: "I only have 3 at the moment, but the collection at its peak was 5. Sadly 2 were lost to the Queensland heat, when the glue of their bridges melted and sheared off.",
+        items: [
+          {
+            id: "yamaha",
+            name: "Yamaha",
+            model: "/models/mbo/guitars/yamaha.glb",
+            description: "Yamaha CGX171CCA",
+
+          },
+          {
+            id: "squire",
+            name: "Stratocaster Squire",
+            model: "/models/mbo/guitars/squire.glb",
+          },
+          {
+            id: "kohala",
+            name: "Kohala",
+            model: "/models/mbo/guitars/kohala.glb",
+          }
+        ]
+      },
+      {
         id: "friends",
         name: "Friends",
         description: "always appreciated",
@@ -156,7 +180,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
           {
             id: "hamish",
             name: "Hamish",
-            model: "/models/Hamish.glb",
+            model: "/models/mbo/friends/Hamish.glb",
             captureApp: "Polycam",
             captureDate: "2023 August 26 4:43PM",
             captureMethod: "LiDAR",
@@ -166,7 +190,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             id: "dragan",
             description: "A man sitting and playing the accordion with partial surroundings included.",
             name: "Dragan",
-            model: "/models/Dragan.glb",
+            model: "/models/mbo/friends/Dragan.glb",
             captureApp: "Polycam",
             captureMethod: "Photo mode",
             captureDate: "2024 May 22, 10:22PM",
@@ -178,7 +202,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
           {
             id: "annaliese-riya",
             name: "Annaliese & Riya",
-            model: "/models/AnnalieseRiya.glb",
+            model: "/models/mbo/friends/AnnalieseRiya.glb",
             captureApp: "Polycam",
             captureMethod: "LiDAR",
             captureDate: "2023 April 7 7:31PM",
@@ -189,7 +213,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             id: "issy",
             name: "Islwyn",
             captureApp: "Polycam",
-            model: "/models/Issy.glb",
+            model: "/models/mbo/friends/Issy.glb",
             captureMethod: "LiDAR",
             captureDevice: "Apple iPhone 13 Pro",
             captureLocation: "West End",
@@ -202,7 +226,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             description: "We were at the park",
             captureApp: "Polycam",
             captureMethod: "LiDAR",
-            model: "/models/LouNathan.glb",
+            model: "/models/mbo/friends/LouNathan.glb",
             captureDevice: "Apple iPhone 13 Pro",
             captureDate: "2023 April 9 3:55 PM",
             captureLatLong: "33.89 S, 151.18 E",
@@ -213,7 +237,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             name: "Jack",
             captureApp: "Polycam",
             captureMethod: "LiDAR",
-            model: "/models/Jack.glb",
+            model: "/models/mbo/friends/Jack.glb",
             captureDevice: "Apple iPhone 13 Pro",
             captureDate: "2023 April 8 10:16 PM",
             captureLocation: "Sydney",
@@ -224,7 +248,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             name: "Sam",
             captureApp: "Polycam",
             captureMethod: "LiDAR",
-            model: "/models/Sam.glb",
+            model: "/models/mbo/friends/Sam.glb",
             captureDevice: "Apple iPhone 13 Pro",
             captureDate: "2024 May 24 12:27 PM",
             captureLocation: "Canva, Surry Hills",
@@ -235,7 +259,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             id: "tom",
             name: "Tom",
             captureMethod: "LiDAR",
-            model: "/models/Tom.glb",
+            model: "/models/mbo/friends/Tom.glb",
             captureDevice: "Apple iPhone 13 Pro",
             captureDate: "2024 May 24 12:36 PM",
             captureLocation: "Canva, Surry Hills",
@@ -245,7 +269,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             name: "Jackie",
             captureApp: "Polycam",
             captureMethod: "LiDAR",
-            model: "/models/Jackie.glb",
+            model: "/models/mbo/friends/Jackie.glb",
             captureDevice: "Apple iPhone 13 Pro",
             captureDate: "2024 May 21 8:00 PM",
             captureLocation: "Darlinghurst",
@@ -255,7 +279,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             name: "Casey",
             captureApp: "Polycam",
             captureMethod: "LiDAR",
-            model: "/models/Casey.glb",
+            model: "/models/mbo/friends/Casey.glb",
             captureDate: "2024 May 21",
             captureDevice: "Apple iPhone 13 Pro",
             captureLocation: "Canva, Surry Hills"
@@ -265,7 +289,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             name: "Fran",
             captureApp: "Polycam",
             captureMethod: "LiDAR",
-            model: "/models/Fran.glb",
+            model: "/models/mbo/friends/Fran.glb",
             captureDevice: "Apple iPhone 13 Pro",
             captureLocation: "Chippendale",
             captureDate: "2023 April 18 9:09 PM"
@@ -276,7 +300,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             description: "The Thinker",
             captureApp: "Polycam",
             captureMethod: "LiDAR",
-            model: "/models/Roman.glb",
+            model: "/models/mbo/friends/Roman.glb",
             captureDate: "2024 May 21",
             captureDevice: "Apple iPhone 13 Pro",
             captureLocation: "Canva, Surry Hills"
@@ -286,7 +310,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             name: "James",
             captureApp: "Polycam",
             captureMethod: "LiDAR",
-            model: "/models/James.glb",
+            model: "/models/mbo/friends/James.glb",
             captureDevice: "Apple iPhone 13 Pro",
             captureLocation: "Some boat in the middle of Sydney Harbour",
             captureLatLong: "33.86 S, 151.20 E",
