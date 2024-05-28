@@ -51,7 +51,7 @@ interface User {
 interface Collection {
   id: string;
   name: string;
-  description?: string;
+  description?: string | JSX.Element;
   items: Item[];
 }
 
@@ -61,7 +61,7 @@ interface Item {
   name: string;
   model: string;
   poster?: string;
-  description?: string;
+  description?: string | JSX.Element;
   // Dates
   releaseDate?: string;
   manufactureDate?: string;
