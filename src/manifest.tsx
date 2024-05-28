@@ -10,7 +10,7 @@ export interface User {
 export interface Collection {
   id: string;
   name: string;
-  description?: string;
+  description?: string | JSX.Element;
   items: Item[];
 }
 
@@ -20,7 +20,7 @@ export interface Item {
   name: string;
   model: string;
   poster?: string;
-  description?: string;
+  description?: string | JSX.Element;
   // Dates
   releaseDate?: string;
   manufactureDate?: string;
