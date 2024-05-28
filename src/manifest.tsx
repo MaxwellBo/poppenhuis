@@ -101,7 +101,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             description: "EarthQuaker Devices Plumes Small Signal Shredder",
             releaseDate: "2019",
             manufactureDate: "2019",
-            acquisitionDate: "2022",
+            acquisitionDate: "2022?",
             captureDate: "2024 May 22",
             captureLocation: "Darlinghurst",
             captureDevice: "Apple iPhone 13 Pro",
@@ -113,7 +113,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             name: "El Capistan",
             model: "/models/mbo/pedals/elcap.glb",
             description: "Strymon El Capistan dTape Echo",
-            acquisitionDate: "2022",
+            acquisitionDate: "2022?",
             captureDate: "2024 May 22",
             captureLocation: "Darlinghurst",
             captureDevice: "Apple iPhone 13 Pro",
@@ -125,7 +125,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             name: "MS-70CDR",
             model: "/models/mbo/pedals/multistomp.glb",
             description: "Zoom MS-70CDR MultiStomp",
-            acquisitionDate: "2022",
+            acquisitionDate: "2022?",
             captureDate: "2024 May 22",
             captureLocation: "Darlinghurst",
             captureDevice: "Apple iPhone 13 Pro",
@@ -139,7 +139,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             description: "EarthQuaker Devices Avalanche Run V2 Stereo Delay & Reverb",
             releaseDate: "2017",
             manufactureDate: "2017",
-            acquisitionDate: "2022",
+            acquisitionDate: "2022?",
             captureDate: "2024 May 22",
             captureLocation: "Darlinghurst",
             captureDevice: "Apple iPhone 13 Pro",
@@ -151,24 +151,41 @@ My abject failure to use them properly convinced me to stick to the classical gu
       {
         id: "guitars",
         name: "Guitars",
-        description: "I only have 3 at the moment, but the collection at its peak was 5. Sadly 2 were lost to the Queensland heat, when the glue of their bridges melted and sheared off.",
+        description: "I only have 3 at the moment, but peak collection size was 5. Sadly 2 were lost to the Queensland heat, when the glue of their bridges melted and sheared off.",
         items: [
           {
             id: "yamaha",
             name: "Yamaha",
             model: "/models/mbo/guitars/yamaha.glb",
             description: "Yamaha CGX171CCA",
-
+            captureDate: "2024 May 28",
+            captureMethod: "LiDAR",
+            captureDevice: "Apple iPhone 13 Pro",
+            captureApp: "Polycam",
+            acquisitionDate: "2011?",
+            captureLocation: "Darlinghurst",
           },
           {
             id: "squire",
             name: "Stratocaster Squire",
             model: "/models/mbo/guitars/squire.glb",
+            captureDate: "2024 May 28",
+            captureMethod: "LiDAR",
+            captureDevice: "Apple iPhone 13 Pro",
+            captureApp: "Polycam",
+            acquisitionDate: "2022?",
+            captureLocation: "Darlinghurst",
           },
           {
             id: "kohala",
             name: "Kohala",
             model: "/models/mbo/guitars/kohala.glb",
+            captureDate: "2024 May 28",
+            captureMethod: "LiDAR",
+            captureDevice: "Apple iPhone 13 Pro",
+            captureApp: "Polycam",
+            acquisitionDate: "2018?",
+            captureLocation: "Darlinghurst",
           }
         ]
       },
@@ -184,7 +201,8 @@ My abject failure to use them properly convinced me to stick to the classical gu
             captureApp: "Polycam",
             captureDate: "2023 August 26 4:43PM",
             captureMethod: "LiDAR",
-            captureDevice: "Apple iPhone 13 Pro"
+            captureDevice: "Apple iPhone 13 Pro",
+            acquisitionDate: "2021?"
           },
           {
             id: "dragan",
@@ -195,6 +213,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             captureMethod: "Photo mode",
             captureDate: "2024 May 22, 10:22PM",
             captureDevice: "Apple iPhone 11 Pro Max",
+            acquisitionDate: "2015?",
             customFields: {
               vertices: "25.4k",
             }
@@ -208,6 +227,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             captureDate: "2023 April 7 7:31PM",
             captureLocation: "Darlinghurst",
             captureDevice: "Apple iPhone 13 Pro",
+            acquisitionDate: "2019 & ???"
           },
           {
             id: "issy",
@@ -218,7 +238,8 @@ My abject failure to use them properly convinced me to stick to the classical gu
             captureDevice: "Apple iPhone 13 Pro",
             captureLocation: "West End",
             captureLatLong: "27.48 S, 153.01 E",
-            captureDate: "2023 April 26 9:00PM"
+            captureDate: "2023 April 26 9:00PM",
+            acquisitionDate: "2012?"
           },
           {
             id: "lou-nathan",
@@ -230,7 +251,8 @@ My abject failure to use them properly convinced me to stick to the classical gu
             captureDevice: "Apple iPhone 13 Pro",
             captureDate: "2023 April 9 3:55 PM",
             captureLatLong: "33.89 S, 151.18 E",
-            captureLocation: "Newtown"
+            captureLocation: "Newtown",
+            acquisitionDate: "2022"
           },
           {
             id: "jack",
@@ -253,7 +275,8 @@ My abject failure to use them properly convinced me to stick to the classical gu
             captureDate: "2024 May 24 12:27 PM",
             captureLocation: "Canva, Surry Hills",
             releaseDate: "1999",
-            manufactureDate: "1999"
+            manufactureDate: "1999",
+            acquisitionDate: "2023"
           },
           {
             id: "tom",
@@ -263,6 +286,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             captureDevice: "Apple iPhone 13 Pro",
             captureDate: "2024 May 24 12:36 PM",
             captureLocation: "Canva, Surry Hills",
+            acquisitionDate: "2022"
           },
           {
             id: "jackie",
@@ -273,6 +297,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             captureDevice: "Apple iPhone 13 Pro",
             captureDate: "2024 May 21 8:00 PM",
             captureLocation: "Darlinghurst",
+            acquisitionDate: "2023"
           },
           {
             id: "casey",
@@ -282,7 +307,8 @@ My abject failure to use them properly convinced me to stick to the classical gu
             model: "/models/mbo/friends/Casey.glb",
             captureDate: "2024 May 21",
             captureDevice: "Apple iPhone 13 Pro",
-            captureLocation: "Canva, Surry Hills"
+            captureLocation: "Canva, Surry Hills",
+            acquisitionDate: "2022"
           },
           {
             id: "fran",
@@ -292,7 +318,8 @@ My abject failure to use them properly convinced me to stick to the classical gu
             model: "/models/mbo/friends/Fran.glb",
             captureDevice: "Apple iPhone 13 Pro",
             captureLocation: "Chippendale",
-            captureDate: "2023 April 18 9:09 PM"
+            captureDate: "2023 April 18 9:09 PM",
+            acquisitionDate: "2015"
           },
           {
             id: "roman",
@@ -303,7 +330,8 @@ My abject failure to use them properly convinced me to stick to the classical gu
             model: "/models/mbo/friends/Roman.glb",
             captureDate: "2024 May 21",
             captureDevice: "Apple iPhone 13 Pro",
-            captureLocation: "Canva, Surry Hills"
+            captureLocation: "Canva, Surry Hills",
+            acquisitionDate: "2023"
           },
           { 
             id: "james",
@@ -314,7 +342,8 @@ My abject failure to use them properly convinced me to stick to the classical gu
             captureDevice: "Apple iPhone 13 Pro",
             captureLocation: "Some boat in the middle of Sydney Harbour",
             captureLatLong: "33.86 S, 151.20 E",
-            captureDate: "2024 May 24 4:58PM"
+            captureDate: "2024 May 24 4:58PM",
+            acquisitionDate: "2015?"
           }
         ]
       }
