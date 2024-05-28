@@ -60,7 +60,7 @@ export function UsersView() {
         The scan collections can be of anything: pottery, sculptures, guitars, cars, cakes, plants, etc.
         <br />
         <br />
-        It was inspired by <a href="https://www.are.na/">are.na</a> and the wonderful <a href="https://www.dayroselane.com/hydrants">Hydrant&nbsp;Directory</a>.
+        It was inspired by <a href="https://www.are.na/">are.na</a>, <a href="https://cari.institute/">Consumer Aesthetics Research Institute</a>, and <a href="https://www.dayroselane.com/hydrants">Hydrant&nbsp;Directory</a>.
         <br />
         <br />
         The following users have collections:
