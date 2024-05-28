@@ -176,6 +176,16 @@ My abject failure to use them properly convinced me to stick to the classical gu
             }
           },
           {
+            id: "annaliese-riya",
+            name: "Annaliese & Riya",
+            model: "/models/AnnalieseRiya.glb",
+            captureApp: "Polycam",
+            captureMethod: "LiDAR",
+            captureDate: "2023 April 7 7:31PM",
+            captureLocation: "Darlinghurst",
+            captureDevice: "Apple iPhone 13 Pro",
+          },
+          {
             id: "issy",
             name: "Islwyn",
             captureApp: "Polycam",
@@ -317,7 +327,7 @@ export async function loadCollection({ params, request }: { params: { userId: Us
   const user = await loadUser({ params, request });
   const collection = user.collections.find((collection) => collection.id === params.collectionId);
   if (!collection) throw new Error("Collection not found");
-  
+
   // sort by capture date lexiographically
   collection.items.sort((a, b) => {
     if (a.captureDate && b.captureDate) {
