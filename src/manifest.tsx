@@ -262,6 +262,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             model: "/models/mbo/friends/Jack.glb",
             captureDevice: "Apple iPhone 13 Pro",
             captureDate: "2023 April 8 10:16 PM",
+            acquisitionDate: "2022",
             captureLocation: "Sydney",
             captureLatLong: "33.88 S, 151.21 E"
           },
