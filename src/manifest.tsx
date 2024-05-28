@@ -192,7 +192,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
       {
         id: "friends",
         name: "Friends",
-        description: "always appreciated",
+        description: "always appreciated (all parties have agreed to be on the site)",
         items: [
           {
             id: "hamish",
