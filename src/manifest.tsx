@@ -291,6 +291,17 @@ My abject failure to use them properly convinced me to stick to the classical gu
             acquisitionDate: "2022"
           },
           {
+            id: "liam",
+            name: "Liam",
+            captureMethod: "LiDAR",
+            model: "/models/mbo/friends/Liam.glb",
+            captureDevice: "Apple iPhone 13 Pro",
+            acquisitionDate: "2022",
+            captureLocation: "Redfern",
+            captureLatLong: "33.89 S, 151.21 E",
+            captureDate: "2023 Apr 22 at 10:40PM"
+          },
+          {
             id: "jackie",
             name: "Jackie",
             captureApp: "Polycam",
