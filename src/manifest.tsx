@@ -103,7 +103,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             manufactureDate: "2019",
             acquisitionDate: "2022?",
             captureDate: "2024 May 22",
-            captureLocation: "Darlinghurst",
+            captureLocation: "Darlinghurst, Sydney",
             captureDevice: "Apple iPhone 13 Pro",
             captureMethod: "LiDAR",
             captureApp: "Polycam",
@@ -115,7 +115,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             description: "Strymon El Capistan dTape Echo",
             acquisitionDate: "2022?",
             captureDate: "2024 May 22",
-            captureLocation: "Darlinghurst",
+            captureLocation: "Darlinghurst, Sydney",
             captureDevice: "Apple iPhone 13 Pro",
             captureMethod: "LiDAR",
             captureApp: "Polycam",
@@ -127,7 +127,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             description: "Zoom MS-70CDR MultiStomp",
             acquisitionDate: "2022?",
             captureDate: "2024 May 22",
-            captureLocation: "Darlinghurst",
+            captureLocation: "Darlinghurst, Sydney",
             captureDevice: "Apple iPhone 13 Pro",
             captureMethod: "LiDAR",
             captureApp: "Polycam",
@@ -141,7 +141,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             manufactureDate: "2017",
             acquisitionDate: "2022?",
             captureDate: "2024 May 22",
-            captureLocation: "Darlinghurst",
+            captureLocation: "Darlinghurst, Sydney",
             captureDevice: "Apple iPhone 13 Pro",
             captureMethod: "LiDAR",
             captureApp: "Polycam",
@@ -163,7 +163,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             captureDevice: "Apple iPhone 13 Pro",
             captureApp: "Polycam",
             acquisitionDate: "2011?",
-            captureLocation: "Darlinghurst",
+            captureLocation: "Darlinghurst, Sydney",
           },
           {
             id: "squire",
@@ -175,7 +175,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             captureDevice: "Apple iPhone 13 Pro",
             captureApp: "Polycam",
             acquisitionDate: "2022?",
-            captureLocation: "Darlinghurst",
+            captureLocation: "Darlinghurst, Sydney",
           },
           {
             id: "kohala",
@@ -186,7 +186,18 @@ My abject failure to use them properly convinced me to stick to the classical gu
             captureDevice: "Apple iPhone 13 Pro",
             captureApp: "Polycam",
             acquisitionDate: "2018?",
-            captureLocation: "Darlinghurst",
+            captureLocation: "Darlinghurst, Sydney",
+          },
+          {
+            id: "requinto",
+            name: "Requinto",
+            model: "/models/mbo/guitars/requinto.glb",
+            captureDate: "2024 May 31",
+            captureMethod: "LiDAR",
+            captureDevice: "Apple iPhone 13 Pro",
+            captureApp: "Polycam",
+            acquisitionDate: "2013?",
+            captureLocation: "Kangaroo Point, Brisbane",
           }
         ]
       },
@@ -226,7 +237,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             captureApp: "Polycam",
             captureMethod: "LiDAR",
             captureDate: "2023 April 7 7:31PM",
-            captureLocation: "Darlinghurst",
+            captureLocation: "Darlinghurst, Sydney",
             captureDevice: "Apple iPhone 13 Pro",
             acquisitionDate: "2019 & ???"
           },
@@ -275,7 +286,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             model: "/models/mbo/friends/Sam.glb",
             captureDevice: "Apple iPhone 13 Pro",
             captureDate: "2024 May 24 12:27 PM",
-            captureLocation: "Canva, Surry Hills",
+            captureLocation: "Canva, Surry Hills, Sydney",
             releaseDate: "1999",
             manufactureDate: "1999",
             acquisitionDate: "2023"
@@ -287,7 +298,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             model: "/models/mbo/friends/Tom.glb",
             captureDevice: "Apple iPhone 13 Pro",
             captureDate: "2024 May 24 12:36 PM",
-            captureLocation: "Canva, Surry Hills",
+            captureLocation: "Canva, Surry Hills, Sydney",
             acquisitionDate: "2022"
           },
           {
@@ -309,7 +320,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             model: "/models/mbo/friends/Jackie.glb",
             captureDevice: "Apple iPhone 13 Pro",
             captureDate: "2024 May 21 8:00 PM",
-            captureLocation: "Darlinghurst",
+            captureLocation: "Darlinghurst, Sydney",
             acquisitionDate: "2023"
           },
           {
@@ -330,7 +341,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             captureMethod: "LiDAR",
             model: "/models/mbo/friends/Fran.glb",
             captureDevice: "Apple iPhone 13 Pro",
-            captureLocation: "Chippendale",
+            captureLocation: "Chippendale, Sydney",
             captureDate: "2023 April 18 9:09 PM",
             acquisitionDate: "2015"
           },
@@ -343,7 +354,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             model: "/models/mbo/friends/Roman.glb",
             captureDate: "2024 May 21",
             captureDevice: "Apple iPhone 13 Pro",
-            captureLocation: "Canva, Surry Hills",
+            captureLocation: "Canva, Surry Hills, Sydney",
             acquisitionDate: "2023"
           },
           { 
