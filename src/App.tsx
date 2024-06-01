@@ -189,7 +189,7 @@ export function CollectionView() {
         <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / {collection.name} ({collection.items.length})
       </h1>
     </header>
-    {collection.description && <p>{collection.description}</p>}
+    {collection.description && <p className='description'>{collection.description}</p>}
     <ItemCards collection={collection} user={user} />
   </article>
 }
@@ -201,7 +201,7 @@ export function CollectionRow(props: { collection: Collection, user: User }) {
       <h3>
         <QueryPreservingLink to={`/${user.id}/${collection.id}`}>{collection.name}</QueryPreservingLink> ({collection.items.length})
       </h3>
-      {collection.description && <p className='short'>{collection.description}</p>}
+      {collection.description && <p className='short description'>{collection.description}</p>}
       <ItemCards {...props} limit={6} />
     </article>
   );
@@ -277,7 +277,7 @@ export function ItemView() {
           <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}/${collection.id}`}>{collection.name}</QueryPreservingLink> / {item.name}
         </h1>
       </header>
-      <p>{item.description}</p>
+      <p className='description'>{item.description}</p>
       <div className='previous-next'>
       </div>
       <div className='item-hero'>

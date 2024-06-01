@@ -180,6 +180,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
           {
             id: "kohala",
             name: "Kohala",
+            description: "Not quite a guitar",
             model: "/models/mbo/guitars/kohala.glb",
             captureDate: "2024 May 28",
             captureMethod: "LiDAR",
@@ -190,10 +191,12 @@ My abject failure to use them properly convinced me to stick to the classical gu
           },
           {
             id: "requinto",
-            description: `This was graciously gifted to me by my old guitar teacher. He attempted to purchase it in a rural town in Spain. He attempted to pay by credit card, but the store did not have a terminal. The only bank in town was closed. The store owner said he could take it and send the money once he got back to Australia, which he did.
+            description: `This was graciously gifted to me by my old guitar teacher. He found it in a rural town in Spain. He attempted to purchase it with a credit card but the store did not have a terminal, and the only bank in town was closed. The store owner said he could take it and send the money once he got back to Australia, which he did.
+
+I am unsure of its make or model otherwise. Not the greatest sound, but a pleasure to play.
             
-            To quote Wikipedia: 'The requinto guitar has six nylon strings with a scale length of 530 to 540 millimetres (20.9 to 21.3 in), which is about 18% smaller than a standard guitar scale. Requintos are tuned: A2-D3-G3-C4-E4-A4 (one fourth higher than the standard classical guitar).'`,
-            name: "Requinto",
+To quote Wikipedia: "The requinto guitar has six nylon strings with a scale length of 530 to 540 millimetres (20.9 to 21.3 in), which is about 18% smaller than a standard guitar scale. Requintos are tuned: A2-D3-G3-C4-E4-A4 (one fourth higher than the standard classical guitar)."`,
+            name: "some requinto",
             model: "/models/mbo/guitars/requinto.glb",
             captureDate: "2024 May 31",
             captureMethod: "LiDAR",
