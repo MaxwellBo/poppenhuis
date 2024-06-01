@@ -157,7 +157,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             id: "yamaha",
             name: "Yamaha",
             model: "/models/mbo/guitars/yamaha.glb",
-            description: "Yamaha CGX171CCA",
+            description: "A Yamaha CGX171CCA. I acquired this one in Japan. Not the greatest sound, and not the easiest thing to play. But hey, it's got a pickup and a mic.",
             captureDate: "2024 May 28",
             captureMethod: "LiDAR",
             captureDevice: "Apple iPhone 13 Pro",
