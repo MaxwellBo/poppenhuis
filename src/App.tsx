@@ -315,6 +315,12 @@ function ItemDescriptionList(props: { item: Item, collection: Collection, user: 
 
   return (
     <dl>
+      {
+        props.item.formalName && <>
+          <dt>Formal name</dt>
+          <dd>{props.item.formalName}</dd>
+        </>
+      }
       <dt>User ID</dt>
       <dd>{props.user.id}</dd>
       <dt>Collection ID</dt>

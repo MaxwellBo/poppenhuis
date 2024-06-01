@@ -18,6 +18,10 @@ body {
   background-color: #fffff8;
 }
 
+code {
+  font-family: 'Inconsolata', monospace;
+}
+
 h1 {
   padding-bottom: 1.5rem;
 }

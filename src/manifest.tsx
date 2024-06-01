@@ -18,6 +18,7 @@ export interface Item {
   // Existential details
   id: string;
   name: string;
+  formalName?: string;
   model: string;
   poster?: string;
   description?: string;
@@ -59,6 +60,7 @@ interface Item {
   // Existential details
   id: string;
   name: string;
+  formalName?: string;
   model: string;
   poster?: string;
   description?: string | JSX.Element;
@@ -98,7 +100,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             id: "plumes",
             name: "Plumes",
             model: "/models/mbo/pedals/plumes.glb",
-            description: "EarthQuaker Devices Plumes Small Signal Shredder",
+            formalName: "EarthQuaker Devices Plumes Small Signal Shredder",
             releaseDate: "2019",
             manufactureDate: "2019",
             acquisitionDate: "2022?",
@@ -112,7 +114,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             id: "elcap",
             name: "El Capistan",
             model: "/models/mbo/pedals/elcap.glb",
-            description: "Strymon El Capistan dTape Echo",
+            formalName: "Strymon El Capistan dTape Echo",
             acquisitionDate: "2022?",
             captureDate: "2024 May 22",
             captureLocation: "Darlinghurst, Sydney",
@@ -122,9 +124,9 @@ My abject failure to use them properly convinced me to stick to the classical gu
           },
           {
             id: "multistomp",
-            name: "MS-70CDR",
+            name: "MultiStomp",
             model: "/models/mbo/pedals/multistomp.glb",
-            description: "Zoom MS-70CDR MultiStomp",
+            formalName: "Zoom MS-70CDR MultiStomp Chorus/Delay/Reverb Pedal",
             acquisitionDate: "2022?",
             captureDate: "2024 May 22",
             captureLocation: "Darlinghurst, Sydney",
@@ -136,7 +138,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             id: "avrun",
             name: "Avalanche Run",
             model: "/models/mbo/pedals/avrun.glb",
-            description: "EarthQuaker Devices Avalanche Run V2 Stereo Delay & Reverb",
+            formalName: "EarthQuaker Devices Avalanche Run V2 Stereo Delay & Reverb",
             releaseDate: "2017",
             manufactureDate: "2017",
             acquisitionDate: "2022?",
@@ -157,7 +159,8 @@ My abject failure to use them properly convinced me to stick to the classical gu
             id: "yamaha",
             name: "Yamaha",
             model: "/models/mbo/guitars/yamaha.glb",
-            description: "A Yamaha CGX171CCA. I acquired this one in Japan. Not the greatest sound, and not the easiest thing to play. But hey, it's got a pickup and a mic.",
+            description: "I acquired this one in Japan. Not the greatest sound, and not the easiest thing to play. But hey, it's got a pickup and a mic.",
+            formalName: "Yamaha CGX171CCA",
             captureDate: "2024 May 28",
             captureMethod: "LiDAR",
             captureDevice: "Apple iPhone 13 Pro",
