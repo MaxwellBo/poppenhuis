@@ -16,7 +16,6 @@ body {
   margin: 2vw auto;
   /** set a nice light tan background color */
   background-color: #fffff8;
-  text-transform: lowercase;
 }
 
 h1 {
@@ -59,7 +58,6 @@ dl > dd {
   /** Description details should be monospace */
   font-family: 'Inconsolata', monospace;
   font-size: 1.15em;
-  text-transform: none;
 }
 
 .card-grid {

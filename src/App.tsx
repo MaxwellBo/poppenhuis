@@ -19,7 +19,7 @@ export function App() {
         <Outlet />
       </main>
       <footer>
-        <small>c. 2024, <a href="https://github.com/MaxwellBo/poppenhuis">Source code</a>, <a href="https://maxbo.me">Max Bo</a></small>
+        <small>c. 2024, <a href="https://github.com/MaxwellBo/poppenhuis">source code</a>, <a href="https://maxbo.me">Max Bo</a></small>
       </footer>
     </div>
   )
@@ -60,7 +60,7 @@ export function UsersView() {
         The scan collections can be of anything: pottery, sculptures, guitars, cars, cakes, plants, etc.
         <br />
         <br />
-        It was inspired by <a href="https://www.are.na/">Are.na</a>, <a href="https://cari.institute/">Consumer&nbsp;Aesthetics&nbsp;Research&nbsp;Institute</a>, <a href="https://www.dayroselane.com/hydrants">The&nbsp;Hydrant&nbsp;Directory</a>, and this <a href="https://x.com/samdape/status/1777986265993875950">Sam Peitz Tweet</a>.
+        It was inspired by <a href="https://www.are.na/">Are.na</a>, <a href="https://cari.institute/">Consumer&nbsp;Aesthetics&nbsp;Research&nbsp;Institute</a>, <a href="https://www.dayroselane.com/hydrants">The&nbsp;Hydrant&nbsp;Directory</a>, and this <a href="https://x.com/samdape/status/1777986265993875950">Sam Peitz tweet</a>.
         <br />
         <br />
         The following users have collections:
@@ -189,7 +189,7 @@ export function CollectionView() {
         <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / {collection.name} ({collection.items.length})
       </h1>
     </header>
-    {collection.description && <p className='short'>{collection.description}</p>}
+    {collection.description && <p>{collection.description}</p>}
     <ItemCards collection={collection} user={user} />
   </article>
 }

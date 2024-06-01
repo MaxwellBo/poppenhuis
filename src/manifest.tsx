@@ -90,9 +90,9 @@ const FIRST_PARTY_MANIFEST: Manifest = [
     collections: [
       {
         id: "pedals",
-        name: "Pedals",
+        name: "pedals",
         description: `I have a small collection of guitar pedals from an era where I was trying to get into the electric guitar. 
-My abject failure to use them properly convinced me to stick to the classical guitar`,
+My abject failure to use them properly convinced me to stick to the classical guitar.`,
         items: [
           {
             id: "plumes",
@@ -150,7 +150,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
       },
       {
         id: "guitars",
-        name: "Guitars",
+        name: "guitars",
         description: "I only have 3 at the moment, but peak collection size was 5. Sadly 2 were lost to the Queensland heat, when the glue of their bridges melted and sheared off.",
         items: [
           {
@@ -206,8 +206,8 @@ My abject failure to use them properly convinced me to stick to the classical gu
       },
       {
         id: "friends",
-        name: "Friends",
-        description: "always appreciated (all parties have agreed to be on the site)",
+        name: "friends",
+        description: "Always appreciated (all parties have agreed to be on the site)",
         items: [
           {
             id: "hamish",
