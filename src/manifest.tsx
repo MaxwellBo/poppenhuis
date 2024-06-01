@@ -182,7 +182,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
           },
           {
             id: "kohala",
-            name: "Kohala",
+            name: "Kohala ukelele",
             description: "Not quite a guitar",
             model: "/models/mbo/guitars/kohala.glb",
             captureDate: "2024 May 28",
