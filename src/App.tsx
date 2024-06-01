@@ -241,7 +241,7 @@ export function ItemCards(props: { collection: Collection, user: User, highlight
       </ul>
       {showSeeMore && 
         <div className='center see-more'>
-          <QueryPreservingLink to={`/${user.id}/${collection.id}`}>See all {collection.name} →</QueryPreservingLink>
+          <QueryPreservingLink to={`/${user.id}/${collection.id}`}>see all {collection.name} →</QueryPreservingLink>
         </div>}
     </>
   );
