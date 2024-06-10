@@ -63,6 +63,16 @@ aside {
   justify-content: space-between;
 }
 
+
+details[open] summary {
+  text-decoration: underline;
+  margin-bottom: 0.5ch;
+}
+
+details[open] {
+  margin-bottom: 2ch;
+}
+
 dl {
   /** Description lists should be displayed as a grid */
   display: grid;
