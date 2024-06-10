@@ -15,7 +15,11 @@ body {
   max-width: min(80vw, 100ch);
   margin: 2vw auto;
   /** set a nice light tan background color */
-  background-color: #fffff8;
+  background-color: rgb(255, 246, 230);
+}
+
+.orange {
+  color: #b06200;
 }
 
 code {
@@ -47,6 +51,19 @@ hr {
   margin-top: 3ch;
 }
 
+a {
+  color: green;
+}
+
+a:visited {
+  color: darkgreen;
+}
+
+a:active {
+  color: red;
+}
+
+
 aside {
   width: 40%;
   padding-left: 0.5rem;
@@ -64,7 +81,7 @@ aside {
 }
 
 
-details[open] summary {
+details[open] > summary {
   text-decoration: underline;
   margin-bottom: 0.5ch;
 }
@@ -180,7 +197,7 @@ dl > dd {
 }
 
 .short {
-  max-width: 40ch;
+  max-width: 50ch;
 }
 
 .description {

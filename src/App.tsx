@@ -59,7 +59,7 @@ export function UsersView() {
           <ul>
             {users.map((user) => (
               <li key={user.id}>
-                <QueryPreservingLink to={user.id}>{user.name}</QueryPreservingLink>
+                <QueryPreservingLink to={user.id}>{user.name}</QueryPreservingLink> <Extra ts={user.collections} t="collection" />
               </li>
             ))}
           </ul>
@@ -72,7 +72,7 @@ export function UsersView() {
             The scan collections can be of anything: pottery, sculptures, guitars, cars, cakes, plants, etc.
             <br />
             <br />
-            It was inspired by <a href="https://www.are.na/">Are.na</a>, <a href="https://cari.institute/">Consumer&nbsp;Aesthetics&nbsp;Research&nbsp;Institute</a>, <a href="https://www.dayroselane.com/hydrants">The&nbsp;Hydrant&nbsp;Directory</a>, and this <a href="https://x.com/samdape/status/1777986265993875950">Sam Peitz tweet</a>.
+            It takes inspiration from <a href="https://www.are.na/">Are.na</a>, <a href="https://cari.institute/">Consumer&nbsp;Aesthetics&nbsp;Research&nbsp;Institute</a>, <a href="https://www.dayroselane.com/hydrants">The&nbsp;Hydrant&nbsp;Directory</a>, this <a href="https://x.com/samdape/status/1777986265993875950">Sam Peitz tweet</a>, and <a href="https://kevin.garden">kevin.garden</a>.
             <br />
             <br />
           </p>
@@ -100,6 +100,13 @@ export function UsersView() {
 }
 
 const EXAMPLE_MANIFEST_URL = 'https://raw.githubusercontent.com/MaxwellBo/maxwellbo.github.io/master/poppenhuis-manifest.json'
+
+function Extra(props: { ts: unknown[], t: string }) {
+  const { ts, t } = props;
+  const plural = t && ts && ts.length > 1 ? "s" : "";
+
+  return <span className='orange'>({ts.length} {t}{plural})</span>;
+}
 
 function ThirdPartyManifests() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -170,7 +177,7 @@ export function UserView() {
       </Helmet>
       <header>
         <h1>
-          <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / {user.name}
+          <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / {user.name} /
         </h1>
         <div className='padding-bottom-1rem'>{user.bio}</div>
       </header>
@@ -191,7 +198,7 @@ export function CollectionView() {
     </Helmet>
     <header>
       <h1>
-        <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / {collection.name} ({collection.items.length})
+        <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / {collection.id} /
       </h1>
     </header>
     {collection.description && <p className='description'>{collection.description}</p>}
@@ -204,7 +211,7 @@ export function CollectionRow(props: { collection: Collection, user: User }) {
   return (
     <article className='collection-row'>
       <h3>
-        <QueryPreservingLink to={`/${user.id}/${collection.id}`}>{collection.name}</QueryPreservingLink> ({collection.items.length})
+        <QueryPreservingLink to={`/${user.id}/${collection.id}`}>{collection.name}</QueryPreservingLink> <Extra ts={collection.items} t="item" />
       </h3>
       {collection.description && <p className='short description'>{collection.description}</p>}
       <ItemCards {...props} limit={6} />
@@ -279,7 +286,7 @@ export function ItemView() {
       </Helmet>
       <header>
         <h1>
-          <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}/${collection.id}`}>{collection.name}</QueryPreservingLink> / {item.name}
+          <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}/${collection.id}`}>{collection.id}</QueryPreservingLink> / {item.name}
         </h1>
       </header>
       <p className='description'>{item.description}</p>
