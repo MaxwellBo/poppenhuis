@@ -42,6 +42,27 @@ h3 {
   font-size: 0.7rem;
 }
 
+hr {
+  margin-bottom: 3ch;
+  margin-top: 3ch;
+}
+
+aside {
+  width: 40%;
+  padding-left: 0.5rem;
+  margin-left: 0.5rem;
+  float: right;
+  margin-left: 5px;
+  border-left: black 1px solid;
+}
+
+.cols {
+  display: flex;
+  gap: 4ch;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
 dl {
   /** Description lists should be displayed as a grid */
   display: grid;
