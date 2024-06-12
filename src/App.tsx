@@ -50,7 +50,7 @@ export function UsersView() {
       </Helmet>
       <header>
         <h1>
-          poppenhuis
+          poppenhuis /
         </h1>
       </header>
       <div className='cols'>
@@ -59,7 +59,7 @@ export function UsersView() {
           <ul>
             {users.map((user) => (
               <li key={user.id}>
-                <QueryPreservingLink to={user.id}>{user.name}</QueryPreservingLink> <Extra ts={user.collections} t="collection" />
+                <QueryPreservingLink to={user.id}>{user.name}</QueryPreservingLink> <Size ts={user.collections} t="collection" />
               </li>
             ))}
           </ul>
@@ -101,7 +101,7 @@ export function UsersView() {
 
 const EXAMPLE_MANIFEST_URL = 'https://raw.githubusercontent.com/MaxwellBo/maxwellbo.github.io/master/poppenhuis-manifest.json'
 
-function Extra(props: { ts: unknown[], t: string }) {
+function Size(props: { ts: unknown[], t: string }) {
   const { ts, t } = props;
   const plural = t && ts && ts.length > 1 ? "s" : "";
 
@@ -211,7 +211,7 @@ export function CollectionRow(props: { collection: Collection, user: User }) {
   return (
     <article className='collection-row'>
       <h3>
-        <QueryPreservingLink to={`/${user.id}/${collection.id}`}>{collection.name}</QueryPreservingLink> <Extra ts={collection.items} t="item" />
+        <QueryPreservingLink to={`/${user.id}/${collection.id}`}>{collection.name}</QueryPreservingLink> <Size ts={collection.items} t="item" />
       </h3>
       {collection.description && <p className='short description'>{collection.description}</p>}
       <ItemCards {...props} limit={6} />

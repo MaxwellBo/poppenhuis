@@ -63,6 +63,22 @@ a:active {
   color: red;
 }
 
+.spin-context {
+  position: relative;
+  transform-style: preserve-3d;
+  animation: spin 20s linear infinite;
+}
+
+.spin-context > * {
+  position: absolute;
+  transform-style: preserve-3d;
+}
+
+@keyframes spin {
+  from { transform: rotateX(-0.1turn) rotateY(0turn); }
+  to { transform: rotateX(-0.1turn) rotateY(1turn); }
+}
+
 
 aside {
   width: 40%;
