@@ -124,7 +124,7 @@ Sadly 2 were lost to the Queensland heat, when the glue of their bridges melted 
           {
             id: "kohala",
             name: "Kohala ukelele",
-            description: "Not quite a guitar",
+            description: "Not quite a guitar. Sounds shit.",
             model: "/models/mbo/guitars/kohala.glb",
             captureDate: "2024 May 28",
             captureMethod: "LiDAR",

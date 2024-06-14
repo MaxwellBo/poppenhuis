@@ -69,7 +69,7 @@ export function UsersView() {
             poppenhuis (<i>Dutch for "dollhouse"</i>) is a site for displaying collections of 3D model scans.
             <br />
             <br />
-            The scan collections can be of anything: pottery, sculptures, guitars, cars, cakes, plants, etc.
+            The scan collections can be of anything: pottery, sculptures, guitars, cars, cakes, plants, <i>dolls</i>, etc.
             <br />
             <br />
             
@@ -86,17 +86,17 @@ export function UsersView() {
           </details>
           <details>
             <summary>What file formats can poppenhuis render?</summary>
-            poppenhuis uses only <a href="https://modelviewer.dev/">model-viewer</a> for rendering 3D models,
+            poppenhuis uses <a href="https://modelviewer.dev/">model-viewer</a> for rendering 3D models,
             which only renders glTF/GLB (<code>.gltf/.glb</code>) files.
             <br />
             <br />
-            Ideally poppenhuis would also support rendering Polygon File Format (<code>.ply</code>) for rendering <a href="https://en.wikipedia.org/wiki/Gaussian_splatting">Gaussian splats</a> with an alternative renderer.
+            Ideally poppenhuis would also support rendering Polygon File Format (<code>.ply</code>) for rendering <a href="https://en.wikipedia.org/wiki/Gaussian_splatting">Gaussian splats</a>. PRs welcome.
           </details>
-          <details>
+          {/* <details>
             <summary>Notes on construction</summary>
             I deliberately built this as an SPA with just a <a href="https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts">out-of-the-box Vite React template</a>. I know they're not exactly in vogue right now with <a href="https://nextjs.org/">Next.js</a> being all the rage.
             But an SPA lends itself to being snapshotable/archivable with a simple <a href="https://www.gnu.org/software/wget/manual/html_node/Recursive-Retrieval-Options.html"><code>wget --recursive</code></a>.
-          </details>
+          </details> */}
         </section>
       </div>
     </article>
@@ -357,6 +357,8 @@ function ItemDescriptionList(props: { item: Item, collection: Collection, user: 
       <dd>{location}</dd>
       <dt>Capture device</dt>
       <dd>{props.item.captureDevice}</dd>
+      <dt>Capture app</dt>
+      <dd>{props.item.captureApp}</dd>
       <dt>Capture method</dt>
       <dd>{props.item.captureMethod}</dd>
       <dt>Model</dt>

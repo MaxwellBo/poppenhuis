@@ -17,6 +17,23 @@ body {
   background-color: oldlace;
 }
 
+a {
+  color: mediumvioletred;
+}
+
+a:visited {
+  color: darkmagenta;
+}
+
+.size {
+  color: saddlebrown;
+}
+
+a:active {
+  color: red;
+}
+
+
 code {
   font-family: 'Inconsolata', monospace;
 }
@@ -46,10 +63,6 @@ hr {
   margin-top: 3ch;
 }
 
-
-.size {
-  color: mediumvioletred;
-}
 
 .spin-context {
   position: relative;
