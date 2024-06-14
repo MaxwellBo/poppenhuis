@@ -14,12 +14,7 @@ body {
   /** set a reasonable max-width */
   max-width: min(80vw, 100ch);
   margin: 2vw auto;
-  /** set a nice light tan background color */
-  background-color: rgb(255, 246, 230);
-}
-
-.orange {
-  color: #b06200;
+  background-color: oldlace;
 }
 
 code {
@@ -51,16 +46,9 @@ hr {
   margin-top: 3ch;
 }
 
-a {
-  color: rgb(227, 13, 149);
-}
 
-a:visited {
-  color: darkgreen;
-}
-
-a:active {
-  color: red;
+.size {
+  color: mediumvioletred;
 }
 
 .spin-context {

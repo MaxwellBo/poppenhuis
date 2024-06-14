@@ -93,7 +93,8 @@ const FIRST_PARTY_MANIFEST: Manifest = [
       {
         id: "guitars",
         name: "guitars",
-        description: "I only have 3 at the moment, but peak collection size was 5. Sadly 2 were lost to the Queensland heat, when the glue of their bridges melted and sheared off.",
+        description: `I only have 3 at the moment, but peak collection size was 5. 
+Sadly 2 were lost to the Queensland heat, when the glue of their bridges melted and sheared off.`,
         items: [
           {
             id: "yamaha",
