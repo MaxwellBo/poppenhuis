@@ -206,7 +206,7 @@ To quote Wikipedia: "The requinto guitar has six nylon strings with a scale leng
             captureDevice: "Apple iPhone 13 Pro",
             captureApp: "Polycam",
             acquisitionDate: "2013?",
-            captureLocation: "Kangaroo Point, Brisbane",
+            captureLocation: "West End, Brisbane",
           }
         ]
       },
