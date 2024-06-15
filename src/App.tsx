@@ -60,6 +60,15 @@ export function UsersView() {
             {users.map((user) => (
               <li key={user.id}>
                 <QueryPreservingLink to={user.id}>{user.name}</QueryPreservingLink> <Size ts={user.collections} t="collection" />
+                <ul>
+                  {
+                    user.collections.map((collection) =>
+                      <li key={collection.id}>
+                        <QueryPreservingLink to={user.id + "/" + collection.id}>{collection.name}</QueryPreservingLink> <Size ts={collection.items} t="item" />
+                      </li>
+                    )
+                  }
+                </ul>
               </li>
             ))}
           </ul>
@@ -72,7 +81,7 @@ export function UsersView() {
             The scan collections can be of anything: pottery, sculptures, guitars, cars, cakes, plants, <i>dolls</i>, etc.
             <br />
             <br />
-            
+
             It takes inspiration from <a href="https://www.are.na/">Are.na</a>, <a href="https://cari.institute/">Consumer&nbsp;Aesthetics&nbsp;Research&nbsp;Institute</a> and <a href="https://www.dayroselane.com/hydrants">The&nbsp;Hydrant&nbsp;Directory</a>.
             <br />
             <br />
@@ -255,7 +264,7 @@ export function ItemCards(props: { collection: Collection, user: User, highlight
           </li>
         ))}
       </ul>
-      {showSeeMore && 
+      {showSeeMore &&
         <div className='center see-more'>
           <QueryPreservingLink to={`/${user.id}/${collection.id}`}>see all {collection.name} →</QueryPreservingLink>
         </div>}

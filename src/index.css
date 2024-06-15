@@ -18,11 +18,11 @@ body {
 }
 
 a {
-  color: mediumvioletred;
+  /* color: mediumvioletred; */
 }
 
 a:visited {
-  color: darkmagenta;
+  /* color: darkmagenta; */
 }
 
 .size {
