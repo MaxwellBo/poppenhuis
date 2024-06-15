@@ -1,6 +1,4 @@
-/** Import a nice serif font from Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;700&display=swap');
-/** Import a more elegant monospace font from Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@400;700&display=swap');
 
 footer {
@@ -9,20 +7,10 @@ footer {
 }
 
 body {
-  /** set a nicer serif font */
   font-family: 'Lora', serif;
-  /** set a reasonable max-width */
   max-width: min(80vw, 100ch);
   margin: 2vw auto;
   background-color: oldlace;
-}
-
-a {
-  /* color: mediumvioletred; */
-}
-
-a:visited {
-  /* color: darkmagenta; */
 }
 
 .size {
@@ -32,7 +20,6 @@ a:visited {
 a:active {
   color: red;
 }
-
 
 code {
   font-family: 'Inconsolata', monospace;
@@ -62,24 +49,6 @@ hr {
   margin-bottom: 3ch;
   margin-top: 3ch;
 }
-
-
-.spin-context {
-  position: relative;
-  transform-style: preserve-3d;
-  animation: spin 20s linear infinite;
-}
-
-.spin-context > * {
-  position: absolute;
-  transform-style: preserve-3d;
-}
-
-@keyframes spin {
-  from { transform: rotateX(-0.1turn) rotateY(0turn); }
-  to { transform: rotateX(-0.1turn) rotateY(1turn); }
-}
-
 
 aside {
   width: 40%;
@@ -117,14 +86,11 @@ dl {
 }
 
 dl > dt {
-  /** Description terms should be bold */
   font-weight: bold;
-
 }
 
 dl > dd {
   max-width: 40ch;
-  /** Description details should be monospace */
   font-family: 'Inconsolata', monospace;
   font-size: 1.15em;
 }
