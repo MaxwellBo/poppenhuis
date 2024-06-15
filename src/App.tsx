@@ -101,6 +101,12 @@ export function UsersView() {
             <br />
             Ideally poppenhuis would also support rendering Polygon File Format (<code>.ply</code>) for rendering <a href="https://en.wikipedia.org/wiki/Gaussian_splatting">Gaussian splats</a>. PRs welcome.
           </details>
+          <details>
+            <summary>Why?</summary>
+            My partner has a large collection of dolls, so I built poppenhuis to make it easier for her to catalogue them and track metadata.
+            
+            Some of the dolls are culturally sensitive and shouldn't be displayed on a public forum, so she hosts her collection privately with a 3rd party manifest.
+          </details>
           {/* <details>
             <summary>Notes on construction</summary>
             I deliberately built this as an SPA with just a <a href="https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts">out-of-the-box Vite React template</a>. I know they're not exactly in vogue right now with <a href="https://nextjs.org/">Next.js</a> being all the rage.
@@ -144,14 +150,16 @@ function ThirdPartyManifests() {
 
   return (
     <>
-      <h3>1st party manifest</h3>
+      <b>1st party manifest</b>
+      <br />
       If you'd like me to host your collection either:
       <ul>
         <li>submit a GitHub PR to <a href="https://github.com/MaxwellBo/poppenhuis">the repo</a> modifying <a href="https://github.com/MaxwellBo/poppenhuis/blob/master/src/manifest.tsx"><code>//src/manifest.tsx</code></a> and <a href="https://github.com/MaxwellBo/poppenhuis/tree/master/public/models"><code>//public/models</code></a>.</li>
         <li>reach out to <a href="https://twitter.com/_max_bo_">me on Twitter</a> and send me a <code>.zip</code> folder of your models and a Google Sheet of your metadata. I'll upload it for you if you're not technically inclined.</li>
       </ul>
       <br />
-      <h3>3rd party manifests</h3>
+      <b>3rd party manifests</b>
+      <br />
       You can view and share your own content on this site with manifest files.
       <br />
       <br />
