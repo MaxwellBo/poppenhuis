@@ -158,7 +158,7 @@ dl > dd {
   padding: 3px;
 }
 
-.model-viewer-wrapper:active .camera-keys {
+.model-viewer-wrapper:focus-within .camera-keys {
   position: absolute;
   display: inline-block;
 }
