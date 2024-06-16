@@ -400,6 +400,9 @@ function getStyleForModelSize(size: ModelSize | undefined) {
 function ModelViewerWrapper(props: { item: Item, size?: ModelSize }) {
   return (
     <div className='model-viewer-wrapper'>
+      {props.size !== 'small' && <div className='camera-keys'>
+        <kbd>←</kbd> <kbd>↑</kbd> <kbd>↓</kbd> <kbd>→</kbd>
+      </div>}
       {/* @ts-ignore */}
       <model-viewer
         key={props.item.model}

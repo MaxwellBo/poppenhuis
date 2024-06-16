@@ -153,6 +153,16 @@ dl > dd {
   z-index: 9;
 }
 
+.model-viewer-wrapper .camera-keys {
+  display: none;
+  padding: 3px;
+}
+
+.model-viewer-wrapper:active .camera-keys {
+  position: absolute;
+  display: inline-block;
+}
+
 .item-hero {
   display: flex;
   flex-wrap: nowrap;
