@@ -280,9 +280,7 @@ function ItemCard(props: { item: Item, collection: Collection, user: User, altNa
   return (
     <div className="card">
       <div className='center'>
-        <div className='center model-viewer-wrapper'>
-          <Model item={props.item} size={props.size ?? 'normal'} />
-        </div>
+        <ModelViewerWrapper item={props.item} size={props.size ?? 'normal'} />
         <QueryPreservingLink to={`/${props.user.id}/${props.collection.id}/${props.item.id}`} triggerKey={props.triggerKey}>
           {props.altName ?? props.item.name}
         </QueryPreservingLink>
@@ -315,7 +313,7 @@ export function ItemView() {
       <div className='item-hero'>
         {previousItem ?
           <ItemCard item={previousItem} collection={collection} user={user} triggerKey="a" altName="← previous" size='small' /> : <div />}
-        <Model item={item} size='big' />
+        <ModelViewerWrapper item={item} size='big' />
         <ItemDescriptionList item={item} collection={collection} user={user} />
         {nextItem ?
           <ItemCard item={nextItem} collection={collection} user={user} triggerKey="d" altName="next →" size='small' /> : <div />}
@@ -399,24 +397,26 @@ function getStyleForModelSize(size: ModelSize | undefined) {
   }
 }
 
-function Model(props: { item: Item, size?: ModelSize }) {
+function ModelViewerWrapper(props: { item: Item, size?: ModelSize }) {
   return (
-    // @ts-ignore
-    <model-viewer
-      key={props.item.model}
-      style={getStyleForModelSize(props.size)}
-      alt={props.item.description}
-      src={props.item.model}
-      interaction-prompt=""
-      progress-bar=""
-      loading="auto"
-      poster={props.item.poster}
-      auto-rotate-delay="0"
-      rotation-per-second="30deg"
-      camera-controls
-      auto-rotate
-      touch-action="pan-y"
-    />
+    <div className='model-viewer-wrapper'>
+      {/* @ts-ignore */}
+      <model-viewer
+        key={props.item.model}
+        style={getStyleForModelSize(props.size)}
+        alt={props.item.description}
+        src={props.item.model}
+        interaction-prompt=""
+        progress-bar=""
+        loading="auto"
+        poster={props.item.poster}
+        auto-rotate-delay="0"
+        rotation-per-second="30deg"
+        camera-controls
+        auto-rotate
+        touch-action="pan-y"
+      />
+    </div>
   );
 }
 
