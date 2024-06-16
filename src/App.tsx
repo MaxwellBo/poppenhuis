@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { KeyboardEvent, useEffect, useRef } from 'react';
 import { Helmet } from "react-helmet";
 import './App.css'
 import {
@@ -104,7 +104,7 @@ export function UsersView() {
           <details>
             <summary>Why?</summary>
             My partner has a large collection of dolls, so I built poppenhuis to make it easier for her to catalogue them and track metadata.
-            
+
             Some of the dolls are culturally sensitive and shouldn't be displayed on a public forum, so she hosts her collection privately with a 3rd party manifest.
           </details>
         </section>
@@ -275,15 +275,18 @@ export function ItemCards(props: { collection: Collection, user: User, highlight
   );
 }
 
-function ItemCard(props: { item: Item, collection: Collection, user: User, altName?: string, size?: ModelSize }) {
+function ItemCard(props: { item: Item, collection: Collection, user: User, altName?: string, size?: ModelSize, triggerKey?: string }) {
   return (
     <div className="card">
-      <div className='center thumbnail'>
-        <Model item={props.item} size={props.size ?? 'normal'} />
+      <div className='center'>
+        <div className='center thumbnail'>
+          <Model item={props.item} size={props.size ?? 'normal'} />
+        </div>
+        <QueryPreservingLink to={`/${props.user.id}/${props.collection.id}/${props.item.id}`} triggerKey={props.triggerKey}>
+          {props.altName ?? props.item.name}
+        </QueryPreservingLink>
+        {props.triggerKey && <kbd className='block'>{props.triggerKey}</kbd>}
       </div>
-      <QueryPreservingLink to={`/${props.user.id}/${props.collection.id}/${props.item.id}`}>
-        {props.altName ?? props.item.name}
-      </QueryPreservingLink>
     </div>
   );
 }
@@ -310,11 +313,11 @@ export function ItemView() {
       </div>
       <div className='item-hero'>
         {previousItem ?
-          <ItemCard item={previousItem} collection={collection} user={user} altName="← previous" size='small' /> : <div />}
+          <ItemCard item={previousItem} collection={collection} user={user} triggerKey="a" altName="← previous" size='small' /> : <div />}
         <Model item={item} size='big' />
         <ItemDescriptionList item={item} collection={collection} user={user} />
         {nextItem ?
-          <ItemCard item={nextItem} collection={collection} user={user} altName="next →" size='small' /> : <div />}
+          <ItemCard item={nextItem} collection={collection} user={user} triggerKey="d" altName="next →" size='small' /> : <div />}
       </div>
       <ItemCards collection={collection} user={user} highlighted={item.id} limit={6} />
     </article>
@@ -430,7 +433,34 @@ function ScrollToTop() {
 
 
 
-function QueryPreservingLink(props: { to: string, children: React.ReactNode }) {
+function QueryPreservingLink(props: { to: string, children: React.ReactNode, triggerKey?: string }) {
   const [searchParams] = useSearchParams();
-  return <Link to={{ pathname: props.to, search: searchParams.toString() }}>{props.children}</Link>
+  const linkRef = useRef<HTMLAnchorElement>(null);
+
+  // we want to register a key to trigger the link click on keydown
+  useEffect(() => {
+    console.log(props.triggerKey)
+    if (!props.triggerKey) {
+      return;
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      console.log(event)
+      if (event.key === props.triggerKey) {
+        if (linkRef.current) {
+          linkRef.current.click();
+        }
+      }
+    };
+
+    // @ts-ignore
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      // @ts-ignore
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
+  return <Link ref={linkRef} to={{ pathname: props.to, search: searchParams.toString() }}>{props.children}</Link>
 }
