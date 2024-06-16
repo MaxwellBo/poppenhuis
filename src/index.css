@@ -151,7 +151,7 @@ dl > dd {
 
 .model-viewer-wrapper model-viewer:hover {
   padding: 0px;
-  border: 1px dotted #333;
+  border: 1px solid #333;
   z-index: 9;
 }
 
