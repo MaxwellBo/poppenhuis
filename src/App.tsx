@@ -65,6 +65,7 @@ export function UsersView() {
                     user.collections.map((collection) =>
                       <li key={collection.id}>
                         <QueryPreservingLink to={user.id + "/" + collection.id}>{collection.name}</QueryPreservingLink> <Size ts={collection.items} t="item" />
+                        <ItemCard item={collection.items[0]} collection={collection} user={user} size='small' altName={''} />
                       </li>
                     )
                   }
@@ -439,7 +440,6 @@ function QueryPreservingLink(props: { to: string, children: React.ReactNode, tri
 
   // we want to register a key to trigger the link click on keydown
   useEffect(() => {
-    console.log(props.triggerKey)
     if (!props.triggerKey) {
       return;
     }
