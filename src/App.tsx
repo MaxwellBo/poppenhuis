@@ -280,7 +280,7 @@ function ItemCard(props: { item: Item, collection: Collection, user: User, altNa
   return (
     <div className="card">
       <div className='center'>
-        <div className='center thumbnail'>
+        <div className='center model-viewer-wrapper'>
           <Model item={props.item} size={props.size ?? 'normal'} />
         </div>
         <QueryPreservingLink to={`/${props.user.id}/${props.collection.id}/${props.item.id}`} triggerKey={props.triggerKey}>
@@ -445,7 +445,6 @@ function QueryPreservingLink(props: { to: string, children: React.ReactNode, tri
     }
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      console.log(event)
       if (event.key === props.triggerKey) {
         if (linkRef.current) {
           linkRef.current.click();
