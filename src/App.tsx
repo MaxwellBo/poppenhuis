@@ -263,7 +263,7 @@ export function ItemCards(props: { collection: Collection, user: User, highlight
     <>
       <ul className='card-grid'>
         {truncatedItems.map((item) => (
-          <li key={item.id} className={item.id === highlighted ? 'highlight fade' : undefined}>
+          <li key={item.id} className={item.id === highlighted ? 'yelling fade-model-viewer' : undefined}>
             <ItemCard item={item} collection={collection} user={user} />
           </li>
         ))}

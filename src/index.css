@@ -27,7 +27,9 @@ blink, .blink { animation: blink 1s step-end infinite; }
   67% { opacity: 0 }
 }
 
-.fade { animation: fade 2s infinite; }
+.fade-model-viewer model-viewer { 
+  animation: fade 2s infinite; 
+}
 
 @keyframes fade {
   0%, 100% { opacity: 1; }
@@ -149,7 +151,7 @@ dl > dd {
 
 .model-viewer-wrapper model-viewer:hover {
   padding: 0px;
-  border: 1px solid #333;
+  border: 1px dotted #333;
   z-index: 9;
 }
 
@@ -228,7 +230,7 @@ dl > dd {
   white-space: pre-wrap;
 }
 
-.highlight {
+.yelling {
   text-transform: uppercase;
   font-weight: bold;
 }
