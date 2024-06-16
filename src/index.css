@@ -157,7 +157,7 @@ dl > dd {
 
 .model-viewer-wrapper .camera-keys {
   display: none;
-  padding: 3px;
+  padding: 7px;
 }
 
 .model-viewer-wrapper:focus-within .camera-keys {
