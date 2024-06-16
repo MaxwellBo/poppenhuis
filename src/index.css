@@ -21,6 +21,19 @@ a:active {
   color: red;
 }
 
+blink, .blink { animation: blink 1s step-end infinite; }
+
+@keyframes blink {
+  67% { opacity: 0 }
+}
+
+.fade { animation: fade 2s infinite; }
+
+@keyframes fade {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.1; }
+}
+
 code {
   font-family: 'Inconsolata', monospace;
 }

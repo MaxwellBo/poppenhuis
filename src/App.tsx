@@ -107,11 +107,6 @@ export function UsersView() {
             
             Some of the dolls are culturally sensitive and shouldn't be displayed on a public forum, so she hosts her collection privately with a 3rd party manifest.
           </details>
-          {/* <details>
-            <summary>Notes on construction</summary>
-            I deliberately built this as an SPA with just a <a href="https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts">out-of-the-box Vite React template</a>. I know they're not exactly in vogue right now with <a href="https://nextjs.org/">Next.js</a> being all the rage.
-            But an SPA lends itself to being snapshotable/archivable with a simple <a href="https://www.gnu.org/software/wget/manual/html_node/Recursive-Retrieval-Options.html"><code>wget --recursive</code></a>.
-          </details> */}
         </section>
       </div>
     </article>
@@ -267,7 +262,7 @@ export function ItemCards(props: { collection: Collection, user: User, highlight
     <>
       <ul className='card-grid'>
         {truncatedItems.map((item) => (
-          <li key={item.id} className={item.id === highlighted ? 'highlight' : undefined}>
+          <li key={item.id} className={item.id === highlighted ? 'highlight fade' : undefined}>
             <ItemCard item={item} collection={collection} user={user} />
           </li>
         ))}
@@ -337,6 +332,9 @@ function ItemDescriptionList(props: { item: Item, collection: Collection, user: 
     location = captureLatLong;
   }
 
+  const { captureDevice, captureApp, captureMethod } = props.item;
+  const method = [captureDevice, captureApp, captureMethod].filter(Boolean).join(', ');
+
   const customFields = props.item.customFields ? Object.entries(props.item.customFields).map(([key, value]) => {
     return (
       <React.Fragment key={key}>
@@ -360,8 +358,6 @@ function ItemDescriptionList(props: { item: Item, collection: Collection, user: 
       <dd>{props.collection.id}</dd>
       <dt>Item ID</dt>
       <dd>{props.item.id}</dd>
-      {/* <dt>Description</dt>
-      <dd>{props.item.description}</dd> */}
       <dt>Release date</dt>
       <dd>{props.item.releaseDate}</dd>
       <dt>Manufacture date</dt>
@@ -372,12 +368,8 @@ function ItemDescriptionList(props: { item: Item, collection: Collection, user: 
       <dd>{props.item.captureDate}</dd>
       <dt>Capture location</dt>
       <dd>{location}</dd>
-      <dt>Capture device</dt>
-      <dd>{props.item.captureDevice}</dd>
-      <dt>Capture app</dt>
-      <dd>{props.item.captureApp}</dd>
       <dt>Capture method</dt>
-      <dd>{props.item.captureMethod}</dd>
+      <dd>{method}</dd>
       <dt>Model</dt>
       <dd>{props.item.model}</dd>
       {props.item.poster && <>
