@@ -82,7 +82,7 @@ export function UsersView() {
             <br />
             <br />
 
-            It takes inspiration from <a href="https://www.are.na/">Are.na</a>, <a href="https://cari.institute/">Consumer&nbsp;Aesthetics&nbsp;Research&nbsp;Institute</a> and <a href="https://www.dayroselane.com/hydrants">The&nbsp;Hydrant&nbsp;Directory</a>.
+            It takes inspiration from <a href="https://www.are.na/">Are.na</a>, <a href="https://cari.institute/">Consumer&nbsp;Aesthetics&nbsp;Research&nbsp;Institute</a>, <a href="https://www.dayroselane.com/hydrants">The&nbsp;Hydrant&nbsp;Directory</a> and <a href="https://en.wikipedia.org/wiki/Tony_Hawk%27s_Pro_Skater_4">Tony Hawk's Pro Skater 4</a>.
             <br />
             <br />
             <small>(I discovered this <a href="https://x.com/samdape/status/1777986265993875950">Sam Peitz tweet</a>, <a href="https://kevin.garden">kevin.garden</a> and <a href="https://rotatingsandwiches.com/">rotating sandwiches</a> after first publish.)</small>
