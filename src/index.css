@@ -39,11 +39,6 @@ a:active {
   color: red;
 }
 
-
-.size {
-  color: saddlebrown;
-}
-
 code {
   font-family: 'Inconsolata', monospace;
 }
@@ -151,6 +146,10 @@ pre {
 }
 
 /** APP SPECIFIC STYLES */
+
+.size {
+  color: saddlebrown;
+}
 
 .fade-model-viewer model-viewer { 
   animation: fade 2s infinite; 
