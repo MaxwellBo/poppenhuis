@@ -46,7 +46,7 @@ export function UsersView() {
     <article>
       <Helmet>
         <title>poppenhuis</title>
-        <meta name="description" content={`a dollhouse`} />
+        <meta name="description" content="Dutch for 'dollhouse'" />
       </Helmet>
       <header>
         <h1>
