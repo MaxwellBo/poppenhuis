@@ -401,7 +401,7 @@ function ModelViewerWrapper(props: { item: Item, size?: ModelSize }) {
   return (
     <div className='model-viewer-wrapper'>
       {props.size !== 'small' && <div className='camera-keys'>
-        <kbd>←</kbd> <kbd>↑</kbd> <kbd>↓</kbd> <kbd>→</kbd>
+        <kbd>SHIFT</kbd> <kbd>←</kbd> <kbd>↑</kbd> <kbd>↓</kbd> <kbd>→</kbd>
       </div>}
       {/* @ts-ignore */}
       <model-viewer
