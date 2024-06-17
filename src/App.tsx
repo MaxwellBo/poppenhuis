@@ -91,6 +91,12 @@ export function UsersView() {
             <br />
           </p>
           <details>
+            <summary>Why?</summary>
+            My partner has a large collection of dolls, so I built poppenhuis to make it easier for her to catalogue and track metadata.
+
+            Some of the dolls are culturally sensitive and shouldn't be displayed on a public forum, so she hosts her collection privately with a 3rd party manifest.
+          </details>
+          <details>
             <summary>Want to host your own content here?</summary>
             <ThirdPartyManifests />
           </details>
@@ -103,10 +109,11 @@ export function UsersView() {
             Ideally poppenhuis would also support rendering Polygon File Format (<code>.ply</code>) for rendering <a href="https://en.wikipedia.org/wiki/Gaussian_splatting">Gaussian splats</a>. PRs welcome.
           </details>
           <details>
-            <summary>Why?</summary>
-            My partner has a large collection of dolls, so I built poppenhuis to make it easier for her to catalogue them and track metadata.
-
-            Some of the dolls are culturally sensitive and shouldn't be displayed on a public forum, so she hosts her collection privately with a 3rd party manifest.
+            <summary>Notes on construction</summary>
+            I tried porting the app to <a href="https://nextjs.org/">Next.js</a> to get some of that sweet, sweet SSR. 
+            But to my dismay I discovered that clicking any link was causing a full page load and remount, which invalidated the camera state of all <a href="https://modelviewer.dev/">model-viewer</a> components.
+            Alas, the app remains a <a href="https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts">Vite React SPA</a>.
+            If anyone has a solution to this, please reach out to me on <a href="https://twitter.com/_max_bo_">Twitter</a>.
           </details>
         </section>
       </div>
