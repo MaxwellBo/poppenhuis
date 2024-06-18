@@ -320,7 +320,7 @@ export function ItemView() {
       <div className='item-hero'>
         {previousItem ?
           <ItemCard item={previousItem} collection={collection} user={user} triggerKey="a" altName="← previous" size='small' /> : <div />}
-        <ModelViewerWrapper item={item} size='big' />
+        <ModelViewerWrapper item={item} size='responsive' />
         <ItemDescriptionList item={item} collection={collection} user={user} />
         {nextItem ?
           <ItemCard item={nextItem} collection={collection} user={user} triggerKey="d" altName="next →" size='small' /> : <div />}
@@ -390,14 +390,14 @@ function ItemDescriptionList(props: { item: Item, collection: Collection, user: 
   );
 }
 
-type ModelSize = 'small' | 'normal' | 'big';
+type ModelSize = 'small' | 'normal' | 'responsive';
 
 function getStyleForModelSize(size: ModelSize | undefined) {
   switch (size) {
     case 'small':
       return { height: "6rem", width: "6rem" };
-    case 'big':
-      return { height: '35rem', width: "35rem" };
+    case 'responsive':
+      return { height: '30rem', width: "30rem", maxWidth: "95vw", maxHeight: "95vw" };
     case 'normal':
     default:
       return { height: "16rem", width: "16rem" };
