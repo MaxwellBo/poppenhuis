@@ -67,10 +67,8 @@ aside {
 }
 
 dl {
-  /** Description lists should be displayed as a grid */
   display: grid;
   grid-template-columns: auto auto;
-  /* grid-auto-rows: min-content; */
   gap: 0.3ch;
   column-gap: 1ch;
 }
