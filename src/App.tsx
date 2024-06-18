@@ -157,7 +157,7 @@ function ThirdPartyManifests() {
       <br />
       If you'd like me to host your collection either:
       <ul>
-        <li>submit a GitHub PR to <a href="https://github.com/MaxwellBo/poppenhuis">the repo</a> modifying <a href="https://github.com/MaxwellBo/poppenhuis/blob/master/src/manifest.tsx"><code>//src/manifest.tsx</code></a> and <a href="https://github.com/MaxwellBo/poppenhuis/tree/master/public/models"><code>//public/models</code></a>.</li>
+        <li>submit a GitHub PR to <a href="https://github.com/MaxwellBo/poppenhuis">the repo</a> modifying <a href="https://github.com/MaxwellBo/poppenhuis/blob/master/src/manifest.tsx"><code>//src/manifest.tsx</code></a> and <a href="https://github.com/MaxwellBo/poppenhuis/tree/master/public/models"><code>//public/models/</code></a>.</li>
         <li>reach out to <a href="https://twitter.com/_max_bo_">me on Twitter</a> and send me a <code>.zip</code> folder of your models and a Google Sheet of your metadata. I'll upload it for you if you're not technically inclined.</li>
       </ul>
       <br />
@@ -320,7 +320,7 @@ export function ItemPage() {
       <div className='item-hero'>
         {previousItem ?
           <ItemCard item={previousItem} collection={collection} user={user} triggerKey="a" altName="← previous" size='small' /> : <div />}
-        <ModelViewerWrapper item={item} size='responsive' />
+        <ModelViewerWrapper item={item} size='responsive-big' />
         <ItemDescriptionList item={item} collection={collection} user={user} />
         {nextItem ?
           <ItemCard item={nextItem} collection={collection} user={user} triggerKey="d" altName="next →" size='small' /> : <div />}
@@ -390,13 +390,13 @@ function ItemDescriptionList(props: { item: Item, collection: Collection, user: 
   );
 }
 
-type ModelSize = 'small' | 'normal' | 'responsive';
+type ModelSize = 'small' | 'normal' | 'responsive-big';
 
 function getStyleForModelSize(size: ModelSize | undefined) {
   switch (size) {
     case 'small':
       return { height: "6rem", width: "6rem" };
-    case 'responsive':
+    case 'responsive-big':
       return { height: '30rem', width: "30rem", maxWidth: "95vw", maxHeight: "95vw" };
     case 'normal':
     default:
