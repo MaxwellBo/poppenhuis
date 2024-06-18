@@ -179,10 +179,13 @@ pre {
   list-style-type: none;
 }
 
-/* don't show the card grid under 800px screen width */
 @media (max-width: 800px) {
   .item-view .card-grid {
     display: none;
+  }
+
+  kbd {
+    display: none !important;
   }
 }
 
