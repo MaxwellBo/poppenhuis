@@ -5,7 +5,7 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
-import { ErrorPage, App, UserView, ItemView, UsersView, CollectionView } from './App.tsx';
+import { ErrorPage, App, UserPage, ItemPage, UsersView, CollectionPage } from './App.tsx';
 import { loadUser, loadUsers, loadItem, loadCollection } from './manifest.tsx';
 
 const router = createBrowserRouter([
@@ -23,19 +23,19 @@ const router = createBrowserRouter([
       },
       {
         path: ":userId",
-        element: <UserView />,
+        element: <UserPage />,
         // @ts-ignore
         loader: loadUser,
       },
       {
         path: ":userId/:collectionId",
-        element: <CollectionView />,
+        element: <CollectionPage />,
         // @ts-ignore
         loader: loadCollection,
       },
       {
         path: ":userId/:collectionId/:itemId",
-        element: <ItemView />,
+        element: <ItemPage />,
         // @ts-ignore
         loader: loadItem,
       },

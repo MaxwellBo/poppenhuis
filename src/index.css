@@ -180,7 +180,7 @@ pre {
 }
 
 @media (max-width: 800px) {
-  .item-view .card-grid {
+  .item-page .card-grid {
     display: none;
   }
 

@@ -190,7 +190,7 @@ function ThirdPartyManifests() {
   )
 }
 
-export function UserView() {
+export function UserPage() {
   const user = useLoaderData() as User;
 
   return (
@@ -212,10 +212,10 @@ export function UserView() {
 }
 
 
-export function CollectionView() {
+export function CollectionPage() {
   const { collection, user } = useLoaderData() as Awaited<ReturnType<typeof loadCollection>>;
 
-  return <article className='collection-view'>
+  return <article>
     <Helmet>
       <title>{collection.name} - poppenhuis</title>
       <meta name="description" content={`Collection of 3D models by ${user.name}`} />
@@ -297,14 +297,14 @@ function ItemCard(props: { item: Item, collection: Collection, user: User, altNa
   );
 }
 
-export function ItemView() {
+export function ItemPage() {
   const { item, user, collection } = useLoaderData() as Awaited<ReturnType<typeof loadItem>>;
 
   const previousItem: Item | undefined = collection.items.find((_, index) => collection.items[index + 1]?.id === item.id);
   const nextItem: Item | undefined = collection.items.find((_, index) => collection.items[index - 1]?.id === item.id);
 
   return (
-    <article className='item-view'>
+    <article className='item-page'>
       <Helmet>
         <title>{item.name} - poppenhuis</title>
         <meta name="description" content={item.description} />
