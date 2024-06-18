@@ -50,7 +50,7 @@ export function UsersView() {
       </Helmet>
       <header>
         <h1>
-          poppenhuis /
+          🎎 poppenhuis /
         </h1>
       </header>
       <div className='cols'>
@@ -110,7 +110,7 @@ export function UsersView() {
           </details>
           <details>
             <summary>Notes on construction</summary>
-            I tried porting the app to <a href="https://nextjs.org/">Next.js</a> to get some of that sweet, sweet SSR. 
+            I tried porting the app to <a href="https://nextjs.org/">Next.js</a> to get some of that sweet, sweet SSR.
             But to my dismay I discovered that clicking any link was causing a full page load and remount, which invalidated the camera state of all <a href="https://modelviewer.dev/">model-viewer</a> components.
             Alas, the app remains a <a href="https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts">Vite React SPA</a>.
             If anyone has a solution to this, please reach out to me on <a href="https://twitter.com/_max_bo_">Twitter</a>.
@@ -201,7 +201,7 @@ export function UserPage() {
       </Helmet>
       <header>
         <h1>
-          <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / {user.name} /
+          🎎 <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / {user.name} /
         </h1>
         <div className='padding-bottom-1rem'>{user.bio}</div>
       </header>
@@ -222,7 +222,7 @@ export function CollectionPage() {
     </Helmet>
     <header>
       <h1>
-        <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / {collection.id} /
+        🎎 <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / {collection.id} /
       </h1>
     </header>
     {collection.description && <p className='description'>{collection.description}</p>}
@@ -311,7 +311,7 @@ export function ItemPage() {
       </Helmet>
       <header>
         <h1>
-          <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}/${collection.id}`}>{collection.id}</QueryPreservingLink> / {item.name}
+          🎎 <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}/${collection.id}`}>{collection.id}</QueryPreservingLink> / {item.name}
         </h1>
       </header>
       <p className='description'>{item.description}</p>
