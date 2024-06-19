@@ -100,7 +100,7 @@ Sadly 2 were lost to the Queensland heat, when the glue of their bridges melted 
             id: "yamaha",
             name: "Yamaha",
             model: "/models/mbo/guitars/yamaha.glb",
-            description: "I acquired this one in Japan. Not the greatest sound, and not the easiest thing to play. But hey, it's got a pickup and a mic.",
+            description: "I acquired this one in Japan. Not the greatest sound, and the jack broke after about 6 years. But it's fine amplified.",
             formalName: "Yamaha CGX171CCA",
             captureDate: "2024 May 28",
             captureMethod: "LiDAR",
@@ -124,7 +124,7 @@ Sadly 2 were lost to the Queensland heat, when the glue of their bridges melted 
           {
             id: "kohala",
             name: "Kohala ukelele",
-            description: "Not quite a guitar. Sounds shit.",
+            description: "Not quite a guitar.",
             model: "/models/mbo/guitars/kohala.glb",
             captureDate: "2024 May 28",
             captureMethod: "LiDAR",
@@ -139,7 +139,7 @@ Sadly 2 were lost to the Queensland heat, when the glue of their bridges melted 
 
 I am unsure of its make or model otherwise. Not the greatest sound, but a pleasure to play.
             
-To quote Wikipedia: "The requinto guitar has six nylon strings with a scale length of 530 to 540 millimetres (20.9 to 21.3 in), which is about 18% smaller than a standard guitar scale. Requintos are tuned: A2-D3-G3-C4-E4-A4 (one fourth higher than the standard classical guitar)."`,
+What's a requinto? "The requinto [classical] guitar has six nylon strings with a scale length of 530 to 540 millimetres (20.9 to 21.3 in), which is about 18% smaller than a standard guitar scale. Requintos are tuned: A2-D3-G3-C4-E4-A4 (one fourth higher than the standard classical guitar)."`,
             name: "some requinto",
             model: "/models/mbo/guitars/requinto.glb",
             captureDate: "2024 May 31",
