@@ -30,11 +30,14 @@ export function ErrorPage() {
 
   return (
     <div id="error-page">
-      <h1>Oops!</h1>
-      <p>Sorry, an unexpected error has occurred.</p>
+      <h1>Fatal error</h1>
+      <p>This page has thrown an unrecoverable error:</p>
+      <br/>
       <p>
         <i>{error.statusText || error.message}</i>
       </p>
+      <br />
+      <p>Please reach out to me <a href="https://twitter.com/_max_bo_">me on Twitter</a>, and I'll push a fix.</p>
     </div>
   );
 }
@@ -113,7 +116,7 @@ export function UsersView() {
             I tried porting the app to <a href="https://nextjs.org/">Next.js</a> to get some of that sweet, sweet SSR.
             But to my dismay I discovered that clicking any link was causing a full page load and remount, which invalidated the camera state of all <a href="https://modelviewer.dev/">model-viewer</a> components.
             Alas, the app remains a <a href="https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts">Vite React SPA</a>.
-            If anyone has a solution to this, please reach out to me on <a href="https://twitter.com/_max_bo_">Twitter</a>.
+            If anyone has a solution to this, please reach out to <a href="https://twitter.com/_max_bo_">me on Twitter</a>.
           </details>
         </section>
       </div>
@@ -341,9 +344,6 @@ function ItemDescriptionList(props: { item: Item, collection: Collection, user: 
     location = captureLatLong;
   }
 
-  const { captureDevice, captureApp, captureMethod } = props.item;
-  const method = [captureDevice, captureApp, captureMethod].filter(Boolean).join(', ');
-
   const customFields = props.item.customFields ? Object.entries(props.item.customFields).map(([key, value]) => {
     return (
       <React.Fragment key={key}>
@@ -361,12 +361,12 @@ function ItemDescriptionList(props: { item: Item, collection: Collection, user: 
           <dd>{props.item.formalName}</dd>
         </>
       }
-      <dt>user ID</dt>
+      {/* <dt>user ID</dt>
       <dd>{props.user.id}</dd>
       <dt>collection ID</dt>
       <dd>{props.collection.id}</dd>
       <dt>item ID</dt>
-      <dd>{props.item.id}</dd>
+      <dd>{props.item.id}</dd> */}
       <dt>release date</dt>
       <dd>{props.item.releaseDate}</dd>
       <dt>manufacture date</dt>
@@ -377,8 +377,12 @@ function ItemDescriptionList(props: { item: Item, collection: Collection, user: 
       <dd>{props.item.captureDate}</dd>
       <dt>capture location</dt>
       <dd>{location}</dd>
+      <dt>capture device</dt>
+      <dd>{props.item.captureDevice}</dd>
+      <dt>capture app</dt>
+      <dd>{props.item.captureApp}</dd>
       <dt>capture method</dt>
-      <dd>{method}</dd>
+      <dd>{props.item.captureMethod}</dd>
       <dt>model</dt>
       <dd>{props.item.model}</dd>
       {props.item.poster && <>
