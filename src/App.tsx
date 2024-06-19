@@ -357,32 +357,32 @@ function ItemDescriptionList(props: { item: Item, collection: Collection, user: 
     <dl>
       {
         props.item.formalName && <>
-          <dt>Formal name</dt>
+          <dt>formal name</dt>
           <dd>{props.item.formalName}</dd>
         </>
       }
-      <dt>User ID</dt>
+      <dt>user ID</dt>
       <dd>{props.user.id}</dd>
-      <dt>Collection ID</dt>
+      <dt>collection ID</dt>
       <dd>{props.collection.id}</dd>
-      <dt>Item ID</dt>
+      <dt>item ID</dt>
       <dd>{props.item.id}</dd>
-      <dt>Release date</dt>
+      <dt>release date</dt>
       <dd>{props.item.releaseDate}</dd>
-      <dt>Manufacture date</dt>
+      <dt>manufacture date</dt>
       <dd>{props.item.manufactureDate}</dd>
-      <dt>Acquisition date</dt>
+      <dt>acquisition date</dt>
       <dd>{props.item.acquisitionDate}</dd>
-      <dt>Capture date</dt>
+      <dt>capture date</dt>
       <dd>{props.item.captureDate}</dd>
-      <dt>Capture location</dt>
+      <dt>capture location</dt>
       <dd>{location}</dd>
-      <dt>Capture method</dt>
+      <dt>capture method</dt>
       <dd>{method}</dd>
-      <dt>Model</dt>
+      <dt>model</dt>
       <dd>{props.item.model}</dd>
       {props.item.poster && <>
-        <dt>Poster</dt>
+        <dt>poster</dt>
         <dd>{props.item.poster}</dd>
       </>}
       {customFields}
