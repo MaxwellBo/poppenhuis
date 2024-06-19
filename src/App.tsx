@@ -1,4 +1,5 @@
 import React, { KeyboardEvent, useEffect, useRef } from 'react';
+import '@google/model-viewer'
 import { Helmet } from "react-helmet";
 import './App.css'
 import {
