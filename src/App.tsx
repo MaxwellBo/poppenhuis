@@ -19,7 +19,7 @@ export function App() {
         <Outlet />
       </main>
       <footer>
-        <small>c. 2024, <a href="https://github.com/MaxwellBo/poppenhuis">source code</a>, <a href="https://maxbo.me">Max Bo</a></small>
+        <small>🎎 c. 2024, <a href="https://github.com/MaxwellBo/poppenhuis">source code</a>, <a href="https://maxbo.me">Max Bo</a></small>
       </footer>
     </div>
   )
@@ -50,7 +50,7 @@ export function UsersView() {
       </Helmet>
       <header>
         <h1>
-          🎎 poppenhuis /
+          poppenhuis /
         </h1>
       </header>
       <div className='cols'>
@@ -201,7 +201,7 @@ export function UserPage() {
       </Helmet>
       <header>
         <h1>
-          🎎 <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / {user.name} /
+          <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / {user.name} /
         </h1>
         <div className='padding-bottom-1rem'>{user.bio}</div>
       </header>
@@ -222,7 +222,7 @@ export function CollectionPage() {
     </Helmet>
     <header>
       <h1>
-        🎎 <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / {collection.id} /
+        <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / {collection.id} /
       </h1>
     </header>
     {collection.description && <p className='description'>{collection.description}</p>}
@@ -311,7 +311,7 @@ export function ItemPage() {
       </Helmet>
       <header>
         <h1>
-          🎎 <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}/${collection.id}`}>{collection.id}</QueryPreservingLink> / {item.name}
+          <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}/${collection.id}`}>{collection.id}</QueryPreservingLink> / {item.name}
         </h1>
       </header>
       <p className='description'>{item.description}</p>
