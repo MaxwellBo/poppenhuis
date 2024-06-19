@@ -112,7 +112,7 @@ Sadly 2 were lost to the Queensland heat, when the glue of their bridges melted 
           {
             id: "squire",
             name: "Stratocaster Squire",
-            description: "I swear, the stickers are _not_ mine. They came with the guitar when I got if off Facebook Marketplace for a whopping $50AUD.",
+            description: "The stickers came with the guitar when I got if off Facebook Marketplace for a whopping $50AUD.",
             model: "/models/mbo/guitars/squire.glb",
             captureDate: "2024 May 28",
             captureMethod: "LiDAR",
