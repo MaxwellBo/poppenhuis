@@ -32,7 +32,7 @@ export interface Item {
   manufactureLocation?: string;
   acquisitionLocation?: string;
   captureLocation?: string;
-  captureLatLong?: string;
+  captureLatLon?: string;
   // Capture details
   captureApp?: string;
   captureDevice?: string;
@@ -78,7 +78,7 @@ interface Item {
   manufactureLocation?: string;
   acquisitionLocation?: string;
   captureLocation?: string;
-  captureLatLong?: string;
+  captureLatLon?: string;
   // Capture details
   captureApp?: string;
   captureDevice?: string;
@@ -280,7 +280,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             captureMethod: "LiDAR",
             captureDevice: "Apple iPhone 13 Pro",
             captureLocation: "West End",
-            captureLatLong: "27.48 S, 153.01 E",
+            captureLatLon: "27.48 S, 153.01 E",
             captureDate: "2023 April 26 9:00PM",
             acquisitionDate: "2012?"
           },
@@ -293,7 +293,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             model: "/models/mbo/friends/LouNathan.glb",
             captureDevice: "Apple iPhone 13 Pro",
             captureDate: "2023 April 9 3:55 PM",
-            captureLatLong: "33.89 S, 151.18 E",
+            captureLatLon: "33.89 S, 151.18 E",
             captureLocation: "Newtown",
             acquisitionDate: "2022"
           },
@@ -307,7 +307,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             captureDate: "2023 April 8 10:16 PM",
             acquisitionDate: "2022",
             captureLocation: "Sydney",
-            captureLatLong: "33.88 S, 151.21 E"
+            captureLatLon: "33.88 S, 151.21 E"
           },
           {
             id: "sam",
@@ -340,7 +340,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             captureDevice: "Apple iPhone 13 Pro",
             acquisitionDate: "2022",
             captureLocation: "Redfern",
-            captureLatLong: "33.89 S, 151.21 E",
+            captureLatLon: "33.89 S, 151.21 E",
             captureDate: "2023 Apr 22 at 10:40PM"
           },
           {
@@ -396,7 +396,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             model: "/models/mbo/friends/James.glb",
             captureDevice: "Apple iPhone 13 Pro",
             captureLocation: "Some boat in the middle of Sydney Harbour",
-            captureLatLong: "33.86 S, 151.20 E",
+            captureLatLon: "33.86 S, 151.20 E",
             captureDate: "2024 May 24 4:58PM",
             acquisitionDate: "2015?"
           }

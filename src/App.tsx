@@ -288,14 +288,15 @@ export function ItemCards(props: { collection: Collection, user: User, highlight
 }
 
 function ItemCard(props: { item: Item, collection: Collection, user: User, altName?: string, size?: ModelSize, triggerKey?: string }) {
+  const { item, collection, user, altName, size, triggerKey } = props;
   return (
     <div className="card">
       <div className='center'>
-        <ModelViewerWrapper item={props.item} size={props.size ?? 'normal'} />
-        <QueryPreservingLink to={`/${props.user.id}/${props.collection.id}/${props.item.id}`} triggerKey={props.triggerKey}>
-          {props.altName ?? props.item.name}
+        <ModelViewerWrapper item={item} size={size ?? 'normal'} />
+        <QueryPreservingLink to={`/${user.id}/${collection.id}/${item.id}`} triggerKey={triggerKey}>
+          {altName ?? item.name}
         </QueryPreservingLink>
-        {props.triggerKey && <kbd className='block'>{props.triggerKey}</kbd>}
+        {triggerKey && <kbd className='block'>{triggerKey}</kbd>}
       </div>
     </div>
   );
@@ -321,11 +322,15 @@ export function ItemPage() {
       <p className='description'>{item.description}</p>
       <div className='previous-next'>
       </div>
-      <div className='item-hero'>
+      <div className='bento'>
         {previousItem ?
           <ItemCard item={previousItem} collection={collection} user={user} triggerKey="a" altName="← previous" size='small' /> : <div />}
         <ModelViewerWrapper item={item} size='responsive-big' />
-        <ItemDescriptionList item={item} collection={collection} user={user} />
+        <div>
+          <ItemDescriptionList item={item} collection={collection} user={user} context='web' />
+          <br />
+          <QueryPreservingLink to={`/${user.id}/${collection.id}/${item.id}/label`}>print label</QueryPreservingLink>
+        </div>
         {nextItem ?
           <ItemCard item={nextItem} collection={collection} user={user} triggerKey="d" altName="next →" size='small' /> : <div />}
       </div>
@@ -334,15 +339,41 @@ export function ItemPage() {
   );
 }
 
-function ItemDescriptionList(props: { item: Item, collection: Collection, user: User }) {
-  const { captureLocation, captureLatLong } = props.item;
+export function WallLabelPage() {
+  const { item, user, collection } = useLoaderData() as Awaited<ReturnType<typeof loadItem>>;
+
+  const url = `poppenhu.is/${user.id}/${collection.id}/${item.id}`
+
+  useEffect(() => {
+    // window.print();
+  });
+
+  return (
+    <article className='short'>
+      <div className='no-print'>
+        <QueryPreservingLink to={`/${user.id}/${collection.id}/${item.id}`}>← back</QueryPreservingLink>
+      </div>
+      <h1>{item.name}</h1>
+      <ItemDescriptionList item={item} collection={collection} user={user} context='print'/>
+    </article>
+  )
+}
+
+
+
+function ItemDescriptionList(props: { item: Item, collection: Collection, user: User, context: 'web' | 'print' }) {
+  const { user, collection, item, context } = props;
+  const { captureLocation, captureLatLon, } = props.item;
+  
+  const url = `poppenhu.is/${user.id}/${collection.id}/${item.id}`
+
   let location;
-  if (captureLocation && captureLatLong) {
-    location = `${captureLocation} (${captureLatLong})`;
+  if (captureLocation && captureLatLon) {
+    location = `${captureLocation} (${captureLatLon})`;
   } else if (captureLocation) {
     location = captureLocation;
-  } else if (captureLatLong) {
-    location = captureLatLong;
+  } else if (captureLatLon) {
+    location = captureLatLon;
   }
 
   const customFields = props.item.customFields ? Object.entries(props.item.customFields).map(([key, value]) => {
@@ -357,44 +388,48 @@ function ItemDescriptionList(props: { item: Item, collection: Collection, user: 
   return (
     <dl>
       {
-        props.item.formalName && <>
-          <dt>formal name</dt>
-          <dd>{props.item.formalName}</dd>
+        context === 'print' && <>
+          <dt>URL</dt>
+          <dd><a href={url}>{url}</a></dd>
         </>
       }
-      {/* <dt>user ID</dt>
-      <dd>{props.user.id}</dd>
-      <dt>collection ID</dt>
-      <dd>{props.collection.id}</dd>
-      <dt>item ID</dt>
-      <dd>{props.item.id}</dd> */}
+      {
+        item.formalName && <>
+          <dt>formal name</dt>
+          <dd>{item.formalName}</dd>
+        </>
+      }
       <dt>release date</dt>
-      <dd>{props.item.releaseDate}</dd>
+      <dd>{item.releaseDate}</dd>
       <dt>manufacture date</dt>
-      <dd>{props.item.manufactureDate}</dd>
+      <dd>{item.manufactureDate}</dd>
       <dt>manufacture location</dt>
-      <dd>{props.item.manufactureLocation}</dd>
+      <dd>{item.manufactureLocation}</dd>
       <dt>material</dt>
-      <dd>{props.item.material?.join(", ")}</dd>
+      <dd>{item.material?.join(", ")}</dd>
       <dt>acquisition date</dt>
-      <dd>{props.item.acquisitionDate}</dd>
+      <dd>{item.acquisitionDate}</dd>
       <dt>acquisition location</dt>
-      <dd>{props.item.acquisitionLocation}</dd>
-      <dt>capture date</dt>
-      <dd>{props.item.captureDate}</dd>
-      <dt>capture location</dt>
-      <dd>{location}</dd>
-      <dt>capture device</dt>
-      <dd>{props.item.captureDevice}</dd>
-      <dt>capture app</dt>
-      <dd>{props.item.captureApp}</dd>
-      <dt>capture method</dt>
-      <dd>{props.item.captureMethod}</dd>
-      <dt>model</dt>
-      <dd>{props.item.model}</dd>
-      {props.item.poster && <>
+      <dd>{item.acquisitionLocation}</dd>
+      {
+        context === 'web' && <>
+        <dt>capture date</dt>
+        <dd>{item.captureDate}</dd>
+        <dt>capture location</dt>
+        <dd>{location}</dd>
+        <dt>capture device</dt>
+        <dd>{item.captureDevice}</dd>
+        <dt>capture app</dt>
+        <dd>{item.captureApp}</dd>
+        <dt>capture method</dt>
+        <dd>{item.captureMethod}</dd>
+          <dt>model</dt>
+          <dd>{item.model}</dd>
+        </>
+      }
+      {context === 'web' && item.poster && <>
         <dt>poster</dt>
-        <dd>{props.item.poster}</dd>
+        <dd>{item.poster}</dd>
       </>}
       {customFields}
     </dl>
