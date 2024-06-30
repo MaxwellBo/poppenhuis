@@ -119,12 +119,20 @@ pre {
 
 /* UTILITIES */
 
+.pb-1ch {
+  padding-bottom: 1ch;
+}
+
 .block {
   display: block;
 }
 
 .short {
   max-width: 50ch;
+}
+
+.really-short {
+  max-width: 25ch;
 }
 
 .yelling {

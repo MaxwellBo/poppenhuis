@@ -33,7 +33,7 @@ export function ErrorPage() {
     <div id="error-page">
       <h1>Fatal error</h1>
       <p>This page has thrown an unrecoverable error:</p>
-      <br/>
+      <br />
       <p>
         <i>{error.statusText || error.message}</i>
       </p>
@@ -327,9 +327,9 @@ export function ItemPage() {
           <ItemCard item={previousItem} collection={collection} user={user} triggerKey="a" altName="← previous" size='small' /> : <div />}
         <ModelViewerWrapper item={item} size='responsive-big' />
         <div>
-          <ItemDescriptionList item={item} collection={collection} user={user} context='web' />
+          <DescriptionList item={item} collection={collection} user={user} />
           <br />
-          <QueryPreservingLink to={`/${user.id}/${collection.id}/${item.id}/label`}>print label</QueryPreservingLink>
+          <QueryPreservingLink to={`/${user.id}/${collection.id}/${item.id}/label`}>print label?</QueryPreservingLink>
         </div>
         {nextItem ?
           <ItemCard item={nextItem} collection={collection} user={user} triggerKey="d" altName="next →" size='small' /> : <div />}
@@ -341,31 +341,43 @@ export function ItemPage() {
 
 export function WallLabelPage() {
   const { item, user, collection } = useLoaderData() as Awaited<ReturnType<typeof loadItem>>;
+  const itemUrl = `poppenhu.is/${user.id}/${user.id}/${item.id}`;
+  const itemQrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=96x96&data=${encodeURIComponent(itemUrl)}`
 
-  const url = `poppenhu.is/${user.id}/${collection.id}/${item.id}`
-
-  useEffect(() => {
-    // window.print();
-  });
+  const dateLocation = (date?: string, location?: string) => {
+    const acc = []
+    if (date) acc.push(date)
+    if (location) acc.push("in " + location)
+    return acc.join(", ")
+  }
 
   return (
-    <article className='short'>
+    <article className='really-short'>
       <div className='no-print'>
-        <QueryPreservingLink to={`/${user.id}/${collection.id}/${item.id}`}>← back</QueryPreservingLink>
+        <QueryPreservingLink to={`/${user.id}/${collection.id}/${item.id}`}>← non-label page</QueryPreservingLink>
       </div>
-      <h1>{item.name}</h1>
-      <ItemDescriptionList item={item} collection={collection} user={user} context='print'/>
+      <h1 className='pb-1ch'>{item.name}</h1>
+      {item.formalName && <b><i className='pb-1ch block'>{item.formalName}</i></b>}
+      {item.material && <i className='pb-1ch block'>{item.material.join(", ")}</i>}
+      <p className='pb-1ch description'>{item.description}</p>
+      {item.releaseDate && <p className='pb-1ch'>Released {item.releaseDate}</p>}
+      {(item.manufactureDate || item.manufactureLocation) && <p className='pb-1ch'>Manufactured {dateLocation(item.manufactureDate, item.manufactureLocation)}</p>}
+      {(item.acquisitionDate || item.acquisitionLocation) && <p className='pb-1ch'>Acquired {dateLocation(item.acquisitionDate, item.acquisitionLocation)}</p>}
+      <div className='pb-1ch'>
+        <QueryPreservingLink to={`/${user.id}/${collection.id}/${item.id}`}>
+          <code>
+            <small>{itemUrl}</small>
+          </code>
+        </QueryPreservingLink>
+      </div>
+      <img src={itemQrCodeUrl} alt="QR code" onLoad={() => window.print()} />
     </article>
   )
 }
 
-
-
-function ItemDescriptionList(props: { item: Item, collection: Collection, user: User, context: 'web' | 'print' }) {
-  const { user, collection, item, context } = props;
+function DescriptionList(props: { item: Item, collection: Collection, user: User }) {
+  const { item } = props;
   const { captureLocation, captureLatLon, } = props.item;
-  
-  const url = `poppenhu.is/${user.id}/${collection.id}/${item.id}`
 
   let location;
   if (captureLocation && captureLatLon) {
@@ -387,18 +399,10 @@ function ItemDescriptionList(props: { item: Item, collection: Collection, user: 
 
   return (
     <dl>
-      {
-        context === 'print' && <>
-          <dt>URL</dt>
-          <dd><a href={url}>{url}</a></dd>
-        </>
-      }
-      {
-        item.formalName && <>
-          <dt>formal name</dt>
-          <dd>{item.formalName}</dd>
-        </>
-      }
+      {item.formalName && <>
+        <dt>formal name</dt>
+        <dd>{item.formalName}</dd>
+      </>}
       <dt>release date</dt>
       <dd>{item.releaseDate}</dd>
       <dt>manufacture date</dt>
@@ -411,23 +415,19 @@ function ItemDescriptionList(props: { item: Item, collection: Collection, user: 
       <dd>{item.acquisitionDate}</dd>
       <dt>acquisition location</dt>
       <dd>{item.acquisitionLocation}</dd>
-      {
-        context === 'web' && <>
-        <dt>capture date</dt>
-        <dd>{item.captureDate}</dd>
-        <dt>capture location</dt>
-        <dd>{location}</dd>
-        <dt>capture device</dt>
-        <dd>{item.captureDevice}</dd>
-        <dt>capture app</dt>
-        <dd>{item.captureApp}</dd>
-        <dt>capture method</dt>
-        <dd>{item.captureMethod}</dd>
-          <dt>model</dt>
-          <dd>{item.model}</dd>
-        </>
-      }
-      {context === 'web' && item.poster && <>
+      <dt>capture date</dt>
+      <dd>{item.captureDate}</dd>
+      <dt>capture location</dt>
+      <dd>{location}</dd>
+      <dt>capture device</dt>
+      <dd>{item.captureDevice}</dd>
+      <dt>capture app</dt>
+      <dd>{item.captureApp}</dd>
+      <dt>capture method</dt>
+      <dd>{item.captureMethod}</dd>
+      <dt>model</dt>
+      <dd>{item.model}</dd>
+      {item.poster && <>
         <dt>poster</dt>
         <dd>{item.poster}</dd>
       </>}
