@@ -22,6 +22,7 @@ export interface Item {
   model: string;
   poster?: string;
   description?: string;
+  material?: string[];
   // Dates
   releaseDate?: string;
   manufactureDate?: string;
@@ -67,6 +68,7 @@ interface Item {
   model: string;
   poster?: string;
   description?: string;
+  material?: string[];
   // Dates
   releaseDate?: string;
   manufactureDate?: string;
@@ -107,6 +109,7 @@ Sadly 2 were lost to the Queensland heat, when the glue of their bridges melted 
             name: "Yamaha",
             model: "/models/mbo/guitars/yamaha.glb",
             description: "I acquired this one in Japan. Not the greatest sound, and the jack broke after about 6 years. But it's fine amplified.",
+            material: ["cedar top", "rosewood back and sides"],
             formalName: "Yamaha CGX171CCA",
             captureDate: "2024 May 28",
             captureMethod: "LiDAR",
