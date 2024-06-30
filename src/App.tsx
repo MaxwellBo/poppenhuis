@@ -359,7 +359,7 @@ export function WallLabelPage() {
       <h1 className='pb-1ch'>{item.name}</h1>
       {item.formalName && <b><i className='pb-1ch block'>{item.formalName}</i></b>}
       {item.material && <i className='pb-1ch block'>{item.material.join(", ")}</i>}
-      <p className='pb-1ch description'>{item.description}</p>
+      {item.description && <p className='pb-1ch description'>{item.description}</p>}
       {item.releaseDate && <p className='pb-1ch'>Released {item.releaseDate}</p>}
       {(item.manufactureDate || item.manufactureLocation) && <p className='pb-1ch'>Manufactured {dateLocation(item.manufactureDate, item.manufactureLocation)}</p>}
       {(item.acquisitionDate || item.acquisitionLocation) && <p className='pb-1ch'>Acquired {dateLocation(item.acquisitionDate, item.acquisitionLocation)}</p>}
