@@ -27,12 +27,15 @@ export interface Item {
   manufactureDate?: string;
   acquisitionDate?: string;
   captureDate?: string;
+  // Locations
+  manufactureLocation?: string;
+  acquisitionLocation?: string;
+  captureLocation?: string;
+  captureLatLong?: string;
   // Capture details
   captureApp?: string;
   captureDevice?: string;
   captureMethod?: string;
-  captureLatLong?: string;
-  captureLocation?: string;
   // Custom fields
   customFields?: {
     [key: string]: string | undefined;
@@ -63,22 +66,25 @@ interface Item {
   formalName?: string;
   model: string;
   poster?: string;
-  description?: string | JSX.Element;
+  description?: string;
   // Dates
   releaseDate?: string;
   manufactureDate?: string;
   acquisitionDate?: string;
   captureDate?: string;
+  // Locations
+  manufactureLocation?: string;
+  acquisitionLocation?: string;
+  captureLocation?: string;
+  captureLatLong?: string;
   // Capture details
   captureApp?: string;
   captureDevice?: string;
   captureMethod?: string;
-  captureLatLong?: string;
-  captureLocation?: string;
   // Custom fields
   customFields?: {
     [key: string]: string | undefined;
-  }
+  };
 }
 `;
 
@@ -217,17 +223,6 @@ My abject failure to use them properly convinced me to stick to the classical gu
         description: "Always appreciated (all parties have agreed to be on the site)",
         items: [
           {
-            id: "qualtrough",
-            name: "Qualtrough collective",
-            model: "/models/mbo/friends/Qualtrough.glb",
-            captureApp: "Polycam",
-            captureDate: "2024 June 29 9:17PM",
-            captureLocation: "Woolloongabba, Brisbane",
-            captureMethod: "LiDAR",
-            captureDevice: "Apple iPhone 13 Pro",
-            acquisitionDate: "2024"
-          },
-          {
             id: "hamish",
             name: "Hamish",
             model: "/models/mbo/friends/Hamish.glb",
@@ -261,6 +256,17 @@ My abject failure to use them properly convinced me to stick to the classical gu
             captureLocation: "Darlinghurst, Sydney",
             captureDevice: "Apple iPhone 13 Pro",
             acquisitionDate: "2019 & ???"
+          },
+          {
+            id: "qualtrough",
+            name: "Qualtrough collective",
+            model: "/models/mbo/friends/Qualtrough.glb",
+            captureApp: "Polycam",
+            captureDate: "2024 June 29 9:17PM",
+            captureLocation: "Woolloongabba, Brisbane",
+            captureMethod: "LiDAR",
+            captureDevice: "Apple iPhone 13 Pro",
+            acquisitionDate: "2024"
           },
           {
             id: "issy",

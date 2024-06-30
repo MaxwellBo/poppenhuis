@@ -372,8 +372,12 @@ function ItemDescriptionList(props: { item: Item, collection: Collection, user: 
       <dd>{props.item.releaseDate}</dd>
       <dt>manufacture date</dt>
       <dd>{props.item.manufactureDate}</dd>
+      <dt>manufacture location</dt>
+      <dd>{props.item.manufactureLocation}</dd>
       <dt>acquisition date</dt>
       <dd>{props.item.acquisitionDate}</dd>
+      <dt>acquisition location</dt>
+      <dd>{props.item.acquisitionLocation}</dd>
       <dt>capture date</dt>
       <dd>{props.item.captureDate}</dd>
       <dt>capture location</dt>
