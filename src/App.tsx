@@ -341,7 +341,7 @@ export function ItemPage() {
 
 export function WallLabelPage() {
   const { item, user, collection } = useLoaderData() as Awaited<ReturnType<typeof loadItem>>;
-  const itemUrl = `poppenhu.is/${user.id}/${user.id}/${item.id}`;
+  const itemUrl = `poppenhu.is/${user.id}/${collection.id}/${item.id}`;
   const itemQrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=96x96&data=${encodeURIComponent(itemUrl)}`
 
   const dateLocation = (date?: string, location?: string) => {
