@@ -11,6 +11,27 @@ blink, .blink { animation: blink 1s step-end infinite; }
 
 /* GLOBAL OVERRIDES */
 
+@media print {
+  body {
+    background-color: white !important;
+    margin: 0 !important;
+  }
+
+  footer {
+    display: none !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+}
+
+html {
+  /* https://www.geocities.ws/morticcu/cursors.html */
+  cursor: url(/arrowto.cur), auto;
+}
+
+
 body {
   font-family: 'Georgia', serif;
   max-width: min(80vw, 100ch);
@@ -22,17 +43,6 @@ footer {
   padding-top: 2ch;
   padding-bottom: 1ch;
 }
-
-@media print {
-  footer {
-    display: none !important;
-  }
-
-  .no-print {
-    display: none !important;
-  }
-}
-
 
 h1 {
   padding-bottom: 1.5rem;
