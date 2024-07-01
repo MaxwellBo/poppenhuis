@@ -215,7 +215,7 @@ pre {
   list-style-type: none;
 }
 
-@media (max-width: 800px) {
+@media (max-width: 768px) {
   .item-page .card-grid {
     display: none;
   }
@@ -240,7 +240,7 @@ pre {
 .model-viewer-wrapper:hover {
   padding: 0px;
   border: 1px solid #333;
-  z-index: 9;
+  z-index: 10;
 }
 
 .model-viewer-wrapper .camera-keys {
@@ -281,7 +281,7 @@ pre {
   grid-area: next;
 }
 
-@media (max-width: 1100px) {
+@media (max-width: 1150px) {
   .bento {
     display: grid;
     grid-template-rows: auto;
@@ -295,7 +295,7 @@ pre {
   }
 }
 
-@media (max-width: 800px) {
+@media (max-width: 768px) {
   .bento {
     display: grid;
     grid-template-rows: auto;
