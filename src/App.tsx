@@ -330,6 +330,15 @@ export function ItemPage() {
           <DescriptionList item={item} collection={collection} user={user} />
           <br />
           <QueryPreservingLink to={`/${user.id}/${collection.id}/${item.id}/label`}>print label?</QueryPreservingLink>
+          {navigator.share &&
+            <button onClick={() =>
+              navigator.share({
+                title: item.name,
+                text: item.description ?? 'a dollhouse',
+                url: window.location.href
+              })}>
+              share?
+            </button>}
         </div>
         {nextItem ?
           <ItemCard item={nextItem} collection={collection} user={user} triggerKey="d" altName="next →" size='small' /> : <div />}
