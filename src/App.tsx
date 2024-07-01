@@ -360,21 +360,22 @@ export function WallLabelPage() {
     return acc.join(", ")
   }
 
+  // note that this is styled entirely with utility classes
   return (
-    <article className='really-short'>
+    <article className='really-short sans-serif'>
       <div className='no-print'>
         <QueryPreservingLink to={`/${user.id}/${collection.id}/${item.id}`}>← non-label page</QueryPreservingLink>
       </div>
       <h1 className='pb-1ch'>{item.name}</h1>
       {item.formalName && <b><i className='pb-1ch block'>{item.formalName}</i></b>}
       {item.material && <i className='pb-1ch block'>{item.material.join(", ")}</i>}
-      {item.description && <p className='pb-1ch description'>{item.description}</p>}
+      {item.description && <p className='pb-1ch white-space-pre-wrap'>{item.description}</p>}
       {item.releaseDate && <p className='pb-1ch'>Released {item.releaseDate}</p>}
       {(item.manufactureDate || item.manufactureLocation) && <p className='pb-1ch'>Manufactured {dateLocation(item.manufactureDate, item.manufactureLocation)}</p>}
       {(item.acquisitionDate || item.acquisitionLocation) && <p className='pb-1ch'>Acquired {dateLocation(item.acquisitionDate, item.acquisitionLocation)}</p>}
       <div className='pb-1ch'>
         <QueryPreservingLink to={`/${user.id}/${collection.id}/${item.id}`}>
-          <code>
+          <code className='color-black'>
             <small>{itemUrl}</small>
           </code>
         </QueryPreservingLink>

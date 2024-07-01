@@ -129,6 +129,18 @@ pre {
 
 /* UTILITIES */
 
+.white-space-pre-wrap {
+  white-space: pre-wrap;
+}
+
+.sans-serif {
+  font-family: sans-serif;
+}
+
+.color-black {
+  color: black;
+}
+
 .pb-1ch {
   padding-bottom: 1ch;
 }
