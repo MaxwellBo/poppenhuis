@@ -133,6 +133,10 @@ pre {
   padding-bottom: 1ch;
 }
 
+.mr-1ch {
+  margin-right: 1ch;
+}
+
 .block {
   display: block;
 }
