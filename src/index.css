@@ -196,11 +196,12 @@ pre {
   color: saddlebrown;
 }
 
-.fade-model-viewer model-viewer { 
-  animation: fade 2s infinite; 
+.highlight-model-viewer model-viewer { 
+  animation: throb 2s infinite; 
+  z-index: 5;
 }
 
-@keyframes fade {
+@keyframes throb {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.1; }
 }
