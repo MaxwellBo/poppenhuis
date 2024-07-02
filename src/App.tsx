@@ -22,6 +22,7 @@ export function App() {
       <footer>
         <small>🎎 c. 2024, <a href="https://github.com/MaxwellBo/poppenhuis">source code</a>, <a href="https://maxbo.me">Max Bo</a></small>
       </footer>
+      <GridLines />
     </div>
   )
 }
@@ -346,6 +347,25 @@ export function ItemPage() {
       <ItemCards collection={collection} user={user} highlighted={item.id} limit={6} />
     </article>
   );
+}
+
+function GridLines() {
+  return (
+    <div className="grid-container">
+      <svg className="grid" width="400" height="400" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <pattern id="smallGrid" width="10" height="10" patternUnits="userSpaceOnUse">
+            <path d="M 10 0 L 0 0 0 10" fill="none" stroke="gray" stroke-width="0.5" />
+          </pattern>
+          <pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse">
+            <rect width="100" height="100" fill="url(#smallGrid)" />
+            <path d="M 100 0 L 0 0 0 100" fill="none" stroke="gray" stroke-width="1" />
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#grid)" />
+      </svg>
+    </div>
+  )
 }
 
 export function WallLabelPage() {
