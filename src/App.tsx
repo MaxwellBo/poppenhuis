@@ -22,7 +22,7 @@ export function App() {
       <footer className='no-print'>
         <small>🎎 c. 2024, <a href="https://github.com/MaxwellBo/poppenhuis">source code</a>, <a href="https://maxbo.me">Max Bo</a></small>
       </footer>
-      <Plane />
+      {/* <Plane /> */}
     </div>
   )
 }
