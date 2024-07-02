@@ -19,6 +19,7 @@ export interface Item {
   id: string;
   name: string;
   formalName?: string;
+  manufacturer?: string;
   model: string;
   poster?: string;
   description?: string;
@@ -65,6 +66,7 @@ interface Item {
   id: string;
   name: string;
   formalName?: string;
+  manufacturer?: string;
   model: string;
   poster?: string;
   description?: string;
@@ -105,12 +107,33 @@ const FIRST_PARTY_MANIFEST: Manifest = [
 Sadly 2 were lost to the Queensland heat, when the glue of their bridges melted and sheared off.`,
         items: [
           {
+            id: "requinto",
+            description: `This requinto^ graciously gifted to me by my old guitar teacher. He found it in Paracho de Verduzco* (pop. 37000 in 2024), Mexico. He attempted to purchase it with a credit card but the store did not have a terminal, and the only bank in town was closed. The store owner said he could take it and send the money once he got back to Australia, which he did.
+
+^ "The requinto [classical] guitar has six nylon strings with a scale length of 530 to 540 millimetres (20.9 to 21.3 in), which is about 18% smaller than a standard guitar scale. Requintos are tuned: A2-D3-G3-C4-E4-A4 (one fourth higher than the standard classical guitar)."
+
+* "Paracho is well known throughout both Mexico and elsewhere in the world as a hub of lutherie [...] the town's craftsmen are reputed to make the best sounding guitars and vihuelas in all of Mexico."`,
+            name: "a requinto",
+            model: "/models/mbo/guitars/requinto.glb",
+            manufacturer: "Jose Juan Granados",
+            manufactureLocation: "Paracho de Verduzco, Mexico",
+            manufactureDate: "2001 April",
+            captureDate: "2024 May 31",
+            captureMethod: "LiDAR",
+            captureDevice: "Apple iPhone 13 Pro",
+            captureApp: "Polycam",
+            acquisitionDate: "2013?",
+            captureLocation: "West End, Brisbane",
+          },
+          {
             id: "yamaha",
             name: "Yamaha",
             model: "/models/mbo/guitars/yamaha.glb",
             description: "I acquired this one in Japan. Not the greatest sound, and the jack broke after about 6 years. But it's fine amplified.",
             material: ["cedar top", "rosewood back and sides"],
             formalName: "Yamaha CGX171CCA",
+            manufacturer: "Yamaha",
+            manufactureLocation: "Japan",
             captureDate: "2024 May 28",
             captureMethod: "LiDAR",
             captureDevice: "Apple iPhone 13 Pro",
@@ -120,7 +143,9 @@ Sadly 2 were lost to the Queensland heat, when the glue of their bridges melted 
           },
           {
             id: "squire",
-            name: "Stratocaster Squire",
+            name: "Stratocaster Squier",
+            manufactureLocation: "China",
+            manufacturer: "Fender",
             description: "The stickers came with the guitar when I got if off Facebook Marketplace for a whopping $50AUD.",
             model: "/models/mbo/guitars/squire.glb",
             captureDate: "2024 May 28",
@@ -133,6 +158,7 @@ Sadly 2 were lost to the Queensland heat, when the glue of their bridges melted 
           {
             id: "kohala",
             name: "Kohala ukelele",
+            manufacturer: "Kohala",
             description: "Not quite a guitar.",
             model: "/models/mbo/guitars/kohala.glb",
             captureDate: "2024 May 28",
@@ -142,22 +168,6 @@ Sadly 2 were lost to the Queensland heat, when the glue of their bridges melted 
             acquisitionDate: "2018?",
             captureLocation: "Darlinghurst, Sydney",
           },
-          {
-            id: "requinto",
-            description: `This was graciously gifted to me by my old guitar teacher. He found it in a rural town in Spain. He attempted to purchase it with a credit card but the store did not have a terminal, and the only bank in town was closed. The store owner said he could take it and send the money once he got back to Australia, which he did.
-
-I am unsure of its make or model otherwise. Not the greatest sound, but a pleasure to play.
-            
-What's a requinto? "The requinto [classical] guitar has six nylon strings with a scale length of 530 to 540 millimetres (20.9 to 21.3 in), which is about 18% smaller than a standard guitar scale. Requintos are tuned: A2-D3-G3-C4-E4-A4 (one fourth higher than the standard classical guitar)."`,
-            name: "some requinto",
-            model: "/models/mbo/guitars/requinto.glb",
-            captureDate: "2024 May 31",
-            captureMethod: "LiDAR",
-            captureDevice: "Apple iPhone 13 Pro",
-            captureApp: "Polycam",
-            acquisitionDate: "2013?",
-            captureLocation: "West End, Brisbane",
-          }
         ]
       },
       {
@@ -170,6 +180,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             id: "plumes",
             name: "Plumes",
             model: "/models/mbo/pedals/plumes.glb",
+            manufacturer: "EarthQuaker Devices",
             formalName: "EarthQuaker Devices Plumes Small Signal Shredder",
             releaseDate: "2019",
             manufactureDate: "2019",
@@ -183,6 +194,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
           {
             id: "elcap",
             name: "El Capistan",
+            manufacturer: "Strymon",
             model: "/models/mbo/pedals/elcap.glb",
             formalName: "Strymon El Capistan dTape Echo",
             acquisitionDate: "2022?",
@@ -195,6 +207,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
           {
             id: "multistomp",
             name: "MultiStomp",
+            manufacturer: "Zoom",
             model: "/models/mbo/pedals/multistomp.glb",
             formalName: "Zoom MS-70CDR MultiStomp Chorus/Delay/Reverb Pedal",
             acquisitionDate: "2022?",
@@ -207,6 +220,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
           {
             id: "avrun",
             name: "Avalanche Run",
+            manufacturer: "EarthQuaker Devices",
             model: "/models/mbo/pedals/avrun.glb",
             formalName: "EarthQuaker Devices Avalanche Run V2 Stereo Delay & Reverb",
             releaseDate: "2017",

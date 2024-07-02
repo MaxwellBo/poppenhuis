@@ -439,6 +439,8 @@ function DescriptionList(props: { item: Item, collection: Collection, user: User
       </>}
       <dt>release date</dt>
       <dd>{item.releaseDate}</dd>
+      <dt>manufacturer</dt>
+      <dd>{item.manufacturer}</dd>
       <dt>manufacture date</dt>
       <dd>{item.manufactureDate}</dd>
       <dt>manufacture location</dt>
@@ -501,7 +503,7 @@ function ModelViewerWrapper(props: { item: Item, size?: ModelSize }) {
         loading="auto"
         poster={props.item.poster}
         auto-rotate-delay="0"
-        rotation-per-second="30deg"
+        rotation-per-second="20deg"
         camera-controls
         auto-rotate
         touch-action="pan-y"
