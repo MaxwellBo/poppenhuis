@@ -199,7 +199,7 @@ pre {
   z-index: 5;
 }
 
-.grid-container {
+.plane-container {
   overflow: hidden;
   opacity: 0.2;
   perspective: 100vh; /* Distance of the viewer from the object */
@@ -211,7 +211,7 @@ pre {
   height: 100%;
 }
 
-.grid {
+.plane {
   width: 100%;
   height: 100%;
   transform-style: preserve-3d;
