@@ -15,15 +15,7 @@ blink, .blink { animation: blink 1s step-end infinite; }
   body {
     background-color: white !important;
     margin: 0 !important;
-  }
-
-  footer {
-    display: none !important;
-  }
-
-  .no-print {
-    display: none !important;
-  }
+  }  
 }
 
 html {
@@ -128,6 +120,12 @@ pre {
 
 
 /* UTILITIES */
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}
 
 .white-space-pre-wrap {
   white-space: pre-wrap;

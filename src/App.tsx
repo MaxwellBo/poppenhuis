@@ -19,7 +19,7 @@ export function App() {
       <main>
         <Outlet />
       </main>
-      <footer>
+      <footer className='no-print'>
         <small>🎎 c. 2024, <a href="https://github.com/MaxwellBo/poppenhuis">source code</a>, <a href="https://maxbo.me">Max Bo</a></small>
       </footer>
       <GridLines />
@@ -28,7 +28,7 @@ export function App() {
 }
 function GridLines() {
   return (
-    <div className="grid-container">
+    <div className="grid-container no-print">
       <svg className="grid" width="400" height="400" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <pattern id="smallGrid" width="10" height="10" patternUnits="userSpaceOnUse">
