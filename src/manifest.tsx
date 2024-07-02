@@ -122,14 +122,13 @@ Sadly 2 were lost to the Queensland heat, when the glue of their bridges melted 
             captureMethod: "LiDAR",
             captureDevice: "Apple iPhone 13 Pro",
             captureApp: "Polycam",
-            acquisitionDate: "2013?",
+            acquisitionDate: "2013",
             captureLocation: "West End, Brisbane",
           },
           {
             id: "yamaha",
             name: "Yamaha",
             model: "/models/mbo/guitars/yamaha.glb",
-            description: "I acquired this one in Japan. Not the greatest sound, and the jack broke after about 6 years. But it's fine amplified.",
             material: ["cedar top", "rosewood back and sides"],
             formalName: "Yamaha CGX171CCA",
             manufacturer: "Yamaha",
@@ -138,7 +137,7 @@ Sadly 2 were lost to the Queensland heat, when the glue of their bridges melted 
             captureMethod: "LiDAR",
             captureDevice: "Apple iPhone 13 Pro",
             captureApp: "Polycam",
-            acquisitionDate: "2011?",
+            acquisitionDate: "2010",
             captureLocation: "Darlinghurst, Sydney",
           },
           {
@@ -152,7 +151,7 @@ Sadly 2 were lost to the Queensland heat, when the glue of their bridges melted 
             captureMethod: "LiDAR",
             captureDevice: "Apple iPhone 13 Pro",
             captureApp: "Polycam",
-            acquisitionDate: "2022?",
+            acquisitionDate: "2022",
             captureLocation: "Darlinghurst, Sydney",
           },
           {
@@ -165,7 +164,7 @@ Sadly 2 were lost to the Queensland heat, when the glue of their bridges melted 
             captureMethod: "LiDAR",
             captureDevice: "Apple iPhone 13 Pro",
             captureApp: "Polycam",
-            acquisitionDate: "2018?",
+            acquisitionDate: "2018",
             captureLocation: "Darlinghurst, Sydney",
           },
         ]

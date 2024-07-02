@@ -385,22 +385,27 @@ export function WallLabelPage() {
   // Please continue this convention in this component.
   return (
     <article className='really-short'>
-      <div className='no-print pb-1ch'>
+      <div className='no-print pb-3'>
         <QueryPreservingLink to={`/${user.id}/${collection.id}/${item.id}`}>← non-label page</QueryPreservingLink>
       </div>
       <div className='sans-serif'>
-        <h1 className='pb-1ch'>{item.name}</h1>
-        {item.formalName && <b><i className='pb-1ch block'>{item.formalName}</i></b>}
-        {item.material && <i className='pb-1ch block'>{item.material.join(", ")}</i>}
-        {item.description && <p className='pb-1ch white-space-pre-wrap'>{item.description}</p>}
-        {item.releaseDate && <p className='pb-1ch'>Released {item.releaseDate}</p>}
-        {(item.manufactureDate || item.manufactureLocation) && <p className='pb-1ch'>Manufactured {dateLocation(item.manufactureDate, item.manufactureLocation)}</p>}
-        {(item.acquisitionDate || item.acquisitionLocation) && <p className='pb-1ch'>Acquired {dateLocation(item.acquisitionDate, item.acquisitionLocation)}</p>}
-        <div className='pb-1ch'>
+        <div className='pb-3 bigger'>
+          <h1 className='pb-3'>{item.manufacturer || "Anonymous"}</h1>
+          <h1 className='pb-0'>{item.name}</h1>
+          {item.formalName && <i className='block'>{item.formalName}</i>}
+          {item.manufactureDate && <p className='block'>{item.manufactureDate}</p>}
+          {item.manufactureLocation && <p className='block'>{item.manufactureLocation}</p>}
+          {item.material && <i className='block'>{item.material.join(", ")}</i>}
+        </div>
+        <div className='pb-3'>
+          {item.releaseDate && <small className='block'>Released {item.releaseDate}</small>}
+          {(item.acquisitionDate || item.acquisitionLocation) && <small className='block'>Acquired {dateLocation(item.acquisitionDate, item.acquisitionLocation)}</small>}
+        </div>
+        {item.description && <p className='pb-3 white-space-pre-wrap'>{item.description}</p>}
+        <div className='pb-3'>
           <QueryPreservingLink to={`/${user.id}/${collection.id}/${item.id}`}>
-            <code className='color-black'>
-              <small>{itemUrl}</small>
-            </code>
+            <code className='color-black even-smaller'>
+              <small>{itemUrl}</small></code>
           </QueryPreservingLink>
         </div>
         <img src={itemQrCodeUrl} alt="QR code" onLoad={() => window.print()} />
