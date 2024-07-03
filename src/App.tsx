@@ -16,7 +16,7 @@ export function App() {
   return (
     <div>
       <ScrollToTop />
-      <div className='content-container'>
+      <div id='content-container'>
         <main>
           <Outlet />
         </main>
@@ -24,14 +24,14 @@ export function App() {
           <small>🎎 c. 2024, <a href="https://github.com/MaxwellBo/poppenhuis">source code</a>, <a href="https://maxbo.me">Max Bo</a></small>
         </footer>
       </div>
-      <Plane />
+      {/* <Plane /> */}
     </div>
   )
 }
 function Plane() {
   return (
-    <div className="plane-container no-print">
-      <svg className="plane" width="400" height="400" xmlns="http://www.w3.org/2000/svg">
+    <div id="plane-container" className="no-print">
+      <svg id="plane" width="400" height="400" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <pattern id="smallGrid" width="10" height="10" patternUnits="userSpaceOnUse">
             <path d="M 0 0 L 0 0 0 10" fill="none" stroke="gray" strokeWidth="0.5" />

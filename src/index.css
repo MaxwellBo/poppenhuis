@@ -17,7 +17,7 @@ blink, .blink { animation: blink 1s step-end infinite; }
     margin: 0 !important;
   }  
 
-  .content-container {
+  #content-container {
     margin: 0 !important;
   }
 }
@@ -216,13 +216,12 @@ pre {
   min-height: 100vh;
 }
 
-.content-container {
+#content-container {
   max-width: min(80vw, 100ch);
   margin: 2vw auto;
 }
 
-
-.plane-container {
+#plane-container {
   overflow: hidden;
   opacity: 0.1;
   perspective: 200px; /* Distance of the viewer from the object */
@@ -234,7 +233,7 @@ pre {
   height: 100%;
 }
 
-.plane {
+#plane {
   width: 100%;
   height: 100%;
   transform-style: preserve-3d;
