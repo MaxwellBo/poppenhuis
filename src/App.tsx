@@ -544,7 +544,7 @@ function ModelViewerWrapper(props: { item: Item, size?: ModelSize }) {
         loading="auto"
         poster={props.item.poster}
         auto-rotate-delay="0"
-        rotation-per-second="40deg"
+        rotation-per-second="20deg"
         camera-controls
         auto-rotate
         touch-action="pan-y"
