@@ -224,6 +224,7 @@ pre {
 #plane-container {
   display: none;
   overflow: hidden;
+  background-image: url('/clouds.webp');
   perspective: 50px; /* Distance of the viewer from the object */
   position: absolute; /* relative to #root */
   z-index: -1;
@@ -242,9 +243,8 @@ pre {
   transform-origin: center center;
 }
 
-.velocity-design-comfort #plane-container {
+.velocity-design-comfort#plane-container {
   display: block;
-  background-image: url('/clouds.webp');
 }
 
 #velocity-design-comfort-checkbox {

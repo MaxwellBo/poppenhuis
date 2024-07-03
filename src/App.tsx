@@ -13,42 +13,54 @@ import {
 import { loadUsers, MANIFEST_SCHEMA, User, loadCollection, Collection, Item, loadItem } from './manifest';
 
 export function App() {
-  const [enableVelocityDesignComfort, setEnableVelocityDesignComfort] = React.useState(false)
 
   return (
-    <div className={enableVelocityDesignComfort ? 'velocity-design-comfort' : ''}>
+    <div>
       <ScrollToTop />
       <div id='content-container'>
         <main>
           <Outlet />
         </main>
         <footer className='no-print'>
-          <input id="velocity-design-comfort-checkbox" type="checkbox" defaultChecked={enableVelocityDesignComfort} onChange={e => setEnableVelocityDesignComfort(e.currentTarget.checked)} />
           <small>
             🎎 c. 2024, <a href="https://github.com/MaxwellBo/poppenhuis">source code</a>, <a href="https://maxbo.me">Max Bo</a>
           </small>
         </footer>
       </div>
-      <Plane />
+      <VelocityDesignComfort />
     </div>
   )
 }
 
-function Plane() {
+function VelocityDesignComfort() {
+  const [enableVelocityDesignComfort, setEnableVelocityDesignComfort] = React.useState(false)
+
   return (
-    <div id="plane-container" className="no-print">
-      <svg id="plane" width="400" height="400" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <pattern id="smallGrid" width="10" height="10" patternUnits="userSpaceOnUse">
-            <path d="M 0 0 L 0 0 0 10" fill="none" stroke="gray" strokeWidth="0.5" />
-          </pattern>
-          <pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse">
-            <rect width="100" height="100" fill="url(#smallGrid)" />
-            <path d="M 100 0 L 0 0 0 100" fill="none" stroke="SkyBlue" strokeWidth="3" />
-          </pattern>
-        </defs>
-        <rect width="100%" height="100%" fill="url(#grid)" />
-      </svg>
+    <div>
+      <div id="velocity-design-comfort-checkbox">
+        <label>
+          v:d:c
+        </label>
+        <input 
+          type="checkbox" 
+          checked={enableVelocityDesignComfort} 
+          onChange={e => setEnableVelocityDesignComfort(e.currentTarget.checked)} 
+        />
+      </div>
+      <div id="plane-container" className={enableVelocityDesignComfort ? 'velocity-design-comfort no-print' : 'no-print'}>
+        <svg id="plane" width="400" height="400" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="smallGrid" width="10" height="10" patternUnits="userSpaceOnUse">
+              <path d="M 0 0 L 0 0 0 10" fill="none" stroke="gray" strokeWidth="0.5" />
+            </pattern>
+            <pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse">
+              <rect width="100" height="100" fill="url(#smallGrid)" />
+              <path d="M 100 0 L 0 0 0 100" fill="none" stroke="SkyBlue" strokeWidth="3" />
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#grid)" />
+        </svg>
+      </div>
     </div>
   )
 }
