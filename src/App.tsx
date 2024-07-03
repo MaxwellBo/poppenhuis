@@ -16,13 +16,15 @@ export function App() {
   return (
     <div>
       <ScrollToTop />
-      <main>
-        <Outlet />
-      </main>
-      <footer className='no-print'>
-        <small>🎎 c. 2024, <a href="https://github.com/MaxwellBo/poppenhuis">source code</a>, <a href="https://maxbo.me">Max Bo</a></small>
-      </footer>
-      {/* <Plane /> */}
+      <div className='content-container'>
+        <main>
+          <Outlet />
+        </main>
+        <footer className='no-print'>
+          <small>🎎 c. 2024, <a href="https://github.com/MaxwellBo/poppenhuis">source code</a>, <a href="https://maxbo.me">Max Bo</a></small>
+        </footer>
+      </div>
+      <Plane />
     </div>
   )
 }
@@ -390,8 +392,8 @@ export function WallLabelPage() {
       </div>
       <div className='sans-serif'>
         <div className='pb-3 bigger'>
-          <h1 className='pb-3'>{item.manufacturer || "Anonymous"}</h1>
-          <h1 className='pb-0'>{item.name}</h1>
+          <h1 className='pb-3 sans-serif'>{item.manufacturer || "Anonymous"}</h1>
+          <h1 className='pb-0 sans-serif'>{item.name}</h1>
           {item.formalName && <i className='block'>{item.formalName}</i>}
           {item.manufactureDate && <p className='block'>{item.manufactureDate}</p>}
           {item.manufactureLocation && <p className='block'>{item.manufactureLocation}</p>}
