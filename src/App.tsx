@@ -103,28 +103,19 @@ export function UsersView() {
         </section>
         <section className='short'>
           <p>
-            poppenhuis (<i>Dutch for "dollhouse"</i>) is a site for displaying collections of 3D model scans.
+            poppenhuis (<i>Dutch for "dollhouse"</i>) is a space for sharing collections and their 3D scans.
             <br />
             <br />
-            The scan collections can be of anything: pottery, sculptures, guitars, cars, cakes, plants, <i>dolls</i>, etc.
+            Have a collection you care about? of pottery? of sculptures? of guitars? of cars? of cakes? of plants? of dolls? 
             <br />
             <br />
-
-            It takes inspiration from <a href="https://www.are.na/">Are.na</a>, <a href="https://www.dayroselane.com/hydrants">The&nbsp;Hydrant&nbsp;Directory</a> and <a href="https://en.wikipedia.org/wiki/Tony_Hawk%27s_Pro_Skater_4">Tony&nbsp;Hawk's&nbsp;Pro&nbsp;Skater&nbsp;4</a>.
+            It's welcome to live here too.
             <br />
-            <br />
-            <small>(I discovered <a href="https://x.com/samdape/status/1777986265993875950">this Sam Peitz tweet</a>, <a href="https://nathannhan.art/">nathannhan.art</a> and <a href="https://rotatingsandwiches.com/">rotating sandwiches</a> after first release.)</small>
             <br />
             <br />
           </p>
           <details>
-            <summary>Why?</summary>
-            My partner has a large collection of dolls, so I built poppenhuis to make it easier for her to catalogue and track metadata.
-
-            Some of the dolls are culturally sensitive and shouldn't be displayed on a public forum, so she hosts her collection privately with a 3rd party manifest.
-          </details>
-          <details>
-            <summary>Want to host your own content here?</summary>
+            <summary>Want your collection to live here?</summary>
             <ThirdPartyManifests />
           </details>
           <details>
@@ -135,8 +126,22 @@ export function UsersView() {
             <br />
             Ideally poppenhuis would also support rendering Polygon File Format (<code>.ply</code>) for rendering <a href="https://en.wikipedia.org/wiki/Gaussian_splatting">Gaussian splats</a>. PRs welcome.
           </details>
+          <br />
           <details>
-            <summary>Notes on construction</summary>
+            <summary>Why?</summary>
+            My partner has a large collection of dolls, so I built poppenhuis to make it easier for her to catalogue and track metadata.
+
+            Some of the dolls are culturally sensitive and shouldn't be displayed on a public forum, so she hosts her collection privately with a 3rd party manifest.
+          </details>
+          <details>
+            <summary>Credits and inspiration</summary>
+            poppenhuis takes inspiration from <a href="https://www.are.na/">Are.na</a>, <a href="https://www.dayroselane.com/hydrants">The&nbsp;Hydrant&nbsp;Directory</a> and <a href="https://en.wikipedia.org/wiki/Tony_Hawk%27s_Pro_Skater_4">Tony&nbsp;Hawk's&nbsp;Pro&nbsp;Skater&nbsp;4</a>.
+            <br />
+            <br />
+            I discovered <a href="https://x.com/samdape/status/1777986265993875950">this Sam Peitz tweet</a>, <a href="https://nathannhan.art/">nathannhan.art</a> and <a href="https://rotatingsandwiches.com/">rotating sandwiches</a> after first release, and they guided poppenhuis's development in its final stages.
+          </details>
+          <details>
+            <summary>Technical challenges</summary>
             I tried porting the app to <a href="https://nextjs.org/">Next.js</a> to get some of that sweet, sweet SSR.
             But to my dismay I discovered that clicking any link was causing a full page load and remount, which invalidated the camera state of all <a href="https://modelviewer.dev/">model-viewer</a> components.
             Alas, the app remains a <a href="https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts">Vite React SPA</a>.
@@ -182,18 +187,18 @@ function ThirdPartyManifests() {
     <>
       <b>1st party manifest</b>
       <br />
-      If you'd like me to host your collection either:
+      If you want your own collection on poppenhuis, either:
       <ul>
         <li>submit a GitHub PR to <a href="https://github.com/MaxwellBo/poppenhuis">the repo</a> modifying <a href="https://github.com/MaxwellBo/poppenhuis/blob/master/src/manifest.tsx"><code>//src/manifest.tsx</code></a> and <a href="https://github.com/MaxwellBo/poppenhuis/tree/master/public/models"><code>//public/models/</code></a>.</li>
-        <li>reach out to <a href="https://twitter.com/_max_bo_">me on Twitter</a> and send me a <code>.zip</code> folder of your models and a Google Sheet of your metadata. I'll upload it for you if you're not technically inclined.</li>
+        <li>reach out to <a href="https://twitter.com/_max_bo_">me on Twitter</a> and send over a <code>.zip</code> folder of your models and a Google Sheet of your metadata. I'll add your collection for you if you're not technically inclined.</li>
       </ul>
       <br />
       <b>3rd party manifests</b>
       <br />
-      You can view and share your own content on this site with manifest files.
+      You can view and share your own collections on poppenenhuis with manifest files.
       <br />
       <br />
-      Your 3rd party manifest will be merged with the site's 1st party manifest, and the manifest URL will be stored in <code>?manifest=</code> query param so you can share your collections with others.
+      Your 3rd party manifest will be merged with the poppenhuis's 1st party manifest, and the manifest URL will be stored in <code>?manifest=</code> query param so you can share your collections with others.
       <br />
       <br />
       <details>
