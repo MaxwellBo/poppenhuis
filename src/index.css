@@ -256,9 +256,10 @@ pre {
 }
 
 #velocity-design-comfort-checkbox {
+  transform: scale(0.5);
   position: absolute;
-  bottom: 5px;
-  right: 5px;
+  bottom: 2px;
+  right: 2px;
 }
 
 .size {
