@@ -211,20 +211,21 @@ pre {
 
 /** APP SPECIFIC STYLES */
 
-.content-container {
-  max-width: min(80vw, 100ch);
-  margin: 2vw auto;
-}
-
 #root {
   position: relative;
   min-height: 100vh;
 }
 
+.content-container {
+  max-width: min(80vw, 100ch);
+  margin: 2vw auto;
+}
+
+
 .plane-container {
   overflow: hidden;
-  opacity: 0.2;
-  perspective: 100vh; /* Distance of the viewer from the object */
+  opacity: 0.1;
+  perspective: 200px; /* Distance of the viewer from the object */
   position: absolute; /* relative to #root */
   z-index: -1;
   bottom: 0px;
