@@ -13,23 +13,27 @@ import {
 import { loadUsers, MANIFEST_SCHEMA, User, loadCollection, Collection, Item, loadItem } from './manifest';
 
 export function App() {
+  const [enableVelocityDesignComfort, setEnableVelocityDesignComfort] = React.useState(false)
+
   return (
-    <div>
+    <div className={enableVelocityDesignComfort ? 'velocity-design-comfort' : ''}>
       <ScrollToTop />
       <div id='content-container'>
         <main>
           <Outlet />
         </main>
         <footer className='no-print'>
-          <small>🎎 c. 2024, <a href="https://github.com/MaxwellBo/poppenhuis">source code</a>, <a href="https://maxbo.me">Max Bo</a></small>
+          <input id="velocity-design-comfort-checkbox" type="checkbox" defaultChecked={enableVelocityDesignComfort} onChange={e => setEnableVelocityDesignComfort(e.currentTarget.checked)} />
+          <small>
+            🎎 c. 2024, <a href="https://github.com/MaxwellBo/poppenhuis">source code</a>, <a href="https://maxbo.me">Max Bo</a>
+          </small>
         </footer>
       </div>
-      {/* <Plane /> */}
+      <Plane />
     </div>
   )
 }
 
-// @ts-ignore unused
 function Plane() {
   return (
     <div id="plane-container" className="no-print">
@@ -517,7 +521,7 @@ function ModelViewerWrapper(props: { item: Item, size?: ModelSize }) {
         loading="auto"
         poster={props.item.poster}
         auto-rotate-delay="0"
-        rotation-per-second="20deg"
+        rotation-per-second="40deg"
         camera-controls
         auto-rotate
         touch-action="pan-y"
