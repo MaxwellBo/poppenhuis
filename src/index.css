@@ -28,17 +28,13 @@ html {
 }
 
 body {
-  font-family: 'Times New Roman', Times, serif;
+  font-family: 'Georgia', serif;
   background-color: oldlace;
 }
 
 footer {
   padding-top: 2ch;
   padding-bottom: 1ch;
-}
-
-h1, h2, h3, h4, h5, h6 {
-  font-family: 'Georgia', 'Times New Roman', Times, serif;
 }
 
 h1 {
@@ -93,7 +89,7 @@ dl {
 }
 
 dl > dt {
-  font-family: 'Lora', 'Times New Roman', Times, serif;;
+  font-family: 'Lora', 'Gerogia', serif;;
   font-weight: bold;
   font-size: 0.7em
 }
@@ -216,7 +212,7 @@ pre {
 /** APP SPECIFIC STYLES */
 
 .content-container {
-  max-width: min(80vw, 120ch);
+  max-width: min(80vw, 100ch);
   margin: 2vw auto;
 }
 
