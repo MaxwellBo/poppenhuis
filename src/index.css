@@ -265,7 +265,7 @@ pre {
   font-size: 0.7rem;
 }
 
-.cols {
+.columns {
   display: flex;
   gap: 4ch;
   flex-wrap: wrap;

@@ -78,7 +78,7 @@ export function UsersView() {
           poppenhuis /
         </h1>
       </header>
-      <div className='cols'>
+      <div className='columns'>
         <section>
           The following users have collections:
           <ul>
