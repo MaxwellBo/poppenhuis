@@ -28,6 +28,8 @@ export function App() {
     </div>
   )
 }
+
+// @ts-ignore unused
 function Plane() {
   return (
     <div id="plane-container" className="no-print">
