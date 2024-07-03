@@ -33,21 +33,21 @@ export function App() {
 }
 
 function VelocityDesignComfort() {
-  const [enableVelocityDesignComfort, setEnableVelocityDesignComfort] = React.useState(false)
+  const [displayScene, setDisplayScene] = React.useState(false)
 
   return (
-    <div>
+    <div id="velocity-design-comfort">
       <div id="velocity-design-comfort-checkbox">
         <label>
           v:d:c
         </label>
-        <input 
-          type="checkbox" 
-          checked={enableVelocityDesignComfort} 
-          onChange={e => setEnableVelocityDesignComfort(e.currentTarget.checked)} 
+        <input
+          type="checkbox"
+          checked={displayScene}
+          onChange={e => setDisplayScene(e.currentTarget.checked)}
         />
       </div>
-      <div id="plane-container" className={enableVelocityDesignComfort ? 'velocity-design-comfort no-print' : 'no-print'}>
+      <div id="scene" className={displayScene ? 'display-scene no-print' : 'no-print'}>
         <svg id="plane" width="400" height="400" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <pattern id="smallGrid" width="10" height="10" patternUnits="userSpaceOnUse">
@@ -59,6 +59,17 @@ function VelocityDesignComfort() {
             </pattern>
           </defs>
           <rect width="100%" height="100%" fill="url(#grid)" />
+        </svg>
+        <svg id="rainbow" width="1000" height="1000" xmlns="http://www.w3.org/2000/svg">
+          <g transform="translate(500, 0)">
+            <rect x="-450" y="0" width="50" height="1000" fill="red" />
+            <rect x="-400" y="0" width="50" height="1000" fill="orange" />
+            <rect x="-350" y="0" width="50" height="1000" fill="yellow" />
+            <rect x="-300" y="0" width="50" height="1000" fill="lime" />
+            <rect x="-250" y="0" width="50" height="1000" fill="cyan" />
+            <rect x="-200" y="0" width="50" height="1000" fill="blue" />
+            <rect x="-150" y="0" width="50" height="1000" fill="magenta" />
+          </g>
         </svg>
       </div>
     </div>
@@ -122,7 +133,7 @@ export function UsersView() {
             poppenhuis (<i>Dutch for "dollhouse"</i>) is a space for sharing collections and their 3D scans.
             <br />
             <br />
-            Have a collection you care about? of pottery? of sculptures? of guitars? of cars? of cakes? of plants? of dolls? 
+            Have a collection you care about? of pottery? of sculptures? of guitars? of cars? of cakes? of plants? of dolls?
             <br />
             <br />
             It's welcome to live here too.
