@@ -221,6 +221,11 @@ pre {
   margin: 2vw auto;
 }
 
+#error-page {
+  max-width: min(80vw, 100ch);
+  margin: 2vw auto;
+}
+
 #scene {
   display: none;
   overflow: hidden;

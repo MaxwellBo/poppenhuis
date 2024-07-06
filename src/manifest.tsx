@@ -1,4 +1,4 @@
-import { loadArenaChannelAsUser } from "./arena";
+import { loadArenaSearchResultAsUser } from "./arena";
 
 type Manifest = User[];
 
@@ -421,12 +421,12 @@ My abject failure to use them properly convinced me to stick to the classical gu
   }
 ];
 
+export const MANIFEST_URL_QUERY_PARAM = 'manifest';
+
 export async function loadUsers({ request }: { request: Request; }) {
   let thirdPartyManifest: Manifest = [];
-  let arenaManifest: Manifest = [];
 
-  const manfiestUrl = new URL(request.url).searchParams.get('manifest');
-  const arenaChannelUrl = new URL(request.url).searchParams.get('arena-channel');
+  const manfiestUrl = new URL(request.url).searchParams.get(MANIFEST_URL_QUERY_PARAM);
 
   if (manfiestUrl) {
     try {
@@ -439,19 +439,17 @@ export async function loadUsers({ request }: { request: Request; }) {
     }
   }
 
-  if (arenaChannelUrl) {
-    try {
-      const user = await loadArenaChannelAsUser(arenaChannelUrl);
-      arenaManifest = [user];
-    } catch (e) {
-      console.error(e)
-    }
-  }
-
-  return [...FIRST_PARTY_MANIFEST, ...thirdPartyManifest, ...arenaManifest];
+  return [...FIRST_PARTY_MANIFEST, ...thirdPartyManifest];
 }
 
-export async function loadUser({ params, request }: { params: { userId: User['id']; }; request: Request; }) {
+export const ARENA_QUERY_PARAM = 'arena';
+
+export async function loadUser({ params, request }: { params: { userId: User['id']; }; request: Request; }): Promise<User> {
+  const arenaParam = new URL(request.url).searchParams.get(ARENA_QUERY_PARAM);
+  if (arenaParam) {
+    return loadArenaSearchResultAsUser({ userSlug: params.userId });
+  }
+
   const users = await loadUsers({ request });
   const user = users.find((user) => user.id === params.userId);
   if (!user) throw new Error("User not found");

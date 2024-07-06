@@ -10,7 +10,8 @@ import {
   useSearchParams,
   useLocation
 } from "react-router-dom";
-import { loadUsers, MANIFEST_SCHEMA, User, loadCollection, Collection, Item, loadItem } from './manifest';
+import { loadUsers, MANIFEST_SCHEMA, User, loadCollection, Collection, Item, loadItem, MANIFEST_URL_QUERY_PARAM } from './manifest';
+import { loadArenaSearchResultAsUser } from './arena';
 
 export function App() {
 
@@ -85,7 +86,12 @@ export function ErrorPage() {
       <p>This page has thrown an unrecoverable error:</p>
       <br />
       <p>
-        <i>{error.statusText || error.message}</i>
+        <pre>
+          {error.statusText || error.message}
+          <br />
+          <br />
+          {error.stack}
+        </pre>
       </p>
       <br />
       <p>Please reach out to me <a href="https://twitter.com/_max_bo_">me on Twitter</a>, and I'll push a fix.</p>
@@ -93,7 +99,7 @@ export function ErrorPage() {
   );
 }
 
-export function UsersView() {
+export function UsersPage() {
   const users = useLoaderData() as Awaited<ReturnType<typeof loadUsers>>;
 
   return (
@@ -143,7 +149,18 @@ export function UsersView() {
           </p>
           <details>
             <summary>Want your collection to live here?</summary>
-            <ThirdPartyManifests />
+            <p>Either:</p>
+            <br />
+            <b>Edit the 1st party manifest</b>
+            <br />
+            <p>Submit a GitHub PR to <a href="https://github.com/MaxwellBo/poppenhuis">the repo</a> modifying <a href="https://github.com/MaxwellBo/poppenhuis/blob/master/src/manifest.tsx"><code>//src/manifest.tsx</code></a> and <a href="https://github.com/MaxwellBo/poppenhuis/tree/master/public/models"><code>//public/models/</code></a>.</p>
+            <br />
+            <b>Get me to edit the 1st party manifest</b>
+            <p>Reach out to <a href="https://twitter.com/_max_bo_">me on Twitter</a> and send over a <code>.zip</code> folder of your models and a Google Sheet of your metadata. I'll edit the 1st party manifest for you.</p>
+            <br />
+            <ThirdPartyManfiestLoader />
+            <br />
+            <ArenaUserLoader />
           </details>
           <details>
             <summary>What file formats can poppenhuis render?</summary>
@@ -189,9 +206,9 @@ function Size(props: { ts: unknown[], t: string }) {
   return <span className='size'>({ts.length} {t}{plural})</span>;
 }
 
-function ThirdPartyManifests() {
+function ThirdPartyManfiestLoader() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [manifest, setManifest] = React.useState<string>(searchParams.get('manifest') ?? '');
+  const [manifestUrl, setManifestUrl] = React.useState<string>(searchParams.get(MANIFEST_URL_QUERY_PARAM) ?? '');
   const [fetchResult, setFetchResult] = React.useState<string | undefined>(undefined);
   const [fetchStatus, setFetchStatus] = React.useState<JSX.Element>(<div />);
 
@@ -212,14 +229,6 @@ function ThirdPartyManifests() {
 
   return (
     <>
-      <p>Either:</p>
-      <b>Edit the 1st party manifest</b>
-      <br />
-      <p>Submit a GitHub PR to <a href="https://github.com/MaxwellBo/poppenhuis">the repo</a> modifying <a href="https://github.com/MaxwellBo/poppenhuis/blob/master/src/manifest.tsx"><code>//src/manifest.tsx</code></a> and <a href="https://github.com/MaxwellBo/poppenhuis/tree/master/public/models"><code>//public/models/</code></a>.</p>
-      <br />
-      <b>Get me to edit the 1st party manifest</b>
-      <p>Reach out to <a href="https://twitter.com/_max_bo_">me on Twitter</a> and send over a <code>.zip</code> folder of your models and a Google Sheet of your metadata. I'll edit the 1st party manifest for you.</p>
-      <br />
       <b>Mount a 3rd party manifest</b>
       <br />
       Your 3rd party manifest will be merged with the poppenhuis's 1st party manifest, and the manifest URL will be stored in <code>?manifest=</code> query param so you can share your collections with others.
@@ -229,12 +238,12 @@ function ThirdPartyManifests() {
         <summary>Manifest schema</summary>
         <pre>{MANIFEST_SCHEMA}</pre>
       </details>
-      <input style={{ width: "80%", fontSize: 13 }} placeholder={EXAMPLE_MANIFEST_URL} value={manifest} onChange={e => setManifest(e.target.value)} />
+      <input style={{ width: "80%", fontSize: 13 }} placeholder={EXAMPLE_MANIFEST_URL} value={manifestUrl} onChange={e => setManifestUrl(e.target.value)} />
       <br />
-      <button disabled={!manifest} onClick={() => loadManifest(manifest)}>Load custom manifest</button>
+      <button disabled={!manifestUrl} onClick={() => loadManifest(manifestUrl)}>Load custom manifest</button>
       <br />
       <button onClick={() => {
-        setManifest(EXAMPLE_MANIFEST_URL)
+        setManifestUrl(EXAMPLE_MANIFEST_URL)
         loadManifest(EXAMPLE_MANIFEST_URL)
       }}>Load placeholder manifest</button>
 
@@ -242,6 +251,36 @@ function ThirdPartyManifests() {
       <br />
       {fetchStatus}
       <pre className='truncate border'>{fetchResult}</pre>
+    </>
+  )
+}
+
+const EXAMPLE_USER_SLUG = 'max-bo';
+
+function ArenaUserLoader() {
+  const [userSlug, setUserSlug] = React.useState<string>('');
+
+  return (
+    <>
+      <b>View an <a href="https://www.are.na/">Are.na</a> user</b>
+      <br />
+      Specify an Are.na profile slug:
+      <br />
+      <label>
+        <span>https://www.are.na/</span>
+        <input style={{ fontSize: 13 }} placeholder={EXAMPLE_USER_SLUG} value={userSlug} onChange={e => setUserSlug(e.target.value)} />
+      </label>
+      <br />
+      <button onClick={() => {
+        setUserSlug(EXAMPLE_USER_SLUG)
+      }}>Load placeholder user</button>
+      <br />
+      <br />
+      The following link will only display channels that contain blocks uploaded as <code>.glb</code> files.
+      <br />
+      <Link to={{ pathname: `/${userSlug}`, search: `?arena=y` }}>
+        {window.location.origin}/{userSlug}?arena=y
+      </Link>
     </>
   )
 }
