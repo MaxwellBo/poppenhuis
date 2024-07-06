@@ -112,7 +112,7 @@ export function UsersPage() {
           poppenhuis /
         </h1>
       </header>
-      <div className='columns'>
+      <div className='home-columns'>
         <section>
           The following users have collections:
           <ul>
@@ -321,7 +321,7 @@ export function CollectionPage() {
         <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / {collection.id} /
       </h1>
     </header>
-    {collection.description && <p className='description'>{collection.description}</p>}
+    {collection.description && <p className='pre-wrap'>{collection.description}</p>}
     <ItemCards collection={collection} user={user} />
   </article>
 }
@@ -411,7 +411,7 @@ export function ItemPage() {
           <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}/${collection.id}`}>{collection.id}</QueryPreservingLink> / {item.name}
         </h1>
       </header>
-      <p className='description'>{item.description}</p>
+      <p className='average pre-wrap'>{item.description}</p>
       <div className='previous-next'>
       </div>
       <div className='bento'>
@@ -474,7 +474,7 @@ export function WallLabelPage() {
           {item.releaseDate && <small className='block'>Released {item.releaseDate}</small>}
           {(item.acquisitionDate || item.acquisitionLocation) && <small className='block'>Acquired {dateLocation(item.acquisitionDate, item.acquisitionLocation)}</small>}
         </div>
-        {item.description && <p className='pb-3 white-space-pre-wrap'>{item.description}</p>}
+        {item.description && <p className='pb-3 pre-wrap'>{item.description}</p>}
         <div className='pb-3'>
           <QueryPreservingLink to={`/${user.id}/${collection.id}/${item.id}`}>
             <code className='color-black even-smaller'>
