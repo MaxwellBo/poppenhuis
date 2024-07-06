@@ -99,8 +99,13 @@ dl > dd {
   font-family: 'Inconsolata', monospace;
 }
 
-dl > dd > a {
-  word-wrap: break-word;
+.truncate {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+dl > dd a {
   color: black;
 }
 

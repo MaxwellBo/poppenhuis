@@ -538,10 +538,11 @@ function DescriptionList(props: { item: Item, collection: Collection, user: User
       <dt>capture method</dt>
       <dd>{item.captureMethod}</dd>
       <dt>model</dt>
-      <dd><a href={item.model}>{item.model}</a></dd>
+      <dd className='truncate'>
+        <a href={item.model}>{item.model}</a></dd>
       {item.poster && <>
         <dt>poster</dt>
-        <dd><a href={item.poster}>{item.poster}</a></dd>
+        <dd className='truncate'><a href={item.poster}>{item.poster}</a></dd>
       </>}
       {customFields}
     </dl>
