@@ -141,25 +141,29 @@ export function UsersPage() {
             Have a collection you care about? of pottery? of sculptures? of guitars? of cars? of cakes? of plants? of dolls?
             <br />
             <br />
-            It's welcome to live here too.
+            They're welcome to live here too.
             <br />
             <br />
             <br />
           </p>
           <details>
             <summary>Want your collection to live here?</summary>
-            <p>Either:</p>
-            <br />
-            <b>Edit the 1st party manifest</b>
-            <br />
-            <p>Submit a GitHub PR to <a href="https://github.com/MaxwellBo/poppenhuis">the repo</a> modifying <a href="https://github.com/MaxwellBo/poppenhuis/blob/master/src/manifest.tsx"><code>//src/manifest.tsx</code></a> and <a href="https://github.com/MaxwellBo/poppenhuis/tree/master/public/models"><code>//public/models/</code></a>.</p>
-            <br />
-            <b>Get me to edit the 1st party manifest</b>
-            <p>Reach out to <a href="https://twitter.com/_max_bo_">me on Twitter</a> and send over a <code>.zip</code> folder of your models and a Google Sheet of your metadata. I'll edit the 1st party manifest for you.</p>
-            <br />
+            Either:
+            <ul>
+              <li>
+                Edit the 1st party manifest yourself by submitting a GitHub PR to <a href="https://github.com/MaxwellBo/poppenhuis">the repo</a> modifying <a href="https://github.com/MaxwellBo/poppenhuis/blob/master/src/manifest.tsx"><code>//src/manifest.tsx</code></a> and <a href="https://github.com/MaxwellBo/poppenhuis/tree/master/public/models"><code>//public/models/</code></a>
+              </li>
+              <li>
+                Get me to edit the 1st party manifest for you by reaching out to <a href="https://twitter.com/_max_bo_">me on Twitter</a> and send over a <code>.zip</code> folder of your models and a Google Sheet of your metadata.
+              </li>
+            </ul>
+          </details>
+          <details>
+            <summary>Want to load models from an <a href="https://www.are.na/">Are.na</a> user profile?</summary>
             <ArenaUserLoader />
-            <br />
-            <br />
+          </details>
+          <details>
+            <summary>Want to mount a 3rd party manifest?</summary>
             <ThirdPartyManfiestLoader />
           </details>
           <details>
@@ -229,9 +233,7 @@ function ThirdPartyManfiestLoader() {
 
   return (
     <>
-      <b>Mount a 3rd party manifest</b>
-      <br />
-      Your 3rd party manifest will be merged with the poppenhuis's 1st party manifest, and the manifest URL will be stored in <code>?manifest=</code> query param so you can share your collections with others.
+      Your 3rd party manifest will be merged with poppenhuis's 1st party manifest, and the manifest URL will be stored in <code>?manifest=</code> query param so you can share your collections with others.
       <br />
       <br />
       <details>
@@ -262,9 +264,8 @@ function ArenaUserLoader() {
 
   return (
     <>
-      <b>View an <a href="https://www.are.na/">Are.na</a> user</b>
+      Enter an Are.na profile slug:
       <br />
-      Specify an Are.na profile slug:
       <br />
       <label>
         <span>https://www.are.na/</span>
@@ -276,7 +277,7 @@ function ArenaUserLoader() {
       }}>Load placeholder user</button>
       <br />
       <br />
-      The following link will only display channels that contain blocks uploaded as <code>.glb</code> files.
+      The following (shareable!) link will only display channels that contain blocks uploaded as <code>.glb</code> files:
       <br />
       <QueryPreservingLink to={`/arena:${userSlug}`}>
         {window.location.origin}/arena:{userSlug}
@@ -539,11 +540,11 @@ function DescriptionList(props: { item: Item, collection: Collection, user: User
       <dt>capture method</dt>
       <dd>{item.captureMethod}</dd>
       <dt>model</dt>
-      <dd className='truncate'>
+      <dd className='ellipsis'>
         <a href={item.model}>{item.model}</a></dd>
       {item.poster && <>
         <dt>poster</dt>
-        <dd className='truncate'><a href={item.poster}>{item.poster}</a></dd>
+        <dd className='ellipsis'><a href={item.poster}>{item.poster}</a></dd>
       </>}
       {customFields}
     </dl>

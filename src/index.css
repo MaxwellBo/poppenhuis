@@ -99,7 +99,7 @@ dl > dd {
   font-family: 'Inconsolata', monospace;
 }
 
-.truncate {
+.ellipsis {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -121,6 +121,7 @@ details[open] > summary {
 }
 
 details[open] {
+  border: 1px dotted lightgrey;
   margin-bottom: 2ch;
 }
 
