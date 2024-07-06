@@ -321,16 +321,6 @@ pre {
   grid-template-columns: repeat(6, minmax(0, 1fr));
 }
 
-@media (max-width: 768px) {
-  .item-page .item-cards {
-    display: none;
-  }
-
-  kbd {
-    display: none !important;
-  }
-}
-
 .see-more {
   padding-top: 3ch;
 }
@@ -416,6 +406,15 @@ pre {
   }
 }
 
+@media (max-width: 640px) {
+  .item-page .item-cards {
+    display: none;
+  }
+
+  kbd {
+    display: none !important;
+  }
+}
 
 /*
   Josh's Custom CSS Reset
