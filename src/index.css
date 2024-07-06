@@ -313,13 +313,17 @@ pre {
 }
 
 .item-cards {
-  display: grid;
-  /* Adjusts the number of columns dynamically based on the available space while respecting the minimum width constraint of 9rem. */
-  grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
   list-style-type: none;
 }
 
+.item-cards > * {
+  width: 10em;
+  display: inline-block;
+}
+
 .item-page .item-cards {
+  display: grid;
+  list-style-type: none;
   /* Ensures there are always exactly 6 columns that equally divide the available space. */
   grid-template-columns: repeat(6, minmax(0, 1fr));
 }
