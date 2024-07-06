@@ -309,14 +309,20 @@ pre {
   justify-content: space-between;
 }
 
-.card-grid {
+.item-cards {
   display: grid;
+  /* Adjusts the number of columns dynamically based on the available space while respecting the minimum width constraint of 9rem. */
   grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
   list-style-type: none;
 }
 
+.item-page .item-cards {
+  /* Ensures there are always exactly 6 columns that equally divide the available space. */
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
 @media (max-width: 768px) {
-  .item-page .card-grid {
+  .item-page .item-cards {
     display: none;
   }
 
