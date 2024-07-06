@@ -11,7 +11,6 @@ import {
   useLocation
 } from "react-router-dom";
 import { loadUsers, MANIFEST_SCHEMA, User, loadCollection, Collection, Item, loadItem, MANIFEST_URL_QUERY_PARAM } from './manifest';
-import { loadArenaSearchResultAsUser } from './arena';
 
 export function App() {
 
