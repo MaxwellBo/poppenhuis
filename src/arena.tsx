@@ -34,7 +34,10 @@ export async function loadArenaSearchResultAsUser({ userSlug }: { userSlug: stri
       id: channel.slug.toString(),
       name: channel.title,
       description: <p>
-        {channel.metadata.description} - <a href={`https://www.are.na/${userSlug}/${channel.slug}`}>View on Are.na</a>
+        {channel.metadata.description} 
+        <br />
+        <br />
+        <a href={`https://www.are.na/${userSlug}/${channel.slug}`}>Are.na profile ↗</a>
       </p>,
       items,
     })
@@ -43,9 +46,7 @@ export async function loadArenaSearchResultAsUser({ userSlug }: { userSlug: stri
   return {
     id: user.slug,
     name: user.full_name,
-    bio: <p>
-      {user.metadata.description} - <a href={`https://www.are.na/${user.slug}`}>View on Are.na</a>
-    </p>,
+    bio: <p><a href={`https://www.are.na/${user.slug}`}>Are.na channel ↗</a></p>,
     collections
   };
 }
