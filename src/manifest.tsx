@@ -443,12 +443,14 @@ export async function loadUsers({ request }: { request: Request; }) {
   return [...FIRST_PARTY_MANIFEST, ...thirdPartyManifest];
 }
 
-export const ARENA_QUERY_PARAM = 'arena';
+export const ARENA_PREFIX = 'arena:';
 
 export async function loadUser({ params, request }: { params: { userId: User['id']; }; request: Request; }): Promise<User> {
-  const arenaParam = new URL(request.url).searchParams.get(ARENA_QUERY_PARAM);
-  if (arenaParam) {
-    return loadArenaSearchResultAsUser({ userSlug: params.userId });
+  const hasArenaPrefix = params.userId.startsWith(ARENA_PREFIX);
+
+  if (hasArenaPrefix) {
+    const userSlug = params.userId.slice(ARENA_PREFIX.length);
+    return loadArenaSearchResultAsUser({ userSlug });
   }
 
   const users = await loadUsers({ request });

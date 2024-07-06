@@ -277,9 +277,9 @@ function ArenaUserLoader() {
       <br />
       The following link will only display channels that contain blocks uploaded as <code>.glb</code> files.
       <br />
-      <Link to={{ pathname: `/${userSlug}`, search: `?arena=y` }}>
-        {window.location.origin}/{userSlug}?arena=y
-      </Link>
+      <QueryPreservingLink to={`/arena:${userSlug}`}>
+        {window.location.origin}/arena:{userSlug}
+      </QueryPreservingLink>
     </>
   )
 }

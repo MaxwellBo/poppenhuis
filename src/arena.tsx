@@ -1,4 +1,4 @@
-import { Collection, Item, User } from "./manifest";
+import { ARENA_PREFIX, Collection, Item, User } from "./manifest";
 
 export async function loadArenaSearchResultAsUser({ userSlug }: { userSlug: string }): Promise<User> {
   const user: ArenaUser = await fetch(`https://api.are.na/v2/users/${userSlug}`).then((res) => res.json());
@@ -44,7 +44,7 @@ export async function loadArenaSearchResultAsUser({ userSlug }: { userSlug: stri
   }
 
   return {
-    id: user.slug,
+    id: ARENA_PREFIX + user.slug,
     name: user.full_name,
     bio: <p><a href={`https://www.are.na/${user.slug}`}>Are.na channel ↗</a></p>,
     collections
