@@ -99,6 +99,10 @@ dl > dd {
   font-family: 'Inconsolata', monospace;
 }
 
+dl > dd > a {
+  color: black;
+}
+
 hr {
   margin-bottom: 3ch;
   margin-top: 3ch;

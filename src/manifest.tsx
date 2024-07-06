@@ -12,7 +12,7 @@ export interface User {
 export interface Collection {
   id: string;
   name: string;
-  description?: string;
+  description?: string | JSX.Element;
   items: Item[];
 }
 
@@ -20,6 +20,7 @@ export interface Item {
   // Existential details
   id: string;
   name: string;
+  backlink?: string;
   formalName?: string;
   manufacturer?: string;
   model: string;
@@ -42,7 +43,7 @@ export interface Item {
   captureMethod?: string;
   // Custom fields
   customFields?: {
-    [key: string]: string | undefined;
+    [key: string]: string | JSX.Element | undefined;
   };
 }
 // KEEP THIS IN SYNC WITH THE TYPES ABOVE PLEASE
@@ -52,7 +53,7 @@ type Manifest = User[];
 interface User {
   id: string;
   name: string;
-  bio: string | JSX.Element; // JSX.Elements cannot be used with 3rd party manifests
+  bio?: string | JSX.Element; // JSX.Elements cannot be used with 3rd party manifests
   collections: Collection[];
 }
 
@@ -89,7 +90,7 @@ interface Item {
   captureMethod?: string;
   // Custom fields
   customFields?: {
-    [key: string]: string | undefined;
+    [key: string]: string | JSX.Element | undefined;
   };
 }
 `;
