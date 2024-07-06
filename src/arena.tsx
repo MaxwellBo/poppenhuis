@@ -1,6 +1,6 @@
 import { ARENA_PREFIX, Collection, Item, User } from "./manifest";
 
-export async function loadArenaSearchResultAsUser({ userSlug }: { userSlug: string }): Promise<User> {
+export async function loadArenaUser({ userSlug }: { userSlug: string }): Promise<User> {
   const user: ArenaUser = await fetch(`https://api.are.na/v2/users/${userSlug}`).then((res) => res.json());
   const searchResult: ArenaSearchResult = await fetch(`https://api.are.na/v2/search/users/${userSlug}`).then((res) => res.json());
   const channels: ArenaChannel[] = await Promise.all(searchResult.channels.map(channel => fetch(`https://api.are.na/v2/channels/${channel.id}`).then((res) => res.json())));

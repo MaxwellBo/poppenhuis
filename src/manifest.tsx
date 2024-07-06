@@ -1,4 +1,4 @@
-import { loadArenaSearchResultAsUser } from "./arena";
+import { loadArenaUser } from "./arena";
 
 type Manifest = User[];
 
@@ -450,7 +450,7 @@ export async function loadUser({ params, request }: { params: { userId: User['id
 
   if (hasArenaPrefix) {
     const userSlug = params.userId.slice(ARENA_PREFIX.length);
-    return loadArenaSearchResultAsUser({ userSlug });
+    return loadArenaUser({ userSlug });
   }
 
   const users = await loadUsers({ request });
