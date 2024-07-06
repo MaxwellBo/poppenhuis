@@ -20,7 +20,7 @@ export async function loadArenaUser({ userSlug }: { userSlug: string }): Promise
         model: content.source.url,
         description: content.description,
         customFields: {
-          backlink: <a href={`https://www.are.na/block/${content.id}`}>https://www.are.na/block/{content.id}</a>,
+          "are.na block": <a href={`https://www.are.na/block/${content.id}`}>https://www.are.na/block/{content.id}</a>,
         },
         poster: content.image?.display?.url,
       })
@@ -37,7 +37,7 @@ export async function loadArenaUser({ userSlug }: { userSlug: string }): Promise
         {channel.metadata.description} 
         <br />
         <br />
-        <a href={`https://www.are.na/${userSlug}/${channel.slug}`}>Are.na profile ↗</a>
+        <a href={`https://www.are.na/${userSlug}/${channel.slug}`}>Are.na channel ↗</a>
       </p>,
       items,
     })
@@ -46,7 +46,7 @@ export async function loadArenaUser({ userSlug }: { userSlug: string }): Promise
   return {
     id: ARENA_PREFIX + user.slug,
     name: user.full_name,
-    bio: <p><a href={`https://www.are.na/${user.slug}`}>Are.na channel ↗</a></p>,
+    bio: <p><a href={`https://www.are.na/${user.slug}`}>Are.na user ↗</a></p>,
     collections
   };
 }
