@@ -10,7 +10,7 @@ import {
   useSearchParams,
   useLocation
 } from "react-router-dom";
-import { loadUsers, MANIFEST_SCHEMA, User, loadCollection, Collection, Item, loadItem, MANIFEST_URL_QUERY_PARAM } from './manifest';
+import { loadUsers, MANIFEST_SCHEMA, User, loadCollection, Collection, Item, loadItem, MANIFEST_URL_QUERY_PARAM, ARENA_PREFIX } from './manifest';
 
 export function App() {
 
@@ -166,6 +166,7 @@ export function UsersPage() {
             <summary>Want to mount a 3rd party manifest?</summary>
             <ThirdPartyManfiestLoader />
           </details>
+          <br />
           <details>
             <summary>What file formats can poppenhuis render?</summary>
             poppenhuis uses <a href="https://modelviewer.dev/">model-viewer</a> for rendering 3D models,
@@ -174,7 +175,6 @@ export function UsersPage() {
             <br />
             Ideally poppenhuis would also support rendering Polygon File Format (<code>.ply</code>) for rendering <a href="https://en.wikipedia.org/wiki/Gaussian_splatting">Gaussian splats</a>. PRs welcome.
           </details>
-          <br />
           <details>
             <summary>Why?</summary>
             My partner has a large collection of dolls, so I built poppenhuis to make it easier for her to catalogue and track metadata.
@@ -279,8 +279,8 @@ function ArenaUserLoader() {
       <br />
       The following (shareable!) link will only display channels that contain blocks uploaded as <code>.glb</code> files:
       <br />
-      <QueryPreservingLink to={`/arena:${userSlug}`}>
-        {window.location.origin}/arena:{userSlug}
+      <QueryPreservingLink to={`/${ARENA_PREFIX}${userSlug}`}>
+        {window.location.origin}/{ARENA_PREFIX}{userSlug}
       </QueryPreservingLink>
     </>
   )
