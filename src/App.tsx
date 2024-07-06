@@ -212,18 +212,15 @@ function ThirdPartyManifests() {
 
   return (
     <>
-      <b>1st party manifest</b>
+      <p>Either:</p>
+      <b>Edit the 1st party manifest</b>
       <br />
-      If you want your own collection on poppenhuis, either:
-      <ul>
-        <li>submit a GitHub PR to <a href="https://github.com/MaxwellBo/poppenhuis">the repo</a> modifying <a href="https://github.com/MaxwellBo/poppenhuis/blob/master/src/manifest.tsx"><code>//src/manifest.tsx</code></a> and <a href="https://github.com/MaxwellBo/poppenhuis/tree/master/public/models"><code>//public/models/</code></a>.</li>
-        <li>reach out to <a href="https://twitter.com/_max_bo_">me on Twitter</a> and send over a <code>.zip</code> folder of your models and a Google Sheet of your metadata. I'll add your collection for you if you're not technically inclined.</li>
-      </ul>
+      <p>Submit a GitHub PR to <a href="https://github.com/MaxwellBo/poppenhuis">the repo</a> modifying <a href="https://github.com/MaxwellBo/poppenhuis/blob/master/src/manifest.tsx"><code>//src/manifest.tsx</code></a> and <a href="https://github.com/MaxwellBo/poppenhuis/tree/master/public/models"><code>//public/models/</code></a>.</p>
       <br />
-      <b>3rd party manifests</b>
+      <b>Get me to edit the 1st party manifest</b>
+      <p>Reach out to <a href="https://twitter.com/_max_bo_">me on Twitter</a> and send over a <code>.zip</code> folder of your models and a Google Sheet of your metadata. I'll edit the 1st party manifest for you.</p>
       <br />
-      You can view and share your own collections on poppenenhuis with manifest files.
-      <br />
+      <b>Mount a 3rd party manifest</b>
       <br />
       Your 3rd party manifest will be merged with the poppenhuis's 1st party manifest, and the manifest URL will be stored in <code>?manifest=</code> query param so you can share your collections with others.
       <br />

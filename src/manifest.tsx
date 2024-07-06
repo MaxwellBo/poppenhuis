@@ -1,9 +1,11 @@
+import { loadArenaChannelAsUser } from "./arena";
+
 type Manifest = User[];
 
 export interface User {
   id: string;
   name: string;
-  bio: string | JSX.Element; // JSX.Elements cannot be used with 3rd party manifests
+  bio?: string | JSX.Element; // JSX.Elements cannot be used with 3rd party manifests
   collections: Collection[];
 }
 
@@ -421,8 +423,11 @@ My abject failure to use them properly convinced me to stick to the classical gu
 
 export async function loadUsers({ request }: { request: Request; }) {
   let thirdPartyManifest: Manifest = [];
+  let arenaManifest: Manifest = [];
 
   const manfiestUrl = new URL(request.url).searchParams.get('manifest');
+  const arenaChannelUrl = new URL(request.url).searchParams.get('arena-channel');
+
   if (manfiestUrl) {
     try {
       const response = await fetch(manfiestUrl);
@@ -434,7 +439,16 @@ export async function loadUsers({ request }: { request: Request; }) {
     }
   }
 
-  return [...FIRST_PARTY_MANIFEST, ...thirdPartyManifest];
+  if (arenaChannelUrl) {
+    try {
+      const user = await loadArenaChannelAsUser(arenaChannelUrl);
+      arenaManifest = [user];
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+  return [...FIRST_PARTY_MANIFEST, ...thirdPartyManifest, ...arenaManifest];
 }
 
 export async function loadUser({ params, request }: { params: { userId: User['id']; }; request: Request; }) {
