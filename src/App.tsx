@@ -157,9 +157,10 @@ export function UsersPage() {
             <b>Get me to edit the 1st party manifest</b>
             <p>Reach out to <a href="https://twitter.com/_max_bo_">me on Twitter</a> and send over a <code>.zip</code> folder of your models and a Google Sheet of your metadata. I'll edit the 1st party manifest for you.</p>
             <br />
-            <ThirdPartyManfiestLoader />
-            <br />
             <ArenaUserLoader />
+            <br />
+            <br />
+            <ThirdPartyManfiestLoader />
           </details>
           <details>
             <summary>What file formats can poppenhuis render?</summary>
