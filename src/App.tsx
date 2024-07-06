@@ -154,7 +154,7 @@ export function UsersPage() {
                 Edit the 1st party manifest yourself by submitting a GitHub PR to <a href="https://github.com/MaxwellBo/poppenhuis">the repo</a> modifying <a href="https://github.com/MaxwellBo/poppenhuis/blob/master/src/manifest.tsx"><code>//src/manifest.tsx</code></a> and <a href="https://github.com/MaxwellBo/poppenhuis/tree/master/public/models"><code>//public/models/</code></a>
               </li>
               <li>
-                Get me to edit the 1st party manifest for you by reaching out to <a href="https://twitter.com/_max_bo_">me on Twitter</a> and send over a <code>.zip</code> folder of your models and a Google Sheet of your metadata.
+                Get me to edit the 1st party manifest for you by reaching out to <a href="https://twitter.com/_max_bo_">me on Twitter</a> and sending over a <code>.zip</code> folder of your models and a Google Sheet of your metadata.
               </li>
             </ul>
           </details>
