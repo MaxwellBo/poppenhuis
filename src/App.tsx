@@ -39,7 +39,7 @@ function VelocityDesignComfort() {
     <div id="velocity-design-comfort">
       <div id="velocity-design-comfort-checkbox" className='no-print'>
         <label>
-          v:d:c
+          V:D:C. 
         </label>
         <input
           type="checkbox"
