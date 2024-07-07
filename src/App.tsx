@@ -37,7 +37,7 @@ function VelocityDesignComfort() {
 
   return (
     <div id="velocity-design-comfort">
-      <div id="velocity-design-comfort-checkbox no-print">
+      <div id="velocity-design-comfort-checkbox" className='no-print'>
         <label>
           v:d:c
         </label>
