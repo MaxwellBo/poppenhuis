@@ -393,6 +393,17 @@ My abject failure to use them properly convinced me to stick to the classical gu
             acquisitionDate: "2015"
           },
           {
+            id: "sarah",
+            name: "Sarah",
+            captureApp: "Polycam",
+            captureMethod: "LiDAR",
+            acquisitionDate: "2023",
+            model: "/models/mbo/friends/Sarah.glb",
+            captureDevice: "Apple iPhone 13 Pro",
+            captureLocation: "Chippendale, Sydney",
+            captureDate: "2023 April 18 9:13 PM",
+          },
+          {
             id: "roman",
             name: "Roman",
             description: "The Thinker",
@@ -415,6 +426,39 @@ My abject failure to use them properly convinced me to stick to the classical gu
             captureLatLon: "33.86 S, 151.20 E",
             captureDate: "2024 May 24 4:58PM",
             acquisitionDate: "2015?"
+          },
+          {
+            id: "cory",
+            name: "Cory",
+            captureApp: "Polycam",
+            captureMethod: "LiDAR",
+            model: "/models/mbo/friends/Cory.glb",
+            captureDevice: "Apple iPhone 13 Pro",
+            captureLocation: "Darlinghurst, Sydney",
+            captureLatLon: "33.88 S, 151.21 E",
+            captureDate: "2024 July 13 12:45PM"
+          },
+          {
+            id: "kriti",
+            name: "Kriti",
+            captureApp: "Polycam",
+            captureMethod: "LiDAR",
+            model: "/models/mbo/friends/Kriti.glb",
+            captureDevice: "Apple iPhone 13 Pro",
+            captureLocation: "Darlinghurst, Sydney",
+            captureLatLon: "33.88 S, 151.21 E",
+            captureDate: "2024 July 13 12:39PM"
+          },
+          {
+            id: "bec",
+            name: "Bec",
+            captureApp: "Polycam",
+            captureMethod: "LiDAR",
+            model: "/models/mbo/friends/Bec.glb",
+            captureDevice: "Apple iPhone 13 Pro",
+            captureLocation: "Redfern, Sydney",
+            captureLatLon: "33.89 S, 151.20 E",
+            captureDate: "2024 July 13 9:57PM"
           }
         ]
       }
