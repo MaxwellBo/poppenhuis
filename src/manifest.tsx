@@ -466,6 +466,18 @@ My abject failure to use them properly convinced me to stick to the classical gu
   }
 ];
 
+for (const user of FIRST_PARTY_MANIFEST) {
+  for (const collection of user.collections) {
+    collection.items.sort((a, b) => {
+      if (a.captureDate && b.captureDate) {
+        // reverse
+        return -a.captureDate.localeCompare(b.captureDate);
+      }
+      return 0;
+    });
+  }
+}
+
 export const MANIFEST_URL_QUERY_PARAM = 'manifest';
 
 export async function loadUsers({ request }: { request: Request; }) {
@@ -507,16 +519,6 @@ export async function loadCollection({ params, request }: { params: { userId: Us
   const user = await loadUser({ params, request });
   const collection = user.collections.find((collection) => collection.id === params.collectionId);
   if (!collection) throw new Error("Collection not found");
-
-  // sort by capture date lexiographically
-  collection.items.sort((a, b) => {
-    if (a.captureDate && b.captureDate) {
-      // reverse
-      return -a.captureDate.localeCompare(b.captureDate);
-    }
-    return 0;
-  });
-
   return { collection, user };
 }
 
