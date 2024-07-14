@@ -242,192 +242,6 @@ My abject failure to use them properly convinced me to stick to the classical gu
         description: "Always appreciated (all parties have agreed to be on the site)",
         items: [
           {
-            id: "hamish",
-            name: "Hamish",
-            model: "/models/mbo/friends/Hamish.glb",
-            captureApp: "Polycam",
-            captureDate: "2023 August 26 4:43PM",
-            captureMethod: "LiDAR",
-            captureDevice: "Apple iPhone 13 Pro",
-            acquisitionDate: "2021?"
-          },
-          {
-            id: "dragan",
-            description: "A man sitting and playing the accordion with partial surroundings included.",
-            name: "Dragan",
-            model: "/models/mbo/friends/Dragan.glb",
-            captureApp: "Polycam",
-            captureMethod: "Photo mode",
-            captureDate: "2024 May 22, 10:22PM",
-            captureDevice: "Apple iPhone 11 Pro Max",
-            acquisitionDate: "2015?",
-            customFields: {
-              vertices: "25.4k",
-            }
-          },
-          {
-            id: "annaliese-riya",
-            name: "Annaliese & Riya",
-            model: "/models/mbo/friends/AnnalieseRiya.glb",
-            captureApp: "Polycam",
-            captureMethod: "LiDAR",
-            captureDate: "2023 April 7 7:31PM",
-            captureLocation: "Darlinghurst, Sydney",
-            captureDevice: "Apple iPhone 13 Pro",
-            acquisitionDate: "2019 & ???"
-          },
-          {
-            id: "qualtrough",
-            name: "Qualtrough collective",
-            model: "/models/mbo/friends/Qualtrough.glb",
-            captureApp: "Polycam",
-            captureDate: "2024 June 29 9:17PM",
-            captureLocation: "Woolloongabba, Brisbane",
-            captureMethod: "LiDAR",
-            captureDevice: "Apple iPhone 13 Pro",
-            acquisitionDate: "2024"
-          },
-          {
-            id: "issy",
-            name: "Islwyn",
-            description: "Look closer. He is holding a game of Boggle.",
-            captureApp: "Polycam",
-            model: "/models/mbo/friends/Issy.glb",
-            captureMethod: "LiDAR",
-            captureDevice: "Apple iPhone 13 Pro",
-            captureLocation: "West End",
-            captureLatLon: "27.48 S, 153.01 E",
-            captureDate: "2023 April 26 9:00PM",
-            acquisitionDate: "2012?"
-          },
-          {
-            id: "lou-nathan",
-            name: "Lou & Nathan",
-            description: "We were at the park",
-            captureApp: "Polycam",
-            captureMethod: "LiDAR",
-            model: "/models/mbo/friends/LouNathan.glb",
-            captureDevice: "Apple iPhone 13 Pro",
-            captureDate: "2023 April 9 3:55 PM",
-            captureLatLon: "33.89 S, 151.18 E",
-            captureLocation: "Newtown",
-            acquisitionDate: "2022"
-          },
-          {
-            id: "jack",
-            name: "Jack",
-            captureApp: "Polycam",
-            captureMethod: "LiDAR",
-            model: "/models/mbo/friends/Jack.glb",
-            captureDevice: "Apple iPhone 13 Pro",
-            captureDate: "2023 April 8 10:16 PM",
-            acquisitionDate: "2022",
-            captureLocation: "Sydney",
-            captureLatLon: "33.88 S, 151.21 E"
-          },
-          {
-            id: "sam",
-            name: "Sam",
-            captureApp: "Polycam",
-            captureMethod: "LiDAR",
-            model: "/models/mbo/friends/Sam.glb",
-            captureDevice: "Apple iPhone 13 Pro",
-            captureDate: "2024 May 24 12:27 PM",
-            captureLocation: "Canva, Surry Hills, Sydney",
-            releaseDate: "1999",
-            manufactureDate: "1999",
-            acquisitionDate: "2023"
-          },
-          {
-            id: "tom",
-            name: "Tom",
-            captureMethod: "LiDAR",
-            model: "/models/mbo/friends/Tom.glb",
-            captureDevice: "Apple iPhone 13 Pro",
-            captureDate: "2024 May 24 12:36 PM",
-            captureLocation: "Canva, Surry Hills, Sydney",
-            acquisitionDate: "2022"
-          },
-          {
-            id: "liam",
-            name: "Liam",
-            captureMethod: "LiDAR",
-            model: "/models/mbo/friends/Liam.glb",
-            captureDevice: "Apple iPhone 13 Pro",
-            acquisitionDate: "2022",
-            captureLocation: "Redfern",
-            captureLatLon: "33.89 S, 151.21 E",
-            captureDate: "2023 Apr 22 at 10:40PM"
-          },
-          {
-            id: "jackie",
-            name: "Jackie",
-            captureApp: "Polycam",
-            captureMethod: "LiDAR",
-            model: "/models/mbo/friends/Jackie.glb",
-            captureDevice: "Apple iPhone 13 Pro",
-            captureDate: "2024 May 21 8:00 PM",
-            captureLocation: "Darlinghurst, Sydney",
-            acquisitionDate: "2023"
-          },
-          {
-            id: "casey",
-            name: "Casey",
-            captureApp: "Polycam",
-            captureMethod: "LiDAR",
-            model: "/models/mbo/friends/Casey.glb",
-            captureDate: "2024 May 21",
-            captureDevice: "Apple iPhone 13 Pro",
-            captureLocation: "Canva, Surry Hills",
-            acquisitionDate: "2022"
-          },
-          {
-            id: "fran",
-            name: "Fran",
-            captureApp: "Polycam",
-            captureMethod: "LiDAR",
-            model: "/models/mbo/friends/Fran.glb",
-            captureDevice: "Apple iPhone 13 Pro",
-            captureLocation: "Chippendale, Sydney",
-            captureDate: "2023 April 18 9:09 PM",
-            acquisitionDate: "2015"
-          },
-          {
-            id: "sarah",
-            name: "Sarah",
-            captureApp: "Polycam",
-            captureMethod: "LiDAR",
-            acquisitionDate: "2023",
-            model: "/models/mbo/friends/Sarah.glb",
-            captureDevice: "Apple iPhone 13 Pro",
-            captureLocation: "Chippendale, Sydney",
-            captureDate: "2023 April 18 9:13 PM",
-          },
-          {
-            id: "roman",
-            name: "Roman",
-            description: "The Thinker",
-            captureApp: "Polycam",
-            captureMethod: "LiDAR",
-            model: "/models/mbo/friends/Roman.glb",
-            captureDate: "2024 May 21",
-            captureDevice: "Apple iPhone 13 Pro",
-            captureLocation: "Canva, Surry Hills, Sydney",
-            acquisitionDate: "2023"
-          },
-          { 
-            id: "james",
-            name: "James",
-            captureApp: "Polycam",
-            captureMethod: "LiDAR",
-            model: "/models/mbo/friends/James.glb",
-            captureDevice: "Apple iPhone 13 Pro",
-            captureLocation: "Some boat in the middle of Sydney Harbour",
-            captureLatLon: "33.86 S, 151.20 E",
-            captureDate: "2024 May 24 4:58PM",
-            acquisitionDate: "2015?"
-          },
-          {
             id: "cory",
             name: "Cory",
             captureApp: "Polycam",
@@ -459,24 +273,198 @@ My abject failure to use them properly convinced me to stick to the classical gu
             captureLocation: "Redfern, Sydney",
             captureLatLon: "33.89 S, 151.20 E",
             captureDate: "2024 July 13 9:57PM"
-          }
+          },
+          {
+            id: "qualtrough",
+            name: "Qualtrough collective",
+            model: "/models/mbo/friends/Qualtrough.glb",
+            captureApp: "Polycam",
+            captureDate: "2024 June 29 9:17PM",
+            captureLocation: "Woolloongabba, Brisbane",
+            captureMethod: "LiDAR",
+            captureDevice: "Apple iPhone 13 Pro",
+            acquisitionDate: "2024"
+          },
+          { 
+            id: "james",
+            name: "James",
+            captureApp: "Polycam",
+            captureMethod: "LiDAR",
+            model: "/models/mbo/friends/James.glb",
+            captureDevice: "Apple iPhone 13 Pro",
+            captureLocation: "Some boat in the middle of Sydney Harbour",
+            captureLatLon: "33.86 S, 151.20 E",
+            captureDate: "2024 May 24 4:58PM",
+            acquisitionDate: "2015?"
+          },
+          {
+            id: "dragan",
+            description: "A man sitting and playing the accordion with partial surroundings included.",
+            name: "Dragan",
+            model: "/models/mbo/friends/Dragan.glb",
+            captureApp: "Polycam",
+            captureMethod: "Photo mode",
+            captureDate: "2024 May 22, 10:22PM",
+            captureDevice: "Apple iPhone 11 Pro Max",
+            acquisitionDate: "2015?",
+            customFields: {
+              vertices: "25.4k",
+            }
+          },
+          {
+            id: "jackie",
+            name: "Jackie",
+            captureApp: "Polycam",
+            captureMethod: "LiDAR",
+            model: "/models/mbo/friends/Jackie.glb",
+            captureDevice: "Apple iPhone 13 Pro",
+            captureDate: "2024 May 21 8:00 PM",
+            captureLocation: "Darlinghurst, Sydney",
+            acquisitionDate: "2023"
+          },
+          {
+            id: "roman",
+            name: "Roman",
+            description: "The Thinker",
+            captureApp: "Polycam",
+            captureMethod: "LiDAR",
+            model: "/models/mbo/friends/Roman.glb",
+            captureDate: "2024 May 21",
+            captureDevice: "Apple iPhone 13 Pro",
+            captureLocation: "Canva, Surry Hills, Sydney",
+            acquisitionDate: "2023"
+          },
+          {
+            id: "hamish",
+            name: "Hamish",
+            model: "/models/mbo/friends/Hamish.glb",
+            captureApp: "Polycam",
+            captureDate: "2023 August 26 4:43PM",
+            captureMethod: "LiDAR",
+            captureDevice: "Apple iPhone 13 Pro",
+            acquisitionDate: "2021?"
+          },
+          {
+            id: "sam",
+            name: "Sam",
+            captureApp: "Polycam",
+            captureMethod: "LiDAR",
+            model: "/models/mbo/friends/Sam.glb",
+            captureDevice: "Apple iPhone 13 Pro",
+            captureDate: "2024 May 24 12:27 PM",
+            captureLocation: "Canva, Surry Hills, Sydney",
+            releaseDate: "1999",
+            manufactureDate: "1999",
+            acquisitionDate: "2023"
+          },
+          {
+            id: "tom",
+            name: "Tom",
+            captureMethod: "LiDAR",
+            model: "/models/mbo/friends/Tom.glb",
+            captureDevice: "Apple iPhone 13 Pro",
+            captureDate: "2024 May 24 12:36 PM",
+            captureLocation: "Canva, Surry Hills, Sydney",
+            acquisitionDate: "2022"
+          },
+          {
+            id: "casey",
+            name: "Casey",
+            captureApp: "Polycam",
+            captureMethod: "LiDAR",
+            model: "/models/mbo/friends/Casey.glb",
+            captureDate: "2024 May 21",
+            captureDevice: "Apple iPhone 13 Pro",
+            captureLocation: "Canva, Surry Hills",
+            acquisitionDate: "2022"
+          },
+          {
+            id: "issy",
+            name: "Islwyn",
+            description: "Look closer. He is holding a game of Boggle.",
+            captureApp: "Polycam",
+            model: "/models/mbo/friends/Issy.glb",
+            captureMethod: "LiDAR",
+            captureDevice: "Apple iPhone 13 Pro",
+            captureLocation: "West End",
+            captureLatLon: "27.48 S, 153.01 E",
+            captureDate: "2023 April 26 9:00PM",
+            acquisitionDate: "2012?"
+          },
+          {
+            id: "fran",
+            name: "Fran",
+            captureApp: "Polycam",
+            captureMethod: "LiDAR",
+            model: "/models/mbo/friends/Fran.glb",
+            captureDevice: "Apple iPhone 13 Pro",
+            captureLocation: "Chippendale, Sydney",
+            captureDate: "2023 April 18 9:09 PM",
+            acquisitionDate: "2015"
+          },
+          {
+            id: "sarah",
+            name: "Sarah",
+            captureApp: "Polycam",
+            captureMethod: "LiDAR",
+            acquisitionDate: "2023",
+            model: "/models/mbo/friends/Sarah.glb",
+            captureDevice: "Apple iPhone 13 Pro",
+            captureLocation: "Chippendale, Sydney",
+            captureDate: "2023 April 18 9:13 PM",
+          },
+          {
+            id: "liam",
+            name: "Liam",
+            captureMethod: "LiDAR",
+            model: "/models/mbo/friends/Liam.glb",
+            captureDevice: "Apple iPhone 13 Pro",
+            acquisitionDate: "2022",
+            captureLocation: "Redfern",
+            captureLatLon: "33.89 S, 151.21 E",
+            captureDate: "2023 Apr 22 at 10:40PM"
+          },
+          {
+            id: "lou-nathan",
+            name: "Lou & Nathan",
+            description: "We were at the park",
+            captureApp: "Polycam",
+            captureMethod: "LiDAR",
+            model: "/models/mbo/friends/LouNathan.glb",
+            captureDevice: "Apple iPhone 13 Pro",
+            captureDate: "2023 April 9 3:55 PM",
+            captureLatLon: "33.89 S, 151.18 E",
+            captureLocation: "Newtown",
+            acquisitionDate: "2022"
+          },
+          {
+            id: "jack",
+            name: "Jack",
+            captureApp: "Polycam",
+            captureMethod: "LiDAR",
+            model: "/models/mbo/friends/Jack.glb",
+            captureDevice: "Apple iPhone 13 Pro",
+            captureDate: "2023 April 8 10:16 PM",
+            acquisitionDate: "2022",
+            captureLocation: "Sydney",
+            captureLatLon: "33.88 S, 151.21 E"
+          },
+          {
+            id: "annaliese-riya",
+            name: "Annaliese & Riya",
+            model: "/models/mbo/friends/AnnalieseRiya.glb",
+            captureApp: "Polycam",
+            captureMethod: "LiDAR",
+            captureDate: "2023 April 7 7:31PM",
+            captureLocation: "Darlinghurst, Sydney",
+            captureDevice: "Apple iPhone 13 Pro",
+            acquisitionDate: "2019 & ???"
+          },
         ]
       }
     ]
   }
 ];
-
-for (const user of FIRST_PARTY_MANIFEST) {
-  for (const collection of user.collections) {
-    collection.items.sort((a, b) => {
-      if (a.captureDate && b.captureDate) {
-        // reverse
-        return -a.captureDate.localeCompare(b.captureDate);
-      }
-      return 0;
-    });
-  }
-}
 
 export const MANIFEST_URL_QUERY_PARAM = 'manifest';
 
