@@ -243,6 +243,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
         items: [
           {
             id: "cory",
+            acquisitionDate: "2015",
             name: "Cory",
             captureApp: "Polycam",
             captureMethod: "LiDAR",
@@ -255,6 +256,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
           {
             id: "kriti",
             name: "Kriti",
+            acquisitionDate: "2015",
             captureApp: "Polycam",
             captureMethod: "LiDAR",
             model: "/models/mbo/friends/Kriti.glb",
@@ -266,6 +268,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
           {
             id: "bec",
             name: "Bec",
+            acquisitionDate: "2024",
             captureApp: "Polycam",
             captureMethod: "LiDAR",
             model: "/models/mbo/friends/Bec.glb",

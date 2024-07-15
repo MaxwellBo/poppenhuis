@@ -54,6 +54,11 @@ a:active {
   color: red;
 }
 
+a:hover {
+  border: 1px solid black;
+  margin: -1px;
+}
+
 code {
   font-family: 'Inconsolata', monospace;
 }
