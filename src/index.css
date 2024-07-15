@@ -55,8 +55,16 @@ a:active {
 }
 
 a:hover {
-  border: 1px solid black;
-  margin: -1px;
+  background-color: blue;
+  color: white;
+  text-decoration: none;
+  /* margin: -1px; */
+}
+
+a:hover:visited {
+  background-color: purple;
+  color: white;
+  text-decoration: none;
 }
 
 code {
