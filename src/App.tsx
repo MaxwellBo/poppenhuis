@@ -424,7 +424,7 @@ export function ItemPage() {
             <button className='mr-1ch' onClick={() =>
               navigator.share({
                 title: item.name,
-                text: item.description ?? 'a dollhouse',
+                text: item.description ?? 'a digital dollhouse',
                 url: window.location.href
               })}>
               share?
