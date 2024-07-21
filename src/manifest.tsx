@@ -97,6 +97,39 @@ interface Item {
 
 const FIRST_PARTY_MANIFEST: Manifest = [
   {
+    id: "jackie",
+    name: "Jackie",
+    bio: <p>
+      <a href="https://www.instagram.com/bb.flambe/">baking Instagram</a>
+    </p>,
+    collections: [
+      {
+        id: "cakes",
+        name: "cakes",
+        items: [
+          {
+            id: "brat",
+            releaseDate: "2024 July 21",
+            name: "<br/>at cake",
+            description: "made for the HTML in Hyde (maxbo.me/html-in-hyde) HTML freewrite",
+            model: "/models/jackie/cakes/brat.glb",
+            manufacturer: "Jackie",
+            material: ["chocolate sponge cake", "caramel sauce",
+              "apple jam", "whipped cream", "Swiss meringue buttercream"],
+            manufactureLocation: "Darlinghurst, Sydney",
+            manufactureDate: "2024 July 21",
+            captureDate: "2024 July 21, 10:35AM",
+            captureLocation: "Darlinghurst, Sydney",
+            captureMethod: "LiDAR",
+            captureDevice: "Apple iPhone 13 Pro",
+            captureApp: "Polycam",
+            acquisitionDate: "2024 July 21"
+          },
+        ]
+      }
+    ]
+  },
+  {
     id: "mbo",
     name: "Max Bo",
     bio: <p>
@@ -288,7 +321,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             captureDevice: "Apple iPhone 13 Pro",
             acquisitionDate: "2024"
           },
-          { 
+          {
             id: "james",
             name: "James",
             captureApp: "Polycam",
