@@ -101,7 +101,9 @@ const FIRST_PARTY_MANIFEST: Manifest = [
     name: "Jackie",
     bio: <p>
       cakes rule everything around me
+      <br />
       baker & baby cook
+      <br />
       <a href="https://www.instagram.com/bb.flambe/">baking Instagram</a>
     </p>,
     collections: [
