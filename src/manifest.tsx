@@ -115,7 +115,7 @@ const FIRST_PARTY_MANIFEST: Manifest = [
             id: "brat",
             releaseDate: "2024 July 21",
             name: "<br/>at cake",
-            description: "made for the HTML in Hyde (maxbo.me/html-in-hyde) HTML freewrite",
+            description: "𝓫𝓻/>𝓪𝓽 𝔀𝓲𝓷𝓽𝓮𝓻 ✮ choc sponge cake w layers of apple jam, caramel, whipped cream, swiss meringue bc ✮ for @max.bo_ HTML in hyde (i’m now a woman in STEM) ᯓ★",
             model: "/models/jackie/cakes/brat.glb",
             manufacturer: "Jackie",
             material: ["chocolate sponge cake", "caramel sauce",
@@ -127,7 +127,76 @@ const FIRST_PARTY_MANIFEST: Manifest = [
             captureMethod: "LiDAR",
             captureDevice: "Apple iPhone 13 Pro",
             captureApp: "Polycam",
-            acquisitionDate: "2024 July 21"
+            acquisitionDate: "2024 July 21",
+            acquisitionLocation: "Darlinghurst, Sydney",
+          },
+          {
+            id: "meringue-stack",
+            releaseDate: "2024 July 21",
+            manufacturer: "Jackie",
+            manufactureDate: "2024 July 21",
+            manufactureLocation: "Darlinghurst, Sydney",
+            captureDate: "2024 July 21",
+            captureLocation: "Darlinghurst, Sydney",
+            captureMethod: "LiDAR",
+            acquisitionDate: "2024 July 21",
+            acquisitionLocation: "Darlinghurst, Sydney",
+            name: "meringue stack",
+            model: "/models/jackie/cakes/meringue-stack.glb",
+            material: [
+              "pavlova",
+              "matcha whipped cream",
+              "strawberries"
+            ],
+            captureDevice: "Apple iPhone 15 Pro Max",
+          },
+          {
+            id: "ube-cheesecake",
+            description: "𝒷𝑒 𝒷𝓊𝓇𝓃𝓉 𝒷𝒶𝓈𝓆𝓊𝑒 𝒸𝒽𝑒𝑒𝓈𝑒𝒸𝒶𝓀𝑒 𝓁𝒶𝓎𝑒𝓇𝑒𝒹 𝓌𝒾𝓉𝒽 𝓂𝑜𝒸𝒽𝒾 & 𝒸𝒽𝑜𝒸 𝒷𝓇𝑜𝓌𝓃𝒾𝑒 • almost went up in flames but was too DELICIOUS and sexy to die so she ended up toasty like a roasty marshmallow!?? @allyzli put this idea in my head and i couldn’t continue breathing til i made it (+ sweet basque minis, who wants some? •ᴗ•)",
+            releaseDate: "2024 July 8",
+            name: "ube burnt basque cheesecake with mochi & brownie layers",
+            material: [
+              "ube", "cream cheese", "mochi", "choc brownie",
+              "soy caramel"
+            ],
+            manufacturer: "Jackie",
+            manufactureLocation: "Darlinghurst, Sydney",
+            manufactureDate: "2024 July 8",
+            captureDate: "2024 July 8",
+            captureLocation: "Darlinghurst, Sydney",
+            captureMethod: "LiDAR",
+            captureDevice: "Apple iPhone 15 Pro Max",
+            captureApp: "Polycam",
+            acquisitionDate: "2024 July 8",
+            acquisitionLocation: "Darlinghurst, Sydney",
+            model: "/models/jackie/cakes/ube-cheesecake.glb",
+            customFields: {
+              instagram: <a href="https://www.instagram.com/p/C9raf3tSST6/?img_index=1">https://www.instagram.com/p/C9raf3tSST6/?img_index=1</a>
+            }
+          },
+          {
+            id: "dark-forest-dragon",
+            description: "𝖙𝖍𝖊 𝖉𝖆𝖗𝖐 𝖋𝖔𝖗𝖊𝖘𝖙 ꕤǂ⋆𓍼my sweet lil dragun cakescape from the very first to final slices of black sesame cake, black cocoa buttercream, cherry compote, meringue & snowskin mooncakes •••• i think creating the head was my fav part ✮",
+            material: [
+              "black sesame cake",
+              "black cocoa buttercream", "cherry compote", "meringue", "snowskin mooncakes"
+            ],
+            releaseDate: "2024 May 28",
+            name: "dark forest dragon",
+            model: "/models/jackie/cakes/dark-forest-dragon.glb",
+            manufacturer: "Jackie",
+            manufactureLocation: "Darlinghurst, Sydney",
+            manufactureDate: "2024 May 28",
+            captureDate: "2024 May 28",
+            captureLocation: "Darlinghurst, Sydney",
+            captureMethod: "LiDAR",
+            captureDevice: "Apple iPhone 15 Pro Max",
+            captureApp: "Polycam",
+            acquisitionDate: "2024 May 28",
+            acquisitionLocation: "Darlinghurst, Sydney",
+            customFields: {
+              instagram: <a href="https://www.instagram.com/p/C7fZJYsyAMi">https://www.instagram.com/p/C7fZJYsyAMi/</a>
+            }
           },
         ]
       }
