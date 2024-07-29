@@ -462,7 +462,7 @@ export function WallLabelPage() {
       </div>
       <div className='sans-serif'>
         <div className='pb-3 bigger'>
-          <h1 className='pb-3'>{item.manufacturer || "Anonymous"}</h1>
+          <h2 className='pb-3'>{item.manufacturer || "Anonymous"}</h2>
           <h1 className='pb-0'>{item.name}</h1>
           {item.formalName && <i className='block'>{item.formalName}</i>}
           {item.manufactureDate && <p className='block'>{item.manufactureDate}</p>}
