@@ -527,7 +527,7 @@ function DescriptionList(props: { item: Item, collection: Collection, user: User
       <dt>manufacture location</dt>
       <dd>{item.manufactureLocation}</dd>
       <dt>material</dt>
-      <dd>{item.material?.join(", ")}</dd>
+      <dd className='list'>{item.material?.join(", ")}</dd>
       <dt>acquisition date</dt>
       <dd>{item.acquisitionDate}</dd>
       <dt>acquisition location</dt>

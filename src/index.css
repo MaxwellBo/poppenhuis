@@ -122,6 +122,15 @@ dl > dd a {
   color: black;
 }
 
+dd:empty::after {
+  content: "undefined";
+  opacity: 0.1;
+}
+
+dd:empty.list::after {
+  content: "[]";
+}
+
 hr {
   margin-bottom: 3ch;
   margin-top: 3ch;
