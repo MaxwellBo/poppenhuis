@@ -204,7 +204,7 @@ const FIRST_PARTY_MANIFEST: Manifest = [
   },
   {
     id: "mbo",
-    name: "Max Bo",
+    name: "Max",
     bio: <p>
       <a href="https://maxbo.me">maxbo.me</a>, <a href="https://twitter.com/_max_bo_">twitter</a>
     </p>,

@@ -23,7 +23,7 @@ export function App() {
         </main>
         <footer className='no-print'>
           <small>
-            🎎 c. 2024, <a href="https://github.com/MaxwellBo/poppenhuis">source code</a>, <a href="https://dashboard.simpleanalytics.com/poppenhu.is">analytics</a>, <a href="https://maxbo.me">Max Bo</a>
+            🎎 c. 2024, <a href="https://maxbo.me">Max Bo</a>, <a href="https://github.com/MaxwellBo/poppenhuis">source code</a>, <a href="https://dashboard.simpleanalytics.com/poppenhu.is">analytics</a>
           </small>
           <VelocityDesignComfort />
         </footer>
