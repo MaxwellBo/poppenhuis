@@ -446,12 +446,18 @@ My abject failure to use them properly convinced me to stick to the classical gu
           {
             id: "hamish",
             name: "Hamish",
+            manufacturer: "Catherine",
+            manufactureLocation: "Mater Mothers' Hospital, Brisbane",
+            manufactureDate: "1999",
+            releaseDate: "2000 February",
+            material: ["flesh", "blood", "bone"],
             model: "/models/mbo/friends/Hamish.glb",
             captureApp: "Polycam",
             captureDate: "2023 August 26 4:43PM",
+            captureLocation: "Canva, Surry Hills, Sydney",
             captureMethod: "LiDAR",
             captureDevice: "Apple iPhone 13 Pro",
-            acquisitionDate: "2021?"
+            acquisitionDate: "2021"
           },
           {
             id: "sam",
