@@ -514,7 +514,11 @@ function DescriptionList(props: { item: Item, collection: Collection, user: User
         <dt>formal name</dt>
         <dd>{item.formalName}</dd>
       </>}
-      <dt>release date</dt>
+      <dt><abbr title={`The release date and the manufacture date are subtly different. The release date is the date this item's specific variant was made available to the public. The manufacture date is the date the item was actually made.
+
+      This typology is based on the MusicBrainz schema (https://musicbrainz.org/doc/MusicBrainz_Database/Schema), where:
+      - a work can have multiple recordings,
+      - a recording can have multiple releases.`}>release date</abbr></dt>
       <dd>{item.releaseDate}</dd>
       <dt>manufacturer</dt>
       <dd>{item.manufacturer}</dd>
