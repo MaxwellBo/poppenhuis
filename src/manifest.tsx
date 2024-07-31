@@ -360,6 +360,24 @@ My abject failure to use them properly convinced me to stick to the classical gu
             captureDate: "2024 July 13 12:45PM"
           },
           {
+            id: "georgia",
+            name: "Georgia",
+            acquisitionDate: "2022",
+            captureApp: "Polycam",
+            captureMethod: "LiDAR",
+            model: "/models/mbo/friends/Georgia.glb",
+            captureDevice: "Apple iPhone 13 Pro",
+            captureLocation: "Panania, Sydney",
+            captureLatLon: "33.96S, 151.00E",
+            captureDate: "2024 April 22, 8:22PM",
+            acquisitionLocation: "Sydney",
+            material: ["coffee", "void", "cat hair"],
+            manufactureLocation: "Perth",
+            manufacturer: "Christina",
+            releaseDate: "1998 October",
+            manufactureDate: "1998",
+          },
+          {
             id: "kriti",
             name: "Kriti",
             acquisitionDate: "2015",
@@ -457,7 +475,8 @@ My abject failure to use them properly convinced me to stick to the classical gu
             captureLocation: "Canva, Surry Hills, Sydney",
             captureMethod: "LiDAR",
             captureDevice: "Apple iPhone 13 Pro",
-            acquisitionDate: "2021"
+            acquisitionDate: "2021",
+            acquisitionLocation: "The Burrow, West End, Brisbane"
           },
           {
             id: "sam",
