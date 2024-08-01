@@ -600,7 +600,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
       }
     ]
   }, {
-    id: "Leaonie",
+    id: "leaonie",
     name: "Leaonie",
     collections: [
       {
