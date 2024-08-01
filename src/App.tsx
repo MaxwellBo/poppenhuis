@@ -10,7 +10,7 @@ import {
   useSearchParams,
   useLocation
 } from "react-router-dom";
-import { loadUsers, MANIFEST_SCHEMA, User, loadCollection, Collection, Item, loadItem, MANIFEST_URL_QUERY_PARAM, ARENA_PREFIX } from './manifest';
+import { loadUsers, MANIFEST_SCHEMA, User, loadCollection, Collection, Item, loadItem, MANIFEST_URL_QUERY_PARAM, ARENA_PREFIX, ITEM_FIELD_DESCRIPTIONS } from './manifest';
 
 export function App() {
 
@@ -511,19 +511,11 @@ function DescriptionList(props: { item: Item, collection: Collection, user: User
 
   return (
     <dl>
-      {item.formalName && <>
-        <dt>formal name</dt>
-        <dd>{item.formalName}</dd>
-      </>}
-      {item.alt && <>
-        <dt>alt</dt>
-        <dd>{item.alt}</dd>
-      </>}
-      <dt><abbr title={`The release date and the manufacture date are subtly different. The release date is the date this item's specific variant was made available to the public. The manufacture date is the date the item was actually made.
-
-      This typology is based on the MusicBrainz schema (https://musicbrainz.org/doc/MusicBrainz_Database/Schema), where:
-      - a work can have multiple recordings,
-      - a recording can have multiple releases.`}>release date</abbr></dt>
+      <dt><abbr title={ITEM_FIELD_DESCRIPTIONS.formalName}>formal name</abbr></dt>
+      <dd>{item.formalName}</dd>
+      <dt><abbr title={ITEM_FIELD_DESCRIPTIONS.alt}>alt</abbr></dt>
+      <dd>{item.alt}</dd>
+      <dt><abbr title={ITEM_FIELD_DESCRIPTIONS.releaseDate}>release date</abbr></dt>
       <dd>{item.releaseDate}</dd>
       <dt>manufacturer</dt>
       <dd>{item.manufacturer}</dd>
@@ -547,11 +539,11 @@ function DescriptionList(props: { item: Item, collection: Collection, user: User
       <dd>{item.captureApp}</dd>
       <dt>capture method</dt>
       <dd>{item.captureMethod}</dd>
-      <dt>model</dt>
+      <dt><abbr title={ITEM_FIELD_DESCRIPTIONS.model}>model</abbr></dt>
       <dd className='ellipsis'>
         <a href={item.model}>{item.model}</a></dd>
       {item.poster && <>
-        <dt>poster</dt>
+        <dt><abbr title={ITEM_FIELD_DESCRIPTIONS.poster}>poster</abbr></dt>
         <dd className='ellipsis'><a href={item.poster}>{item.poster}</a></dd>
       </>}
       {customFields}

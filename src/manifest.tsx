@@ -16,33 +16,46 @@ export interface Collection {
   items: Item[];
 }
 
+export const ITEM_FIELD_DESCRIPTIONS = {
+  formalName: "A more specific name (like a model number or a scientific name) than the general name.",
+  model: "The path to the 3D model. Only glTF/GLB models are supported.",
+  alt: "Custom text that will be used to describe the model to viewers who use a screen reader or otherwise depend on additional semantic context to understand what they are viewing.",
+  poster: "The image to be displayed instead of the model it is loaded and ready to render.",
+  releaseDate: `The release date and the manufacture date are subtly different. The release date is the date this item's specific variant was made available to the public. The manufacture date is the date the item was actually made.
+
+      This typology is based on the MusicBrainz schema (https://musicbrainz.org/doc/MusicBrainz_Database/Schema), where:
+      - a work can have multiple recordings,
+      - a recording can have multiple releases.`,
+};
+
 export interface Item {
-  // Existential details
+  // required fields
   id: string;
   name: string;
-  alt?: string;
-  backlink?: string;
-  formalName?: string;
-  manufacturer?: string;
+  // model-viewer fields
   model: string;
   poster?: string;
-  description?: string;
-  material?: string[];
-  // Dates
+  alt?: string;
+  // abstract details
+  formalName?: string;
   releaseDate?: string;
+  description?: string;
+  // material reality
+  manufacturer?: string;
   manufactureDate?: string;
-  acquisitionDate?: string;
-  captureDate?: string;
-  // Locations
   manufactureLocation?: string;
+  material?: string[];
+  // acquisition
+  acquisitionDate?: string;
   acquisitionLocation?: string;
+  // capture
+  captureDate?: string;
   captureLocation?: string;
   captureLatLon?: string;
-  // Capture details
-  captureApp?: string;
   captureDevice?: string;
+  captureApp?: string;
   captureMethod?: string;
-  // Custom fields
+  // misc
   customFields?: {
     [key: string]: string | JSX.Element | undefined;
   };
@@ -65,32 +78,46 @@ interface Collection {
   items: Item[];
 }
 
-interface Item {
-  // Existential details
+export const ITEM_FIELD_DESCRIPTIONS = {
+  formalName: "A more specific name (like a model number or a scientific name) than the general name.",
+  model: "The path to the 3D model. Only glTF/GLB models are supported.",
+  alt: "Custom text that will be used to describe the model to viewers who use a screen reader or otherwise depend on additional semantic context to understand what they are viewing.",
+  poster: "The image to be displayed instead of the model it is loaded and ready to render.",
+  releaseDate: \`The release date and the manufacture date are subtly different. The release date is the date this item's specific variant was made available to the public. The manufacture date is the date the item was actually made.
+
+      This typology is based on the MusicBrainz schema (https://musicbrainz.org/doc/MusicBrainz_Database/Schema), where:
+      - a work can have multiple recordings,
+      - a recording can have multiple releases.\`,
+};
+
+export interface Item {
+  // required fields
   id: string;
   name: string;
-  alt?: string;
-  formalName?: string;
-  manufacturer?: string;
+  // model-viewer fields
   model: string;
   poster?: string;
-  description?: string;
-  material?: string[];
-  // Dates
+  alt?: string;
+  // abstract details
+  formalName?: string;
   releaseDate?: string;
+  description?: string;
+  // material reality
+  manufacturer?: string;
   manufactureDate?: string;
-  acquisitionDate?: string;
-  captureDate?: string;
-  // Locations
   manufactureLocation?: string;
+  material?: string[];
+  // acquisition
+  acquisitionDate?: string;
   acquisitionLocation?: string;
+  // capture
+  captureDate?: string;
   captureLocation?: string;
   captureLatLon?: string;
-  // Capture details
-  captureApp?: string;
   captureDevice?: string;
+  captureApp?: string;
   captureMethod?: string;
-  // Custom fields
+  // misc
   customFields?: {
     [key: string]: string | JSX.Element | undefined;
   };
