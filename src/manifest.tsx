@@ -20,6 +20,7 @@ export interface Item {
   // Existential details
   id: string;
   name: string;
+  alt?: string;
   backlink?: string;
   formalName?: string;
   manufacturer?: string;
@@ -68,6 +69,7 @@ interface Item {
   // Existential details
   id: string;
   name: string;
+  alt?: string;
   formalName?: string;
   manufacturer?: string;
   model: string;
@@ -426,7 +428,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
           },
           {
             id: "dragan",
-            description: "A man sitting and playing the accordion with partial surroundings included.",
+            alt: "A man sitting and playing the accordion with partial surroundings included.",
             name: "Dragan",
             model: "/models/mbo/friends/Dragan.glb",
             captureApp: "Polycam",
@@ -594,6 +596,59 @@ My abject failure to use them properly convinced me to stick to the classical gu
             captureDevice: "Apple iPhone 13 Pro",
             acquisitionDate: "2019 & ???"
           },
+        ]
+      }
+    ]
+  }, {
+    id: "Leaonie",
+    name: "Leaonie",
+    collections: [
+      {
+        id: "pottery",
+        name: "pottery",
+        items: [
+          {
+            id: "bear",
+            name: "bear",
+            alt: "A simplistic white bear with a green hat on a small snowy base.",
+            model: "/models/leaonie/pottery/bear.glb",
+            manufacturer: "Leaonie",
+            captureDevice: "Apple iPhone 14 Pro Max",
+            captureMethod: "LiDAR",
+            captureApp: "Polycam",
+            captureDate: "2024 July 23",
+            customFields: {
+              "vertices": "28.4k"
+            }
+          },
+          {
+            id: "mouse-bowl",
+            name: "mouse bowl",
+            alt: "A small, ceramic cup with a cute mouse design, featuring textured sides and a rounded handle.",
+            model: "/models/leaonie/pottery/mouse-bowl.glb",
+            manufacturer: "Leaonie",
+            captureDevice: "Apple iPhone 14 Pro Max",
+            captureMethod: "Photo mode",
+            captureApp: "Polycam",
+            captureDate: "2024 July 23",
+            customFields: {
+              "vertices": "120.4k"
+            }
+          },
+          {
+            id: "vase",
+            alt: "A textured ceramic vase with a narrow opening, displayed on a simple white stand.",
+            name: "vase",
+            model: "/models/leaonie/pottery/vase.glb",
+            manufacturer: "Leaonie",
+            captureDevice: "Apple iPhone 14 Pro Max",
+            captureMethod: "LiDAR",
+            captureApp: "Polycam",
+            captureDate: "2024 July 23",
+            customFields: {
+              "vertices": "49.4k"
+            }
+          }
         ]
       }
     ]

@@ -516,6 +516,10 @@ function DescriptionList(props: { item: Item, collection: Collection, user: User
         <dt>formal name</dt>
         <dd>{item.formalName}</dd>
       </>}
+      {item.alt && <>
+        <dt>alt</dt>
+        <dd>{item.alt}</dd>
+      </>}
       <dt><abbr title={`The release date and the manufacture date are subtly different. The release date is the date this item's specific variant was made available to the public. The manufacture date is the date the item was actually made.
 
       This typology is based on the MusicBrainz schema (https://musicbrainz.org/doc/MusicBrainz_Database/Schema), where:
@@ -580,7 +584,7 @@ function ModelViewerWrapper(props: { item: Item, size?: ModelSize }) {
       <model-viewer
         key={props.item.model}
         style={getStyleForModelSize(props.size)}
-        alt={props.item.description}
+        alt={props.item.alt ?? props.item.description}
         src={props.item.model}
         interaction-prompt=""
         progress-bar=""
