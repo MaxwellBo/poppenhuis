@@ -292,6 +292,7 @@ export function UserPage() {
     <article>
       <Helmet>
         <title>{user.name} - poppenhuis</title>
+        {/* we can't put the bio in here because the bio could be a React tree */}
         <meta name="description" content={`Collections of 3D models by ${user.name}`} />
       </Helmet>
       <header>
@@ -299,6 +300,7 @@ export function UserPage() {
           <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / {user.name} /
         </h1>
       </header>
+      {user.bio && <p>{user.bio}<br /></p>}
       {user.collections.map((collection) =>
         <CollectionRow key={collection.id} collection={collection} user={user} />)}
     </article>
