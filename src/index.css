@@ -313,11 +313,6 @@ pre {
   50% { opacity: 0.1; }
 }
 
-
-.padding-bottom-1rem {
-  margin-bottom: 1rem;
-}
-
 .card dl {
   font-size: 0.7rem;
 }
