@@ -118,6 +118,7 @@ dl > dd {
   text-overflow: ellipsis;
 }
 
+
 dl > dd a {
   color: black;
 }

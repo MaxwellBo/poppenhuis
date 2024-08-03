@@ -153,7 +153,7 @@ const FIRST_PARTY_MANIFEST: Manifest = [
             acquisitionDate: "2024 July 21",
             acquisitionLocation: "Darlinghurst, Sydney",
             customFields: {
-              instagram: <a href="https://www.instagram.com/p/C91qasNS9YI/">https://www.instagram.com/p/C91qasNS9YI/</a>
+              instagram: <a href="instagram.com/p/C91qasNS9YI/">instagram.com/p/C91qasNS9YI/</a>
             }
           },
           {
@@ -197,7 +197,7 @@ const FIRST_PARTY_MANIFEST: Manifest = [
             acquisitionLocation: "Darlinghurst, Sydney",
             model: "/models/jackie/cakes/ube-cheesecake.glb",
             customFields: {
-              instagram: <a href="https://www.instagram.com/p/C9J_99XySH7">https://www.instagram.com/p/C9J_99XySH7</a>
+              instagram: <a href="instagram.com/p/C9J_99XySH7">instagram.com/p/C9J_99XySH7</a>
             }
           },
           {
@@ -221,7 +221,7 @@ const FIRST_PARTY_MANIFEST: Manifest = [
             acquisitionDate: "2024 May 28",
             acquisitionLocation: "Darlinghurst, Sydney",
             customFields: {
-              instagram: <a href="https://www.instagram.com/p/C7fZJYsyAMi">https://www.instagram.com/p/C7fZJYsyAMi/</a>
+              instagram: <a href="instagram.com/p/C7fZJYsyAMi">instagram.com/p/C7fZJYsyAMi/</a>
             }
           },
         ]
