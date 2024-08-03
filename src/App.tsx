@@ -513,6 +513,7 @@ function DescriptionList(props: { item: Item, collection: Collection, user: User
 
   return (
     <dl>
+      {customFields}
       <dt><abbr title={ITEM_FIELD_DESCRIPTIONS.formalName}>formal name</abbr></dt>
       <dd>{item.formalName}</dd>
       <dt><abbr title={ITEM_FIELD_DESCRIPTIONS.alt}>alt</abbr></dt>
@@ -548,7 +549,6 @@ function DescriptionList(props: { item: Item, collection: Collection, user: User
         <dt><abbr title={ITEM_FIELD_DESCRIPTIONS.poster}>poster</abbr></dt>
         <dd className='ellipsis'><a href={item.poster}>{item.poster}</a></dd>
       </>}
-      {customFields}
     </dl>
   );
 }
