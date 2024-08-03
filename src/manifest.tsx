@@ -138,7 +138,7 @@ const FIRST_PARTY_MANIFEST: Manifest = [
             id: "brat",
             releaseDate: "2024 July 21",
             name: "<br/>at cake",
-            description: "<𝓫𝓻/>𝓪𝓽 𝔀𝓲𝓷𝓽𝓮𝓻 ✮ choc sponge cake w layers of apple jam, caramel, whipped cream, swiss meringue bc ✮ for @max.bo_ HTML in hyde (i’m now a woman in STEM) ᯓ★",
+            description: "<𝓫𝓻/>𝓪𝓽 𝔀𝓲𝓷𝓽𝓮𝓻 ✮ choc sponge cake w layers of apple jam, caramel, whipped cream, swiss meringue bc ✮ for @max.bo_ HTML in hyde (i’m now a woman in STEM) ᯓ★ ~ https://www.instagram.com/p/C91qasNS9YI/",
             model: "/models/jackie/cakes/brat.glb",
             manufacturer: "Jackie",
             material: ["chocolate sponge cake", "caramel sauce",
