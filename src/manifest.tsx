@@ -152,6 +152,9 @@ const FIRST_PARTY_MANIFEST: Manifest = [
             captureApp: "Polycam",
             acquisitionDate: "2024 July 21",
             acquisitionLocation: "Darlinghurst, Sydney",
+            customFields: {
+              instagram: <a href="https://www.instagram.com/p/C91qasNS9YI/">https://www.instagram.com/p/C91qasNS9YI/</a>
+            }
           },
           {
             id: "meringue-stack",
