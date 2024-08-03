@@ -138,7 +138,7 @@ const FIRST_PARTY_MANIFEST: Manifest = [
             id: "brat",
             releaseDate: "2024 July 21",
             name: "<br/>at cake",
-            description: "<𝓫𝓻/>𝓪𝓽 𝔀𝓲𝓷𝓽𝓮𝓻 ✮ choc sponge cake w layers of apple jam, caramel, whipped cream, swiss meringue bc ✮ for @max.bo_ HTML in hyde (i’m now a woman in STEM) ᯓ★",
+            description: "<𝓫𝓻/>𝓪𝓽 𝔀𝓲𝓷𝓽𝓮𝓻 ✮ choc sponge cake w layers of apple jam, caramel, whipped cream, swiss meringue bc ✮ for @max.bo_ HTML in hyde (i’m now a woman in STEM) ᯓ★ ~ https://www.instagram.com/p/C91qasNS9YI/",
             model: "/models/jackie/cakes/brat.glb",
             manufacturer: "Jackie",
             material: ["chocolate sponge cake", "caramel sauce",
@@ -153,7 +153,7 @@ const FIRST_PARTY_MANIFEST: Manifest = [
             acquisitionDate: "2024 July 21",
             acquisitionLocation: "Darlinghurst, Sydney",
             customFields: {
-              instagram: <a href="instagram.com/p/C91qasNS9YI/">instagram.com/p/C91qasNS9YI/</a>
+              instagram: <a href="https://www.instagram.com/p/C91qasNS9YI/">instagram.com/p/C91qasNS9YI/</a>
             }
           },
           {
@@ -197,7 +197,7 @@ const FIRST_PARTY_MANIFEST: Manifest = [
             acquisitionLocation: "Darlinghurst, Sydney",
             model: "/models/jackie/cakes/ube-cheesecake.glb",
             customFields: {
-              instagram: <a href="instagram.com/p/C9J_99XySH7">instagram.com/p/C9J_99XySH7</a>
+              instagram: <a href="https://www.instagram.com/p/C9raf3tSST6/?img_index=1">instagram.com/p/C9raf3tSST6/</a>
             }
           },
           {
@@ -221,7 +221,7 @@ const FIRST_PARTY_MANIFEST: Manifest = [
             acquisitionDate: "2024 May 28",
             acquisitionLocation: "Darlinghurst, Sydney",
             customFields: {
-              instagram: <a href="instagram.com/p/C7fZJYsyAMi">instagram.com/p/C7fZJYsyAMi/</a>
+              instagram: <a href="https://www.instagram.com/p/C7fZJYsyAMi">instagram.com/p/C7fZJYsyAMi/</a>
             }
           },
         ]
