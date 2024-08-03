@@ -197,7 +197,7 @@ const FIRST_PARTY_MANIFEST: Manifest = [
             acquisitionLocation: "Darlinghurst, Sydney",
             model: "/models/jackie/cakes/ube-cheesecake.glb",
             customFields: {
-              instagram: <a href="https://www.instagram.com/p/C9raf3tSST6/?img_index=1">instagram.com/p/C9raf3tSST6/</a>
+              instagram: <a href="https://www.instagram.com/p/C9J_99XySH7">instagram.com/p/C9J_99XySH7/</a>
             }
           },
           {
