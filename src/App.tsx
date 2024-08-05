@@ -400,7 +400,7 @@ export function ItemPage() {
   const previousItem: Item | undefined = collection.items.find((_, index) => collection.items[index + 1]?.id === item.id);
   const nextItem: Item | undefined = collection.items.find((_, index) => collection.items[index - 1]?.id === item.id);
 
-  const githubManifestCodeSearchUrl = `https://github.com/search?q=repo%3AMaxwellBo%2Fpoppenhuis+id%3A+%22${item.id}%22&type=code`;
+  const githubManifestCodeSearchUrl = `https://github.com/search?q=repo%3AMaxwellBo%2Fpoppenhuis+%22id%3A+%5C%22${item.id}%5C%22%22&type=code`;
 
   return (
     <article className='item-page'>
