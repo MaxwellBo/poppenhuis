@@ -2,8 +2,20 @@ import { ARENA_PREFIX, Collection, Item, User } from "./manifest";
 
 export async function loadArenaUser({ userSlug }: { userSlug: string }): Promise<User> {
   const user: ArenaUser = await fetch(`https://api.are.na/v2/users/${userSlug}`).then((res) => res.json());
-  const searchResult: ArenaSearchResult = await fetch(`https://api.are.na/v2/search/users/${userSlug}`).then((res) => res.json());
-  const channels: ArenaChannel[] = await Promise.all(searchResult.channels.map(channel => fetch(`https://api.are.na/v2/channels/${channel.id}`).then((res) => res.json())));
+
+  const resultChannels: ArenaChannel[] = []
+
+  let page = 1;
+  do {
+    const searchResult: ArenaSearchResult = await fetch(`https://api.are.na/v2/search/users/${userSlug}?page=${page}&per=100`).then((res) => res.json());
+    resultChannels.push(...searchResult.channels);
+
+    if (searchResult.current_page === searchResult.total_pages) {
+      break;
+    }
+  } while (page++ < 100);
+
+  const channels: ArenaChannel[] = await Promise.all(resultChannels.map(channel => fetch(`https://api.are.na/v2/channels/${channel.id}`).then((res) => res.json())));
 
   const collections: Collection[] = [];
   for (const channel of channels) {
