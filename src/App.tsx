@@ -300,7 +300,7 @@ export function UserPage() {
           <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / {user.name} /
         </h1>
       </header>
-      {user.bio && <p>{user.bio}<br /></p>}
+      {user.bio && <>{user.bio}<br /></>}
       {user.collections.map((collection) =>
         <CollectionRow key={collection.id} collection={collection} user={user} />)}
     </article>
