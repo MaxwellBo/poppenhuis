@@ -491,6 +491,8 @@ export function WallLabelPage() {
 
 function computeModelSize(url: string): number | undefined {
   const resources = performance.getEntriesByType('resource');
+
+  console.log(resources);
   // @ts-ignore
   const resourceEntry: PerformanceResourceTiming | undefined = resources.find(entry => entry.name.endsWith(url));
   if (resourceEntry) {
