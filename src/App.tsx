@@ -489,23 +489,9 @@ export function WallLabelPage() {
   )
 }
 
-function computeModelSize(url: string): number | undefined {
-  const resources = performance.getEntriesByType('resource');
-
-  console.log(resources);
-  // @ts-ignore
-  const resourceEntry: PerformanceResourceTiming | undefined = resources.find(entry => entry.name.endsWith(url));
-  if (resourceEntry) {
-    return resourceEntry.transferSize;
-  }  else {
-    return undefined
-  }
-}
-
 function DescriptionList(props: { item: Item, collection: Collection, user: User }) {
   const { item } = props;
   const { captureLocation, captureLatLon, } = props.item;
-  const modelSize: number | undefined = computeModelSize(item.model);
 
   let location;
   if (captureLocation && captureLatLon) {
@@ -559,10 +545,6 @@ function DescriptionList(props: { item: Item, collection: Collection, user: User
       <dt><abbr title={ITEM_FIELD_DESCRIPTIONS.model}>model</abbr></dt>
       <dd className='ellipsis'>
         <a href={item.model}>{item.model}</a></dd>
-      {modelSize && <>
-        <dt>model size</dt>
-        <dd>{formatBytes(modelSize)}</dd>
-      </>}
       {item.poster && <>
         <dt><abbr title={ITEM_FIELD_DESCRIPTIONS.poster}>poster</abbr></dt>
         <dd className='ellipsis'><a href={item.poster}>{item.poster}</a></dd>
@@ -613,15 +595,6 @@ function ModelViewerWrapper(props: { item: Item, size?: ModelSize }) {
 
 // UTILS
 
-function formatBytes(bytes: number, decimals = 2) {
-  if (bytes === 0) return '0 Bytes';
-  const k = 1024;
-  const dm = decimals < 0 ? 0 : decimals;
-  const sizes = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + sizes[i];
-}
-
 function ScrollToTop() {
   const { pathname } = useLocation();
 
@@ -631,6 +604,8 @@ function ScrollToTop() {
 
   return null;
 }
+
+
 
 function QueryPreservingLink(props: { to: string, children: React.ReactNode, triggerKey?: string }) {
   const [searchParams] = useSearchParams();
