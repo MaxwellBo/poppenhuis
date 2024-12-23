@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 import {
   createBrowserRouter,
-  RouterProvider,
-} from "react-router-dom";
+} from "react-router";
+import { RouterProvider } from "react-router/dom";
 import { ErrorPage, App, UserPage, ItemPage, UsersPage, CollectionPage, WallLabelPage } from './App.tsx';
 import { loadUser, loadUsers, loadItem, loadCollection } from './manifest.tsx';
 

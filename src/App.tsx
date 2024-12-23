@@ -9,7 +9,7 @@ import {
   Link,
   useSearchParams,
   useLocation
-} from "react-router-dom";
+} from "react-router";
 import { loadUsers, MANIFEST_SCHEMA, User, loadCollection, Collection, Item, loadItem, MANIFEST_URL_QUERY_PARAM, ARENA_PREFIX, ITEM_FIELD_DESCRIPTIONS } from './manifest';
 
 export function App() {
