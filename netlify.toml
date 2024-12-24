@@ -1,11 +1,7 @@
-[
-build
-]
+[build]
   command = "npm run build"
   publish = "dist"
 
-[[
-edge_functions
-]]
+[[edge_functions]]
   path = "/*"
   function = "transform"
