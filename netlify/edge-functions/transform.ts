@@ -294,20 +294,20 @@ function generateMetaTags(pathname: string): MetaTags {
 
 function generateMetaHTML(tags: MetaTags): string {
   return `
+    <title>${tags.title}</title>
     <meta name="title" content="${tags.title}" />
-    <meta name="description" content="${tags.description}" />
-    
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="${tags.url}" />
-    <meta property="og:title" content="${tags.title}" />
-    <meta property="og:description" content="${tags.description}" />
-    <meta property="og:image" content="${tags.image}" />
-    
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content="${tags.url}" />
     <meta property="twitter:title" content="${tags.title}" />
+    <meta property="og:title" content="${tags.title}" />
+
+    <meta name="description" content="${tags.description}" />
+    <meta property="og:description" content="${tags.description}" />
     <meta property="twitter:description" content="${tags.description}" />
+
+    <meta property="og:image" content="${tags.image}" />
     <meta property="twitter:image" content="${tags.image}" />
+
+    <meta property="og:url" content="${tags.url}" />
+    <meta property="twitter:url" content="${tags.url}" />
   `;
 }
 
