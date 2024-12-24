@@ -219,16 +219,16 @@ const FIRST_PARTY_MANIFEST = [
 function parseRoute(pathname: string): { userId?: string; collectionId?: string; itemId?: string } {
   const parts = pathname.split('/').filter(Boolean);
   
-  if (parts[0] === 'users' && parts.length === 2) {
-    return { userId: parts[1] };
+  if (parts.length === 1) {
+    return { userId: parts[0] };
   }
   
-  if (parts[0] === 'users' && parts[2] === 'collections' && parts.length === 4) {
-    return { userId: parts[1], collectionId: parts[3] };
+  if (parts.length === 2) {
+    return { userId: parts[0], collectionId: parts[1] };
   }
   
-  if (parts[0] === 'users' && parts[2] === 'collections' && parts[4] === 'items' && parts.length === 6) {
-    return { userId: parts[1], collectionId: parts[3], itemId: parts[5] };
+  if (parts.length === 3) {
+    return { userId: parts[0], collectionId: parts[1], itemId: parts[2] };
   }
   
   return {};
