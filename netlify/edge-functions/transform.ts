@@ -325,13 +325,10 @@ export default async function handler(req: Request, context: Context) {
   const response = await context.next();
   const text = await response.text();
   
-  // Replace the existing meta tags
+  // Replace everything between the meta markers
   const modifiedHTML = text.replace(
-    /<meta\s+(?:name|property)=["'](?:title|description|og:.*?|twitter:.*?)["']\s+content=["'].*?["']\s*\/?>/g,
-    ""
-  ).replace(
-    /<\/head>/,
-    `${metaHTML}\n</head>`
+    /<!-- OPEN META -->[\s\S]*?<!-- CLOSE META -->/,
+    `<!-- OPEN META -->\n${metaHTML}\n  <!-- CLOSE META -->`
   );
   
   return new Response(modifiedHTML, {
