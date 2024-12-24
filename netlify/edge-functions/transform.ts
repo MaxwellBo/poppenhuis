@@ -1,6 +1,6 @@
 // netlify/edge-functions/transform.ts
 import { Context } from "@netlify/edge-functions";
-import { FIRST_PARTY_MANIFEST, type User, type Collection, type Item } from "../../src/manifest";
+import { type User, type Collection, type Item } from "../../src/manifest";
 
 const BASE_URL = "https://poppenhu.is";
 
@@ -10,6 +10,210 @@ interface MetaTags {
   image?: string;
   url: string;
 }
+
+const FIRST_PARTY_MANIFEST = [
+  {
+    id: "jackie",
+    name: "Jackie",
+    collections: [
+      {
+        id: "cakes",
+        name: "cakes",
+        items: [
+          {
+            id: "brat",
+            name: "brat cake",
+            description: "brat winter - choc sponge cake with layers of apple jam, caramel, whipped cream, swiss meringue bc"
+          },
+          {
+            id: "meringue-stack",
+            name: "meringue stack"
+          },
+          {
+            id: "ube-cheesecake",
+            name: "ube burnt basque cheesecake with mochi & brownie layers",
+            description: "be burnt basque cheesecake layered with mochi & choc brownie - almost went up in flames but was too delicious and sexy to die so she ended up toasty like a roasty marshmallow"
+          },
+          {
+            id: "dark-forest-dragon",
+            name: "dark forest dragon",
+            description: "the dark forest - sweet dragon cakescape with black sesame cake, black cocoa buttercream, cherry compote, meringue & snowskin mooncakes"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: "mbo",
+    name: "Max",
+    collections: [
+      {
+        id: "guitars",
+        name: "guitars",
+        description: "I only have 3 at the moment, but peak collection size was 5. Sadly 2 were lost to the Queensland heat, when the glue of their bridges melted and sheared off.",
+        items: [
+          {
+            id: "requinto",
+            name: "a requinto",
+            description: "A requinto guitar found in Paracho de Verduzco, Mexico. A requinto guitar has six nylon strings with a shorter scale length than a standard guitar."
+          },
+          {
+            id: "yamaha",
+            name: "Yamaha"
+          },
+          {
+            id: "squire",
+            name: "Stratocaster Squier",
+            description: "The stickers came with the guitar when I got if off Facebook Marketplace for a whopping $50AUD."
+          },
+          {
+            id: "kohala",
+            name: "Kohala ukelele",
+            description: "Not quite a guitar."
+          }
+        ]
+      },
+      {
+        id: "pedals",
+        name: "pedals",
+        description: "I have a small collection of guitar pedals from an era where I was trying to get into the electric guitar. My abject failure to use them properly convinced me to stick to the classical guitar.",
+        items: [
+          {
+            id: "plumes",
+            name: "Plumes"
+          },
+          {
+            id: "elcap",
+            name: "El Capistan"
+          },
+          {
+            id: "multistomp",
+            name: "MultiStomp"
+          },
+          {
+            id: "avrun",
+            name: "Avalanche Run"
+          }
+        ]
+      },
+      {
+        id: "friends",
+        name: "friends",
+        description: "Always appreciated (all parties have agreed to be on the site)",
+        items: [
+          {
+            id: "cory",
+            name: "Cory"
+          },
+          {
+            id: "georgia",
+            name: "Georgia"
+          },
+          {
+            id: "kriti",
+            name: "Kriti"
+          },
+          {
+            id: "bec",
+            name: "Bec"
+          },
+          {
+            id: "qualtrough",
+            name: "Qualtrough collective"
+          },
+          {
+            id: "james",
+            name: "James"
+          },
+          {
+            id: "dragan",
+            name: "Dragan"
+          },
+          {
+            id: "jackie",
+            name: "Jackie"
+          },
+          {
+            id: "roman",
+            name: "Roman",
+            description: "The Thinker"
+          },
+          {
+            id: "hamish",
+            name: "Hamish"
+          },
+          {
+            id: "sam",
+            name: "Sam"
+          },
+          {
+            id: "tom",
+            name: "Tom"
+          },
+          {
+            id: "casey",
+            name: "Casey"
+          },
+          {
+            id: "issy",
+            name: "Islwyn",
+            description: "Look closer. He is holding a game of Boggle."
+          },
+          {
+            id: "fran",
+            name: "Fran"
+          },
+          {
+            id: "sarah",
+            name: "Sarah"
+          },
+          {
+            id: "liam",
+            name: "Liam"
+          },
+          {
+            id: "lou-nathan",
+            name: "Lou & Nathan",
+            description: "We were at the park"
+          },
+          {
+            id: "jack",
+            name: "Jack"
+          },
+          {
+            id: "annaliese-riya",
+            name: "Annaliese & Riya"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: "leaonie",
+    name: "Leaonie",
+    collections: [
+      {
+        id: "pottery",
+        name: "pottery",
+        items: [
+          {
+            id: "bear",
+            name: "bear"
+          },
+          {
+            id: "mouse-bowl",
+            name: "mouse bowl"
+          },
+          {
+            id: "vase",
+            name: "vase"
+          }
+        ]
+      }
+    ]
+  }
+];
+
 
 function parseRoute(pathname: string): { userId?: string; collectionId?: string; itemId?: string } {
   const parts = pathname.split('/').filter(Boolean);
