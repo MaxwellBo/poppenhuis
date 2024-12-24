@@ -53,6 +53,7 @@ export default function ItemPage() {
     </article>
   );
 }
+
 function DescriptionList(props: { item: Item; collection: Collection; user: User; }) {
   const { item } = props;
   const { captureLocation, captureLatLon, } = props.item;

@@ -27,7 +27,7 @@ export default function UserPage() {
   );
 }
 
-export function CollectionRow(props: { collection: Collection, user: User }) {
+function CollectionRow(props: { collection: Collection, user: User }) {
   const { collection, user } = props;
   return (
     <article className='collection-row'>
