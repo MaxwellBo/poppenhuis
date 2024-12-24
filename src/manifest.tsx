@@ -118,7 +118,7 @@ export interface Item {
 }
 `;
 
-const FIRST_PARTY_MANIFEST: Manifest = [
+export const FIRST_PARTY_MANIFEST: Manifest = [
   {
     id: "jackie",
     name: "Jackie",
