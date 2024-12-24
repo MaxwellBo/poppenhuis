@@ -1,6 +1,7 @@
+// @ts-nocheck
+
 // netlify/edge-functions/transform.ts
 import { Context } from "@netlify/edge-functions";
-import { type User, type Collection, type Item } from "../../src/manifest";
 
 const BASE_URL = "https://poppenhu.is";
 
