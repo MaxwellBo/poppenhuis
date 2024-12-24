@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 import { createBrowserRouter, useRouteError } from "react-router";
 import { RouterProvider } from "react-router/dom";
+import App from './routes/App.tsx';
 import UsersPage, { loader as usersPageLoader } from './routes/UsersPage.tsx';
 import UserPage, { loader as userPageLoader } from './routes/UserPage.tsx';
 import CollectionPage, { loader as collectionPageLoader } from './routes/CollectionPage.tsx';
@@ -23,8 +24,8 @@ function convert(m: any) {
 const router = createBrowserRouter([
   {
     path: "/",
-    lazy: () => import('./routes/App.tsx').then(convert),
     errorElement: <ErrorPage />,
+    element: <App />,
     children: [
       {
         path: "",
