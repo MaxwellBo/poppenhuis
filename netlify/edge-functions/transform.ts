@@ -313,7 +313,7 @@ function generateMetaHTML(tags: MetaTags): string {
 
 export default async function handler(req: Request, context: Context) {
   // Only transform HTML requests
-  if (!context.next().headers.get("content-type")?.includes("text/html")) {
+  if (!req.headers.get("accept")?.includes("text/html")) {
     return context.next();
   }
 
