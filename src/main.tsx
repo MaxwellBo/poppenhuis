@@ -10,17 +10,6 @@ import CollectionPage, { loader as collectionPageLoader } from './routes/Collect
 import ItemPage, { loader as itemPageLoader } from './routes/ItemPage.tsx';
 import WallLabelPage, { loader as wallLabelPageLoader } from './routes/WallLabelPage.tsx';
 
-function convert(m: any) {
-  let {
-    default: Component,
-    ...rest
-  } = m;
-  return {
-    ...rest,
-    Component,
-  };
-}
-
 const router = createBrowserRouter([
   {
     path: "/",
