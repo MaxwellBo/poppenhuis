@@ -8,6 +8,13 @@ export default async function handler(request: Request, context: Context) {
   if (!request.headers.get("accept")?.includes("text/html")) {
     return context.next();
   }
+  
+  // Exclude assets requests
+  const assetExtensions = [".js", ".css", ".png", ".jpg", ".jpeg", ".gif", ".svg", ".ico", ".woff", ".woff2", ".ttf", ".eot"];
+  if (assetExtensions.some(ext => request.url.endsWith(ext))) {
+    return context.next();
+  }
+
   const url = new URL(request.url);
   const response = await context.next();
   const text = await response.text();
@@ -23,15 +30,19 @@ export default async function handler(request: Request, context: Context) {
 
   let meta = DEFAULT_META;
 
-  if (itemId) {
-    const { item, collection, user } = await loadItem({ params, request });
-    meta = getMetaForItem(item, collection, user);
-  } else if (collectionId) {
-    const { collection, user } = await loadCollection({ params, request });
-    meta = getMetaForCollection(collection, user);
-  } else if (userId) {
-    const user = await loadUser({ params, request });
-    meta = getMetaForUser(user);
+  try {
+    if (itemId) {
+      const { item, collection, user } = await loadItem({ params, request });
+      meta = getMetaForItem(item, collection, user);
+    } else if (collectionId) {
+      const { collection, user } = await loadCollection({ params, request });
+      meta = getMetaForCollection(collection, user);
+    } else if (userId) {
+      const user = await loadUser({ params, request });
+      meta = getMetaForUser(user);
+    }
+  } catch (error) {
+    console.error(error);
   }
 
   // Replace everything between the meta markers
