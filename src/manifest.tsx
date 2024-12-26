@@ -237,9 +237,9 @@ Sadly 2 were lost to the Queensland heat, when the glue of their bridges melted 
             id: "requinto",
             description: `This requinto^ graciously gifted to me by my old guitar teacher. He found it in Paracho de Verduzco* (pop. 37000 in 2024), Mexico. He attempted to purchase it with a credit card but the store did not have a terminal, and the only bank in town was closed. The store owner said he could take it and send the money once he got back to Australia, which he did.
 
-^ "The requinto [classical] guitar has six nylon strings with a scale length of 530 to 540 millimetres (20.9 to 21.3 in), which is about 18% smaller than a standard guitar scale. Requintos are tuned: A2-D3-G3-C4-E4-A4 (one fourth higher than the standard classical guitar)."
+^"The requinto [classical] guitar has six nylon strings with a scale length of 530 to 540 millimetres (20.9 to 21.3 in), which is about 18% smaller than a standard guitar scale. Requintos are tuned: A2-D3-G3-C4-E4-A4 (one fourth higher than the standard classical guitar)."
 
-* "Paracho is well known throughout both Mexico and elsewhere in the world as a hub of lutherie [...] the town's craftsmen are reputed to make the best sounding guitars and vihuelas in all of Mexico."`,
+*"Paracho is well known throughout both Mexico and elsewhere in the world as a hub of lutherie [...] the town's craftsmen are reputed to make the best sounding guitars and vihuelas in all of Mexico."`,
             name: "a requinto",
             model: "/models/mbo/guitars/requinto.glb",
             manufacturer: "Jose Juan Granados",
@@ -767,11 +767,9 @@ export async function loadArenaUser({ userSlug }: { userSlug: string }): Promise
     collections.push({
       id: channel.slug.toString(),
       name: channel.title,
-      description: `
-      ${channel.metadata.description} 
-      
-      [Are.na channel](https://www.are.na/${userSlug}/${channel.slug})
-      `,
+      description: `${channel.metadata.description} 
+
+[Are.na channel](https://www.are.na/${userSlug}/${channel.slug})`,
       items,
     })
   }
