@@ -23,6 +23,7 @@ const HTML_TEMPLATE = `
         auto-rotate
         auto-rotate-delay="0"
         rotation-per-second="20deg"
+        camera-orbit="0deg 75deg 85%" 
         auto-rotate-delay="0"
     ></model-viewer>
 </body>

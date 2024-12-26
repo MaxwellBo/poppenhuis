@@ -384,6 +384,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             captureApp: "Polycam",
             captureMethod: "LiDAR",
             model: "/models/mbo/friends/Georgia.glb",
+            poster: "/models/mbo/friends/Georgia.jpg",
             captureDevice: "Apple iPhone 13 Pro",
             captureLocation: "Panania, Sydney",
             captureLatLon: "33.96S, 151.00E",
