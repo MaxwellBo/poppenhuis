@@ -46,6 +46,13 @@ export function fromUser(user: User): Meta {
 }
 
 export function metaToHtml(meta: Meta) {
+  let { title, description, image, url } = meta;
+  // sanitize the values so they're safe to interpolate into the HTML
+  title = title.replace(/"/g, '&quot;');
+  description = description.replace(/"/g, '&quot;');
+  image = image.replace(/"/g, '&quot;');
+  url = url.replace(/"/g, '&quot;');
+
   return `
     <title>${meta.title}</title>
     <meta name="description" content="${meta.description}" />
