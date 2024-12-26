@@ -1,7 +1,7 @@
-import { ItemCards, MetaBlock, QueryPreservingLink } from "../utils";
+import { ItemCards, HelmetMeta, QueryPreservingLink } from "../utils";
 import { useLoaderData } from "react-router";
 import { loadCollection } from "../manifest";
-import { fromUser } from "../meta";
+import { metaForCollection, metaForUser } from "../meta";
 import Markdown from "react-markdown";
 
 export const loader = loadCollection;
@@ -10,7 +10,7 @@ export default function CollectionPage() {
   const { collection, user } = useLoaderData() as Awaited<ReturnType<typeof loader>>;
 
   return <article>
-    <MetaBlock meta={fromUser(user)} />
+    <HelmetMeta meta={metaForCollection(collection, user)} />
     <header>
       <h1>
         <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / {collection.id} /

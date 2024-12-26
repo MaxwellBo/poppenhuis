@@ -1,7 +1,7 @@
 // netlify/edge-functions/transform.ts
 import { Context } from "@netlify/edge-functions";
 import { loadUser, loadItem, loadCollection } from "../../src/manifest.tsx";
-import { DEFAULT_META, fromItem as getMetaForItem, fromCollection as getMetaForCollection, fromUser as getMetaForUser, metaToHtml } from '../../src/meta.ts'
+import { DEFAULT_META, metaForCollection, metaForItem, metaForUser, metaToHtml } from '../../src/meta.ts'
 
 export default async function handler(request: Request, context: Context) {
   // Only transform HTML requests
@@ -33,13 +33,13 @@ export default async function handler(request: Request, context: Context) {
   try {
     if (itemId) {
       const { item, collection, user } = await loadItem({ params, request });
-      meta = getMetaForItem(item, collection, user);
+      meta = metaForItem(item, collection, user);
     } else if (collectionId) {
       const { collection, user } = await loadCollection({ params, request });
-      meta = getMetaForCollection(collection, user);
+      meta = metaForCollection(collection, user);
     } else if (userId) {
       const user = await loadUser({ params, request });
-      meta = getMetaForUser(user);
+      meta = metaForUser(user);
     }
   } catch (error) {
     console.error(error);

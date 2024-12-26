@@ -1,18 +1,17 @@
 import { useLoaderData } from "react-router";
-import { ItemCards, MetaBlock, QueryPreservingLink, Size } from "../utils";
+import { ItemCards, HelmetMeta, QueryPreservingLink, Size } from "../utils";
 import { Collection, loadUser, User } from "../manifest";
-import { fromUser } from "../meta";
+import { metaForUser } from "../meta";
 import Markdown from "react-markdown";
 
 export const loader = loadUser;
 
 export default function UserPage() {
   const user = useLoaderData() as User;
-  const meta = fromUser(user);
 
   return (
     <article>
-      <MetaBlock meta={meta} />
+      <HelmetMeta meta={metaForUser(user)} />
       <header>
         <h1>
           <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / {user.name} /

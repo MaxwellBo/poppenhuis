@@ -16,7 +16,7 @@ export const DEFAULT_META = {
   url: BASE_URL,
 };
 
-export function fromItem(item: Item, collection: Collection, user: User): Meta {
+export function metaForItem(item: Item, collection: Collection, user: User): Meta {
   return {
     title: `${item.name} - poppenhuis`,
     description: item.description ?? `3D model in the collection ${collection.name} by ${user.name}`,
@@ -27,7 +27,7 @@ export function fromItem(item: Item, collection: Collection, user: User): Meta {
   };
 }
 
-export function fromCollection(collection: Collection, user: User): Meta {
+export function metaForCollection(collection: Collection, user: User): Meta {
   return {
     title: `${collection.name} - poppenhuis`,
     description: `Collection of 3D models by ${user.name}`,
@@ -36,7 +36,7 @@ export function fromCollection(collection: Collection, user: User): Meta {
   };
 }
 
-export function fromUser(user: User): Meta {
+export function metaForUser(user: User): Meta {
   return {
     title: `${user.name} - poppenhuis`,
     description: user.bio ?? `Collection of 3D models by ${user.name}`,

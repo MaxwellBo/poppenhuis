@@ -1,7 +1,7 @@
 import React from "react";
 import { useLoaderData, useSearchParams } from "react-router";
 import { loadUsers, MANIFEST_URL_QUERY_PARAM, MANIFEST_SCHEMA, ARENA_PREFIX } from "../manifest";
-import { ItemCard, MetaBlock, QueryPreservingLink, Size } from "../utils";
+import { ItemCard, HelmetMeta, QueryPreservingLink, Size } from "../utils";
 import { DEFAULT_META } from "../meta";
 
 const EXAMPLE_MANIFEST_URL = 'https://raw.githubusercontent.com/MaxwellBo/maxwellbo.github.io/master/poppenhuis-manifest.json'
@@ -13,7 +13,7 @@ export default function UsersPage() {
 
   return (
     <article>
-      <MetaBlock meta={DEFAULT_META} />
+      <HelmetMeta meta={DEFAULT_META} />
       <header>
         <h1>
           poppenhuis /

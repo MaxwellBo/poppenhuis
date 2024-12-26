@@ -142,7 +142,7 @@ export function QueryPreservingLink(props: { to: string, children: React.ReactNo
   return <Link ref={linkRef} to={{ pathname: props.to, search: searchParams.toString() }}>{props.children}</Link>
 }
 
-export function MetaBlock(props: { meta: Meta }) {
+export function HelmetMeta(props: { meta: Meta }) {
   const { meta } = props;
   return (
     <Helmet>
