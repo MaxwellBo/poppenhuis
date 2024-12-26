@@ -2,6 +2,7 @@
 
 // netlify/edge-functions/transform.ts
 import { Context } from "@netlify/edge-functions";
+import { FIRST_PARTY_MANIFEST } from "../../src/manifest.tsx";
 
 const BASE_URL = "https://poppenhu.is";
 
