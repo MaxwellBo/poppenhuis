@@ -1,4 +1,4 @@
-import { Collection, Item, User } from "./manifest";
+import type { Collection, Item, User } from "./manifest";
 
 const BASE_URL = "https://poppenhu.is";
 

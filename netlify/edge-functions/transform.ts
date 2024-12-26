@@ -12,7 +12,6 @@ export default async function handler(request: Request, context: Context) {
   const response = await context.next();
   const text = await response.text();
 
-
   // there's 3 possible paths: 
   // /:userId, /:userId/:collectionId, /:userId/:collectionId/:itemId
   const pathname = url.pathname;
