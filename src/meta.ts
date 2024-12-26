@@ -16,6 +16,17 @@ export const DEFAULT_META = {
   url: BASE_URL,
 };
 
+export function fromItem(item: Item, collection: Collection, user: User): Meta {
+  return {
+    title: `${item.name} - poppenhuis`,
+    description: item.description ?? `3D model in the collection ${collection.name} by ${user.name}`,
+    image: item.poster 
+      ? `${BASE_URL}${item.poster}`
+      : `${BASE_URL}/og.png`,
+    url: `${BASE_URL}/${user.id}/${collection.id}/${item.id}`,
+  };
+}
+
 export function fromCollection(collection: Collection, user: User): Meta {
   return {
     title: `${collection.name} - poppenhuis`,
@@ -25,19 +36,10 @@ export function fromCollection(collection: Collection, user: User): Meta {
   };
 }
 
-export function fromItem(item: Item, collection: Collection, user: User): Meta {
-  return {
-    title: `${item.name} - poppenhuis`,
-    description: item.description ?? "a digital dollhouse",
-    image: `${BASE_URL}/og.png`,
-    url: `${BASE_URL}/${user.id}/${collection.id}/${item.id}`,
-  };
-}
-
 export function fromUser(user: User): Meta {
   return {
     title: `${user.name} - poppenhuis`,
-    description: `Collection of 3D models by ${user.name}`,
+    description: user.bio ?? `Collection of 3D models by ${user.name}`,
     image: `${BASE_URL}/og.png`,
     url: `${BASE_URL}/${user.id}`,
   };

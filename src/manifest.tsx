@@ -3,14 +3,14 @@ type Manifest = User[];
 export interface User {
   id: string;
   name: string;
-  bio?: string | JSX.Element; // JSX.Elements cannot be used with 3rd party manifests
+  bio?: string; 
   collections: Collection[];
 }
 
 export interface Collection {
   id: string;
   name: string;
-  description?: string | JSX.Element;
+  description?: string;
   items: Item[];
 }
 
@@ -20,7 +20,7 @@ export const ITEM_FIELD_DESCRIPTIONS = {
   alt: "Custom text that will be used to describe the model to viewers who use a screen reader or otherwise depend on additional semantic context to understand what they are viewing.",
   poster: "The image to be displayed instead of the model it is loaded and ready to render.",
   releaseDate: `The release date and the manufacture date are subtly different. The release date is the date this item's specific variant was made available to the public. The manufacture date is the date the item was actually made.
-      e.g. while the iPhone SE 1 was relased in 2016, it was manufactured up until 2018.`
+      e.g. while the iPhone SE 1 was released in 2016, it was manufactured up until 2018.`
 };
 
 export interface Item {
@@ -52,7 +52,7 @@ export interface Item {
   captureMethod?: string;
   // misc
   customFields?: {
-    [key: string]: string | JSX.Element | undefined;
+    [key: string]: string | undefined;
   };
 }
 // KEEP THIS IN SYNC WITH THE TYPES ABOVE PLEASE
@@ -62,14 +62,14 @@ type Manifest = User[];
 interface User {
   id: string;
   name: string;
-  bio?: string | JSX.Element; // JSX.Elements cannot be used with 3rd party manifests
+  bio?: string;
   collections: Collection[];
 }
 
 interface Collection {
   id: string;
   name: string;
-  description?: string | JSX.Element;
+  description?: string;
   items: Item[];
 }
 
@@ -79,7 +79,7 @@ export const ITEM_FIELD_DESCRIPTIONS = {
   alt: "Custom text that will be used to describe the model to viewers who use a screen reader or otherwise depend on additional semantic context to understand what they are viewing.",
   poster: "The image to be displayed instead of the model it is loaded and ready to render.",
   releaseDate: \`The release date and the manufacture date are subtly different. The release date is the date this item's specific variant was made available to the public. The manufacture date is the date the item was actually made.
-      e.g. while the iPhone SE 1 was relased in 2016, it was manufactured up until 2018.\`
+      e.g. while the iPhone SE 1 was released in 2016, it was manufactured up until 2018.\`
 };
 
 export interface Item {
@@ -111,7 +111,7 @@ export interface Item {
   captureMethod?: string;
   // misc
   customFields?: {
-    [key: string]: string | JSX.Element | undefined;
+    [key: string]: string | undefined;
   };
 }
 `;
@@ -120,13 +120,9 @@ export const FIRST_PARTY_MANIFEST: Manifest = [
   {
     id: "jackie",
     name: "Jackie",
-    bio: <p>
-      cakes rule everything around me
-      <br />
-      baker & baby cook
-      <br />
-      <a href="https://www.instagram.com/bb.flambe/">baking Instagram</a>
-    </p>,
+    bio: `cakes rule everything around me  
+baker & baby cook  
+[baking Instagram](https://www.instagram.com/bb.flambe/)`,
     collections: [
       {
         id: "cakes",
@@ -151,7 +147,7 @@ export const FIRST_PARTY_MANIFEST: Manifest = [
             acquisitionDate: "2024 July 21",
             acquisitionLocation: "Darlinghurst, Sydney",
             customFields: {
-              instagram: <a href="https://www.instagram.com/p/C91qasNS9YI/">instagram.com/p/C91qasNS9YI/</a>
+              instagram: "[instagram.com/p/C91qasNS9YI/](https://www.instagram.com/p/C91qasNS9YI/)"
             }
           },
           {
@@ -195,7 +191,7 @@ export const FIRST_PARTY_MANIFEST: Manifest = [
             acquisitionLocation: "Darlinghurst, Sydney",
             model: "/models/jackie/cakes/ube-cheesecake.glb",
             customFields: {
-              instagram: <a href="https://www.instagram.com/p/C9J_99XySH7">instagram.com/p/C9J_99XySH7/</a>
+              instagram: "[instagram.com/p/C9J_99XySH7](https://www.instagram.com/p/C9J_99XySH7)"
             }
           },
           {
@@ -219,7 +215,7 @@ export const FIRST_PARTY_MANIFEST: Manifest = [
             acquisitionDate: "2024 May 28",
             acquisitionLocation: "Darlinghurst, Sydney",
             customFields: {
-              instagram: <a href="https://www.instagram.com/p/C7fZJYsyAMi">instagram.com/p/C7fZJYsyAMi/</a>
+              instagram: "[instagram.com/p/C7fZJYsyAMi/](https://www.instagram.com/p/C7fZJYsyAMi)"
             }
           },
         ]
@@ -229,9 +225,7 @@ export const FIRST_PARTY_MANIFEST: Manifest = [
   {
     id: "mbo",
     name: "Max",
-    bio: <p>
-      <a href="https://maxbo.me">maxbo.me</a>, <a href="https://twitter.com/_max_bo_">twitter</a>
-    </p>,
+    bio: "[maxbo.me](https://maxbo.me), [twitter](https://twitter.com/_max_bo_)",
     collections: [
       {
         id: "guitars",
@@ -760,7 +754,7 @@ export async function loadArenaUser({ userSlug }: { userSlug: string }): Promise
         model: content.source.url,
         description: content.description,
         customFields: {
-          "are.na block": <a href={`https://www.are.na/block/${content.id}`}>https://www.are.na/block/{content.id}</a>,
+          "are.na block": `[https://www.are.na/block/${content.id}](https://www.are.na/block/${content.id})`
         },
         poster: content.image?.display?.url,
       })
@@ -773,12 +767,11 @@ export async function loadArenaUser({ userSlug }: { userSlug: string }): Promise
     collections.push({
       id: channel.slug.toString(),
       name: channel.title,
-      description: <p>
-        {channel.metadata.description} 
-        <br />
-        <br />
-        <a href={`https://www.are.na/${userSlug}/${channel.slug}`}>Are.na channel</a>
-      </p>,
+      description: `
+      ${channel.metadata.description} 
+      
+      [Are.na channel](https://www.are.na/${userSlug}/${channel.slug})
+      `,
       items,
     })
   }
@@ -786,7 +779,7 @@ export async function loadArenaUser({ userSlug }: { userSlug: string }): Promise
   return {
     id: ARENA_PREFIX + user.slug,
     name: user.full_name,
-    bio: <p><a href={`https://www.are.na/${user.slug}`}>Are.na user</a></p>,
+    bio: `[Are.na user](https://www.are.na/${user.slug})`,
     collections
   };
 }

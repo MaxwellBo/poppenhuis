@@ -3,6 +3,7 @@ import React from "react";
 import { useLoaderData } from "react-router";
 import { ItemCard, ItemCards, MetaBlock, ModelViewerWrapper, QueryPreservingLink } from "../utils";
 import { fromItem } from "../meta";
+import Markdown from "react-markdown";
 
 export const loader = loadItem
 
@@ -23,7 +24,7 @@ export default function ItemPage() {
           <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}/${collection.id}`}>{collection.id}</QueryPreservingLink> / {item.name}
         </h1>
       </header>
-      <p className='description'>{item.description}</p>
+      <p className='description'><Markdown>{item.description}</Markdown></p>
       <div className='previous-next'>
       </div>
       <div className='bento'>
@@ -69,7 +70,7 @@ function DescriptionList(props: { item: Item; collection: Collection; user: User
     return (
       <React.Fragment key={key}>
         <dt>{key}</dt>
-        <dd>{value}</dd>
+        <dd><Markdown>{value}</Markdown></dd>
       </React.Fragment>
     );
   }) : null;

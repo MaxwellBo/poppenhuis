@@ -2,6 +2,7 @@ import { useLoaderData } from "react-router";
 import { ItemCards, MetaBlock, QueryPreservingLink, Size } from "../utils";
 import { Collection, loadUser, User } from "../manifest";
 import { fromUser } from "../meta";
+import Markdown from "react-markdown";
 
 export const loader = loadUser;
 
@@ -17,7 +18,7 @@ export default function UserPage() {
           <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / {user.name} /
         </h1>
       </header>
-      {user.bio && <>{user.bio}<br /></>}
+      {user.bio && <><Markdown>{user.bio}</Markdown><br />a</>}
       {user.collections.map((collection) =>
         <CollectionRow key={collection.id} collection={collection} user={user} />)}
     </article>
