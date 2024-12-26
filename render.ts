@@ -12,7 +12,7 @@ const HTML_TEMPLATE = `
         model-viewer {
             width: 1200px;
             height: 630px;
-            background-color: #ffffff;
+            background-color: oldlace;
         }
     </style>
 </head>
@@ -21,13 +21,9 @@ const HTML_TEMPLATE = `
         src="MODEL_URL_PLACEHOLDER"
         camera-controls
         auto-rotate
-        camera-orbit="0deg 75deg 105%"
         auto-rotate-delay="0"
-        rotation-per-second="30deg"
-        exposure="1"
-        shadow-intensity="1"
-        shadow-softness="1"
-        environment-image="neutral"
+        rotation-per-second="20deg"
+        auto-rotate-delay="0"
     ></model-viewer>
 </body>
 </html>

@@ -14,7 +14,7 @@ fi
 # Find all .glb files recursively and process each one
 find . -type f -name "*.glb" | while read -r glb_file; do
     # Get the path without the .glb extension
-    poster_path="${glb_file%.glb}.jpg"
+    poster_path="${glb_file%.glb}.jpeg"
     
     echo "Processing: $glb_file -> $poster_path"
     deno run --allow-read --allow-write --allow-run --allow-env --allow-net "$DENO_SCRIPT" "$glb_file" "$poster_path"
