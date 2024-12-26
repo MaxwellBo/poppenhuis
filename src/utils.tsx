@@ -100,7 +100,7 @@ export function ModelViewerWrapper(props: { item: Item, size?: ModelSize }) {
         interaction-prompt=""
         progress-bar=""
         loading="auto"
-        poster={props.item.poster}
+        // poster={props.item.poster}
         auto-rotate-delay="0"
         rotation-per-second="20deg"
         camera-controls
