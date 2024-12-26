@@ -1,20 +1,17 @@
-import { Helmet } from "react-helmet";
 import { useLoaderData } from "react-router";
-import { ItemCards, QueryPreservingLink, Size } from "../utils";
+import { ItemCards, MetaBlock, QueryPreservingLink, Size } from "../utils";
 import { Collection, loadUser, User } from "../manifest";
+import { fromUser } from "../meta";
 
 export const loader = loadUser;
 
 export default function UserPage() {
   const user = useLoaderData() as User;
+  const meta = fromUser(user);
 
   return (
     <article>
-      <Helmet>
-        <title>{user.name} - poppenhuis</title>
-        {/* we can't put the bio in here because the bio could be a React tree */}
-        <meta name="description" content={`Collections of 3D models by ${user.name}`} />
-      </Helmet>
+      <MetaBlock meta={meta} />
       <header>
         <h1>
           <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / {user.name} /

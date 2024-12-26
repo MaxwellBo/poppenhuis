@@ -1,13 +1,14 @@
-import { Helmet } from "react-helmet";
 import { Collection, Item, ITEM_FIELD_DESCRIPTIONS, loadItem, User } from "../manifest";
 import React from "react";
 import { useLoaderData } from "react-router";
-import { ItemCard, ItemCards, ModelViewerWrapper, QueryPreservingLink } from "../utils";
+import { ItemCard, ItemCards, MetaBlock, ModelViewerWrapper, QueryPreservingLink } from "../utils";
+import { fromItem } from "../meta";
 
 export const loader = loadItem
 
 export default function ItemPage() {
   const { item, user, collection } = useLoaderData() as Awaited<ReturnType<typeof loadItem>>;
+  const meta = fromItem(item, collection, user);
 
   const previousItem: Item | undefined = collection.items.find((_, index) => collection.items[index + 1]?.id === item.id);
   const nextItem: Item | undefined = collection.items.find((_, index) => collection.items[index - 1]?.id === item.id);
@@ -16,10 +17,7 @@ export default function ItemPage() {
 
   return (
     <article className='item-page'>
-      <Helmet>
-        <title>{item.name} - poppenhuis</title>
-        <meta name="description" content={item.description} />
-      </Helmet>
+      <MetaBlock meta={meta} />
       <header>
         <h1>
           <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}/${collection.id}`}>{collection.id}</QueryPreservingLink> / {item.name}
