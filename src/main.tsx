@@ -71,7 +71,7 @@ export function ErrorPage() {
         {error.stack}
       </pre>
       <br />
-      <p>Please reach out to gi<a href="https://twitter.com/_max_bo_">me on Twitter</a>, and I'll push a fix.</p>
+      <p>Please reach out to <a href="https://twitter.com/_max_bo_">me on Twitter</a>, and I'll push a fix.</p>
     </div>
   );
 }
