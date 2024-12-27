@@ -1,4 +1,4 @@
-import React, { KeyboardEvent, useEffect, useRef } from 'react';
+import React, { KeyboardEvent, Suspense, useEffect, useRef } from 'react';
 import '@google/model-viewer'
 import './App.css'
 import {
@@ -7,6 +7,8 @@ import {
 import { User, Collection, Item } from './manifest';
 import { Helmet } from 'react-helmet';
 import { Meta } from './meta';
+import { Canvas } from '@react-three/fiber';
+import { Splat, OrbitControls } from '@react-three/drei';
 
 export function Size(props: { ts: unknown[], t: string }) {
   const { ts, t } = props;
@@ -159,3 +161,34 @@ export function HelmetMeta(props: { meta: Meta }) {
     </Helmet>
   );
 }
+
+export function SplatViewer() {
+  return (
+    <div style={{ height: "16rem", width: "16rem" }}>
+      <Canvas camera={{ position: [0, 2, 3.5], fov: 45 }}>
+        <color attach="background" args={['#1b1b1b']} />
+        
+        <Suspense fallback={null}>
+          <Splat 
+        src="/models/mbo/friends/Demitri.ply"
+        toneMapped={false}
+        alphaTest={0}
+        alphaHash={false}
+        chunkSize={25000}
+          />
+        </Suspense>
+
+        <OrbitControls
+          minPolarAngle={0}
+          maxPolarAngle={Math.PI / 2}
+          minDistance={0.5}
+          maxDistance={40}
+          enablePan={false}
+          target={[0, 1, 0]}
+          autoRotate
+          autoRotateSpeed={1.0}
+        />
+      </Canvas>
+    </div>
+  );
+};
