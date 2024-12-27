@@ -4,18 +4,17 @@ import { loadUser, loadItem, loadCollection } from "../../src/manifest.tsx";
 import { DEFAULT_META, metaForCollection, metaForItem, metaForUser, metaToHtml } from '../../src/meta.ts'
 
 export default async function handler(request: Request, context: Context) {
-  // Only transform HTML requests
-  if (!request.headers.get("accept")?.includes("text/html")) {
-    return context.next();
-  }
+  const url = new URL(request.url);
+
+  // Check if this request would be routed to index.html
+  // This means it's not a direct file request (no extension)
+  // OR it's explicitly requesting index.html
+  const isIndexHtmlRoute = !url.pathname.includes('.') || url.pathname.endsWith('index.html');
   
-  // Exclude assets requests
-  const assetExtensions = [".js", ".css", ".png", ".jpg", ".jpeg", ".gif", ".svg", ".ico", ".woff", ".woff2", ".ttf", ".eot"];
-  if (assetExtensions.some(ext => request.url.endsWith(ext))) {
+  if (!isIndexHtmlRoute) {
     return context.next();
   }
 
-  const url = new URL(request.url);
   const response = await context.next();
   const text = await response.text();
 

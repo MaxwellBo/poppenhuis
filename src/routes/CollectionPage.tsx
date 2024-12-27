@@ -1,7 +1,7 @@
 import { ItemCards, HelmetMeta, QueryPreservingLink } from "../utils";
 import { useLoaderData } from "react-router";
 import { loadCollection } from "../manifest";
-import { metaForCollection, metaForUser } from "../meta";
+import { metaForCollection } from "../meta";
 import Markdown from "react-markdown";
 
 export const loader = loadCollection;
