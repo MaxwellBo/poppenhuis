@@ -113,8 +113,9 @@ async function renderModels(config: RenderConfig, isSingle: boolean) {
         console.log(`⏳ Waiting for model-viewers to be ready...`);
         await page.waitForSelector('model-viewer:not([loading])');
         
-        console.log(`🕐 Waiting for initial rotation (10s)...`);
-        await new Promise(r => setTimeout(r, 10000));
+        const waitTimeSeconds = config.models.length * 2;
+        console.log(`🕐 Waiting for initial rotation (${waitTimeSeconds}s)...`);
+        await new Promise(r => setTimeout(r, waitTimeSeconds * 1000));
         
         console.log(`📸 Taking screenshot to: ${config.outputPath}`);
         await page.screenshot({ 
