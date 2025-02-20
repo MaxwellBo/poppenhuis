@@ -56,6 +56,8 @@ function generateModelViewerHTML(models: RenderConfig['models'], isSingle: boole
             src="/model/${index}"
             camera-controls
             auto-rotate
+            interaction-prompt=""
+            progress-bar=""
             auto-rotate-delay="0"
             rotation-per-second="20deg"
             camera-orbit="0deg 75deg 85%"
