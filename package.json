@@ -11,14 +11,11 @@
   },
   "dependencies": {
     "@google/model-viewer": "^3.5.0",
-    "@react-three/drei": "^9.120.4",
-    "@react-three/fiber": "^8.17.10",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-helmet": "^6.1.0",
     "react-markdown": "^9.0.1",
-    "react-router": "^7.1.0",
-    "three": "^0.171.0"
+    "react-router": "^7.1.0"
   },
   "devDependencies": {
     "@netlify/edge-functions": "^2.11.1",
