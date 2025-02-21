@@ -74,8 +74,6 @@ function DescriptionList(props: { item: Item; collection: Collection; user: User
     );
   }) : null;
 
-  const og = metaForItem(item, collection, user).image;
-
   return (
     <dl>
       {customFields}
@@ -108,14 +106,9 @@ function DescriptionList(props: { item: Item; collection: Collection; user: User
       <dt>capture method</dt>
       <dd>{item.captureMethod}</dd>
       <dt><abbr title={ITEM_FIELD_DESCRIPTIONS.model}>model</abbr></dt>
-      <dd className='ellipsis'>
-        <a href={item.model}>{item.model}</a></dd>
-      {item.poster && <>
-        <dt><abbr title={ITEM_FIELD_DESCRIPTIONS.poster}>poster</abbr></dt>
-        <dd className='ellipsis'><a href={item.poster}>{item.poster}</a></dd>
-      </>}
+      <dd className='ellipsis'><a href={item.model}>{item.model}</a></dd>
       <dt><abbr title={ITEM_FIELD_DESCRIPTIONS.og}>Open Graph image</abbr></dt>
-      <dd className='ellipsis'><a href={og}>{og}</a></dd>
+      <dd className='ellipsis'><a href={item.og}>{item.og}</a></dd>
     </dl>
   );
 }

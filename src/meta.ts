@@ -20,29 +20,25 @@ export function metaForItem(item: Item, collection: Collection, user: User): Met
   return {
     title: `${item.name} - poppenhuis`,
     description: item.description ?? `3D model in the collection ${collection.name} by ${user.name}`,
-    image: item.poster 
-      ? `${BASE_URL}${item.poster}`
-      : `${BASE_URL}/og.png`,
+    image: item.og ? `${BASE_URL}${item.og}` : `${BASE_URL}/og.png`,
     url: `${BASE_URL}/${user.id}/${collection.id}/${item.id}`,
   };
 }
 
 export function metaForCollection(collection: Collection, user: User): Meta {
-  const collectionPosterPath = `/${user.id}/${collection.id}/og.jpeg`;
   return {
     title: `${collection.name} - poppenhuis`,
     description: `Collection of 3D models by ${user.name}`,
-    image: `${BASE_URL}${collectionPosterPath}`,
+    image: collection.og ? `${BASE_URL}${collection.og}` : `${BASE_URL}/og.png`,
     url: `${BASE_URL}/${user.id}/${collection.id}`,
   };
 }
 
 export function metaForUser(user: User): Meta {
-  const userPosterPath = `/${user.id}/og.jpeg`;
   return {
     title: `${user.name} - poppenhuis`,
     description: user.bio ?? `Collection of 3D models by ${user.name}`,
-    image: `${BASE_URL}${userPosterPath}`,
+    image: user.og ? `${BASE_URL}${user.og}` : `${BASE_URL}/og.png`,
     url: `${BASE_URL}/${user.id}`,
   };
 }

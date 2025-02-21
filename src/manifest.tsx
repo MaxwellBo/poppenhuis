@@ -3,6 +3,7 @@ type Manifest = User[];
 export interface User {
   id: string;
   name: string;
+  og?: string;
   bio?: string; 
   collections: Collection[];
 }
@@ -10,6 +11,7 @@ export interface User {
 export interface Collection {
   id: string;
   name: string;
+  og?: string;
   description?: string;
   items: Item[];
 }
@@ -30,7 +32,7 @@ export interface Item {
   name: string;
   // model-viewer fields
   model: string;
-  poster?: string;
+  og?: string;
   alt?: string;
   // abstract details
   formalName?: string;
@@ -121,6 +123,7 @@ export const FIRST_PARTY_MANIFEST: Manifest = [
   {
     id: "jackie",
     name: "Jackie",
+    og: "/models/jackie/og.jpeg",
     bio: `cakes rule everything around me  
 baker & baby cook  
 [baking Instagram](https://www.instagram.com/bb.flambe/)`,
@@ -135,7 +138,7 @@ baker & baby cook
             name: "<br/>at cake",
             description: "<𝓫𝓻/>𝓪𝓽 𝔀𝓲𝓷𝓽𝓮𝓻 ✮ choc sponge cake w layers of apple jam, caramel, whipped cream, swiss meringue bc ✮ for @max.bo_ HTML in hyde (i’m now a woman in STEM) ᯓ★ ~ https://www.instagram.com/p/C91qasNS9YI/",
             model: "/models/jackie/cakes/brat.glb",
-            poster: "/models/jackie/cakes/brat.jpeg",
+            og: "/models/jackie/cakes/brat.jpeg",
             manufacturer: "Jackie",
             material: ["chocolate sponge cake", "caramel sauce",
               "apple jam", "whipped cream", "Swiss meringue buttercream"],
@@ -165,7 +168,7 @@ baker & baby cook
             acquisitionLocation: "Darlinghurst, Sydney",
             name: "meringue stack",
             model: "/models/jackie/cakes/meringue-stack.glb",
-            poster: "/models/jackie/cakes/meringue-stack.jpeg",
+            og: "/models/jackie/cakes/meringue-stack.jpeg",
             material: [
               "pavlova",
               "matcha whipped cream",
@@ -193,7 +196,7 @@ baker & baby cook
             acquisitionDate: "2024 July 8",
             acquisitionLocation: "Darlinghurst, Sydney",
             model: "/models/jackie/cakes/ube-cheesecake.glb",
-            poster: "/models/jackie/cakes/ube-cheesecake.jpeg",
+            og: "/models/jackie/cakes/ube-cheesecake.jpeg",
             customFields: {
               instagram: "[instagram.com/p/C9J_99XySH7](https://www.instagram.com/p/C9J_99XySH7)"
             }
@@ -208,7 +211,7 @@ baker & baby cook
             releaseDate: "2024 May 28",
             name: "dark forest dragon",
             model: "/models/jackie/cakes/dark-forest-dragon.glb",
-            poster: "/models/jackie/cakes/dark-forest-dragon.jpeg",
+            og: "/models/jackie/cakes/dark-forest-dragon.jpeg",
             manufacturer: "Jackie",
             manufactureLocation: "Darlinghurst, Sydney",
             manufactureDate: "2024 May 28",
@@ -229,6 +232,7 @@ baker & baby cook
   },
   {
     id: "mbo",
+    og: "/models/mbo/og.jpeg",
     name: "Max",
     bio: "[maxbo.me](https://maxbo.me), [twitter](https://twitter.com/_max_bo_)",
     collections: [
@@ -247,7 +251,7 @@ Sadly 2 were lost to the Queensland heat, when the glue of their bridges melted 
 *"Paracho is well known throughout both Mexico and elsewhere in the world as a hub of lutherie [...] the town's craftsmen are reputed to make the best sounding guitars and vihuelas in all of Mexico."`,
             name: "a requinto",
             model: "/models/mbo/guitars/requinto.glb",
-            poster: "/models/mbo/guitars/requinto.jpeg",
+            og: "/models/mbo/guitars/requinto.jpeg",
             manufacturer: "Jose Juan Granados",
             manufactureLocation: "Paracho de Verduzco, Mexico",
             manufactureDate: "2001 April",
@@ -262,7 +266,7 @@ Sadly 2 were lost to the Queensland heat, when the glue of their bridges melted 
             id: "yamaha",
             name: "Yamaha",
             model: "/models/mbo/guitars/yamaha.glb",
-            poster: "/models/mbo/guitars/yamaha.jpeg",
+            og: "/models/mbo/guitars/yamaha.jpeg",
             material: ["cedar top", "rosewood back and sides"],
             formalName: "Yamaha CGX171CCA",
             manufacturer: "Yamaha",
@@ -281,7 +285,7 @@ Sadly 2 were lost to the Queensland heat, when the glue of their bridges melted 
             manufacturer: "Fender",
             description: "The stickers came with the guitar when I got if off Facebook Marketplace for a whopping $50AUD.",
             model: "/models/mbo/guitars/squire.glb",
-            poster: "/models/mbo/guitars/squire.jpeg",
+            og: "/models/mbo/guitars/squire.jpeg",
             captureDate: "2024 May 28",
             captureMethod: "LiDAR",
             captureDevice: "Apple iPhone 13 Pro",
@@ -295,7 +299,7 @@ Sadly 2 were lost to the Queensland heat, when the glue of their bridges melted 
             manufacturer: "Kohala",
             description: "Not quite a guitar.",
             model: "/models/mbo/guitars/kohala.glb",
-            poster: "/models/mbo/guitars/kohala.jpeg",
+            og: "/models/mbo/guitars/kohala.jpeg",
             captureDate: "2024 May 28",
             captureMethod: "LiDAR",
             captureDevice: "Apple iPhone 13 Pro",
@@ -315,7 +319,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             id: "plumes",
             name: "Plumes",
             model: "/models/mbo/pedals/plumes.glb",
-            poster: "/models/mbo/pedals/plumes.jpeg",
+            og: "/models/mbo/pedals/plumes.jpeg",
             manufacturer: "EarthQuaker Devices",
             formalName: "EarthQuaker Devices Plumes Small Signal Shredder",
             releaseDate: "2019",
@@ -332,7 +336,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             name: "El Capistan",
             manufacturer: "Strymon",
             model: "/models/mbo/pedals/elcap.glb",
-            poster: "/models/mbo/pedals/elcap.jpeg",
+            og: "/models/mbo/pedals/elcap.jpeg",
             formalName: "Strymon El Capistan dTape Echo",
             acquisitionDate: "2022?",
             captureDate: "2024 May 22",
@@ -346,7 +350,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             name: "MultiStomp",
             manufacturer: "Zoom",
             model: "/models/mbo/pedals/multistomp.glb",
-            poster: "/models/mbo/pedals/multistomp.jpeg",
+            og: "/models/mbo/pedals/multistomp.jpeg",
             formalName: "Zoom MS-70CDR MultiStomp Chorus/Delay/Reverb Pedal",
             acquisitionDate: "2022?",
             captureDate: "2024 May 22",
@@ -360,7 +364,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             name: "Avalanche Run",
             manufacturer: "EarthQuaker Devices",
             model: "/models/mbo/pedals/avrun.glb",
-            poster: "/models/mbo/pedals/avrun.jpeg",
+            og: "/models/mbo/pedals/avrun.jpeg",
             formalName: "EarthQuaker Devices Avalanche Run V2 Stereo Delay & Reverb",
             releaseDate: "2017",
             manufactureDate: "2017",
@@ -385,7 +389,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             captureApp: "Polycam",
             captureMethod: "LiDAR",
             model: "/models/mbo/friends/Cory.glb",
-            poster: "/models/mbo/friends/Cory.jpeg",
+            og: "/models/mbo/friends/Cory.jpeg",
             captureDevice: "Apple iPhone 13 Pro",
             captureLocation: "Darlinghurst, Sydney",
             captureLatLon: "33.88 S, 151.21 E",
@@ -398,7 +402,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             captureApp: "Polycam",
             captureMethod: "LiDAR",
             model: "/models/mbo/friends/Georgia.glb",
-            poster: "/models/mbo/friends/Georgia.jpeg",
+            og: "/models/mbo/friends/Georgia.jpeg",
             captureDevice: "Apple iPhone 13 Pro",
             captureLocation: "Panania, Sydney",
             captureLatLon: "33.96S, 151.00E",
@@ -417,7 +421,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             captureApp: "Polycam",
             captureMethod: "LiDAR",
             model: "/models/mbo/friends/Kriti.glb",
-            poster: "/models/mbo/friends/Kriti.jpeg",
+            og: "/models/mbo/friends/Kriti.jpeg",
             captureDevice: "Apple iPhone 13 Pro",
             captureLocation: "Darlinghurst, Sydney",
             captureLatLon: "33.88 S, 151.21 E",
@@ -430,7 +434,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             captureApp: "Polycam",
             captureMethod: "LiDAR",
             model: "/models/mbo/friends/Bec.glb",
-            poster: "/models/mbo/friends/Bec.jpeg",
+            og: "/models/mbo/friends/Bec.jpeg",
             captureDevice: "Apple iPhone 13 Pro",
             captureLocation: "Redfern, Sydney",
             captureLatLon: "33.89 S, 151.20 E",
@@ -440,7 +444,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             id: "qualtrough",
             name: "Qualtrough collective",
             model: "/models/mbo/friends/Qualtrough.glb",
-            poster: "/models/mbo/friends/Qualtrough.jpeg",
+            og: "/models/mbo/friends/Qualtrough.jpeg",
             captureApp: "Polycam",
             captureDate: "2024 June 29 9:17PM",
             captureLocation: "Woolloongabba, Brisbane",
@@ -454,7 +458,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             captureApp: "Polycam",
             captureMethod: "LiDAR",
             model: "/models/mbo/friends/James.glb",
-            poster: "/models/mbo/friends/James.jpeg",
+            og: "/models/mbo/friends/James.jpeg",
             captureDevice: "Apple iPhone 13 Pro",
             captureLocation: "Some boat in the middle of Sydney Harbour",
             captureLatLon: "33.86 S, 151.20 E",
@@ -466,7 +470,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             alt: "A man sitting and playing the accordion with partial surroundings included.",
             name: "Dragan",
             model: "/models/mbo/friends/Dragan.glb",
-            poster: "/models/mbo/friends/Dragan.jpeg",
+            og: "/models/mbo/friends/Dragan.jpeg",
             captureApp: "Polycam",
             captureMethod: "Photo mode",
             captureDate: "2024 May 22, 10:22PM",
@@ -482,7 +486,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             captureApp: "Polycam",
             captureMethod: "LiDAR",
             model: "/models/mbo/friends/Jackie.glb",
-            poster: "/models/mbo/friends/Jackie.jpeg",
+            og: "/models/mbo/friends/Jackie.jpeg",
             captureDevice: "Apple iPhone 13 Pro",
             captureDate: "2024 May 21 8:00 PM",
             captureLocation: "Darlinghurst, Sydney",
@@ -495,7 +499,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             captureApp: "Polycam",
             captureMethod: "LiDAR",
             model: "/models/mbo/friends/Roman.glb",
-            poster: "/models/mbo/friends/Roman.jpeg",
+            og: "/models/mbo/friends/Roman.jpeg",
             captureDate: "2024 May 21",
             captureDevice: "Apple iPhone 13 Pro",
             captureLocation: "Canva, Surry Hills, Sydney",
@@ -510,7 +514,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             releaseDate: "2000 February",
             material: ["flesh", "blood", "bone"],
             model: "/models/mbo/friends/Hamish.glb",
-            poster: "/models/mbo/friends/Hamish.jpeg",
+            og: "/models/mbo/friends/Hamish.jpeg",
             captureApp: "Polycam",
             captureDate: "2023 August 26 4:43PM",
             captureLocation: "Canva, Surry Hills, Sydney",
@@ -525,7 +529,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             captureApp: "Polycam",
             captureMethod: "LiDAR",
             model: "/models/mbo/friends/Sam.glb",
-            poster: "/models/mbo/friends/Sam.jpeg",
+            og: "/models/mbo/friends/Sam.jpeg",
             captureDevice: "Apple iPhone 13 Pro",
             captureDate: "2024 May 24 12:27 PM",
             captureLocation: "Canva, Surry Hills, Sydney",
@@ -538,7 +542,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             name: "Tom",
             captureMethod: "LiDAR",
             model: "/models/mbo/friends/Tom.glb",
-            poster: "/models/mbo/friends/Tom.jpeg",
+            og: "/models/mbo/friends/Tom.jpeg",
             captureDevice: "Apple iPhone 13 Pro",
             captureDate: "2024 May 24 12:36 PM",
             captureLocation: "Canva, Surry Hills, Sydney",
@@ -550,7 +554,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             captureApp: "Polycam",
             captureMethod: "LiDAR",
             model: "/models/mbo/friends/Casey.glb",
-            poster: "/models/mbo/friends/Casey.jpeg",
+            og: "/models/mbo/friends/Casey.jpeg",
             captureDate: "2024 May 21",
             captureDevice: "Apple iPhone 13 Pro",
             captureLocation: "Canva, Surry Hills",
@@ -562,7 +566,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             description: "Look closer. He is holding a game of Boggle.",
             captureApp: "Polycam",
             model: "/models/mbo/friends/Issy.glb",
-            poster: "/models/mbo/friends/Issy.jpeg",
+            og: "/models/mbo/friends/Issy.jpeg",
             captureMethod: "LiDAR",
             captureDevice: "Apple iPhone 13 Pro",
             captureLocation: "West End",
@@ -576,7 +580,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             captureApp: "Polycam",
             captureMethod: "LiDAR",
             model: "/models/mbo/friends/Fran.glb",
-            poster: "/models/mbo/friends/Fran.jpeg",
+            og: "/models/mbo/friends/Fran.jpeg",
             captureDevice: "Apple iPhone 13 Pro",
             captureLocation: "Chippendale, Sydney",
             captureDate: "2023 April 18 9:09 PM",
@@ -589,7 +593,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             captureMethod: "LiDAR",
             acquisitionDate: "2023",
             model: "/models/mbo/friends/Sarah.glb",
-            poster: "/models/mbo/friends/Sarah.jpeg",
+            og: "/models/mbo/friends/Sarah.jpeg",
             captureDevice: "Apple iPhone 13 Pro",
             captureLocation: "Chippendale, Sydney",
             captureDate: "2023 April 18 9:13 PM",
@@ -599,7 +603,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             name: "Liam",
             captureMethod: "LiDAR",
             model: "/models/mbo/friends/Liam.glb",
-            poster: "/models/mbo/friends/Liam.jpeg",
+            og: "/models/mbo/friends/Liam.jpeg",
             captureDevice: "Apple iPhone 13 Pro",
             acquisitionDate: "2022",
             captureLocation: "Redfern",
@@ -613,7 +617,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             captureApp: "Polycam",
             captureMethod: "LiDAR",
             model: "/models/mbo/friends/LouNathan.glb",
-            poster: "/models/mbo/friends/LouNathan.jpeg",
+            og: "/models/mbo/friends/LouNathan.jpeg",
             captureDevice: "Apple iPhone 13 Pro",
             captureDate: "2023 April 9 3:55 PM",
             captureLatLon: "33.89 S, 151.18 E",
@@ -626,7 +630,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             captureApp: "Polycam",
             captureMethod: "LiDAR",
             model: "/models/mbo/friends/Jack.glb",
-            poster: "/models/mbo/friends/Jack.jpeg",
+            og: "/models/mbo/friends/Jack.jpeg",
             captureDevice: "Apple iPhone 13 Pro",
             captureDate: "2023 April 8 10:16 PM",
             acquisitionDate: "2022",
@@ -637,7 +641,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             id: "annaliese-riya",
             name: "Annaliese & Riya",
             model: "/models/mbo/friends/AnnalieseRiya.glb",
-            poster: "/models/mbo/friends/AnnalieseRiya.jpeg",
+            og: "/models/mbo/friends/AnnalieseRiya.jpeg",
             captureApp: "Polycam",
             captureMethod: "LiDAR",
             captureDate: "2023 April 7 7:31PM",
@@ -651,6 +655,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
   }, {
     id: "leaonie",
     name: "Leaonie",
+    og: "/models/leaonie/og.jpeg",
     collections: [
       {
         id: "pottery",
@@ -661,7 +666,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             name: "bear",
             alt: "A simplistic white bear with a green hat on a small snowy base.",
             model: "/models/leaonie/pottery/bear.glb",
-            poster: "/models/leaonie/pottery/bear.jpeg",
+            og: "/models/leaonie/pottery/bear.jpeg",
             manufacturer: "Leaonie",
             captureDevice: "Apple iPhone 14 Pro Max",
             captureMethod: "LiDAR",
@@ -676,7 +681,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             name: "mouse bowl",
             alt: "A small, ceramic cup with a cute mouse design, featuring textured sides and a rounded handle.",
             model: "/models/leaonie/pottery/mouse-bowl.glb",
-            poster: "/models/leaonie/pottery/mouse-bowl.jpeg",
+            og: "/models/leaonie/pottery/mouse-bowl.jpeg",
             manufacturer: "Leaonie",
             captureDevice: "Apple iPhone 14 Pro Max",
             captureMethod: "Photo mode",
@@ -691,7 +696,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             alt: "A textured ceramic vase with a narrow opening, displayed on a simple white stand.",
             name: "vase",
             model: "/models/leaonie/pottery/vase.glb",
-            poster: "/models/leaonie/pottery/vase.jpeg",
+            og: "/models/leaonie/pottery/vase.jpeg",
             manufacturer: "Leaonie",
             captureDevice: "Apple iPhone 14 Pro Max",
             captureMethod: "LiDAR",
@@ -792,7 +797,7 @@ export async function loadArenaUser({ userSlug }: { userSlug: string }): Promise
         customFields: {
           "are.na block": `[https://www.are.na/block/${content.id}](https://www.are.na/block/${content.id})`
         },
-        poster: content.image?.display?.url,
+        og: content.image?.display?.url,
       })
     }
 
