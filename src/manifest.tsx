@@ -131,12 +131,13 @@ baker & baby cook
       {
         id: "cakes",
         name: "cakes",
+        og: "/models/jackie/cakes/og.jpeg",
         items: [
           {
             id: "brat",
             releaseDate: "2024 July 21",
             name: "<br/>at cake",
-            description: "<𝓫𝓻/>𝓪𝓽 𝔀𝓲𝓷𝓽𝓮𝓻 ✮ choc sponge cake w layers of apple jam, caramel, whipped cream, swiss meringue bc ✮ for @max.bo_ HTML in hyde (i’m now a woman in STEM) ᯓ★ ~ https://www.instagram.com/p/C91qasNS9YI/",
+            description: "<𝓫𝓻/>𝓪𝓽 𝔀𝓲𝓷𝓽𝓮𝓻 ✮ choc sponge cake w layers of apple jam, caramel, whipped cream, swiss meringue bc ✮ for @max.bo_ HTML in hyde (i'm now a woman in STEM) ᯓ★ ~ https://www.instagram.com/p/C91qasNS9YI/",
             model: "/models/jackie/cakes/brat.glb",
             og: "/models/jackie/cakes/brat.jpeg",
             manufacturer: "Jackie",
@@ -178,7 +179,7 @@ baker & baby cook
           },
           {
             id: "ube-cheesecake",
-            description: "𝒷𝑒 𝒷𝓊𝓇𝓃𝓉 𝒷𝒶𝓈𝓆𝓊𝑒 𝒸𝒽𝑒𝑒𝓈𝑒𝒸𝒶𝓀𝑒 𝓁𝒶𝓎𝑒𝓇𝑒𝒹 𝓌𝒾𝓉𝒽 𝓂𝑜𝒸𝒽𝒾 & 𝒸𝒽𝑜𝒸 𝒷𝓇𝑜𝓌𝓃𝒾𝑒 • almost went up in flames but was too DELICIOUS and sexy to die so she ended up toasty like a roasty marshmallow!?? @allyzli put this idea in my head and i couldn’t continue breathing til i made it (+ sweet basque minis, who wants some? •ᴗ•)",
+            description: "𝒷𝑒 𝒷𝓊𝓇𝓃𝓉 𝒷𝒶𝓈𝓆𝓊𝑒 𝒸𝒽𝑒𝑒𝓈𝑒𝒸𝒶𝓀𝑒 𝓁𝒶𝓎𝑒𝓇𝑒𝒹 𝓌𝒾𝓉𝒽 𝓂𝑜𝒸𝒽𝒾 & 𝒸𝒽𝑜𝒸 𝒷𝓇𝑜𝓌𝓃𝒾𝑒 • almost went up in flames but was too DELICIOUS and sexy to die so she ended up toasty like a roasty marshmallow!?? @allyzli put this idea in my head and i couldn't continue breathing til i made it (+ sweet basque minis, who wants some? •ᴗ•)",
             releaseDate: "2024 July 8",
             name: "ube burnt basque cheesecake with mochi & brownie layers",
             material: [
@@ -239,6 +240,7 @@ baker & baby cook
       {
         id: "guitars",
         name: "guitars",
+        og: "/models/mbo/guitars/og.jpeg",
         description: `I only have 3 at the moment, but peak collection size was 5. 
 Sadly 2 were lost to the Queensland heat, when the glue of their bridges melted and sheared off.`,
         items: [
@@ -312,6 +314,7 @@ Sadly 2 were lost to the Queensland heat, when the glue of their bridges melted 
       {
         id: "pedals",
         name: "pedals",
+        og: "/models/mbo/pedals/og.jpeg",
         description: `I have a small collection of guitar pedals from an era where I was trying to get into the electric guitar. 
 My abject failure to use them properly convinced me to stick to the classical guitar.`,
         items: [
@@ -380,6 +383,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
       {
         id: "friends",
         name: "friends",
+        og: "/models/mbo/friends/og.jpeg",
         description: "Always appreciated (all parties have agreed to be on the site)",
         items: [
           {
@@ -660,6 +664,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
       {
         id: "pottery",
         name: "pottery",
+        og: "/models/leaonie/pottery/og.jpeg",
         items: [
           {
             id: "bear",
