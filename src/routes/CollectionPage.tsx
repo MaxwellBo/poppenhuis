@@ -1,4 +1,4 @@
-import { ItemCards, HelmetMeta, QueryPreservingLink } from "../utils";
+import { ItemCards, HelmetMeta, QueryPreservingLink, Size } from "../utils";
 import { useLoaderData } from "react-router";
 import { loadCollection } from "../manifest";
 import { metaForCollection } from "../meta";
@@ -13,7 +13,7 @@ export default function CollectionPage() {
     <HelmetMeta meta={metaForCollection(collection, user)} />
     <header>
       <h1>
-        <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / {collection.id} /
+        <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / {collection.id} / <Size ts={collection.items} t="item" />
       </h1>
     </header>
     {collection.description && <p className='description'><Markdown>{collection.description}</Markdown></p>}

@@ -14,7 +14,7 @@ export default function UserPage() {
       <HelmetMeta meta={metaForUser(user)} />
       <header>
         <h1>
-          <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / {user.name} /
+          <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / {user.name} / <Size ts={user.collections} t="collection" />
         </h1>
       </header>
       {user.bio && <><Markdown>{user.bio}</Markdown><br /></>}
