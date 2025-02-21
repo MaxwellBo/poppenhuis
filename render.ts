@@ -18,13 +18,17 @@ const HTML_TEMPLATE = `
             margin: 0;
             padding: 0;
             background-color: oldlace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
         }
         .grid {
             display: grid;
             width: 1200px;
             height: 630px;
-            gap: 10px;
-            padding: 10px;
+            gap: 0;
+            padding: 0;
             box-sizing: border-box;
             background-color: oldlace;
         }
@@ -44,7 +48,8 @@ const HTML_TEMPLATE = `
 `;
 
 function generateModelViewerHTML(models: RenderConfig['models'], isSingle: boolean) {
-    const columns = isSingle ? 1 : 3;  // Single model = 1 column, Multi = 3 columns
+    // Single model = 1 column, Multi = 5 columns
+    const columns = isSingle ? 1 : 5;  
     const rows = Math.ceil(models.length / columns);
     const style = `
         grid-template-columns: repeat(${columns}, 1fr);
