@@ -2,11 +2,17 @@
 import puppeteer from "https://deno.land/x/puppeteer@16.2.0/mod.ts";
 import { serve } from "https://deno.land/std@0.217.0/http/server.ts";
 import { serveFile } from "https://deno.land/std@0.217.0/http/file_server.ts";
+import { walk } from "https://deno.land/std@0.217.0/fs/walk.ts";
+import { dirname, join } from "https://deno.land/std@0.217.0/path/mod.ts";
 
 interface RenderConfig {
   models: string[];
   outputPath: string;
+  type: 'single' | 'collection' | 'user';
 }
+
+// Track used ports to avoid conflicts
+let nextPort = 8000;
 
 const HTML_TEMPLATE = `
 <!DOCTYPE html>
@@ -47,16 +53,41 @@ const HTML_TEMPLATE = `
 </html>
 `;
 
-function generateModelViewerHTML(models: RenderConfig['models'], isSingle: boolean) {
-    // Single model = 1 column, Multi = 5 columns
-    const columns = isSingle ? 1 : 5;  
-    const rows = Math.ceil(models.length / columns);
+function generateModelViewerHTML(models: string[], type: RenderConfig['type']) {
+    let columns = 1;
+    let modelViewers = '';
+    
+    switch (type) {
+        case 'single':
+            columns = 1;
+            modelViewers = models.map((path, index) => generateModelViewer(path, index)).join('');
+            break;
+        case 'collection':
+            columns = 2; // 2x2 grid for collections
+            modelViewers = models.slice(0, 4).map((path, index) => generateModelViewer(path, index)).join('');
+            break;
+        case 'user':
+            // For user mode, we'll handle the grid differently
+            // We'll process collections in rows, 4 items per collection
+            const collections = groupModelsByCollection(models);
+            columns = 4; // 4 items per row for each collection
+            modelViewers = collections.map(collection => 
+                collection.slice(0, 4).map((path, index) => generateModelViewer(path, index)).join('')
+            ).join('');
+            break;
+    }
+
     const style = `
         grid-template-columns: repeat(${columns}, 1fr);
-        grid-template-rows: repeat(${rows}, 1fr);
+        grid-template-rows: auto;
     `;
     
-    const modelViewers = models.map((path, index) => `
+    return HTML_TEMPLATE.replace('<!-- Models will be injected here -->', modelViewers)
+                       .replace('<div id="grid" class="grid">', `<div id="grid" class="grid" style="${style}">`);
+}
+
+function generateModelViewer(path: string, index: number): string {
+    return `
         <model-viewer
             src="/model/${index}"
             camera-controls
@@ -67,14 +98,38 @@ function generateModelViewerHTML(models: RenderConfig['models'], isSingle: boole
             rotation-per-second="20deg"
             camera-orbit="0deg 75deg 85%"
         ></model-viewer>
-    `).join('');
-
-    return HTML_TEMPLATE.replace('<!-- Models will be injected here -->', modelViewers)
-                       .replace('<div id="grid" class="grid">', `<div id="grid" class="grid" style="${style}">`);
+    `;
 }
 
-async function startServer(config: RenderConfig, isSingle: boolean): Promise<string> {
-    const port = 8000;
+function groupModelsByCollection(models: string[]): string[][] {
+    const collections = new Map<string, string[]>();
+    
+    for (const model of models) {
+        const collectionPath = dirname(model);
+        if (!collections.has(collectionPath)) {
+            collections.set(collectionPath, []);
+        }
+        collections.get(collectionPath)?.push(model);
+    }
+    
+    return Array.from(collections.values());
+}
+
+async function findGlbFiles(dir: string): Promise<string[]> {
+    const files: string[] = [];
+    for await (const entry of walk(dir, { 
+        match: [/\.glb$/],
+        maxDepth: 1
+    })) {
+        if (entry.isFile) {
+            files.push(entry.path);
+        }
+    }
+    return files;
+}
+
+async function startServer(config: RenderConfig): Promise<string> {
+    const port = nextPort++;
     
     console.log(`🌐 Starting local server on port ${port}...`);
     
@@ -88,7 +143,7 @@ async function startServer(config: RenderConfig, isSingle: boolean): Promise<str
             return await serveFile(req, config.models[modelIndex]);
         }
         return new Response(
-            generateModelViewerHTML(config.models, isSingle),
+            generateModelViewerHTML(config.models, config.type),
             { headers: { 'content-type': 'text/html' } }
         );
     };
@@ -97,10 +152,10 @@ async function startServer(config: RenderConfig, isSingle: boolean): Promise<str
     return `http://localhost:${port}`;
 }
 
-async function renderModels(config: RenderConfig, isSingle: boolean) {
+async function renderModels(config: RenderConfig) {
     console.log(`📁 Input models: ${config.models.join(', ')}`);
     
-    const serverUrl = await startServer(config, isSingle);
+    const serverUrl = await startServer(config);
     console.log(`🚀 Server started at ${serverUrl}`);
 
     try {
@@ -136,40 +191,83 @@ async function renderModels(config: RenderConfig, isSingle: boolean) {
     }
     
     console.log(`✅ Render complete!`);
-    Deno.exit(0);  // Force exit since server keeps running
 }
 
-// Parse command line arguments
-const args = Deno.args;
-if (args.length < 2) {
-    console.error('Usage:');
-    console.error('Single model: deno run --allow-read --allow-write --allow-run --allow-env --allow-net render.ts single <input.glb> <output.jpeg>');
-    console.error('Multiple models: deno run --allow-read --allow-write --allow-run --allow-env --allow-net render.ts multi <output.jpeg> <model1.glb> [model2.glb ...]');
-    Deno.exit(1);
-}
-
-const mode = args[0];
-if (mode === 'single') {
-    // Single model mode
-    const [_, inputPath, outputPath] = args;
-    await renderModels({
-        models: [inputPath],
-        outputPath
-    }, true);
-} else if (mode === 'multi') {
-    // Multiple models mode
-    const [_, outputPath, ...modelPaths] = args;
-    
-    if (modelPaths.length === 0) {
-        console.error('Error: Must provide at least one model path');
-        Deno.exit(1);
+async function exists(path: string): Promise<boolean> {
+    try {
+        await Deno.stat(path);
+        return true;
+    } catch {
+        return false;
     }
-    
-    await renderModels({
-        models: modelPaths,
-        outputPath
-    }, false);
-} else {
-    console.error('Error: First argument must be either "single" or "multi"');
+}
+
+// Main processing function
+async function processEverything(rootPath: string) {
+    // First process all individual GLB files
+    for await (const entry of walk(rootPath, { match: [/\.glb$/] })) {
+        if (entry.isFile) {
+            const outputPath = entry.path.replace('.glb', '.jpeg');
+            await renderModels({
+                models: [entry.path],
+                outputPath,
+                type: 'single'
+            });
+        }
+    }
+
+    // Then process all collections
+    const processedDirs = new Set<string>();
+    for await (const entry of walk(rootPath, { match: [/\.glb$/] })) {
+        if (entry.isFile) {
+            const dir = dirname(entry.path);
+            if (!processedDirs.has(dir)) {
+                processedDirs.add(dir);
+                const models = await findGlbFiles(dir);
+                if (models.length > 0) {
+                    await renderModels({
+                        models,
+                        outputPath: join(dir, 'og.jpeg'),
+                        type: 'collection'
+                    });
+                }
+            }
+        }
+    }
+
+    // Finally process all user directories
+    const modelsPath = join(rootPath, 'public', 'models');
+    if (await exists(modelsPath)) {
+        // Get all user directories
+        for await (const entry of Deno.readDir(modelsPath)) {
+            if (entry.isDirectory) {
+                const userPath = join(modelsPath, entry.name);
+                const models: string[] = [];
+                
+                // Find all GLB files in this user's directory
+                for await (const modelEntry of walk(userPath, { match: [/\.glb$/] })) {
+                    if (modelEntry.isFile) {
+                        models.push(modelEntry.path);
+                    }
+                }
+                
+                if (models.length > 0) {
+                    console.log(`Processing user directory: ${entry.name}`);
+                    await renderModels({
+                        models,
+                        outputPath: join(userPath, 'og.jpeg'),
+                        type: 'user'
+                    });
+                }
+            }
+        }
+    }
+}
+
+// Simple entry point
+if (Deno.args.length < 1) {
+    console.error('Usage: deno run --allow-read --allow-write --allow-run --allow-env --allow-net render.ts <directory>');
     Deno.exit(1);
 }
+
+await processEverything(Deno.args[0]);
