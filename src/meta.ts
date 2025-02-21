@@ -28,19 +28,21 @@ export function metaForItem(item: Item, collection: Collection, user: User): Met
 }
 
 export function metaForCollection(collection: Collection, user: User): Meta {
+  const collectionPosterPath = `/${user.id}/${collection.id}/collection.jpeg`;
   return {
     title: `${collection.name} - poppenhuis`,
     description: `Collection of 3D models by ${user.name}`,
-    image: `${BASE_URL}/og.png`,
+    image: `${BASE_URL}${collectionPosterPath}`,
     url: `${BASE_URL}/${user.id}/${collection.id}`,
   };
 }
 
 export function metaForUser(user: User): Meta {
+  const userPosterPath = `/${user.id}/user.jpeg`;
   return {
     title: `${user.name} - poppenhuis`,
     description: user.bio ?? `Collection of 3D models by ${user.name}`,
-    image: `${BASE_URL}/og.png`,
+    image: `${BASE_URL}${userPosterPath}`,
     url: `${BASE_URL}/${user.id}`,
   };
 }
