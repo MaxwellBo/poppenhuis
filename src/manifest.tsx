@@ -20,7 +20,8 @@ export const ITEM_FIELD_DESCRIPTIONS = {
   alt: "Custom text that will be used to describe the model to viewers who use a screen reader or otherwise depend on additional semantic context to understand what they are viewing.",
   poster: "The image to be displayed instead of the model it is loaded and ready to render.",
   releaseDate: `The release date and the manufacture date are subtly different. The release date is the date this item's specific variant was made available to the public. The manufacture date is the date the item was actually made.
-      e.g. while the iPhone SE 1 was released in 2016, it was manufactured up until 2018.`
+      e.g. while the iPhone SE 1 was released in 2016, it was manufactured up until 2018.`,
+  og: "This is the image that will be displayed when this item is shared on social media.",
 };
 
 export interface Item {

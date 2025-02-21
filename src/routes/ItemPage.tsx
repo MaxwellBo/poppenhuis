@@ -53,7 +53,7 @@ export default function ItemPage() {
 }
 
 function DescriptionList(props: { item: Item; collection: Collection; user: User; }) {
-  const { item } = props;
+  const { item, collection, user } = props;
   const { captureLocation, captureLatLon, } = props.item;
 
   let location;
@@ -73,6 +73,8 @@ function DescriptionList(props: { item: Item; collection: Collection; user: User
       </React.Fragment>
     );
   }) : null;
+
+  const og = metaForItem(item, collection, user).image;
 
   return (
     <dl>
@@ -112,6 +114,8 @@ function DescriptionList(props: { item: Item; collection: Collection; user: User
         <dt><abbr title={ITEM_FIELD_DESCRIPTIONS.poster}>poster</abbr></dt>
         <dd className='ellipsis'><a href={item.poster}>{item.poster}</a></dd>
       </>}
+      <dt><abbr title={ITEM_FIELD_DESCRIPTIONS.og}>Open Graph image</abbr></dt>
+      <dd className='ellipsis'><a href={og}>{og}</a></dd>
     </dl>
   );
 }

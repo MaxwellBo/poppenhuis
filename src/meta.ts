@@ -28,7 +28,7 @@ export function metaForItem(item: Item, collection: Collection, user: User): Met
 }
 
 export function metaForCollection(collection: Collection, user: User): Meta {
-  const collectionPosterPath = `/${user.id}/${collection.id}/collection.jpeg`;
+  const collectionPosterPath = `/${user.id}/${collection.id}/og.jpeg`;
   return {
     title: `${collection.name} - poppenhuis`,
     description: `Collection of 3D models by ${user.name}`,
@@ -38,7 +38,7 @@ export function metaForCollection(collection: Collection, user: User): Meta {
 }
 
 export function metaForUser(user: User): Meta {
-  const userPosterPath = `/${user.id}/user.jpeg`;
+  const userPosterPath = `/${user.id}/og.jpeg`;
   return {
     title: `${user.name} - poppenhuis`,
     description: user.bio ?? `Collection of 3D models by ${user.name}`,
