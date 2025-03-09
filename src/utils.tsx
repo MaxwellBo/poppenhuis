@@ -1,6 +1,5 @@
 import React, { KeyboardEvent, useEffect, useRef } from 'react';
 import '@google/model-viewer'
-import './App.css'
 import {
   Link,
   useSearchParams} from "react-router";
