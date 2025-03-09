@@ -31,7 +31,7 @@ export default function ItemPage() {
           <ItemCard item={previousItem} collection={collection} user={user} triggerKey="a" altName="← previous" size='small' /> : <div />}
         <ModelViewerWrapper item={item} size='responsive-big' />
         <div>
-          <DescriptionList item={item} collection={collection} user={user} />
+          <Details item={item} />
           <br />
           {navigator.share &&
             <button className='mr-1ch' onClick={() =>
@@ -52,22 +52,228 @@ export default function ItemPage() {
   );
 }
 
-function DescriptionList(props: { item: Item; collection: Collection; user: User; }) {
-  const { item } = props;
-  const { captureLocation, captureLatLon, } = props.item;
+// Type definitions for the table data
+type FieldValue = string | string[] | undefined | null;
 
-  // Create location string for capture location
-  let captureLocationStr: string | undefined;
+type TableCellData = {
+  value: FieldValue;
+  header?: string;
+  visible?: boolean;
+};
+
+// Helper function to create location string for capture location
+function createCaptureLocationStr(item: Item): string | undefined {
+  const { captureLocation, captureLatLon } = item;
   if (captureLocation && captureLatLon) {
-    captureLocationStr = `${captureLocation} (${captureLatLon})`;
+    return `${captureLocation} (${captureLatLon})`;
   } else if (captureLocation) {
-    captureLocationStr = captureLocation;
+    return captureLocation;
   } else if (captureLatLon) {
-    captureLocationStr = captureLatLon;
+    return captureLatLon;
   }
+  return undefined;
+}
 
-  // Process custom fields
-  const customFields = props.item.customFields ? Object.entries(props.item.customFields).map(([key, value]) => {
+// Component for the merged cell table view
+function MergedCellTable({ item }: { item: Item; }) {
+  const captureLocationStr = createCaptureLocationStr(item);
+  const dataMap: Record<string, Record<string, TableCellData>> = {
+    'general': {
+      'formal name': { value: item.formalName },
+      'alt': { value: item.alt }
+    },
+    'release': {
+      'name': { value: 'N/A', header: 'Name' },
+      'date': { value: item.releaseDate, header: 'Date' },
+      'location': { value: null, header: 'Location' },
+      'material': { value: null, header: 'Material' }
+    },
+    'manufacturer': {
+      'name': { value: item.manufacturer, header: 'Name' },
+      'date': { value: item.manufactureDate, header: 'Date' },
+      'location': { value: item.manufactureLocation, header: 'Location' },
+      'material': { value: item.material?.join(", "), header: 'Material' }
+    },
+    'acquisition': {
+      'date': { value: item.acquisitionDate, header: 'Date' },
+      'location': { value: item.acquisitionLocation, header: 'Location' },
+      'device': { value: null, header: 'Device' },
+      'app': { value: null, header: 'App' },
+      'method': { value: null, header: 'Method' }
+    },
+    'capture': {
+      'date': { value: item.captureDate, header: 'Date' },
+      'location': { value: captureLocationStr, header: 'Location' },
+      'device': { value: item.captureDevice, header: 'Device' },
+      'app': { value: item.captureApp, header: 'App' },
+      'method': { value: item.captureMethod, header: 'Method' }
+    },
+    'meta': {
+      'model': { value: item.model },
+      'Open Graph Image': { value: item.og }
+    }
+  };
+
+  // Derive categories from dataMap
+  const categories = Object.keys(dataMap);
+
+  // Derive columnGroups from dataMap
+  const columnGroups: Record<string, string[]> = {};
+  categories.forEach(category => {
+    columnGroups[category] = Object.keys(dataMap[category]);
+  });
+
+  // Get all unique columns
+  const allColumns = new Set<string>();
+  Object.values(columnGroups).forEach(columns => {
+    columns.forEach(col => allColumns.add(col));
+  });
+  const attributes = Array.from(allColumns);
+
+  // Find cells that can be merged
+  const mergedCells: Record<string, { rowspan?: number, colspan?: number, content?: TableCellData }> = {};
+
+  // Check for horizontal merges (same row, adjacent columns)
+  categories.forEach(category => {
+    const visibleColumns = columnGroups[category];
+
+    visibleColumns.forEach((attr, index) => {
+      if (index < visibleColumns.length - 1) {
+        const currentValue = dataMap[category][attr].value;
+        const nextAttr = visibleColumns[index + 1];
+        const nextValue = dataMap[category][nextAttr].value;
+
+        if (currentValue && currentValue === nextValue && currentValue !== null && currentValue !== 'N/A') {
+          const key = `${category}-${attr}`;
+          mergedCells[key] = {
+            colspan: 2,
+            content: dataMap[category][attr]
+          };
+          // Mark the next cell as merged
+          mergedCells[`${category}-${nextAttr}`] = { colspan: 0 };
+        }
+      }
+    });
+  });
+
+  // Check for vertical merges (same column, adjacent rows)
+  attributes.forEach(attr => {
+    categories.forEach((category, index) => {
+      if (index < categories.length - 1) {
+        const nextCategory = categories[index + 1];
+
+        // Only check if both categories have this column
+        const currentCategoryColumns = columnGroups[category];
+        const nextCategoryColumns = columnGroups[nextCategory];
+
+        if (currentCategoryColumns.includes(attr) && nextCategoryColumns.includes(attr)) {
+          const currentValue = dataMap[category][attr].value;
+          const nextValue = dataMap[nextCategory][attr].value;
+
+          if (currentValue && currentValue === nextValue && currentValue !== null && currentValue !== 'N/A') {
+            const key = `${category}-${attr}`;
+            // If this cell is already part of a colspan, we need to handle differently
+            if (mergedCells[key] && mergedCells[key].colspan) {
+              mergedCells[key] = {
+                colspan: mergedCells[key].colspan,
+                rowspan: 2,
+                content: dataMap[category][attr]
+              };
+            } else {
+              mergedCells[key] = {
+                rowspan: 2,
+                content: dataMap[category][attr]
+              };
+            }
+            // Mark the next cell as merged
+            mergedCells[`${nextCategory}-${attr}`] = { rowspan: 0 };
+          }
+        }
+      }
+    });
+  });
+
+  return (
+    <table className="description-table merged-cell-table">
+      <tbody>
+        {categories.map(category => {
+          const visibleColumns = columnGroups[category];
+
+          return (
+            <tr key={category}>
+              <td className="category-cell">{category}</td>
+              {visibleColumns.map(attr => {
+                const key = `${category}-${attr}`;
+                const mergeInfo = mergedCells[key];
+
+                // Skip cells that are merged into others
+                if (mergeInfo && (mergeInfo.rowspan === 0 || mergeInfo.colspan === 0)) {
+                  return null;
+                }
+
+                const cellData = mergeInfo?.content || dataMap[category][attr];
+                const value = cellData.value;
+                const header = cellData.header;
+
+                // Skip rendering if value is null (not undefined) or N/A
+                if (value === null || value === 'N/A') {
+                  return null;
+                }
+
+                // Special rendering for links
+                if ((attr === 'model' || attr === 'Open Graph Image') &&
+                  value && typeof value === 'string' &&
+                  (value.startsWith('http') || value.startsWith('/'))) {
+                  return (
+                    <td
+                      key={attr}
+                      rowSpan={mergeInfo?.rowspan}
+                      colSpan={mergeInfo?.colspan}
+                    >
+                      {header && <strong>{header}: </strong>}
+                      <a href={value} className="ellipsis">{value}</a>
+                    </td>
+                  );
+                }
+
+                // Special rendering for undefined values
+                if (value === undefined) {
+                  return (
+                    <td
+                      key={attr}
+                      rowSpan={mergeInfo?.rowspan}
+                      colSpan={mergeInfo?.colspan}
+                      className="undefined-cell"
+                    >
+                      {header && <strong>{header}: </strong>}
+                      undefined
+                    </td>
+                  );
+                }
+
+                return (
+                  <td
+                    key={attr}
+                    rowSpan={mergeInfo?.rowspan}
+                    colSpan={mergeInfo?.colspan}
+                  >
+                    {header && <strong>{header}: </strong>}
+                    {value}
+                  </td>
+                );
+              })}
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
+  );
+}
+
+function DescriptionList({ item }: { item: Item }) {
+  const captureLocationStr = createCaptureLocationStr(item);
+
+  const customFields = item.customFields ? Object.entries(item.customFields).map(([key, value]) => {
     return (
       <React.Fragment key={key}>
         <dt>{key}</dt>
@@ -76,267 +282,53 @@ function DescriptionList(props: { item: Item; collection: Collection; user: User
     );
   }) : null;
 
-  // Define field type
-  type FieldValue = string | string[] | undefined | null;
-  
-  // Define a more comprehensive type for our table data
-  type TableCellData = {
-    value: FieldValue;
-    header?: string;
-    visible?: boolean;
-  };
+  return (
+    <dl>
+      {customFields}
+      <dt><abbr title={ITEM_FIELD_DESCRIPTIONS.formalName}>formal name</abbr></dt>
+      <dd>{item.formalName}</dd>
+      <dt><abbr title={ITEM_FIELD_DESCRIPTIONS.alt}>alt</abbr></dt>
+      <dd>{item.alt}</dd>
+      <dt><abbr title={ITEM_FIELD_DESCRIPTIONS.releaseDate}>release date</abbr></dt>
+      <dd>{item.releaseDate}</dd>
+      <dt>manufacturer</dt>
+      <dd>{item.manufacturer}</dd>
+      <dt>manufacture date</dt>
+      <dd>{item.manufactureDate}</dd>
+      <dt>manufacture location</dt>
+      <dd>{item.manufactureLocation}</dd>
+      <dt>material</dt>
+      <dd className='list'>{item.material?.join(", ")}</dd>
+      <dt>acquisition date</dt>
+      <dd>{item.acquisitionDate}</dd>
+      <dt>acquisition location</dt>
+      <dd>{item.acquisitionLocation}</dd>
+      <dt>capture date</dt>
+      <dd>{item.captureDate}</dd>
+      <dt>capture location</dt>
+      <dd>{captureLocationStr}</dd>
+      <dt>capture device</dt>
+      <dd>{item.captureDevice}</dd>
+      <dt>capture app</dt>
+      <dd>{item.captureApp}</dd>
+      <dt>capture method</dt>
+      <dd>{item.captureMethod}</dd>
+      <dt><abbr title={ITEM_FIELD_DESCRIPTIONS.model}>model</abbr></dt>
+      <dd className='ellipsis'><a href={item.model}>{item.model}</a></dd>
+      <dt><abbr title={ITEM_FIELD_DESCRIPTIONS.og}>Open Graph image</abbr></dt>
+      <dd className='ellipsis'><a href={item.og}>{item.og}</a></dd>
+    </dl>
+  );
+}
 
-  // Organize data for the merged cell table
-  const createMergedCellTable = () => {
-    // Define the data structure once with all necessary information
-    const dataMap: Record<string, Record<string, TableCellData>> = {
-      'general': {
-        'formal name': { value: item.formalName },
-        'alt': { value: item.alt }
-      },
-      'release': {
-        'name': { value: 'N/A', header: 'Name' },
-        'date': { value: item.releaseDate, header: 'Date' },
-        'location': { value: null, header: 'Location' },
-        'material': { value: null, header: 'Material' }
-      },
-      'manufacturer': {
-        'name': { value: item.manufacturer, header: 'Name' },
-        'date': { value: item.manufactureDate, header: 'Date' },
-        'location': { value: item.manufactureLocation, header: 'Location' },
-        'material': { value: item.material?.join(", "), header: 'Material' }
-      },
-      'acquisition': {
-        'date': { value: item.acquisitionDate, header: 'Date' },
-        'location': { value: item.acquisitionLocation, header: 'Location' },
-        'device': { value: null, header: 'Device' },
-        'app': { value: null, header: 'App' },
-        'method': { value: null, header: 'Method' }
-      },
-      'capture': {
-        'date': { value: item.captureDate, header: 'Date' },
-        'location': { value: captureLocationStr, header: 'Location' },
-        'device': { value: item.captureDevice, header: 'Device' },
-        'app': { value: item.captureApp, header: 'App' },
-        'method': { value: item.captureMethod, header: 'Method' }
-      },
-      'meta': {
-        'model': { value: item.model },
-        'Open Graph Image': { value: item.og }
-      }
-    };
-    
-    // Derive categories from dataMap
-    const categories = Object.keys(dataMap);
-    
-    // Derive columnGroups from dataMap
-    const columnGroups: Record<string, string[]> = {};
-    categories.forEach(category => {
-      columnGroups[category] = Object.keys(dataMap[category]);
-    });
-    
-    // Get all unique columns
-    const allColumns = new Set<string>();
-    Object.values(columnGroups).forEach(columns => {
-      columns.forEach(col => allColumns.add(col));
-    });
-    const attributes = Array.from(allColumns);
-    
-    // Find cells that can be merged
-    const mergedCells: Record<string, { rowspan?: number, colspan?: number, content?: TableCellData }> = {};
-    
-    // Check for horizontal merges (same row, adjacent columns)
-    categories.forEach(category => {
-      const visibleColumns = columnGroups[category];
-      
-      visibleColumns.forEach((attr, index) => {
-        if (index < visibleColumns.length - 1) {
-          const currentValue = dataMap[category][attr].value;
-          const nextAttr = visibleColumns[index + 1];
-          const nextValue = dataMap[category][nextAttr].value;
-          
-          if (currentValue && currentValue === nextValue && currentValue !== null && currentValue !== 'N/A') {
-            const key = `${category}-${attr}`;
-            mergedCells[key] = { 
-              colspan: 2, 
-              content: dataMap[category][attr] 
-            };
-            // Mark the next cell as merged
-            mergedCells[`${category}-${nextAttr}`] = { colspan: 0 };
-          }
-        }
-      });
-    });
-    
-    // Check for vertical merges (same column, adjacent rows)
-    attributes.forEach(attr => {
-      categories.forEach((category, index) => {
-        if (index < categories.length - 1) {
-          const nextCategory = categories[index + 1];
-          
-          // Only check if both categories have this column
-          const currentCategoryColumns = columnGroups[category];
-          const nextCategoryColumns = columnGroups[nextCategory];
-          
-          if (currentCategoryColumns.includes(attr) && nextCategoryColumns.includes(attr)) {
-            const currentValue = dataMap[category][attr].value;
-            const nextValue = dataMap[nextCategory][attr].value;
-            
-            if (currentValue && currentValue === nextValue && currentValue !== null && currentValue !== 'N/A') {
-              const key = `${category}-${attr}`;
-              // If this cell is already part of a colspan, we need to handle differently
-              if (mergedCells[key] && mergedCells[key].colspan) {
-                mergedCells[key] = { 
-                  colspan: mergedCells[key].colspan, 
-                  rowspan: 2, 
-                  content: dataMap[category][attr]
-                };
-              } else {
-                mergedCells[key] = { 
-                  rowspan: 2, 
-                  content: dataMap[category][attr] 
-                };
-              }
-              // Mark the next cell as merged
-              mergedCells[`${nextCategory}-${attr}`] = { rowspan: 0 };
-            }
-          }
-        }
-      });
-    });
-    
-    return { categories, attributes, dataMap, mergedCells, columnGroups };
-  };
-
-  // Render the merged cell table
-  const renderMergedCellTable = () => {
-    const { categories, dataMap, mergedCells, columnGroups } = createMergedCellTable();
-    
-    return (
-      <table className="description-table merged-cell-table">
-        <tbody>
-          {categories.map(category => {
-            const visibleColumns = columnGroups[category];
-            
-            return (
-              <tr key={category}>
-                <td className="category-cell">{category}</td>
-                {visibleColumns.map(attr => {
-                  const key = `${category}-${attr}`;
-                  const mergeInfo = mergedCells[key];
-                  
-                  // Skip cells that are merged into others
-                  if (mergeInfo && (mergeInfo.rowspan === 0 || mergeInfo.colspan === 0)) {
-                    return null;
-                  }
-                  
-                  const cellData = mergeInfo?.content || dataMap[category][attr];
-                  const value = cellData.value;
-                  const header = cellData.header;
-                  
-                  // Skip rendering if value is null (not undefined) or N/A
-                  if (value === null || value === 'N/A') {
-                    return null;
-                  }
-                  
-                  // Special rendering for links
-                  if ((attr === 'model' || attr === 'Open Graph Image') && 
-                      value && typeof value === 'string' && 
-                      (value.startsWith('http') || value.startsWith('/'))) {
-                    return (
-                      <td 
-                        key={attr} 
-                        rowSpan={mergeInfo?.rowspan} 
-                        colSpan={mergeInfo?.colspan}
-                      >
-                        {header && <strong>{header}: </strong>}
-                        <a href={value} className="ellipsis">{value}</a>
-                      </td>
-                    );
-                  }
-                  
-                  // Special rendering for undefined values
-                  if (value === undefined) {
-                    return (
-                      <td 
-                        key={attr} 
-                        rowSpan={mergeInfo?.rowspan} 
-                        colSpan={mergeInfo?.colspan}
-                        className="undefined-cell"
-                      >
-                        {header && <strong>{header}: </strong>}
-                        undefined
-                      </td>
-                    );
-                  }
-                  
-                  return (
-                    <td 
-                      key={attr} 
-                      rowSpan={mergeInfo?.rowspan} 
-                      colSpan={mergeInfo?.colspan}
-                    >
-                      {header && <strong>{header}: </strong>}
-                      {value}
-                    </td>
-                  );
-                })}
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    );
-  };
-
-  // Render the original description list for narrow screens
-  const renderList = () => {
-    return (
-      <dl>
-        {customFields}
-        <dt><abbr title={ITEM_FIELD_DESCRIPTIONS.formalName}>formal name</abbr></dt>
-        <dd>{item.formalName}</dd>
-        <dt><abbr title={ITEM_FIELD_DESCRIPTIONS.alt}>alt</abbr></dt>
-        <dd>{item.alt}</dd>
-        <dt><abbr title={ITEM_FIELD_DESCRIPTIONS.releaseDate}>release date</abbr></dt>
-        <dd>{item.releaseDate}</dd>
-        <dt>manufacturer</dt>
-        <dd>{item.manufacturer}</dd>
-        <dt>manufacture date</dt>
-        <dd>{item.manufactureDate}</dd>
-        <dt>manufacture location</dt>
-        <dd>{item.manufactureLocation}</dd>
-        <dt>material</dt>
-        <dd className='list'>{item.material?.join(", ")}</dd>
-        <dt>acquisition date</dt>
-        <dd>{item.acquisitionDate}</dd>
-        <dt>acquisition location</dt>
-        <dd>{item.acquisitionLocation}</dd>
-        <dt>capture date</dt>
-        <dd>{item.captureDate}</dd>
-        <dt>capture location</dt>
-        <dd>{captureLocationStr}</dd>
-        <dt>capture device</dt>
-        <dd>{item.captureDevice}</dd>
-        <dt>capture app</dt>
-        <dd>{item.captureApp}</dd>
-        <dt>capture method</dt>
-        <dd>{item.captureMethod}</dd>
-        <dt><abbr title={ITEM_FIELD_DESCRIPTIONS.model}>model</abbr></dt>
-        <dd className='ellipsis'><a href={item.model}>{item.model}</a></dd>
-        <dt><abbr title={ITEM_FIELD_DESCRIPTIONS.og}>Open Graph image</abbr></dt>
-        <dd className='ellipsis'><a href={item.og}>{item.og}</a></dd>
-      </dl>
-    );
-  };
-
+function Details({ item }: { item: Item }) {
   return (
     <div className="description-container">
       <div className="wide-screen-only">
-        {renderMergedCellTable()}
+        <MergedCellTable item={item} />
       </div>
       <div className="narrow-screen-only">
-        {renderList()}
+        <DescriptionList item={item} />
       </div>
     </div>
   );
