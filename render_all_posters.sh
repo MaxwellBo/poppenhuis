@@ -88,7 +88,11 @@ done
     fi
 done
 
-# Process only the mbo user directory
-process_user "./public/models/mbo"
+# Process all user directories
+for user_dir in ./public/models/*/; do
+    if [ -d "$user_dir" ]; then
+        process_user "$user_dir"
+    fi
+done
 
 echo "All processing complete"
