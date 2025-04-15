@@ -533,7 +533,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             manufactureLocation: "Jakarta",
             manufactureDate: "July 1997",
             releaseDate: "April 1998",
-            material: ["gold", "denim", "crepe net", "Garmin smart watch"],
+            // material: ["gold", "denim", "crepe net", "Garmin smart watch"],
             model: "/models/mbo/friends/Claudia.glb",
             og: "/models/mbo/friends/Claudia.jpeg",
             captureApp: "Polycam",
