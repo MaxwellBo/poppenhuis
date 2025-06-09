@@ -9,6 +9,7 @@ import UserPage, { loader as userPageLoader } from './routes/UserPage.tsx';
 import CollectionPage, { loader as collectionPageLoader } from './routes/CollectionPage.tsx';
 import ItemPage, { loader as itemPageLoader } from './routes/ItemPage.tsx';
 import WallLabelPage, { loader as wallLabelPageLoader } from './routes/WallLabelPage.tsx';
+import AFramePage from './routes/AFramePage.tsx';
 
 const router = createBrowserRouter([
   {
@@ -45,6 +46,11 @@ const router = createBrowserRouter([
         // @ts-ignore
         loader: wallLabelPageLoader
       },
+      {
+        path: "3d",
+        element: <AFramePage />,
+        loader: usersPageLoader,
+      }
     ]
   },
 ]);
