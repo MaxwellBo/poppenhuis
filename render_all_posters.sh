@@ -11,6 +11,13 @@ if [ ! -f "$DENO_SCRIPT" ]; then
     exit 1
 fi
 
+# Check if specific model argument is provided
+SPECIFIC_MODEL=""
+if [ "$1" = "--model" ] && [ -n "$2" ]; then
+    SPECIFIC_MODEL="$2"
+    echo "Will only process model: $SPECIFIC_MODEL"
+fi
+
 # Function to process a single model
 process_single_model() {
     local glb_file="$1"
@@ -76,23 +83,46 @@ process_user() {
     eval $cmd
 }
 
-# Process all GLB files individually
-\find . -type f -name "*.glb" | while read -r glb_file; do
-    process_single_model "$glb_file"
-done
-
-# Process all collections (directories containing GLB files)
-\find . -type d | while read -r dir; do
-    if [ -n "$(\find "$dir" -maxdepth 1 -type f -name "*.glb")" ]; then
-        process_collection "$dir"
+# Check if we're processing a specific model or everything
+if [ -n "$SPECIFIC_MODEL" ]; then
+    # Process just the specific model
+    if [ -f "$SPECIFIC_MODEL" ]; then
+        process_single_model "$SPECIFIC_MODEL"
+        
+        # Also update the collection's og.jpeg if needed
+        MODEL_DIR=$(dirname "$SPECIFIC_MODEL")
+        if [ -n "$(\find "$MODEL_DIR" -maxdepth 1 -type f -name "*.glb")" ]; then
+            process_collection "$MODEL_DIR"
+        fi
+        
+        # Also update the user's og.jpeg if needed
+        USER_DIR=$(dirname "$(dirname "$MODEL_DIR")")
+        if [[ "$USER_DIR" == *"/public/models/"* ]]; then
+            process_user "$USER_DIR"
+        fi
+    else
+        echo "Error: Specified model file not found at $SPECIFIC_MODEL"
+        exit 1
     fi
-done
-
-# Process all user directories
-for user_dir in ./public/models/*/; do
-    if [ -d "$user_dir" ]; then
-        process_user "$user_dir"
-    fi
-done
+else
+    # Process all GLB files individually
+    \find . -type f -name "*.glb" | while read -r glb_file; do
+        process_single_model "$glb_file"
+    done
+    
+    # Process all collections (directories containing GLB files)
+    \find . -type d | while read -r dir; do
+        if [ -n "$(\find "$dir" -maxdepth 1 -type f -name "*.glb")" ]; then
+            process_collection "$dir"
+        fi
+    done
+    
+    # Process all user directories
+    for user_dir in ./public/models/*/; do
+        if [ -d "$user_dir" ]; then
+            process_user "$user_dir"
+        fi
+    done
+fi
 
 echo "All processing complete"

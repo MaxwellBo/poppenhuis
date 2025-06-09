@@ -497,6 +497,18 @@ My abject failure to use them properly convinced me to stick to the classical gu
             acquisitionDate: "2023"
           },
           {
+            id: "matchamonday",
+            name: "Matcha Monday",
+            description: "[matcha.sydney](https://matcha.sydney/)",
+            captureApp: "Polycam",
+            captureMethod: "LiDAR",
+            model: "/models/mbo/friends/MatchaMonday.glb",
+            og: "/models/mbo/friends/MatchaMonday.jpeg",
+            captureDevice: "Apple iPhone 13 Pro",
+            captureDate: "2025 Jun 9",
+            captureLocation: "Parami, Sydney",
+          },
+          {
             id: "roman",
             name: "Roman",
             description: "The Thinker",
