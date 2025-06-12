@@ -539,6 +539,11 @@ My abject failure to use them properly convinced me to stick to the classical gu
             acquisitionLocation: "The Burrow, West End, Brisbane"
           },
           {
+            id: "dmitry",
+            name: "Dmitry",
+            model: "/models/mbo/friends/dmitry.splat",
+          },
+          {
             id: "claudia",
             name: "Claudia",
             manufacturer: "Leona",
