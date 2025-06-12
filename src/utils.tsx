@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import React, { KeyboardEvent, useEffect, useRef } from 'react';
 import '@google/model-viewer'
 import './App.css'
@@ -7,6 +9,12 @@ import {
 import { User, Collection, Item } from './manifest';
 import { Helmet } from 'react-helmet';
 import { Meta } from './meta';
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { SplatMesh } from "./components/spark/SplatMesh";
+import { SparkRenderer } from "./components/spark/SparkRenderer";
+import { CameraControls } from "@react-three/drei";
+import { useMemo } from "react";
+import type { SplatMesh as SparkSplatMesh } from "@sparkjsdev/spark";
 
 export function Size(props: { ts: unknown[], t: string }) {
   const { ts, t } = props;
@@ -86,27 +94,39 @@ function getStyleForModelSize(size: ModelSize | undefined) {
 }
 
 export function ModelViewerWrapper(props: { item: Item, size?: ModelSize }) {
+  const { item, size } = props;
+  const modelUrl = item.model;
+  const fileExtension = modelUrl.substring(modelUrl.lastIndexOf('.') + 1).toLowerCase();
+  
+  // Determine if this is a Gaussian splat or PLY file
+  const isGaussianSplat = fileExtension === 'splat' || fileExtension === 'ply';
+  
   return (
     <div className='model-viewer-wrapper'>
-      {props.size !== 'small' && <div className='camera-keys'>
+      {size !== 'small' && <div className='camera-keys'>
         <kbd>SHIFT</kbd> <kbd>←</kbd> <kbd>↑</kbd> <kbd>↓</kbd> <kbd>→</kbd>
       </div>}
-      {/* @ts-ignore */}
-      <model-viewer
-        key={props.item.model}
-        style={getStyleForModelSize(props.size)}
-        alt={props.item.alt ?? props.item.description}
-        src={props.item.model}
-        interaction-prompt=""
-        progress-bar=""
-        loading="auto"
-        // poster={props.size !== 'responsive-big' ? props.item.poster : undefined}
-        auto-rotate-delay="0"
-        rotation-per-second="20deg"
-        camera-controls
-        auto-rotate
-        touch-action="pan-y"
-      />
+      
+      {isGaussianSplat ? (
+        <SplatViewer  />
+      ) : (
+        // @ts-ignore
+        <model-viewer
+          key={modelUrl}
+          style={getStyleForModelSize(size)}
+          alt={item.alt ?? item.description}
+          src={modelUrl}
+          interaction-prompt=""
+          progress-bar=""
+          loading="auto"
+          // poster={size !== 'responsive-big' ? item.poster : undefined}
+          auto-rotate-delay="0"
+          rotation-per-second="20deg"
+          camera-controls
+          auto-rotate
+          touch-action="pan-y"
+        />
+      )}
     </div>
   );
 }
@@ -159,3 +179,53 @@ export function HelmetMeta(props: { meta: Meta }) {
     </Helmet>
   );
 }
+
+function SplatViewer() {
+  return (
+    <div>
+      <Canvas gl={{ antialias: false }}>
+        <Scene />
+      </Canvas>
+    </div>
+  );
+}
+
+/**
+ * Separate `Scene` component to be used in the React Three Fiber `Canvas` component so that we can use React Three Fiber hooks like `useThree`
+ */
+const Scene = () => {
+  const renderer = useThree((state) => state.gl);
+  const meshRef = useRef<SparkSplatMesh>(null);
+
+  // Memoize the elements inside the `<SparkRenderer />` `args` prop so that we don't re-create the `<SparkRenderer />` on every render
+  const sparkRendererArgs = useMemo(() => {
+    return { renderer };
+  }, [renderer]);
+
+  // Memoize the `SplatMesh` `args` prop so that we don't re-create the `SplatMesh` on every render
+  const splatMeshArgs = useMemo(
+    () =>
+      ({
+        url: "/assets/splats/butterfly.spz",
+      }) as const,
+    [],
+  );
+
+  useFrame((_, delta) => {
+    if (meshRef.current) {
+      meshRef.current.rotation.y += 0.5 * delta;
+    }
+  });
+
+  return (
+    <>
+      <CameraControls />
+      <SparkRenderer args={[sparkRendererArgs]}>
+        {/* This particular splat mesh is upside down */}
+        <group rotation={[Math.PI, 0, 0]}>
+          <SplatMesh ref={meshRef} args={[splatMeshArgs]} />
+        </group>
+      </SparkRenderer>
+    </>
+  );
+};
