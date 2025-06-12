@@ -1,6 +1,4 @@
-// @ts-nocheck
-
-import React, { KeyboardEvent, useEffect, useRef } from 'react';
+import React, { KeyboardEvent, useEffect, useRef, useLayoutEffect } from 'react';
 import '@google/model-viewer'
 import './App.css'
 import {
@@ -9,12 +7,8 @@ import {
 import { User, Collection, Item } from './manifest';
 import { Helmet } from 'react-helmet';
 import { Meta } from './meta';
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { SplatMesh } from "./components/spark/SplatMesh";
-import { SparkRenderer } from "./components/spark/SparkRenderer";
-import { CameraControls } from "@react-three/drei";
-import { useMemo } from "react";
-import type { SplatMesh as SparkSplatMesh } from "@sparkjsdev/spark";
+import * as THREE from 'three';
+import { SplatMesh } from '@sparkjsdev/spark';
 
 export function Size(props: { ts: unknown[], t: string }) {
   const { ts, t } = props;
@@ -107,10 +101,10 @@ export function ModelViewerWrapper(props: { item: Item, size?: ModelSize }) {
         <kbd>SHIFT</kbd> <kbd>←</kbd> <kbd>↑</kbd> <kbd>↓</kbd> <kbd>→</kbd>
       </div>}
       
-      {isGaussianSplat ? (
-        <SplatViewer  />
+      {(true) ? (
+        <ButterflyViewer />
       ) : (
-        // @ts-ignore
+        // @ts-ignore 
         <model-viewer
           key={modelUrl}
           style={getStyleForModelSize(size)}
@@ -180,52 +174,48 @@ export function HelmetMeta(props: { meta: Meta }) {
   );
 }
 
-function SplatViewer() {
-  return (
-    <div>
-      <Canvas gl={{ antialias: false }}>
-        <Scene />
-      </Canvas>
-    </div>
-  );
+export default function ButterflyViewer() {
+  const mountRef = useRef(null);
+
+  useEffect(() => {
+    if (!mountRef.current) return;
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(
+      60, 
+      mountRef.current.clientWidth / mountRef.current.clientHeight, 
+      0.1, 
+      1000
+    );
+    const renderer = new THREE.WebGLRenderer();
+    
+    // Set size based on the container, not window
+    renderer.setSize(mountRef.current.clientWidth, mountRef.current.clientHeight);
+    
+    // Append to the ref element instead of document.body
+    mountRef.current.appendChild(renderer.domElement);
+
+    const splatURL = "https://sparkjs.dev/assets/splats/butterfly.spz";
+    const butterfly = new SplatMesh({ url: splatURL });
+    butterfly.quaternion.set(1, 0, 0, 0);
+    butterfly.position.set(0, 0, -3);
+    scene.add(butterfly);
+
+    // Render loop
+    const animate = () => {
+      requestAnimationFrame(animate);
+      renderer.render(scene, camera);
+    };
+    animate();
+
+    // Cleanup function
+    return () => {
+      if (mountRef.current && renderer.domElement) {
+        mountRef.current.removeChild(renderer.domElement);
+      }
+      renderer.dispose();
+    };
+  }, []);
+
+  return <div ref={mountRef} style={{ width: '100%', height: '100vh' }} />;
 }
-
-/**
- * Separate `Scene` component to be used in the React Three Fiber `Canvas` component so that we can use React Three Fiber hooks like `useThree`
- */
-const Scene = () => {
-  const renderer = useThree((state) => state.gl);
-  const meshRef = useRef<SparkSplatMesh>(null);
-
-  // Memoize the elements inside the `<SparkRenderer />` `args` prop so that we don't re-create the `<SparkRenderer />` on every render
-  const sparkRendererArgs = useMemo(() => {
-    return { renderer };
-  }, [renderer]);
-
-  // Memoize the `SplatMesh` `args` prop so that we don't re-create the `SplatMesh` on every render
-  const splatMeshArgs = useMemo(
-    () =>
-      ({
-        url: "/assets/splats/butterfly.spz",
-      }) as const,
-    [],
-  );
-
-  useFrame((_, delta) => {
-    if (meshRef.current) {
-      meshRef.current.rotation.y += 0.5 * delta;
-    }
-  });
-
-  return (
-    <>
-      <CameraControls />
-      <SparkRenderer args={[sparkRendererArgs]}>
-        {/* This particular splat mesh is upside down */}
-        <group rotation={[Math.PI, 0, 0]}>
-          <SplatMesh ref={meshRef} args={[splatMeshArgs]} />
-        </group>
-      </SparkRenderer>
-    </>
-  );
-};
