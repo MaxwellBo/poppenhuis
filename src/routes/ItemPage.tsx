@@ -83,12 +83,16 @@ function DescriptionList(props: { item: Item; collection: Collection; user: User
   return (
     <dl>
       {customFields}
+      {customFields && <hr className="break" />}
+      {customFields && <hr className="break" />}
       <dt><abbr title={ITEM_FIELD_DESCRIPTIONS.formalName}>formal name</abbr></dt>
       <dd>{item.formalName}</dd>
       <dt><abbr title={ITEM_FIELD_DESCRIPTIONS.alt}>alt</abbr></dt>
       <dd>{item.alt}</dd>
       <dt><abbr title={ITEM_FIELD_DESCRIPTIONS.releaseDate}>release date</abbr></dt>
       <dd>{item.releaseDate}</dd>
+      <hr className="break" />
+      <hr className="break" />
       <dt>manufacturer</dt>
       <dd>{item.manufacturer}</dd>
       <dt>manufacture date</dt>
@@ -97,10 +101,14 @@ function DescriptionList(props: { item: Item; collection: Collection; user: User
       <dd>{item.manufactureLocation}</dd>
       <dt>material</dt>
       <dd className='list'>{item.material?.join(", ")}</dd>
+      <hr className="break" />
+      <hr className="break" />
       <dt>acquisition date</dt>
       <dd>{item.acquisitionDate}</dd>
       <dt>acquisition location</dt>
       <dd>{item.acquisitionLocation}</dd>
+      <hr className="break" />
+      <hr className="break" />
       <dt>capture date</dt>
       <dd>{item.captureDate}</dd>
       <dt>capture location</dt>
@@ -111,6 +119,8 @@ function DescriptionList(props: { item: Item; collection: Collection; user: User
       <dd>{item.captureApp}</dd>
       <dt>capture method</dt>
       <dd>{item.captureMethod}</dd>
+      <hr className="break" />
+      <hr className="break" />
       <dt><abbr title={ITEM_FIELD_DESCRIPTIONS.model}>model</abbr></dt>
       <dd className='ellipsis'><a href={item.model}>{item.model}</a></dd>
       <dt><abbr title={ITEM_FIELD_DESCRIPTIONS.og}>Open Graph image</abbr></dt>

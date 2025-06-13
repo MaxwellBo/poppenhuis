@@ -485,3 +485,10 @@ input, button, textarea, select {
   transform: scale(5);
   z-index: 100;
 }
+
+
+hr.break {
+  border: none;
+  border-top: 1px dotted #ccc;
+  margin: 0;
+}
