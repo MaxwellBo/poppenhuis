@@ -1,9 +1,13 @@
 import { Collection, Item, ITEM_FIELD_DESCRIPTIONS, loadItem, User } from "../manifest";
 import React from "react";
 import { useLoaderData } from "react-router";
-import { ItemCard, ItemCards, HelmetMeta, ModelViewerWrapper, QueryPreservingLink } from "../utils";
+import { ItemCards } from '../components/ItemCards';
+import { ItemCard } from '../components/ItemCard';
 import { metaForItem } from "../meta";
 import Markdown from "react-markdown";
+import { ModelViewerWrapper } from "../components/ModelViewerWrapper";
+import { QueryPreservingLink } from "../components/QueryPreservingLink";
+import { HelmetMeta } from "../components/HelmetMeta";
 
 export const loader = loadItem
 

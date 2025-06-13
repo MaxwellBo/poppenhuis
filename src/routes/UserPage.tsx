@@ -1,8 +1,11 @@
 import { useLoaderData } from "react-router";
-import { ItemCards, HelmetMeta, QueryPreservingLink, Size } from "../utils";
+import { Size } from '../components/Size';
+import { ItemCards } from '../components/ItemCards';
 import { Collection, loadUser, User } from "../manifest";
 import { metaForUser } from "../meta";
 import Markdown from "react-markdown";
+import { QueryPreservingLink } from "../components/QueryPreservingLink";
+import { HelmetMeta } from "../components/HelmetMeta";
 
 export const loader = loadUser;
 

@@ -1,6 +1,6 @@
 import React from "react";
 import { Outlet, useLocation } from "react-router";
-import { QueryPreservingLink } from "../utils";
+import { QueryPreservingLink } from "../components/QueryPreservingLink";
 
 export default function App() {
   return (

@@ -2,10 +2,10 @@
 
 import { useLoaderData } from "react-router";
 import { loadUsers } from "../manifest";
-import { HelmetMeta, } from "../utils";
 
 import { DEFAULT_META } from "../meta";
 import { AFrameScene } from "../AFrameScene";
+import { HelmetMeta } from "../components/HelmetMeta";
 
 export const loader = loadUsers;
 
@@ -14,7 +14,7 @@ export default function UsersPage() {
 
   return (
     <article>
-            <HelmetMeta meta={DEFAULT_META} />
+      <HelmetMeta meta={DEFAULT_META} />
       <header>
         <h1>
           <a href="/">poppenhuis</a> / 3D

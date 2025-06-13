@@ -1,8 +1,11 @@
 import React from "react";
 import { useLoaderData, useSearchParams } from "react-router";
 import { loadUsers, MANIFEST_URL_QUERY_PARAM, MANIFEST_SCHEMA, ARENA_PREFIX } from "../manifest";
-import { ItemCard, HelmetMeta, QueryPreservingLink, Size } from "../utils";
+import { Size } from '../components/Size';
+import { ItemCard } from '../components/ItemCard';
 import { DEFAULT_META } from "../meta";
+import { HelmetMeta } from "../components/HelmetMeta";
+import { QueryPreservingLink } from "../components/QueryPreservingLink";
 
 const EXAMPLE_MANIFEST_URL = 'https://raw.githubusercontent.com/MaxwellBo/maxwellbo.github.io/master/poppenhuis-manifest.json'
 

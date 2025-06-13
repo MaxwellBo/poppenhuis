@@ -1,6 +1,6 @@
 import { useLoaderData } from "react-router";
-import { QueryPreservingLink } from "../utils";
 import { loadItem } from "../manifest";
+import { QueryPreservingLink } from "../components/QueryPreservingLink";
 
 export const loader = loadItem;
 
