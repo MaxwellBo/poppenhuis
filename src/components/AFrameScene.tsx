@@ -82,10 +82,12 @@ export const AFrameScene: React.FC<AFrameSceneProps> = ({ users }) => {
   }
 
   const items = layout.filter(entity => entity.item).map(item => item.item!);
+  const startingPosition = computePosition({ col: 2, level: 0, depth: 6 });
+  const startingRotation = "0 90 0";
 
   return (
     <a-scene embedded style={{ minHeight: "600px" }}>
-      <a-entity camera fly={true} look-controls wasd-controls="acceleration:100" position="0 1 0"></a-entity>
+      <a-entity camera fly={true} look-controls wasd-controls="acceleration:100" rotation={startingRotation} position={startingPosition}></a-entity>
       <a-assets>
         {items.map((item) => (
               <a-asset-item key={item.id} id={item.id} src={item.model}></a-asset-item>
