@@ -29,7 +29,7 @@ html {
 
 body {
   font-family: 'Georgia', serif;
-  background-color: oldlace;
+  background-color: #fdf5e6;
 }
 
 footer {
@@ -51,7 +51,7 @@ h3 {
 }
 
 a:active {
-  color: red;
+  background-color: red !important;
 }
 
 a:hover {
@@ -457,4 +457,23 @@ input, button, textarea, select {
 }
 #root, #__next {
   isolation: isolate;
+}
+
+.qrcode.print {
+  height: 96px;
+  width: 96px;
+}
+
+.qrcode.web {
+  display: inline-block;
+  height: 48px;
+  width: 48px;
+  vertical-align: top;
+  margin-right: 8px;
+  border: 1px solid #ccc;
+}
+
+.qrcode.web:hover {
+  transform: scale(5);
+  z-index: 100;
 }

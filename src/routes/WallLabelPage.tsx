@@ -1,13 +1,13 @@
 import { useLoaderData } from "react-router";
 import { loadItem } from "../manifest";
 import { QueryPreservingLink } from "../components/QueryPreservingLink";
+import { QRCode } from "../components/QRCode";
 
 export const loader = loadItem;
 
 export default function WallLabelPage() {
   const { item, user, collection } = useLoaderData() as Awaited<ReturnType<typeof loader>>;
   const itemUrl = `poppenhu.is/${user.id}/${collection.id}/${item.id}`;
-  const itemQrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=96x96&data=${encodeURIComponent(itemUrl)}`
 
   const dateLocation = (date?: string, location?: string) => {
     const acc = []
@@ -43,7 +43,7 @@ export default function WallLabelPage() {
               <small>{itemUrl}</small></code>
           </QueryPreservingLink>
         </div>
-        <img src={itemQrCodeUrl} alt="QR code" onLoad={() => window.print()} />
+        <QRCode item={item} user={user} collection={collection} onLoad={(() => window.print())} context="print"/>
       </div>
     </article>
   )
