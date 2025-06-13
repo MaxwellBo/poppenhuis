@@ -8,7 +8,7 @@ import Markdown from "react-markdown";
 import { ModelViewerWrapper } from "../components/ModelViewerWrapper";
 import { QueryPreservingLink } from "../components/QueryPreservingLink";
 import { HelmetMeta } from "../components/HelmetMeta";
-import { QR } from "../components/QRCode";
+import { QrCode } from "../components/QrCode";
 
 export const loader = loadItem
 
@@ -38,7 +38,7 @@ export default function ItemPage() {
         <div>
           <DescriptionList item={item} collection={collection} user={user} />
           <br />
-          <QR item={item} user={user} collection={collection} context="web"/> 
+          <QrCode item={item} user={user} collection={collection} context="web"/> 
           {navigator.share &&
             <button className='mr-1ch' onClick={() =>
               navigator.share({

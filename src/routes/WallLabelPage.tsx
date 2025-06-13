@@ -1,7 +1,7 @@
 import { useLoaderData } from "react-router";
 import { loadItem } from "../manifest";
 import { QueryPreservingLink } from "../components/QueryPreservingLink";
-import { QR } from "../components/QRCode";
+import { QrCode } from "../components/QrCode";
 
 export const loader = loadItem;
 
@@ -43,7 +43,7 @@ export default function WallLabelPage() {
               <small>{itemUrl}</small></code>
           </QueryPreservingLink>
         </div>
-        <QR item={item} user={user} collection={collection} onLoad={(() => window.print())} context="print"/>
+        <QrCode item={item} user={user} collection={collection} onLoad={(() => window.print())} context="print"/>
       </div>
     </article>
   )
