@@ -1,4 +1,3 @@
-import React from 'react';
 import { Item, Collection, User } from '../manifest';
 import { ModelSize } from './ModelViewerWrapper';
 import { ModelViewerWrapper } from './ModelViewerWrapper';

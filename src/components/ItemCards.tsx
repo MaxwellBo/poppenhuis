@@ -1,8 +1,6 @@
-import React from 'react';
 import { Collection, User, Item } from '../manifest';
 import { ItemCard } from './ItemCard';
 import { QueryPreservingLink } from './QueryPreservingLink';
-
 
 export function ItemCards(props: { collection: Collection; user: User; highlighted?: Item['id']; limit?: number; }) {
   const { highlighted, limit, collection, user } = props;
