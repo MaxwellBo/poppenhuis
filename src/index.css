@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@400;700&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@400;700&display=swap'); */
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&display=swap');
 
 /* SHIT THAT SHOULD NEVER HAVE BEEN REMOVED FROM THE HTML SPEC */
 
@@ -68,7 +69,7 @@ a:hover:visited {
 }
 
 code {
-  font-family: 'Inconsolata', monospace;
+  font-family: 'Fira Code', monospace;
 }
 
 kbd {
@@ -109,7 +110,8 @@ dl > dt {
 
 dl > dd {
   max-width: 40ch;
-  font-family: 'Inconsolata', monospace;
+  font-size: 0.8rem;
+  font-family: 'Fira Code', monospace;
 }
 
 .ellipsis {
@@ -149,7 +151,7 @@ details[open] {
 }
 
 pre {
-  font-family: 'Inconsolata', monospace;
+  font-family: 'Fira Code', monospace;
   text-transform: none;
 }
 
