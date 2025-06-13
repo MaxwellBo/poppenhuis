@@ -97,15 +97,15 @@ aside {
 
 dl {
   display: grid;
+  row-gap: 0.3ch;
   grid-template-columns: auto auto;
-  gap: 0.3ch;
-  column-gap: 1ch;
 }
 
 dl > dt {
   font-family: 'Lora', 'Gerogia', serif;;
   font-weight: bold;
-  font-size: 0.7em
+  font-size: 0.7em;
+  padding-right: 1ch;
 }
 
 dl > dd {
