@@ -372,6 +372,7 @@ pre {
   flex-wrap: nowrap;
   flex-direction: row;
   align-items: center;
+  gap: 0.5ch;
 }
 
 .collection-row {
@@ -402,6 +403,7 @@ pre {
     grid-template-areas: 
       "model meta"
       "previous next";
+    gap: 0.5ch;
     align-items: center;
     justify-items: center;
   }
@@ -416,6 +418,7 @@ pre {
       "model model"
       "previous next"
       "meta meta";
+    gap: 0.5ch;
     align-items: center;
     justify-items: center;
   }
