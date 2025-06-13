@@ -1,10 +1,8 @@
-
-
 import { useLoaderData } from "react-router";
 import { loadUsers } from "../manifest";
 
 import { DEFAULT_META } from "../meta";
-import { AFrameScene } from "../AFrameScene";
+import { AFrameScene } from "../components/AFrameScene";
 import { HelmetMeta } from "../components/HelmetMeta";
 
 export const loader = loadUsers;

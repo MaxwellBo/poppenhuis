@@ -1,5 +1,5 @@
 import React from 'react';
-import { Collection, Item, User } from './manifest';
+import { Collection, Item, User } from '../manifest';
 // @ts-ignore
 import AFRAME from 'aframe';
 
