@@ -28,17 +28,17 @@ export default function ItemPage() {
           <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}/${collection.id}`}>{collection.id}</QueryPreservingLink> / {item.name}
         </h1>
       </header>
-      <p className='description'><Markdown>{item.description}</Markdown></p>
-      <div className='previous-next'>
-      </div>
       <div className='bento'>
-        {previousItem ?
-          <ItemCard item={previousItem} collection={collection} user={user} triggerKey="a" altName="← previous" size='small' /> : <div />}
-        <ModelViewerWrapper item={item} size='responsive-big' />
-        <div>
+        <div id="previous">
+          {previousItem && <ItemCard item={previousItem} collection={collection} user={user} triggerKey="a" altName="← previous" size='small' />}
+        </div>
+        <div id="model">
+          <ModelViewerWrapper item={item} size='responsive-big' />
+        </div>
+        <div id="description" className="description"><Markdown>{item.description}</Markdown></div>
+        <div id="meta">
           <DescriptionList item={item} collection={collection} user={user} />
           <br />
-          <QrCode item={item} user={user} collection={collection} context="web"/> 
           {navigator.share &&
             <button className='mr-1ch' onClick={() =>
               navigator.share({
@@ -48,10 +48,12 @@ export default function ItemPage() {
               })}>
               share?
             </button>}
+          <QrCode item={item} user={user} collection={collection} context="web"/> 
           <QueryPreservingLink to={`/${user.id}/${collection.id}/${item.id}/label`}>print label?</QueryPreservingLink>, <a href={githubManifestCodeSearchUrl}>source</a>
         </div>
-        {nextItem ?
-          <ItemCard item={nextItem} collection={collection} user={user} triggerKey="d" altName="next →" size='small' /> : <div />}
+        <div id="next">
+          {nextItem && <ItemCard item={nextItem} collection={collection} user={user} triggerKey="d" altName="next →" size='small' />}
+        </div>
       </div>
       <ItemCards collection={collection} user={user} highlighted={item.id} limit={6} />
     </article>

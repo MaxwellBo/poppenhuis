@@ -367,43 +367,58 @@ pre {
   display: inline-block;
 }
 
-.bento {
-  display: flex;
-  flex-wrap: nowrap;
-  flex-direction: row;
-  align-items: center;
-  gap: 0.5ch;
-}
-
 .collection-row {
   padding-bottom: 3ch;
 }
 
-.bento > *:nth-child(1) {
+.bento #previous {
   grid-area: previous;
+  min-width: 96px;
 }
 
-.bento > *:nth-child(2) {
+.bento #next {
+  grid-area: next;
+  min-width: 96px;
+}
+
+.bento #model {
   grid-area: model;
 }
 
-.bento > *:nth-child(3) {
+.bento #description:not(:empty) {
+  width: 100%;
+  grid-area: description;
+  border-left: 1px dotted #ccc;
+  border-bottom: 1px dotted #ccc;
+  padding-left: 0.5ch;
+  padding-bottom: 0.5ch;
+}
+
+.bento #meta {
   grid-area: meta;
 }
 
-.bento > *:nth-child(4) {
-  grid-area: next;
+
+.bento {
+  display: grid;
+  grid-template-areas: 
+    "previous model meta next"
+    ". description description .";
+  row-gap: 2ch;
+  column-gap: 0.5ch;
+  align-items: center;
+  justify-items: center;
 }
 
 @media (max-width: 1150px) {
   .bento {
     display: grid;
-    grid-template-rows: auto;
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
     grid-template-areas: 
       "model meta"
-      "previous next";
-    gap: 0.5ch;
+      "previous next"
+      "description description";
+    row-gap: 2ch;
+    column-gap: 0.5ch;
     align-items: center;
     justify-items: center;
   }
@@ -412,13 +427,13 @@ pre {
 @media (max-width: 768px) {
   .bento {
     display: grid;
-    grid-template-rows: auto;
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
     grid-template-areas: 
       "model model"
       "previous next"
+      "description description"
       "meta meta";
-    gap: 0.5ch;
+    row-gap: 2ch;
+    column-gap: 0.5ch;
     align-items: center;
     justify-items: center;
   }
