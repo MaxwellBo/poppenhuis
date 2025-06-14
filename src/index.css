@@ -109,7 +109,6 @@ dl > dt {
 }
 
 dl > dd {
-  max-width: 40ch;
   font-size: 0.8rem;
   font-family: 'Fira Code', monospace;
 }
