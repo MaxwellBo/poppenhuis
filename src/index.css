@@ -384,6 +384,10 @@ pre {
   grid-area: model;
 }
 
+.bento #description {
+  grid-area: description;
+}
+
 .bento #description:not(:empty) {
   width: 100%;
   grid-area: description;
@@ -397,27 +401,23 @@ pre {
   grid-area: meta;
 }
 
-
 .bento {
-  display: grid;
-  grid-template-areas: 
-    "previous model meta next"
-    ". description description .";
-  row-gap: 2ch;
-  column-gap: 0.5ch;
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
   align-items: center;
-  justify-items: center;
+  gap: 1ch;
 }
 
 @media (max-width: 1150px) {
   .bento {
     display: grid;
+    grid-template-rows: auto;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
     grid-template-areas: 
       "model meta"
-      "previous next"
-      "description description";
-    row-gap: 2ch;
-    column-gap: 0.5ch;
+      "previous next";
+    gap: 1ch;
     align-items: center;
     justify-items: center;
   }
@@ -426,17 +426,18 @@ pre {
 @media (max-width: 768px) {
   .bento {
     display: grid;
+    grid-template-rows: auto;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
     grid-template-areas: 
       "model model"
       "previous next"
-      "description description"
       "meta meta";
-    row-gap: 2ch;
-    column-gap: 0.5ch;
+    gap: 1ch;
     align-items: center;
     justify-items: center;
   }
 }
+
 
 @media (max-width: 640px) {
   .item-page .item-cards {

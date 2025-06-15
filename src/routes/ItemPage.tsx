@@ -28,6 +28,7 @@ export default function ItemPage() {
           <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}/${collection.id}`}>{collection.id}</QueryPreservingLink> / {item.name}
         </h1>
       </header>
+      <div id="description" className="description"><Markdown>{item.description}</Markdown></div>
       <div className='bento'>
         <div id="previous">
           {previousItem && <ItemCard item={previousItem} collection={collection} user={user} triggerKey="a" altName="← previous" size='small' />}
@@ -35,7 +36,6 @@ export default function ItemPage() {
         <div id="model">
           <ModelViewerWrapper item={item} size='responsive-big' />
         </div>
-        <div id="description" className="description"><Markdown>{item.description}</Markdown></div>
         <div id="meta">
           <DescriptionList item={item} collection={collection} user={user} />
           <br />
