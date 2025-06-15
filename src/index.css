@@ -252,12 +252,12 @@ pre {
 }
 
 #content-container {
-  max-width: min(95vw, 100ch);
+  max-width: min(93vw, 100ch);
   margin: 1em auto;
 }
 
 #error-page {
-  max-width: min(95vw, 100ch);
+  max-width: min(93vw, 100ch);
   margin: 2vw auto;
 }
 
@@ -386,31 +386,30 @@ pre {
 
 .bento #description {
   grid-area: description;
+  align-self: start;
   max-width: 60ch;
 }
 
 .bento #description:not(:empty) {
   width: 100%;
   grid-area: description;
+  padding: 1ch;
   border-left: 1px dotted #ccc;
+  border-right: 1px dotted #ccc;
   border-bottom: 1px dotted #ccc;
-  padding-left: 0.5ch;
-  padding-top: 1ch;
-  padding-bottom: 1ch;
 }
 
 .bento #meta {
   grid-area: meta;
+  width: 100%;
 }
 
 .bento {
   display: grid;
-  grid-template-rows: auto;
-  /* grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); */
+  column-gap: 1ch;
   grid-template-areas: 
     "previous model meta next"
-    ". description description .";
-  gap: 1ch;
+    "previous description meta next";
   align-items: center;
   justify-items: center;
 }
@@ -419,12 +418,11 @@ pre {
   .bento {
     display: grid;
     grid-template-rows: auto;
+    column-gap: 1ch;
     /* grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); */
     grid-template-areas: 
-      "model meta"
-      "previous next"
-      "description description";
-    gap: 1ch;
+      "model model meta meta"
+      "description description previous next";
     align-items: center;
     justify-items: center;
   }
@@ -433,19 +431,23 @@ pre {
 @media (max-width: 768px) {
   .bento {
     display: grid;
-    /* grid-template-rows: auto; */
+    grid-template-rows: auto;
     grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
     grid-template-areas: 
       "model model"
       "previous next"
       "description description"
       "meta meta";
-    gap: 1ch;
     align-items: center;
     justify-items: center;
   }
-}
 
+  .bento #description:not(:empty) {
+    margin-bottom: 1.5ch;
+    margin-top: 1.5ch;
+  }
+
+}
 
 @media (max-width: 640px) {
   .item-page .item-cards {
