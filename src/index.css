@@ -402,21 +402,26 @@ pre {
 }
 
 .bento {
-  display: flex;
-  flex-wrap: nowrap;
-  flex-direction: row;
-  align-items: center;
+  display: grid;
+  grid-template-rows: auto;
+  /* grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); */
+  grid-template-areas: 
+    "previous model meta next"
+    ". description description .";
   gap: 1ch;
+  align-items: center;
+  justify-items: center;
 }
 
 @media (max-width: 1150px) {
   .bento {
     display: grid;
     grid-template-rows: auto;
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    /* grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); */
     grid-template-areas: 
       "model meta"
-      "previous next";
+      "previous next"
+      "description description";
     gap: 1ch;
     align-items: center;
     justify-items: center;
@@ -426,11 +431,12 @@ pre {
 @media (max-width: 768px) {
   .bento {
     display: grid;
-    grid-template-rows: auto;
+    /* grid-template-rows: auto; */
     grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
     grid-template-areas: 
       "model model"
       "previous next"
+      "description description"
       "meta meta";
     gap: 1ch;
     align-items: center;
