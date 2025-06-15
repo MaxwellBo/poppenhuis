@@ -252,7 +252,7 @@ pre {
 }
 
 #content-container {
-  max-width: min(93vw, 100ch);
+  max-width: min(92vw, 130ch);
   margin: 1em auto;
 }
 
@@ -319,11 +319,10 @@ pre {
   font-size: 0.7rem;
 }
 
-.columns {
+#homepage-columns {
   display: flex;
   gap: 4ch;
   flex-wrap: wrap;
-  justify-content: space-between;
 }
 
 .item-cards {
@@ -336,6 +335,8 @@ pre {
 .item-page .item-cards {
   /* Ensures there are always exactly 6 columns that equally divide the available space. */
   grid-template-columns: repeat(6, minmax(0, 1fr));
+  max-width: 90ch;
+  margin: 0 auto;
 }
 
 .see-more {
@@ -373,11 +374,13 @@ pre {
 .bento #previous {
   grid-area: previous;
   min-width: 96px;
+  align-self: center;
 }
 
 .bento #next {
   grid-area: next;
   min-width: 96px;
+  align-self: center;
 }
 
 .bento #model {
@@ -409,8 +412,8 @@ pre {
   column-gap: 1ch;
   grid-template-areas: 
     "previous model meta next"
-    "previous description meta next";
-  align-items: center;
+    ". description meta .";
+  align-items: start;
   justify-items: center;
 }
 
@@ -423,7 +426,7 @@ pre {
     grid-template-areas: 
       "model model meta meta"
       "description description previous next";
-    align-items: center;
+    align-items: start;
     justify-items: center;
   }
 }
@@ -438,15 +441,10 @@ pre {
       "previous next"
       "description description"
       "meta meta";
-    align-items: center;
+    align-items: start;
+    row-gap: 1ch;
     justify-items: center;
   }
-
-  .bento #description:not(:empty) {
-    margin-bottom: 1.5ch;
-    margin-top: 1.5ch;
-  }
-
 }
 
 @media (max-width: 640px) {

@@ -22,7 +22,7 @@ export default function UsersPage() {
           poppenhuis /
         </h1>
       </header>
-      <div className='columns'>
+      <div id="homepage-columns">
         <section>
           The following users have collections:
           <ul>
