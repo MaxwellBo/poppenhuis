@@ -252,12 +252,12 @@ pre {
 }
 
 #content-container {
-  max-width: min(80vw, 100ch);
+  max-width: min(95vw, 100ch);
   margin: 1em auto;
 }
 
 #error-page {
-  max-width: min(80vw, 100ch);
+  max-width: min(95vw, 100ch);
   margin: 2vw auto;
 }
 
@@ -386,6 +386,7 @@ pre {
 
 .bento #description {
   grid-area: description;
+  max-width: 60ch;
 }
 
 .bento #description:not(:empty) {
@@ -394,7 +395,8 @@ pre {
   border-left: 1px dotted #ccc;
   border-bottom: 1px dotted #ccc;
   padding-left: 0.5ch;
-  padding-bottom: 0.5ch;
+  padding-top: 1ch;
+  padding-bottom: 1ch;
 }
 
 .bento #meta {
