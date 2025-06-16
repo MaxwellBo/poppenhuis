@@ -44,29 +44,26 @@ export default function UsersPage() {
           </ul>
         </section>
         <section className='short'>
-          <p>
+          <p className="p-spacing">
             poppenhuis (<i>Dutch for "dollhouse"</i>) is a space for sharing collections and their 3D scans.
-            <br />
-            <br />
-            Have a collection you care about? of pottery? of sculptures? of guitars? of cars? of cakes? of plants? of dolls?
-            <br />
-            <br />
-            They're welcome to live here too.
-            <br />
-            <br />
-            <br />
           </p>
+          <p className="p-spacing">
+            Have a collection you care about? of pottery? of sculptures? of guitars? of cars? of cakes? of plants? of dolls?
+          </p>
+          <p className="p-spacing">
+            They're welcome to live here too.
+          </p>
+          <p className="p-spacing">
+            Add them by submitting a GitHub PR to <a href="https://github.com/MaxwellBo/poppenhuis">the repo</a> modifying <a href="https://github.com/MaxwellBo/poppenhuis/blob/master/src/manifest.tsx"><code>//src/manifest.tsx</code></a> and uploading your <code>.gltf/.glb</code> models to <a href="https://github.com/MaxwellBo/poppenhuis/tree/master/public/models"><code>//public/models/</code></a>!
+          </p>
+          <br />
           <details>
-            <summary>Want your collection to live here?</summary>
-            Either:
-            <ul>
-              <li>
-                Edit the 1st party manifest yourself by submitting a GitHub PR to <a href="https://github.com/MaxwellBo/poppenhuis">the repo</a> modifying <a href="https://github.com/MaxwellBo/poppenhuis/blob/master/src/manifest.tsx"><code>//src/manifest.tsx</code></a> and <a href="https://github.com/MaxwellBo/poppenhuis/tree/master/public/models"><code>//public/models/</code></a>
-              </li>
-              <li>
-                Get me to edit the 1st party manifest for you by reaching out to <a href="https://twitter.com/_max_bo_">me on Twitter</a> and sending over a <code>.zip</code> folder of your models and a Google Sheet of your metadata.
-              </li>
-            </ul>
+            <summary>What file formats can poppenhuis render?</summary>
+            poppenhuis uses <a href="https://modelviewer.dev/">model-viewer</a> for rendering 3D models,
+            which only renders glTF/GLB (<code>.gltf/.glb</code>) files.
+            <br />
+            <br />
+            Ideally poppenhuis would also support rendering Polygon File Format (<code>.ply</code>) for rendering <a href="https://en.wikipedia.org/wiki/Gaussian_splatting">Gaussian splats</a>. PRs welcome.
           </details>
           <details>
             <summary>Want to load models from an <a href="https://www.are.na/">Are.na</a> user profile?</summary>
@@ -77,14 +74,6 @@ export default function UsersPage() {
             <ThirdPartyManfiestLoader />
           </details>
           <br />
-          <details>
-            <summary>What file formats can poppenhuis render?</summary>
-            poppenhuis uses <a href="https://modelviewer.dev/">model-viewer</a> for rendering 3D models,
-            which only renders glTF/GLB (<code>.gltf/.glb</code>) files.
-            <br />
-            <br />
-            Ideally poppenhuis would also support rendering Polygon File Format (<code>.ply</code>) for rendering <a href="https://en.wikipedia.org/wiki/Gaussian_splatting">Gaussian splats</a>. PRs welcome.
-          </details>
           <details>
             <summary>Why?</summary>
             My partner has a large collection of dolls, so I built poppenhuis to make it easier for her to catalogue and track metadata.

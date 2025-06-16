@@ -457,6 +457,10 @@ pre {
   }
 }
 
+.p-spacing {
+  margin-bottom: 1rem;
+}
+
 /*
   Josh's Custom CSS Reset
   https://www.joshwcomeau.com/css/custom-css-reset/
