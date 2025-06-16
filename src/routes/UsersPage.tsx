@@ -81,6 +81,13 @@ export default function UsersPage() {
             Some of the dolls are culturally sensitive and shouldn't be displayed on a public forum, so she hosts her collection privately with a 3rd party manifest.
           </details>
           <details>
+            <summary>Why am I being forced to use GitHub to add my collection?</summary>
+            <ol>
+              <li>GitHub has everything we need for authenticated bulk uploading of models and metadata.</li>
+              <li>Rather than using a database, <q>baking</q> <a href="https://github.com/MaxwellBo/poppenhuis/blob/master/src/manifest.tsx"><code>//src/manifest.tsx</code></a> into the bundle keeps the app snappy.</li>
+            </ol>
+          </details>
+          <details>
             <summary>Credits and inspiration</summary>
             poppenhuis takes inspiration from <a href="https://www.are.na/">Are.na</a>, <a href="https://www.dayroselane.com/hydrants">The&nbsp;Hydrant&nbsp;Directory</a> and <a href="https://en.wikipedia.org/wiki/Tony_Hawk%27s_Pro_Skater_4">Tony&nbsp;Hawk's&nbsp;Pro&nbsp;Skater&nbsp;4</a>.
             <br />
