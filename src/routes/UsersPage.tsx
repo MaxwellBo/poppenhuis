@@ -51,12 +51,9 @@ export default function UsersPage() {
             Have a collection you care about? of pottery? of sculptures? of guitars? of cars? of cakes? of plants? of dolls?
           </p>
           <p className="p-spacing">
-            They're welcome to live here too:
+            They're welcome to live here too. Open a GitHub PR to <a href="https://github.com/MaxwellBo/poppenhuis">the poppenhuis repo</a> and:
           </p>
           <ol>
-            <li>
-              Open a GitHub PR to <a href="https://github.com/MaxwellBo/poppenhuis">the poppenhuis repo</a>
-            </li>
             <li>
               Upload your <code>.gltf/.glb</code> models to <a href="https://github.com/MaxwellBo/poppenhuis/tree/master/public/models"><code>//public/models/</code></a>
             </li>
