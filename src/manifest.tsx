@@ -785,32 +785,36 @@ export async function loadUsers({ request }: { request: Request; }) {
 
 export const ARENA_PREFIX = 'arena:';
 
-export async function loadUser({ params, request }: { params: { userId: User['id']; }; request: Request; }): Promise<User> {
+export async function loadUser({ params, request }: { params: { userId: User['id']; }; request: Request; }): Promise<{
+  user: User,
+  users: User[]
+}> {
   const hasArenaPrefix = params.userId.startsWith(ARENA_PREFIX);
 
   if (hasArenaPrefix) {
     const userSlug = params.userId.slice(ARENA_PREFIX.length);
-    return loadArenaUser({ userSlug });
+    const user = await loadArenaUser({ userSlug })
+    return { user, users: [user] }
   }
 
   const users = await loadUsers({ request });
   const user = users.find((user) => user.id === params.userId);
   if (!user) throw new Error("User not found");
-  return user;
+  return { user, users };
 }
 
 export async function loadCollection({ params, request }: { params: { userId: User['id']; collectionId: Collection['id']; }; request: Request; }) {
-  const user = await loadUser({ params, request });
+  const { user, users } = await loadUser({ params, request });
   const collection = user.collections.find((collection) => collection.id === params.collectionId);
   if (!collection) throw new Error("Collection not found");
-  return { collection, user };
+  return { collection, user, users };
 }
 
 export async function loadItem({ params, request }: { params: { userId: User['id']; collectionId: Collection['id']; itemId: Item['id']; }; request: Request; }) {
-  const { collection, user } = await loadCollection({ params, request });
+  const { collection, user, users } = await loadCollection({ params, request });
   const item = collection.items.find((item) => item.id === params.itemId);
   if (!item) throw new Error("Item not found");
-  return { collection, user, item };
+  return { collection, user, item, users };
 }
 
 export async function loadArenaUser({ userSlug }: { userSlug: string }): Promise<User> {

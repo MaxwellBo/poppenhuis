@@ -3,7 +3,12 @@ import {
   Link,
   useSearchParams} from "react-router";
 
-export function QueryPreservingLink(props: { to: string, children: React.ReactNode, triggerKey?: string }) {
+export function QueryPreservingLink(props: { 
+  to: string, 
+  children: React.ReactNode, 
+  triggerKey?: string,
+  pushParam?: Map<string, string>,
+  popParam?: Set<string> }) {
   const [searchParams] = useSearchParams();
   const linkRef = useRef<HTMLAnchorElement>(null);
 
@@ -30,5 +35,20 @@ export function QueryPreservingLink(props: { to: string, children: React.ReactNo
     };
   }, []);
 
-  return <Link ref={linkRef} to={{ pathname: props.to, search: searchParams.toString() }}>{props.children}</Link>
+
+  const updatedSearchParams = new URLSearchParams(searchParams);
+
+  if (props.pushParam) {
+    for (const [key, value] of props.pushParam.entries()) {
+      updatedSearchParams.set(key, value);
+    }
+  }
+
+  if (props.popParam) {
+    for (const key of props.popParam) {
+      updatedSearchParams.delete(key);
+    }
+  }
+
+  return <Link ref={linkRef} to={{ pathname: props.to, search: updatedSearchParams.toString() }}>{props.children}</Link>
 }

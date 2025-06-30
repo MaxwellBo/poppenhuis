@@ -1,6 +1,5 @@
 import React from "react";
 import { Outlet, useLocation } from "react-router";
-import { QueryPreservingLink } from "../components/QueryPreservingLink";
 
 export default function App() {
   return (
@@ -12,7 +11,7 @@ export default function App() {
         </main>
         <footer className='no-print'>
           <small>
-            🎎 c. 2025, <a href="https://maxbo.me">Max Bo</a>, <a href="https://github.com/MaxwellBo/poppenhuis">source code</a>, <a href="https://dashboard.simpleanalytics.com/poppenhu.is">analytics</a>, <QueryPreservingLink to="3d">experimental mode</QueryPreservingLink>
+            🎎 c. 2025, <a href="https://maxbo.me">Max Bo</a>, <a href="https://github.com/MaxwellBo/poppenhuis">source code</a>, <a href="https://dashboard.simpleanalytics.com/poppenhu.is">analytics</a>
           </small>
           <VelocityDesignComfort />
         </footer>

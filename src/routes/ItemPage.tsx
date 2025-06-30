@@ -1,6 +1,6 @@
 import { Collection, Item, ITEM_FIELD_DESCRIPTIONS, loadItem, User } from "../manifest";
 import React from "react";
-import { useLoaderData } from "react-router";
+import { useLoaderData, useSearchParams } from "react-router";
 import { ItemCards } from '../components/ItemCards';
 import { ItemCard } from '../components/ItemCard';
 import { metaForItem } from "../meta";
@@ -9,16 +9,22 @@ import { ModelViewerWrapper } from "../components/ModelViewerWrapper";
 import { QueryPreservingLink } from "../components/QueryPreservingLink";
 import { HelmetMeta } from "../components/HelmetMeta";
 import { QrCode } from "../components/QrCode";
+import { AFrameScene } from "../components/AFrameScene";
 
 export const loader = loadItem
+const VR_TRUE = new Map()
+VR_TRUE.set('vr', "true")
 
 export default function ItemPage() {
-  const { item, user, collection } = useLoaderData() as Awaited<ReturnType<typeof loadItem>>;
+  const { item, user, collection, users } = useLoaderData() as Awaited<ReturnType<typeof loadItem>>;
 
   const previousItem: Item | undefined = collection.items.find((_, index) => collection.items[index + 1]?.id === item.id);
   const nextItem: Item | undefined = collection.items.find((_, index) => collection.items[index - 1]?.id === item.id);
 
   const githubManifestCodeSearchUrl = `https://github.com/search?q=repo%3AMaxwellBo%2Fpoppenhuis+%22id%3A+%5C%22${item.id}%5C%22%22&type=code`;
+
+  const [searchParams] = useSearchParams();
+  const renderAFrameScene = searchParams.get("vr") === "true";
 
   return (
     <article className='item-page'>
@@ -30,10 +36,15 @@ export default function ItemPage() {
       </header>
       <div className='bento'>
         <div id="previous">
-          {previousItem && <ItemCard item={previousItem} collection={collection} user={user} triggerKey="a" altName="← previous" size='small' />}
+          {previousItem && <ItemCard item={previousItem} collection={collection} user={user} triggerKey="h" altName="← previous" size='small' />}
         </div>
         <div id="model">
-          <ModelViewerWrapper item={item} size='responsive-big' />
+          {renderAFrameScene
+            ? <AFrameScene users={users} startingItem={item} />
+            : <ModelViewerWrapper item={item} size='responsive-big' />}
+          {renderAFrameScene 
+            ? <QueryPreservingLink to={`/${user.id}/${collection.id}/${item.id}`} popParam={new Set(["vr"])}>Not VR?</QueryPreservingLink>
+            : <QueryPreservingLink to={`/${user.id}/${collection.id}/${item.id}`} pushParam={VR_TRUE}>VR?</QueryPreservingLink>}
         </div>
         <div id="description" className="description"><Markdown>{item.description}</Markdown></div>
         <div id="meta">
@@ -52,7 +63,7 @@ export default function ItemPage() {
           <QueryPreservingLink to={`/${user.id}/${collection.id}/${item.id}/label`}>print label?</QueryPreservingLink>, <a href={githubManifestCodeSearchUrl}>source</a>
         </div>
         <div id="next">
-          {nextItem && <ItemCard item={nextItem} collection={collection} user={user} triggerKey="d" altName="next →" size='small' />}
+          {nextItem && <ItemCard item={nextItem} collection={collection} user={user} triggerKey="l" altName="next →" size='small' />}
         </div>
       </div>
       <ItemCards collection={collection} user={user} highlighted={item.id} limit={6} />

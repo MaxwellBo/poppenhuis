@@ -2,6 +2,7 @@ import React from 'react';
 import { Collection, Item, User } from '../manifest';
 // @ts-ignore
 import AFRAME from 'aframe';
+import { getStyleForModelSize } from './ModelViewerWrapper';
 
 declare global {
   namespace JSX {
@@ -21,16 +22,16 @@ declare global {
 
 interface AFrameSceneProps {
   users: User[];
-  initialItem?: Item
+  startingItem?: Item,
 }
 
 const computePosition = ({ col, level, depth }: { col: number; level: number; depth: number; }): string => {
-  return `${col * 2} ${0.7 + level} ${depth * 1.2} `;
+  return `${depth * 2} ${0.7 + level} ${-col * 1.2} `;
 }
 
 AFRAME
 
-export const AFrameScene: React.FC<AFrameSceneProps> = ({ users, initialItem }) => {
+export const AFrameScene: React.FC<AFrameSceneProps> = ({ users, startingItem }) => {
   const layout: {
     position: { col: number; level: number; depth: number; };
     user?: User;
@@ -82,21 +83,22 @@ export const AFrameScene: React.FC<AFrameSceneProps> = ({ users, initialItem }) 
 
   }
 
-  const startingRotation = "0 90 0";
+  const startingRotation = "0 180 0";
   let startingPosition: string = computePosition({ col: 2, level: 0, depth: 6 });
 
-  if (initialItem) {
-    const found = layout.find(entity => entity.item && entity.item.id === initialItem.id);
+  if (startingItem) {
+    const found = layout.find(entity => entity.item && entity.item.id === startingItem.id);
     if (found) {
-      startingPosition = computePosition(found.position);
+      startingPosition = computePosition({ ...found.position, col: found.position.col - 0.7 });
     }
   }
 
   const items = layout.filter(entity => entity.item).map(item => item.item!);
 
   return (
-    <a-scene embedded style={{ minHeight: "600px" }}>
+    <a-scene embedded style={getStyleForModelSize('responsive-big')}>
       <a-entity camera fly={true} look-controls wasd-controls="acceleration:100" rotation={startingRotation} position={startingPosition}></a-entity>
+      <a-sky color="#fdf5e6"></a-sky>
       <a-assets>
         {items.map((item) => (
               <a-asset-item key={item.id} id={item.id} src={item.model}></a-asset-item>
@@ -112,7 +114,7 @@ export const AFrameScene: React.FC<AFrameSceneProps> = ({ users, initialItem }) 
                 value={user.name} 
                 color="#000" 
                 width="10"
-                rotation="0 90 0"
+                rotation="0 -180 0"
                 position={computePosition(position)}
               ></a-text>
           ) } else {
@@ -122,7 +124,7 @@ export const AFrameScene: React.FC<AFrameSceneProps> = ({ users, initialItem }) 
                 value={user.name} 
                 color="#000" 
                 width="10"
-                rotation="0 -90 0"
+                rotation="0 0 0"
                 position={computePosition(position)}
               ></a-text>
             )
@@ -137,7 +139,7 @@ export const AFrameScene: React.FC<AFrameSceneProps> = ({ users, initialItem }) 
                 value={collection.name}
                 color="#000" 
                 width="5"
-                rotation="0 90 0"
+                rotation="0 -180 0"
                 position={computePosition(position)}
               ></a-text>
             );
@@ -148,7 +150,7 @@ export const AFrameScene: React.FC<AFrameSceneProps> = ({ users, initialItem }) 
                 value={collection.name}
                 color="#000" 
                 width="5"
-                rotation="0 -90 0"
+                rotation="0 0 0"
                 position={computePosition(position)}
               ></a-text>
             );
@@ -160,6 +162,7 @@ export const AFrameScene: React.FC<AFrameSceneProps> = ({ users, initialItem }) 
             <a-gltf-model
               key={"model-" + item.id}
               src={`#${item.id}`}
+              rotation="0 0 0"
               position={computePosition(position)}
             ></a-gltf-model>
             <a-text
@@ -167,7 +170,15 @@ export const AFrameScene: React.FC<AFrameSceneProps> = ({ users, initialItem }) 
               value={item.name}
               color="#000"
               width="2"
-              rotation="0 -90 0"
+              rotation="0 -180 0"
+              position={computePosition({ ...position, level: position.level + 1 })}
+            ></a-text>
+            <a-text
+              key={"item-" + item.id}
+              value={item.name}
+              color="#000"
+              width="2"
+              rotation="0 0 0"
               position={computePosition({ ...position, level: position.level + 1 })}
             ></a-text>
           </>
