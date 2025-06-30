@@ -22,11 +22,11 @@ declare global {
 
 interface AFrameSceneProps {
   users: User[];
-  startingItem?: Item,
+  startingItem: Item,
 }
 
 const computePosition = ({ col, level, depth }: { col: number; level: number; depth: number; }): string => {
-  return `${depth * 2} ${0.7 + level} ${-col * 1.2} `;
+  return `${depth * 2} ${0.7 + level} ${-col * 4} `;
 }
 
 AFRAME
@@ -83,7 +83,6 @@ export const AFrameScene: React.FC<AFrameSceneProps> = ({ users, startingItem })
 
   }
 
-  const startingRotation = "0 180 0";
   let startingPosition: string = computePosition({ col: 2, level: 0, depth: 6 });
 
   if (startingItem) {
@@ -97,7 +96,7 @@ export const AFrameScene: React.FC<AFrameSceneProps> = ({ users, startingItem })
 
   return (
     <a-scene embedded style={getStyleForModelSize('responsive-big')}>
-      <a-entity camera fly={true} look-controls wasd-controls="acceleration:100" rotation={startingRotation} position={startingPosition}></a-entity>
+      <a-entity camera fly={true} look-controls wasd-controls="acceleration:100"  position={startingPosition}></a-entity>
       <a-sky color="#fdf5e6"></a-sky>
       <a-assets>
         {items.map((item) => (
@@ -161,6 +160,7 @@ export const AFrameScene: React.FC<AFrameSceneProps> = ({ users, startingItem })
           return <>
             <a-gltf-model
               key={"model-" + item.id}
+              animation="property: rotation; to: 0 360 0; dur: 20000; easing: linear; loop: true"
               src={`#${item.id}`}
               rotation="0 0 0"
               position={computePosition(position)}
