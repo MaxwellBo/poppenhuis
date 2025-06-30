@@ -10,7 +10,7 @@ import { HelmetMeta } from "../components/HelmetMeta";
 export const loader = loadUser;
 
 export default function UserPage() {
-  const user = useLoaderData() as User;
+  const { user } = useLoaderData() as Awaited<ReturnType<typeof loader>>;
 
   return (
     <article>

@@ -88,7 +88,7 @@ export const AFrameScene: React.FC<AFrameSceneProps> = ({ users, startingItem })
   if (startingItem) {
     const found = layout.find(entity => entity.item && entity.item.id === startingItem.id);
     if (found) {
-      startingPosition = computePosition({ ...found.position, col: found.position.col - 0.7 });
+      startingPosition = computePosition({ ...found.position, col: found.position.col - 0.3 });
     }
   }
 
