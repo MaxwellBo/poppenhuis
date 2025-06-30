@@ -558,7 +558,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
           },
           {
             id: "sugg",
-            name: "???",
+            name: "Sugg",
             material: ["gold", "denim", "crepe net", "Garmin smart watch"],
             captureApp: "Polycam",
             captureDate: "2025 April 12 11:50PM",
