@@ -21,6 +21,7 @@ declare global {
 
 interface AFrameSceneProps {
   users: User[];
+  initialItem?: Item
 }
 
 const computePosition = ({ col, level, depth }: { col: number; level: number; depth: number; }): string => {
@@ -29,7 +30,7 @@ const computePosition = ({ col, level, depth }: { col: number; level: number; de
 
 AFRAME
 
-export const AFrameScene: React.FC<AFrameSceneProps> = ({ users }) => {
+export const AFrameScene: React.FC<AFrameSceneProps> = ({ users, initialItem }) => {
   const layout: {
     position: { col: number; level: number; depth: number; };
     user?: User;
@@ -81,9 +82,17 @@ export const AFrameScene: React.FC<AFrameSceneProps> = ({ users }) => {
 
   }
 
-  const items = layout.filter(entity => entity.item).map(item => item.item!);
-  const startingPosition = computePosition({ col: 2, level: 0, depth: 6 });
   const startingRotation = "0 90 0";
+  let startingPosition: string = computePosition({ col: 2, level: 0, depth: 6 });
+
+  if (initialItem) {
+    const found = layout.find(entity => entity.item && entity.item.id === initialItem.id);
+    if (found) {
+      startingPosition = computePosition(found.position);
+    }
+  }
+
+  const items = layout.filter(entity => entity.item).map(item => item.item!);
 
   return (
     <a-scene embedded style={{ minHeight: "600px" }}>
