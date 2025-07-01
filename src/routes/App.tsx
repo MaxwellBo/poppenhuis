@@ -3,8 +3,11 @@ import { Outlet, useLocation } from "react-router";
 
 
 const commit = import.meta.env.COMMIT_REF?.slice(0, 7) || "HEAD";
-const context = (import.meta.env.CONTEXT || 'local');
 const deployId = import.meta.env.DEPLOY_ID || ""
+let context = (import.meta.env.CONTEXT || 'local');
+if (context === 'production') {
+  context = 'prod';
+}
 
 export default function App() {
   return (

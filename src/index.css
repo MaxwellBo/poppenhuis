@@ -526,7 +526,7 @@ hr.break {
   border: 1px solid black;
   text-decoration: none;
   padding: 2px;
-  margin: 2px;
+  margin-left: 4px;
   font-family: 'Fira Code', monospace;
 }
 
@@ -535,7 +535,7 @@ hr.break {
   color: white;
 }
 
-.pill#env.production {
+.pill#env.prod {
   background-color: #008751;
 }
 
