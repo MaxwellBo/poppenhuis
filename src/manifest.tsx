@@ -46,6 +46,8 @@ export interface Item {
   // acquisition
   acquisitionDate?: string;
   acquisitionLocation?: string;
+  // post-acquisition
+  storageLocation?: string;
   // capture
   captureDate?: string;
   captureLocation?: string;
@@ -263,13 +265,14 @@ Sadly 2 were lost to the Queensland heat, when the glue of their bridges melted 
             captureApp: "Polycam",
             acquisitionDate: "2013",
             captureLocation: "West End, Brisbane",
+            storageLocation: "Kangaroo Point, Brisbane",
           },
           {
             id: "yamaha",
             name: "Yamaha",
             model: "/models/mbo/guitars/yamaha.glb",
             og: "/models/mbo/guitars/yamaha.jpeg",
-            material: ["cedar top", "rosewood back and sides"],
+            material: ["cedar top", "rosewood back and sides", "ebony fretboard"],
             formalName: "Yamaha CGX171CCA",
             manufacturer: "Yamaha",
             manufactureLocation: "Japan",
@@ -279,6 +282,7 @@ Sadly 2 were lost to the Queensland heat, when the glue of their bridges melted 
             captureApp: "Polycam",
             acquisitionDate: "2010",
             captureLocation: "Darlinghurst, Sydney",
+            storageLocation: "Darlinghurst, Sydney",
           },
           {
             id: "squire",
@@ -294,6 +298,7 @@ Sadly 2 were lost to the Queensland heat, when the glue of their bridges melted 
             captureApp: "Polycam",
             acquisitionDate: "2022",
             captureLocation: "Darlinghurst, Sydney",
+            storageLocation: "Darlinghurst, Sydney",
           },
           {
             id: "kohala",
@@ -308,6 +313,7 @@ Sadly 2 were lost to the Queensland heat, when the glue of their bridges melted 
             captureApp: "Polycam",
             acquisitionDate: "2018",
             captureLocation: "Darlinghurst, Sydney",
+            storageLocation: "Darlinghurst, Sydney",
           },
         ]
       },
@@ -333,6 +339,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             captureDevice: "Apple iPhone 13 Pro",
             captureMethod: "LiDAR",
             captureApp: "Polycam",
+            storageLocation: "Darlinghurst, Sydney",
           },
           {
             id: "elcap",
@@ -347,6 +354,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             captureDevice: "Apple iPhone 13 Pro",
             captureMethod: "LiDAR",
             captureApp: "Polycam",
+            storageLocation: "Darlinghurst, Sydney",
           },
           {
             id: "multistomp",
@@ -361,6 +369,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             captureDevice: "Apple iPhone 13 Pro",
             captureMethod: "LiDAR",
             captureApp: "Polycam",
+            storageLocation: "Darlinghurst, Sydney",
           },
           {
             id: "avrun",
@@ -377,6 +386,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             captureDevice: "Apple iPhone 13 Pro",
             captureMethod: "LiDAR",
             captureApp: "Polycam",
+            storageLocation: "Darlinghurst, Sydney",
           },
         ]
       },

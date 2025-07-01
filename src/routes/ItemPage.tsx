@@ -122,6 +122,10 @@ function DescriptionList(props: { item: Item; collection: Collection; user: User
       <dd>{item.acquisitionLocation}</dd>
       <hr className="break" />
       <hr className="break" />
+      <dt>storage location</dt>
+      <dd>{item.storageLocation}</dd>
+      <hr className="break" />
+      <hr className="break" />
       <dt>capture date</dt>
       <dd>{item.captureDate}</dd>
       <dt>capture location</dt>
