@@ -107,6 +107,8 @@ export interface Item {
   // acquisition
   acquisitionDate?: string;
   acquisitionLocation?: string;
+  // post-acquisition
+  storageLocation?: string;
   // capture
   captureDate?: string;
   captureLocation?: string;
@@ -832,7 +834,14 @@ export async function loadItem({ params, request }: { params: { userId: User['id
   return { collection, user, item, users };
 }
 
+const ARENA_USER_CACHE = new Map<string, User>();
+
 export async function loadArenaUser({ userSlug }: { userSlug: string }): Promise<User> {
+  const cached = ARENA_USER_CACHE.get(userSlug);
+  if (cached) {
+    return cached;
+  }
+
   const user: ArenaUser = await fetch(`https://api.are.na/v2/users/${userSlug}`).then((res) => res.json());
 
   const resultChannels: ArenaChannel[] = []
@@ -884,12 +893,16 @@ export async function loadArenaUser({ userSlug }: { userSlug: string }): Promise
     })
   }
 
-  return {
+  const result: User = {
     id: ARENA_PREFIX + user.slug,
     name: user.full_name,
     bio: `[Are.na user](https://www.are.na/${user.slug})`,
     collections
   };
+
+  ARENA_USER_CACHE.set(userSlug, result);
+
+  return result;
 }
 
 /**

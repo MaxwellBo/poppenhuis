@@ -55,6 +55,12 @@ a:active {
   background-color: red !important;
 }
 
+a.pending {
+  background-color: red;
+  color: white;
+  animation: blink 1s step-end infinite;
+}
+
 a:hover {
   background-color: blue;
   color: white;
@@ -596,4 +602,15 @@ hr.break {
 
 input[type="checkbox"] {
   margin-right: 0.5ch
+}
+
+#loading-status {
+  position: fixed;
+  font-family: 'Fira Code', monospace;
+  background-color: red;
+  color: white;
+  padding: 1ch;
+  margin: 1ch;;
+  top: 0;
+  left: 0;
 }

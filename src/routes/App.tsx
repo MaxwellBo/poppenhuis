@@ -1,5 +1,5 @@
 import React from "react";
-import { Outlet, useLocation } from "react-router";
+import { Outlet, useLocation, useNavigation } from "react-router";
 
 
 const commit = import.meta.env.COMMIT_REF?.slice(0, 7) || "HEAD";
@@ -12,6 +12,7 @@ if (context === 'production') {
 export default function App() {
   return (
     <div>
+      <LoadingStatus />
       <ScrollToTop />
       <div id='content-container'>
         <main>
@@ -88,6 +89,16 @@ function ScrollToTop() {
   }, [pathname]);
 
   return null;
+}
+
+function LoadingStatus() {
+  const navigation = useNavigation();
+  const isLoading = navigation.state === 'loading';
+
+  return isLoading ? (
+    <div id="loading-status" className="blink">
+      <span>Loading...</span>
+    </div>) : null;
 }
 
 

@@ -1,6 +1,7 @@
 import React, { KeyboardEvent, useEffect, useRef } from 'react';
 import {
   Link,
+  NavLink,
   useSearchParams} from "react-router";
 
 export function QueryPreservingLink(props: { 
@@ -38,11 +39,17 @@ export function QueryPreservingLink(props: {
   }, []);
 
 
-  return <Link 
+  return <NavLink 
     ref={linkRef} 
     id={props.id}
-    className={props.className}
+      className={({ isActive, isPending }) =>
+        isPending 
+          ? `${props.className} pending` 
+          : isActive 
+            ? `${props.className} active` 
+            : props.className
+    }
     to={{ pathname: props.to, search: searchParams.toString() }}>
       {props.children}
-    </Link>
+    </NavLink>
 }
