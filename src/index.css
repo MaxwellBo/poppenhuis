@@ -98,7 +98,7 @@ aside {
 dl {
   display: grid;
   row-gap: 0.3ch;
-  grid-template-columns: auto auto;
+  grid-template-columns: max-content 1fr;
 }
 
 dl > dt {
