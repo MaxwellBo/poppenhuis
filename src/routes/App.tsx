@@ -10,12 +10,12 @@ const CONTEXT_BACKGROUND_COLOR = {
 
 type ContextType = keyof typeof CONTEXT_BACKGROUND_COLOR;
 
-export default function App() {
-  const commit = import.meta.env.COMMIT_REF?.slice(0, 8) || 'no commit';
-  const context = (import.meta.env.CONTEXT || 'local') as ContextType;
-  const deployId = import.meta.env.DEPLOY_ID || ""
-  const test = import.meta.env.TEST || "no test";
+const commit = import.meta.env.COMMIT_REF?.slice(0, 8) || 'no commit';
+const context = (import.meta.env.CONTEXT || 'local') as ContextType;
+const deployId = import.meta.env.DEPLOY_ID || ""
+const test = import.meta.env.TEST || "no test";
 
+export default function App() {
   return (
     <div>
       <ScrollToTop />
