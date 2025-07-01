@@ -26,7 +26,7 @@ interface AFrameSceneProps {
 }
 
 const computePosition = ({ col, level, depth }: { col: number; level: number; depth: number; }): string => {
-  return `${depth * 2} ${0.7 + level} ${-col * 4} `;
+  return `${depth * 2} ${level} ${-col * 4} `;
 }
 
 AFRAME
@@ -43,14 +43,14 @@ export const AFrameScene: React.FC<AFrameSceneProps> = ({ users, startingItem })
   let collectionCount = 0;
   for (const user of users) {
     layout.push({
-      position: { col: collectionCount, level: 2, depth: 0 },
+      position: { col: collectionCount, level: 3, depth: 0 },
       user: user,
       flip: false,
     });
 
     for (const collection of user.collections) {
       layout.push({
-        position: { col: collectionCount, level: 1, depth: 0 },
+        position: { col: collectionCount, level: 2, depth: 0 },
         collection: collection,
         flip: false,
       });
@@ -67,7 +67,7 @@ export const AFrameScene: React.FC<AFrameSceneProps> = ({ users, startingItem })
       }
 
       layout.push({
-        position: { col: collectionCount, level: 1, depth: 0 },
+        position: { col: collectionCount, level: 2, depth: 0 },
         collection: collection,
         flip: true,
       });
@@ -76,7 +76,7 @@ export const AFrameScene: React.FC<AFrameSceneProps> = ({ users, startingItem })
     }
 
     layout.push({
-      position: { col: collectionCount - 1, level: 2, depth: 0 },
+      position: { col: collectionCount - 1, level: 3, depth: 0 },
       user: user,
       flip: true,
     });
