@@ -1,6 +1,6 @@
 import { Collection, Item, ITEM_FIELD_DESCRIPTIONS, loadItem, User } from "../manifest";
 import React from "react";
-import { useLoaderData, useSearchParams } from "react-router";
+import { useLoaderData, useNavigate, useSearchParams } from "react-router";
 import { ItemCards } from '../components/ItemCards';
 import { ItemCard } from '../components/ItemCard';
 import { metaForItem } from "../meta";
@@ -23,8 +23,18 @@ export default function ItemPage() {
 
   const githubManifestCodeSearchUrl = `https://github.com/search?q=repo%3AMaxwellBo%2Fpoppenhuis+%22id%3A+%5C%22${item.id}%5C%22%22&type=code`;
 
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const renderAFrameScene = searchParams.get("vr") === "true";
+
+  const handleVRToggle = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newSearchParams = new URLSearchParams(searchParams);
+    if (e.target.checked) {
+      newSearchParams.set("vr", "true");
+    } else {
+      newSearchParams.delete("vr");
+    }
+    setSearchParams(newSearchParams);
+  };
 
   return (
     <article className='item-page'>
@@ -42,9 +52,14 @@ export default function ItemPage() {
           {renderAFrameScene
             ? <AFrameScene users={users} startingItem={item} />
             : <ModelViewerWrapper item={item} size='responsive-big' />}
-          {renderAFrameScene 
-            ? <QueryPreservingLink className="action-link" to={`/${user.id}/${collection.id}/${item.id}`} popParam={new Set(["vr"])}>no VR</QueryPreservingLink>
-            : <QueryPreservingLink className="action-link" to={`/${user.id}/${collection.id}/${item.id}`} pushParam={VR_TRUE}>VR</QueryPreservingLink>}
+          <label className="vr-toggle">
+            <input 
+              type="checkbox" 
+              checked={renderAFrameScene} 
+              onChange={handleVRToggle}
+            />
+            VR?
+          </label>
         </div>
         <div id="description" className="description"><Markdown>{item.description}</Markdown></div>
         <div id="meta">

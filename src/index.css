@@ -569,3 +569,7 @@ hr.break {
 .action-link::after {
   content: "?";
 }
+
+input[type="checkbox"] {
+  margin-right: 0.5ch
+}

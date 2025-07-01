@@ -38,25 +38,11 @@ export function QueryPreservingLink(props: {
   }, []);
 
 
-  const updatedSearchParams = new URLSearchParams(searchParams);
-
-  if (props.pushParam) {
-    for (const [key, value] of props.pushParam.entries()) {
-      updatedSearchParams.set(key, value);
-    }
-  }
-
-  if (props.popParam) {
-    for (const key of props.popParam) {
-      updatedSearchParams.delete(key);
-    }
-  }
-
   return <Link 
     ref={linkRef} 
     id={props.id}
     className={props.className}
-    to={{ pathname: props.to, search: updatedSearchParams.toString() }}>
+    to={{ pathname: props.to, search: searchParams.toString() }}>
       {props.children}
     </Link>
 }
