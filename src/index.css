@@ -428,6 +428,7 @@ pre {
 .bento {
   display: grid;
   column-gap: 1ch;
+  grid-template-columns: min-content 1fr 1fr min-content;
   grid-template-areas: 
     "previous model meta next"
     ". description meta .";
