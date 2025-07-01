@@ -96,7 +96,7 @@ export default function ItemPage() {
             collection={collection} 
             showIndex={true}
             user={user} triggerKey="l" 
-            altName={nextItemIsFirst ? "go to start ↺" : "next →"} 
+            altName={nextItemIsFirst ? "back to start ↺" : "next →"} 
             size='small' />
         </div>
       </div>
