@@ -19,7 +19,7 @@ export default function CollectionPage() {
         <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / {collection.id} / <Size ts={collection.items} t="item" />
       </h1>
     </header>
-    {collection.description && <p className='description'><Markdown>{collection.description}</Markdown></p>}
+    {collection.description && <div className='short description ugc'><Markdown>{collection.description}</Markdown></div>}
     <ItemCards collection={collection} user={user} />
   </article>
 }

@@ -74,7 +74,7 @@ export default function ItemPage() {
             VR?
           </label>
         </div>
-        <div id="description" className="description"><Markdown>{item.description}</Markdown></div>
+        <div id="description" className="description ugc"><Markdown>{item.description}</Markdown></div>
         <div id="meta">
           <DescriptionList item={item} collection={collection} user={user} />
           <br />

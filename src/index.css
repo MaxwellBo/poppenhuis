@@ -111,6 +111,7 @@ dl > dt {
 dl > dd {
   font-size: 0.8rem;
   font-family: 'Fira Code', monospace;
+  letter-spacing: -0.03em;
 }
 
 .ellipsis {
@@ -349,6 +350,10 @@ pre {
   white-space: pre-wrap;
 }
 
+.ugc {
+  font-style: italic;
+}
+
 .a-scene-wrapper,
 .model-viewer-wrapper {
   padding: 1px;
@@ -372,6 +377,12 @@ pre {
   position: absolute;
   display: inline-block;
   z-index: 100;
+}
+
+#collection-rows {
+  padding-left: 1ch;
+  margin-top: 1ch;
+  border-left: 1px dotted #ccc;
 }
 
 .collection-row {

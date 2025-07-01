@@ -20,9 +20,11 @@ export default function UserPage() {
           <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / {user.name} / <Size ts={user.collections} t="collection" />
         </h1>
       </header>
-      {user.bio && <><Markdown>{user.bio}</Markdown><br /></>}
-      {user.collections.map((collection) =>
-        <CollectionRow key={collection.id} collection={collection} user={user} />)}
+      {user.bio && <div className="short description ugc"><Markdown>{user.bio}</Markdown><br /></div>}
+      <div id="collection-rows">
+        {user.collections.map((collection) =>
+          <CollectionRow key={collection.id} collection={collection} user={user} />)}
+      </div>
     </article>
   );
 }
@@ -34,7 +36,7 @@ function CollectionRow(props: { collection: Collection, user: User }) {
       <h3>
         <QueryPreservingLink to={`/${user.id}/${collection.id}`}>{collection.name}</QueryPreservingLink> <Size ts={collection.items} t="item" />
       </h3>
-      {collection.description && <p className='short description'><Markdown>{collection.description}</Markdown></p>}
+      {collection.description && <p className='short description ugc'><Markdown>{collection.description}</Markdown></p>}
       <ItemCards {...props} limit={6} />
     </article>
   );
