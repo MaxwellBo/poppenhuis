@@ -425,13 +425,18 @@ pre {
   width: 100%;
 }
 
+.bento #cards {
+  grid-area: cards;
+}
+
 .bento {
   display: grid;
   column-gap: 1ch;
   grid-template-columns: min-content 1fr 1fr min-content;
   grid-template-areas: 
     "previous model meta next"
-    ". description meta .";
+    ". description meta ."
+    "cards cards cards cards";
   align-items: start;
   justify-items: center;
 }
@@ -444,7 +449,8 @@ pre {
     /* grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); */
     grid-template-areas: 
       "model model meta meta"
-      "description description previous next";
+      "description description previous next"
+      "cards cards cards cards";
     align-items: start;
     justify-items: center;
   }
@@ -459,7 +465,8 @@ pre {
       "model model"
       "previous next"
       "description description"
-      "meta meta";
+      "meta meta"
+      "cards cards";
     align-items: start;
     row-gap: 1ch;
     justify-items: center;

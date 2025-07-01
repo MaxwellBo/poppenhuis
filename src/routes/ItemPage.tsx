@@ -99,8 +99,10 @@ export default function ItemPage() {
             altName={nextItemIsFirst ? "back to start ↺" : "next →"} 
             size='small' />
         </div>
+        <div id="cards">
+          <ItemCards collection={collection} user={user} highlighted={item.id} limit={6} />
+        </div>
       </div>
-      <ItemCards collection={collection} user={user} highlighted={item.id} limit={6} />
     </article>
   );
 }
