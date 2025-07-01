@@ -493,12 +493,6 @@ input, button, textarea, select {
   isolation: isolate;
 }
 
-.qrcode {
-  image-rendering: pixelated;
-  image-rendering: -moz-crisp-edges;
-  image-rendering: crisp-edges;
-}
-
 .qrcode.print {
   height: 96px;
   width: 96px;
