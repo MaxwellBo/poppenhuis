@@ -8,11 +8,12 @@ export function ItemCard(props: {
   item: Item; 
   collection: Collection; 
   user: User; 
+  showIndex?: boolean;
   altName?: string; 
   size?: ModelSize; 
   triggerKey?: string; 
 }) {
-  const { item, collection, user, altName, size, triggerKey } = props;
+  const { item, collection, user, altName, size, triggerKey, showIndex } = props;
   return (
     <div className="card">
       <div className='center'>
@@ -21,7 +22,7 @@ export function ItemCard(props: {
           {altName ?? item.name}
         </QueryPreservingLink> 
         {triggerKey && <kbd className='block'>{triggerKey}</kbd>}
-        <div className='index'>({collection.items.indexOf(item) + 1})</div>
+        {showIndex && <div className='index'>({collection.items.indexOf(item) + 1})</div>}
       </div>
     </div>
   );

@@ -55,6 +55,7 @@ export default function ItemPage() {
           <ItemCard 
             item={previousItem} 
             collection={collection} 
+            showIndex={true}
             user={user} 
             triggerKey="h" 
             altName={previousItemIsLast ? "↻ go to end" : "← previous"} 
@@ -93,6 +94,7 @@ export default function ItemPage() {
           <ItemCard 
             item={nextItem} 
             collection={collection} 
+            showIndex={true}
             user={user} triggerKey="l" 
             altName={nextItemIsFirst ? "go to start ↺" : "next →"} 
             size='small' />
