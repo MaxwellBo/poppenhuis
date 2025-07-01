@@ -1,20 +1,10 @@
 import React from "react";
 import { Outlet, useLocation } from "react-router";
 
-const CONTEXT_BACKGROUND_COLOR = {
-  "production": "#f7f9fc",
-  "deploy-preview": "#fef7f0",
-  "branch-deploy": "#f0f7ff",
-  "local": "#f4f9f4",
-} as const;
-
-type ContextType = keyof typeof CONTEXT_BACKGROUND_COLOR;
 
 const commit = import.meta.env.COMMIT_REF?.slice(0, 8) || 'no commit';
-const context = (import.meta.env.CONTEXT || 'local') as ContextType;
+const context = (import.meta.env.CONTEXT || 'local');
 const deployId = import.meta.env.DEPLOY_ID || ""
-const test = import.meta.env.TEST || "no test";
-const env = JSON.stringify(import.meta.env, null, 2);
 
 export default function App() {
   return (
@@ -31,21 +21,12 @@ export default function App() {
                 <VelocityDesignComfort />
               </div>
               <div>
-                <a id="deploy" className="pill" href={`https://app.netlify.com/projects/poppenhuis/deploys/${deployId}`} style={{ backgroundColor: CONTEXT_BACKGROUND_COLOR[context] }}>
+                <a id="env" className={`pill ${context}`} href={`https://app.netlify.com/projects/poppenhuis/deploys/${deployId}`}>
                   {context}
                 </a>
                 <a id="commit" className="pill" href={`https://github.com/MaxwellBo/poppenhuis/commit/${commit}`}>
                   {commit}
                 </a>
-                <div>
-                  {test}
-                </div>
-                <div>
-                  {JSON.stringify(import.meta.env, null, 2)}
-                </div>
-                <div>
-                  {env}
-                </div>
               </div>
             </small>
         </footer>

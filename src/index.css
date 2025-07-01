@@ -524,8 +524,29 @@ hr.break {
   border: 1px solid black;
   text-decoration: none;
   padding: 2px;
-  margin: 1px;
+  margin: 2px;
   font-family: 'Fira Code', monospace;
+}
+
+.pill#env {
+  text-transform: uppercase;
+  color: white;
+}
+
+.pill#env.production {
+  background-color: #008751;
+}
+
+.pill#env.deploy-preview {
+  background-color: #AB5236;
+}
+
+.pill#env.branch-deploy {
+  background-color: #7E2553;
+}
+
+.pill#env.local {
+  background-color: #1D2B53;
 }
 
 .pill:hover {
