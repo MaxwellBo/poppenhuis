@@ -36,9 +36,6 @@ export function ItemCards(props: { collection: Collection; user: User; highlight
       </ul>
       {showSeeMore &&
         <div className='center see-more'>
-          <span className="size">
-            ({truncatedItems.length > 0 ? `${items.indexOf(truncatedItems[0]) + 1}-${items.indexOf(truncatedItems[truncatedItems.length - 1]) + 1} of ${items.length} ${collection.name}` : ''})
-          </span>
           <QueryPreservingLink to={`/${user.id}/${collection.id}`}>see all {collection.items.length} {collection.name} →</QueryPreservingLink>
         </div>}
     </>

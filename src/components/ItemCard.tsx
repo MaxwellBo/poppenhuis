@@ -4,7 +4,14 @@ import { ModelViewerWrapper } from './ModelViewerWrapper';
 import { QueryPreservingLink } from './QueryPreservingLink';
 
 
-export function ItemCard(props: { item: Item; collection: Collection; user: User; altName?: string; size?: ModelSize; triggerKey?: string; }) {
+export function ItemCard(props: { 
+  item: Item; 
+  collection: Collection; 
+  user: User; 
+  altName?: string; 
+  size?: ModelSize; 
+  triggerKey?: string; 
+}) {
   const { item, collection, user, altName, size, triggerKey } = props;
   return (
     <div className="card">
@@ -12,8 +19,9 @@ export function ItemCard(props: { item: Item; collection: Collection; user: User
         <ModelViewerWrapper item={item} size={size ?? 'normal'} />
         <QueryPreservingLink to={`/${user.id}/${collection.id}/${item.id}`} triggerKey={triggerKey}>
           {altName ?? item.name}
-        </QueryPreservingLink>
+        </QueryPreservingLink> 
         {triggerKey && <kbd className='block'>{triggerKey}</kbd>}
+        <div className='index'>({collection.items.indexOf(item) + 1})</div>
       </div>
     </div>
   );
