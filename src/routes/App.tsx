@@ -11,9 +11,9 @@ const CONTEXT_BACKGROUND_COLOR = {
 type ContextType = keyof typeof CONTEXT_BACKGROUND_COLOR;
 
 export default function App() {
-  const commit = import.meta.env.COMMIT_REF?.slice(0, 8) || 'no commit';
-  const context = (import.meta.env.CONTEXT || 'local') as ContextType;
-  const deployId = import.meta.env.DEPLOY_ID || 'local';
+  const commit = process.env.COMMIT_REF?.slice(0, 8) || 'no commit';
+  const context = (process.env.CONTEXT || 'local') as ContextType;
+  const deployId = process.env.DEPLOY_ID || ""
 
   return (
     <div>
@@ -33,7 +33,7 @@ export default function App() {
                   {context}
                 </a>
                 <a id="commit" className="pill" href={`https://github.com/MaxwellBo/poppenhuis/commit/${commit}`}>
-                {commit}
+                  {commit}
                 </a>
               </div>
             </small>
