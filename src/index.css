@@ -156,6 +156,7 @@ details[open] {
 
 .explanation {
   border-left: 1px dotted #ccc;
+  margin-left: 0.27rem;
   padding-left: 2ch;
 }
 
