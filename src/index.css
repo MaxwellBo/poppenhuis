@@ -556,3 +556,16 @@ hr.break {
 .pill:active {
   background-color: red !important;
 }
+
+.action-link {
+  text-decoration: underline wavy;
+  text-decoration-thickness: 1px;
+}
+
+.action-link::before {
+  content: "¿";
+}
+
+.action-link::after {
+  content: "?";
+}

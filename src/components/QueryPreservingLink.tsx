@@ -5,6 +5,8 @@ import {
 
 export function QueryPreservingLink(props: { 
   to: string, 
+  id?: string,
+  className?: string,
   children: React.ReactNode, 
   triggerKey?: string,
   pushParam?: Map<string, string>,
@@ -50,5 +52,11 @@ export function QueryPreservingLink(props: {
     }
   }
 
-  return <Link ref={linkRef} to={{ pathname: props.to, search: updatedSearchParams.toString() }}>{props.children}</Link>
+  return <Link 
+    ref={linkRef} 
+    id={props.id}
+    className={props.className}
+    to={{ pathname: props.to, search: updatedSearchParams.toString() }}>
+      {props.children}
+    </Link>
 }

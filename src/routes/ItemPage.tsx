@@ -43,8 +43,8 @@ export default function ItemPage() {
             ? <AFrameScene users={users} startingItem={item} />
             : <ModelViewerWrapper item={item} size='responsive-big' />}
           {renderAFrameScene 
-            ? <QueryPreservingLink to={`/${user.id}/${collection.id}/${item.id}`} popParam={new Set(["vr"])}>Not VR?</QueryPreservingLink>
-            : <QueryPreservingLink to={`/${user.id}/${collection.id}/${item.id}`} pushParam={VR_TRUE}>VR?</QueryPreservingLink>}
+            ? <QueryPreservingLink className="action-link" to={`/${user.id}/${collection.id}/${item.id}`} popParam={new Set(["vr"])}>no VR</QueryPreservingLink>
+            : <QueryPreservingLink className="action-link" to={`/${user.id}/${collection.id}/${item.id}`} pushParam={VR_TRUE}>VR</QueryPreservingLink>}
         </div>
         <div id="description" className="description"><Markdown>{item.description}</Markdown></div>
         <div id="meta">
@@ -59,8 +59,8 @@ export default function ItemPage() {
               })}>
               share?
             </button>}
-          <QrCode item={item} user={user} collection={collection} context="web"/> 
-          <QueryPreservingLink to={`/${user.id}/${collection.id}/${item.id}/label`}>print label?</QueryPreservingLink>, <a href={githubManifestCodeSearchUrl}>source</a>
+          <QrCode item={item} user={user} collection={collection} context="web" />
+          <QueryPreservingLink className="action-link" to={`/${user.id}/${collection.id}/${item.id}/label`}>print label</QueryPreservingLink>, <a href={githubManifestCodeSearchUrl}>source</a>
         </div>
         <div id="next">
           {nextItem && <ItemCard item={nextItem} collection={collection} user={user} triggerKey="l" altName="next →" size='small' />}
