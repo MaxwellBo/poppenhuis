@@ -12,8 +12,6 @@ import { QrCode } from "../components/QrCode";
 import { AFrameScene } from "../components/AFrameScene";
 
 export const loader = loadItem
-const VR_TRUE = new Map()
-VR_TRUE.set('vr', "true")
 
 export default function ItemPage() {
   const { item, user, collection, users } = useLoaderData() as Awaited<ReturnType<typeof loadItem>>;

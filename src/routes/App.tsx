@@ -2,7 +2,7 @@ import React from "react";
 import { Outlet, useLocation } from "react-router";
 
 
-const commit = import.meta.env.COMMIT_REF?.slice(0, 8) || 'no commit';
+const commit = import.meta.env.COMMIT_REF?.slice(0, 7) || "HEAD";
 const context = (import.meta.env.CONTEXT || 'local');
 const deployId = import.meta.env.DEPLOY_ID || ""
 
