@@ -64,47 +64,60 @@ export default function UsersPage() {
           <br />
           <details>
             <summary>What file formats can poppenhuis render?</summary>
-            poppenhuis uses <a href="https://modelviewer.dev/">model-viewer</a> for rendering 3D models,
-            which only renders glTF/GLB (<code>.gltf/.glb</code>) files.
-            <br />
-            <br />
-            Ideally poppenhuis would also support rendering Polygon File Format (<code>.ply</code>) for rendering <a href="https://en.wikipedia.org/wiki/Gaussian_splatting">Gaussian splats</a>. PRs welcome.
+            <div className="explanation">
+              poppenhuis uses <a href="https://modelviewer.dev/">model-viewer</a> for rendering 3D models,
+              which only renders glTF/GLB (<code>.gltf/.glb</code>) files.
+              <br />
+              <br />
+              Ideally poppenhuis would also support rendering Polygon File Format (<code>.ply</code>) for rendering <a href="https://en.wikipedia.org/wiki/Gaussian_splatting">Gaussian splats</a>. PRs welcome.
+            </div>
           </details>
           <details>
             <summary>Want to load models from an <a href="https://www.are.na/">Are.na</a> user profile?</summary>
-            <ArenaUserLoader />
-          </details>
+            <div className="explanation">
+              <ArenaUserLoader />
+            </div>
+            </details>
           <details>
             <summary>Want to mount a 3rd party manifest?</summary>
-            <ThirdPartyManfiestLoader />
+            <div className="explanation">
+              <ThirdPartyManfiestLoader />
+            </div>
           </details>
-          <br />
           <details>
             <summary>Why?</summary>
-            My partner has a large collection of dolls, so I built poppenhuis to make it easier for her to catalogue and track metadata.
+            <div className="explanation">
+              My partner has a large collection of dolls, so I built poppenhuis to make it easier for her to catalogue and track metadata.
 
-            Some of the dolls are culturally sensitive and shouldn't be displayed on a public forum, so she hosts her collection privately with a 3rd party manifest.
+              Some of the dolls are culturally sensitive and shouldn't be displayed on a public forum, so she hosts her collection privately with a 3rd party manifest.
+            </div>
           </details>
           <details>
             <summary>Why am I being forced to use GitHub to add my collection?</summary>
-            <ol>
+            <div className="explanation">
+              <ol>
               <li>GitHub has everything we need for authenticated bulk uploading of models and metadata.</li>
               <li>Rather than using a database, <q>baking</q> <a href="https://github.com/MaxwellBo/poppenhuis/blob/master/src/manifest.tsx"><code>//src/manifest.tsx</code></a> into the bundle keeps the app snappy.</li>
-            </ol>
+              </ol>
+            </div>
           </details>
           <details>
             <summary>Credits and inspiration</summary>
-            poppenhuis takes inspiration from <a href="https://www.are.na/">Are.na</a>, <a href="https://www.dayroselane.com/hydrants">The&nbsp;Hydrant&nbsp;Directory</a> and <a href="https://en.wikipedia.org/wiki/Tony_Hawk%27s_Pro_Skater_4">Tony&nbsp;Hawk's&nbsp;Pro&nbsp;Skater&nbsp;4</a>.
-            <br />
-            <br />
-            I discovered <a href="https://x.com/samdape/status/1777986265993875950">this Sam Peitz tweet</a>, <a href="https://nathannhan.art/">nathannhan.art</a>, <a href="https://jisu.world/bag/">What's in Jisu's bag?</a>, and <a href="https://rotatingsandwiches.com/">rotating sandwiches</a> after first release, and they guided poppenhuis's development in its final stages.
+            <div className="explanation">
+              poppenhuis takes inspiration from <a href="https://www.are.na/">Are.na</a>, <a href="https://www.dayroselane.com/hydrants">The&nbsp;Hydrant&nbsp;Directory</a> and <a href="https://en.wikipedia.org/wiki/Tony_Hawk%27s_Pro_Skater_4">Tony&nbsp;Hawk's&nbsp;Pro&nbsp;Skater&nbsp;4</a>.
+              <br />
+              <br />
+              I discovered <a href="https://x.com/samdape/status/1777986265993875950">this Sam Peitz tweet</a>, <a href="https://nathannhan.art/">nathannhan.art</a>, <a href="https://jisu.world/bag/">What's in Jisu's bag?</a>, and <a href="https://rotatingsandwiches.com/">rotating sandwiches</a> after first release, and they guided poppenhuis's development in its final stages.
+            </div>
           </details>
           <details>
             <summary>Technical challenges</summary>
-            I tried porting the app to <a href="https://nextjs.org/">Next.js</a> to get some of that sweet, sweet SSR.
-            But to my <a href="https://twitter.com/_max_bo_/status/1815536378522022130">dismay</a> I discovered that clicking any link was causing a full page load and remount, which invalidated the camera state of all <a href="https://modelviewer.dev/">model-viewer</a> components.
-            Alas, the app remains a <a href="https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts">Vite React SPA</a>.
-            If anyone has a solution to this, please reach out to <a href="https://twitter.com/_max_bo_">me on Twitter</a>.
+            <div className="indent">
+              I tried porting the app to <a href="https://nextjs.org/">Next.js</a> to get some of that sweet, sweet SSR.
+              But to my <a href="https://twitter.com/_max_bo_/status/1815536378522022130">dismay</a> I discovered that clicking any link was causing a full page load and remount, which invalidated the camera state of all <a href="https://modelviewer.dev/">model-viewer</a> components.
+              Alas, the app remains a <a href="https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts">Vite React SPA</a>.
+              If anyone has a solution to this, please reach out to <a href="https://twitter.com/_max_bo_">me on Twitter</a>.
+            </div>
           </details>
         </section>
       </div>

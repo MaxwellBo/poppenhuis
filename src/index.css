@@ -141,13 +141,16 @@ hr {
 
 
 details[open] > summary {
-  text-decoration: underline;
   margin-bottom: 0.5ch;
 }
 
 details[open] {
-  border: 1px dotted lightgrey;
-  margin-bottom: 2ch;
+  margin-bottom: 3ch;
+}
+
+.explanation {
+  border-left: 1px dotted #ccc;
+  padding-left: 2ch;
 }
 
 pre {
