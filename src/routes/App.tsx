@@ -1,7 +1,20 @@
 import React from "react";
 import { Outlet, useLocation } from "react-router";
 
+const CONTEXT_BACKGROUND_COLOR = {
+  "production": "#f7f9fc",
+  "deploy-preview": "#fef7f0",
+  "branch-deploy": "#f0f7ff",
+  "local": "#f4f9f4",
+} as const;
+
+type ContextType = keyof typeof CONTEXT_BACKGROUND_COLOR;
+
 export default function App() {
+  const commit = import.meta.env.COMMIT_REF?.slice(0, 8) || 'no commit';
+  const context = (import.meta.env.CONTEXT || 'local') as ContextType;
+  const deployId = import.meta.env.DEPLOY_ID || 'local';
+
   return (
     <div>
       <ScrollToTop />
@@ -10,10 +23,20 @@ export default function App() {
           <Outlet />
         </main>
         <footer className='no-print'>
-          <small>
-            🎎 c. 2025, <a href="https://maxbo.me">Max Bo</a>, <a href="https://github.com/MaxwellBo/poppenhuis">source code</a>, <a href="https://dashboard.simpleanalytics.com/poppenhu.is">analytics</a>
-          </small>
-          <VelocityDesignComfort />
+            <small style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+              <div>
+                🎎 c. 2025, <a href="https://maxbo.me">Max Bo</a>, <a href="https://github.com/MaxwellBo/poppenhuis">source code</a>, <a href="https://dashboard.simpleanalytics.com/poppenhu.is">analytics</a>
+                <VelocityDesignComfort />
+              </div>
+              <div>
+                <a id="deploy" className="pill" href={`https://app.netlify.com/projects/poppenhuis/deploys/${deployId}`} style={{ backgroundColor: CONTEXT_BACKGROUND_COLOR[context] }}>
+                  {context}
+                </a>
+                <a id="commit" className="pill" href={`https://github.com/MaxwellBo/poppenhuis/commit/${commit}`}>
+                {commit}
+                </a>
+              </div>
+            </small>
         </footer>
       </div>
     </div>

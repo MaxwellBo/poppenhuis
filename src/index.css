@@ -518,3 +518,20 @@ hr.break {
   border-top: 1px dotted #ccc;
   margin: 0;
 }
+
+
+.pill {
+  border: 1px solid black;
+  text-decoration: none;
+  padding: 2px;
+  margin: 1px;
+  font-family: 'Fira Code', monospace;
+}
+
+.pill:hover {
+  background-color: blue !important;
+}
+
+.pill:active {
+  background-color: red !important;
+}
