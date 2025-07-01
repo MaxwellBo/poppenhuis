@@ -16,8 +16,16 @@ export const loader = loadItem
 export default function ItemPage() {
   const { item, user, collection, users } = useLoaderData() as Awaited<ReturnType<typeof loadItem>>;
 
-  const previousItem: Item | undefined = collection.items.find((_, index) => collection.items[index + 1]?.id === item.id);
-  const nextItem: Item | undefined = collection.items.find((_, index) => collection.items[index - 1]?.id === item.id);
+  const currentIndex = collection.items.findIndex(i => i.id === item.id);
+  const previousItem: Item = currentIndex > 0 
+    ? collection.items[currentIndex - 1] 
+    : collection.items[collection.items.length - 1];
+  const nextItem: Item = currentIndex < collection.items.length - 1 
+    ? collection.items[currentIndex + 1] 
+    : collection.items[0];
+
+  const previousItemIsLast = currentIndex === 0;
+  const nextItemIsFirst = currentIndex === collection.items.length - 1;
 
   const githubManifestCodeSearchUrl = `https://github.com/search?q=repo%3AMaxwellBo%2Fpoppenhuis+%22id%3A+%5C%22${item.id}%5C%22%22&type=code`;
 
@@ -44,7 +52,13 @@ export default function ItemPage() {
       </header>
       <div className='bento'>
         <div id="previous">
-          {previousItem && <ItemCard item={previousItem} collection={collection} user={user} triggerKey="h" altName="← previous" size='small' />}
+          <ItemCard 
+            item={previousItem} 
+            collection={collection} 
+            user={user} 
+            triggerKey="h" 
+            altName={previousItemIsLast ? "↻ go to end" : "← previous"} 
+            size='small' />
         </div>
         <div id="model">
           {renderAFrameScene
@@ -76,7 +90,12 @@ export default function ItemPage() {
           <QueryPreservingLink className="action-link" to={`/${user.id}/${collection.id}/${item.id}/label`}>print label</QueryPreservingLink>, <a href={githubManifestCodeSearchUrl}>source</a>
         </div>
         <div id="next">
-          {nextItem && <ItemCard item={nextItem} collection={collection} user={user} triggerKey="l" altName="next →" size='small' />}
+          <ItemCard 
+            item={nextItem} 
+            collection={collection} 
+            user={user} triggerKey="l" 
+            altName={nextItemIsFirst ? "go to start ↺" : "next →"} 
+            size='small' />
         </div>
       </div>
       <ItemCards collection={collection} user={user} highlighted={item.id} limit={6} />
