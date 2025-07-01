@@ -347,24 +347,29 @@ pre {
   white-space: pre-wrap;
 }
 
+.a-scene-wrapper,
 .model-viewer-wrapper {
   padding: 1px;
 }
 
+.a-scene-wrapper:hover, 
 .model-viewer-wrapper:hover {
   padding: 0px;
   border: 1px solid #333;
   z-index: 10;
 }
 
+.a-scene-wrapper .camera-keys,
 .model-viewer-wrapper .camera-keys {
   display: none;
   padding: 7px;
 }
 
+.a-scene-wrapper .camera-keys,
 .model-viewer-wrapper:focus-within .camera-keys {
   position: absolute;
   display: inline-block;
+  z-index: 100;
 }
 
 .collection-row {
