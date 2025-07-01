@@ -14,6 +14,7 @@ const commit = import.meta.env.COMMIT_REF?.slice(0, 8) || 'no commit';
 const context = (import.meta.env.CONTEXT || 'local') as ContextType;
 const deployId = import.meta.env.DEPLOY_ID || ""
 const test = import.meta.env.TEST || "no test";
+const env = JSON.stringify(import.meta.env, null, 2);
 
 export default function App() {
   return (
@@ -41,6 +42,9 @@ export default function App() {
                 </div>
                 <div>
                   {JSON.stringify(import.meta.env, null, 2)}
+                </div>
+                <div>
+                  {env}
                 </div>
               </div>
             </small>
