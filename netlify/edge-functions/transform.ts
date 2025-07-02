@@ -37,7 +37,7 @@ export default async function handler(request: Request, context: Context) {
       const { collection, user } = await loadCollection({ params, request });
       meta = metaForCollection(collection, user);
     } else if (userId) {
-      const user = await loadUser({ params, request });
+      const { user } = await loadUser({ params, request });
       meta = metaForUser(user);
     }
   } catch (error) {
