@@ -31,6 +31,8 @@ html {
 body {
   font-family: 'Georgia', serif;
   background-color: #fdf5e6;
+  /* background-image: radial-gradient(circle at center, #00000027 1px, transparent 1px);
+  background-size: 64px 64px; */
 }
 
 footer {
