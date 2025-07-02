@@ -367,12 +367,11 @@ pre {
 
 .a-scene-wrapper,
 .model-viewer-wrapper {
-  padding: 1px;
+  border: 1px solid #33300000;
 }
 
 .a-scene-wrapper:hover, 
 .model-viewer-wrapper:hover {
-  padding: 0px;
   border: 1px solid #333;
   z-index: 10;
 }
