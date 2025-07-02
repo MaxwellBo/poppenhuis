@@ -607,7 +607,7 @@ input[type="checkbox"] {
   margin-right: 0.5ch
 }
 
-#loading-status {
+.loading-status {
   position: fixed;
   font-family: 'Fira Code', monospace;
   background-color: red;
@@ -616,4 +616,9 @@ input[type="checkbox"] {
   margin: 1ch;;
   top: 0;
   left: 0;
+}
+
+/* if nothing rendered show loading spinner */
+#root > *:not(:first-child) {
+    display: none;
 }

@@ -95,11 +95,13 @@ function LoadingStatus() {
   const navigation = useNavigation();
   const isLoading = navigation.state === 'loading';
 
-  return isLoading ? (
-    <div id="loading-status" className="blink">
-      <span>Loading...</span>
-    </div>) : null;
+  return isLoading ? <Spinner /> : null;
 }
 
-
-
+export function Spinner() {
+  return (
+    <div className="loading-status blink">
+      <span>Loading...</span>
+    </div>
+  );
+}
