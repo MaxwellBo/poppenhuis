@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Allow all web crawlers to access the site
+# This is a public digital dollhouse showcasing 3D model collections
