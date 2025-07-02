@@ -66,11 +66,20 @@ export default function UsersPage() {
             <summary>What file formats can poppenhuis render?</summary>
             <div className="explanation">
               poppenhuis uses <a href="https://modelviewer.dev/">model-viewer</a> for rendering 3D models,
-              which only renders glTF/GLB (<code>.gltf/.glb</code>) files.
+              which only renders <code>.gltf/.glb</code> files.
               <br />
               <br />
-              Ideally poppenhuis would also support rendering Polygon File Format (<code>.ply</code>) for rendering <a href="https://en.wikipedia.org/wiki/Gaussian_splatting">Gaussian splats</a>. PRs welcome.
+              Ideally poppenhuis would also support <code>.ply</code>-based <a href="https://en.wikipedia.org/wiki/Gaussian_splatting">Gaussian splats</a>, perhaps with <a href="https://sparkjs.dev/">Spark</a>. PRs welcome.
             </div>
+          </details>
+          <details>
+            <summary>What app should I use to scan to <code>.gltf/.glb</code> files?</summary>
+            <div className="explanation">
+              I personally use <a href="https://poly.cam/">Polycam</a> in LiDAR mode. The produced models, while jank and low poly, are small, compressed, easy to edit, and dimensionally accurate.
+              <br />
+              <br />
+              I also like <a href="https://scaniverse.com/">Scaniverse</a>, but I exclusively use it for <a href="https://en.wikipedia.org/wiki/Gaussian_splatting">Gaussian splatting</a>, and have not used its LiDAR mode.
+              </div>
           </details>
           <details>
             <summary>Want to load models from an <a href="https://www.are.na/">Are.na</a> user profile?</summary>
