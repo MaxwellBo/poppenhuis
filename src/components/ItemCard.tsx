@@ -21,7 +21,6 @@ export function ItemCard(props: {
         <QueryPreservingLink to={`/${user.id}/${collection.id}/${item.id}`} triggerKey={triggerKey}>
           {altName ?? item.name}
         </QueryPreservingLink> 
-        {triggerKey && <kbd className='block'>{triggerKey}</kbd>}
         {showIndex && <div className='index'>({collection.items.indexOf(item) + 1})</div>}
       </div>
     </div>

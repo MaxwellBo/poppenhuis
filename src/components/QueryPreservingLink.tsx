@@ -38,18 +38,21 @@ export function QueryPreservingLink(props: {
   }, []);
 
 
-  return <NavLink 
-    ref={linkRef} 
-    id={props.id}
-      className={({ isActive, isPending }) => {
-        return isPending 
-          ? `${props.className} pending` 
-          : isActive 
-            ? `${props.className} active` 
-            : props.className
+  return <>
+    <NavLink 
+      ref={linkRef} 
+      id={props.id}
+        className={({ isActive, isPending }) => {
+          return isPending 
+            ? `${props.className} pending` 
+            : isActive 
+              ? `${props.className} active` 
+              : props.className
+        }
       }
-    }
-    to={{ pathname: props.to, search: searchParams.toString() }}>
-      {props.children}
-    </NavLink>
+      to={{ pathname: props.to, search: searchParams.toString() }}>
+        {props.children}
+      </NavLink>
+      {props.triggerKey && <kbd className='block' onClick={() => linkRef.current?.click()}>{props.triggerKey}</kbd>}
+  </>
 }

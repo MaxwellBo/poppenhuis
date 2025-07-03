@@ -88,6 +88,16 @@ kbd {
   text-transform: uppercase;
 }
 
+kbd:hover {
+  transform: translate(0px, 1px);
+  box-shadow: none;
+}
+
+kbd:active {
+  transform: translate(0px, 2px);
+  box-shadow: inset 0 2px 0 #d1d5db;
+}
+
 dl {
   display: grid;
   row-gap: 0.3ch;
