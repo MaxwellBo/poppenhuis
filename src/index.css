@@ -603,3 +603,17 @@ input, button, textarea, select {
 #root, #__next {
   isolation: isolate;
 }
+
+button {
+  box-shadow: 2px 2px #bbb;
+}
+
+button:hover {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px #bbb;
+}
+
+button:active {
+  transform: translate(2px, 2px);
+  box-shadow: none;
+}
