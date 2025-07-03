@@ -230,7 +230,7 @@ pre {
 }
 
 .border {
-  border: 1px dotted grey;
+  border: 1px dotted #ccc;
 }
 
 .red {
@@ -517,7 +517,7 @@ hr.break {
 
 
 .pill {
-  border: 1px dotted black;
+  border: 1px solid black;
   text-decoration: none;
   padding: 2px;
   margin-left: 4px;
