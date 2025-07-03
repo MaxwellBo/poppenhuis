@@ -489,6 +489,15 @@ My abject failure to use them properly convinced me to stick to the classical gu
             captureDate: "2024 July 13 9:57PM"
           },
           {
+            id: "lucia",
+            name: "Lucia",
+            acquisitionDate: "2025 Jul 3",
+            captureApp: "Polycam",
+            captureMethod: "LiDAR",
+            model: "/models/mbo/friends/Lucia.glb",
+            og: "/models/mbo/friends/Lucia.jpeg",
+          },
+          {
             id: "qualtrough",
             name: "Qualtrough collective",
             model: "/models/mbo/friends/Qualtrough.glb",
