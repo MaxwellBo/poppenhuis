@@ -136,12 +136,12 @@ export const FIRST_PARTY_MANIFEST: Manifest = [
         og: "/models/joey/stolen/og.jpeg",
         description: "i don't own these items but i took them from someone's house",
         items: [
-          {
-            id: "mug",
-            name: "mug",
-            description: "a mug with writing on it",
-            model: "/models/joey/stolen/mug.glb",
-          },
+          // {
+          //   id: "mug",
+          //   name: "mug",
+          //   description: "a mug with writing on it",
+          //   model: "/models/joey/stolen/mug.glb",
+          // },
           {
             id: "film-camera",
             name: "film camera",
