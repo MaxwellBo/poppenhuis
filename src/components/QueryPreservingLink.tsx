@@ -41,12 +41,13 @@ export function QueryPreservingLink(props: {
   return <NavLink 
     ref={linkRef} 
     id={props.id}
-      className={({ isActive, isPending }) =>
-        isPending 
+      className={({ isActive, isPending }) => {
+        return isPending 
           ? `${props.className} pending` 
           : isActive 
             ? `${props.className} active` 
             : props.className
+      }
     }
     to={{ pathname: props.to, search: searchParams.toString() }}>
       {props.children}

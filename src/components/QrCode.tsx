@@ -27,13 +27,12 @@ export function QrCode(props: { item: Item, user: User, collection: Collection, 
     });
   }, [itemUrl, backgroundColor]);
 
-  return (
+  return qrDataUrl != '' ? (
     <img 
       key={itemUrl} 
       className={`qrcode ${props.context}`} 
       src={qrDataUrl} 
       alt="QR code" 
       onLoad={props.onLoad} 
-    />
-  );
+    />) : <div className={`qrcode ${props.context}`} />;
 }
