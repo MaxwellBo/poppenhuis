@@ -94,15 +94,6 @@ kbd {
   text-transform: uppercase;
 }
 
-aside {
-  width: 40%;
-  padding-left: 0.5rem;
-  margin-left: 0.5rem;
-  float: right;
-  margin-left: 5px;
-  border-left: black 1px solid;
-}
-
 dl {
   display: grid;
   row-gap: 0.3ch;
@@ -239,7 +230,7 @@ pre {
 }
 
 .border {
-  border: 1px solid #333;
+  border: 1px dotted grey;
 }
 
 .red {
@@ -367,12 +358,12 @@ pre {
 
 .a-scene-wrapper,
 .model-viewer-wrapper {
-  border: 1px solid #33300000;
+  border: 1px dotted rgba(0, 0, 0, 0);
 }
 
 .a-scene-wrapper:hover, 
 .model-viewer-wrapper:hover {
-  border: 1px solid #333;
+  border: 1px dotted black;
   z-index: 10;
 }
 
@@ -509,7 +500,7 @@ pre {
   width: 48px;
   vertical-align: top;
   margin-right: 8px;
-  border: 1px solid #ccc;
+  border: 1px dotted #ccc;
 }
 
 .qrcode.web:hover {
@@ -526,7 +517,7 @@ hr.break {
 
 
 .pill {
-  border: 1px solid black;
+  border: 1px dotted black;
   text-decoration: none;
   padding: 2px;
   margin-left: 4px;
