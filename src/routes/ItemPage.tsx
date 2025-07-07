@@ -11,7 +11,7 @@ import { QueryPreservingLink } from "../components/QueryPreservingLink";
 import { HelmetMeta } from "../components/HelmetMeta";
 import { QrCode } from "../components/QrCode";
 import { AFrameScene } from "../components/AFrameScene";
-import { doc, updateDoc } from "firebase/firestore";
+import { doc, updateDoc, deleteField } from "firebase/firestore";
 
 export const loader = loadItem
 
@@ -46,9 +46,19 @@ export default function ItemPage() {
   };
 
   const handleEditSubmit = async (updatedItem: Partial<Item>) => {
-    console.log(updatedItem)
-    const itemRef = doc(db, "users", user.id, "collections", collection.id, "items", item.id);
-    await updateDoc(itemRef, updatedItem);
+    const itemRef = doc(db, "users2", user.id, "collections", collection.id, "items", item.id);
+    
+    const updates: Record<string, any> = {};
+    
+    Object.entries(updatedItem).forEach(([key, value]) => {
+      if (value === undefined) {
+        updates[key] = deleteField();
+      } else {
+        updates[key] = value;
+      }
+    });
+    
+    await updateDoc(itemRef, updates);
     window.location.reload();
   };
 
@@ -89,7 +99,7 @@ export default function ItemPage() {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
             <span></span>
             <button onClick={() => setIsEditing(!isEditing)}>
-              {isEditing ? 'Cancel' : 'Edit'}
+              {isEditing ? 'cancel' : 'edit'}
             </button>
           </div>
           {isEditing ? (
@@ -209,7 +219,31 @@ function DescriptionList(props: { item: Item; collection: Collection; user: User
 
 
 function EditableDescriptionList(props: { item: Item; collection: Collection; user: User; onSubmit: (updatedItem: Partial<Item>) => void; }) {
-  const [formData, setFormData] = React.useState<Record<string, any>>({});
+  const [formData, setFormData] = React.useState<Record<string, any>>(() => {
+    const initialData: Record<string, any> = {};
+    
+    // Only set fields that are defined in the item
+    if (props.item.formalName !== undefined) initialData.formalName = props.item.formalName;
+    if (props.item.alt !== undefined) initialData.alt = props.item.alt;
+    if (props.item.releaseDate !== undefined) initialData.releaseDate = props.item.releaseDate;
+    if (props.item.manufacturer !== undefined) initialData.manufacturer = props.item.manufacturer;
+    if (props.item.manufactureDate !== undefined) initialData.manufactureDate = props.item.manufactureDate;
+    if (props.item.manufactureLocation !== undefined) initialData.manufactureLocation = props.item.manufactureLocation;
+    if (props.item.material !== undefined) initialData.material = props.item.material.join(", ");
+    if (props.item.acquisitionDate !== undefined) initialData.acquisitionDate = props.item.acquisitionDate;
+    if (props.item.acquisitionLocation !== undefined) initialData.acquisitionLocation = props.item.acquisitionLocation;
+    if (props.item.storageLocation !== undefined) initialData.storageLocation = props.item.storageLocation;
+    if (props.item.captureDate !== undefined) initialData.captureDate = props.item.captureDate;
+    if (props.item.captureLocation !== undefined) initialData.captureLocation = props.item.captureLocation;
+    if (props.item.captureLatLon !== undefined) initialData.captureLatLon = props.item.captureLatLon;
+    if (props.item.captureDevice !== undefined) initialData.captureDevice = props.item.captureDevice;
+    if (props.item.captureApp !== undefined) initialData.captureApp = props.item.captureApp;
+    if (props.item.captureMethod !== undefined) initialData.captureMethod = props.item.captureMethod;
+    if (props.item.model !== undefined) initialData.model = props.item.model;
+    if (props.item.og !== undefined) initialData.og = props.item.og;
+    
+    return initialData;
+  });
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value || undefined }));
@@ -293,7 +327,7 @@ function EditableDescriptionList(props: { item: Item; collection: Collection; us
         {renderField('model', 'model', ITEM_FIELD_DESCRIPTIONS.model)}
         {renderField('Open Graph image', 'og', ITEM_FIELD_DESCRIPTIONS.og)}
       </dl>
-      <button type="submit">Save Changes</button>
+      <button type="submit">submit save</button>
     </form>
   );
 }
