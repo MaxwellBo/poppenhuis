@@ -1,4 +1,5 @@
 import { Collection, Item, ITEM_FIELD_DESCRIPTIONS, loadItem, User } from "../manifest";
+import { db } from "../firebase";
 import React from "react";
 import { useLoaderData, useSearchParams } from "react-router";
 import { ItemCards } from '../components/ItemCards';
@@ -10,11 +11,13 @@ import { QueryPreservingLink } from "../components/QueryPreservingLink";
 import { HelmetMeta } from "../components/HelmetMeta";
 import { QrCode } from "../components/QrCode";
 import { AFrameScene } from "../components/AFrameScene";
+import { doc, updateDoc } from "firebase/firestore";
 
 export const loader = loadItem
 
 export default function ItemPage() {
   const { item, user, collection, users } = useLoaderData() as Awaited<ReturnType<typeof loadItem>>;
+  const [isEditing, setIsEditing] = React.useState(false);
 
   const currentIndex = collection.items.findIndex(i => i.id === item.id);
   const previousItem: Item = currentIndex > 0 
@@ -40,6 +43,13 @@ export default function ItemPage() {
       newSearchParams.delete("vr");
     }
     setSearchParams(newSearchParams);
+  };
+
+  const handleEditSubmit = async (updatedItem: Partial<Item>) => {
+    console.log(updatedItem)
+    const itemRef = doc(db, "users", user.id, "collections", collection.id, "items", item.id);
+    await updateDoc(itemRef, updatedItem);
+    window.location.reload();
   };
 
   return (
@@ -76,7 +86,22 @@ export default function ItemPage() {
         </div>
         <div id="description" className="description ugc"><Markdown>{item.description}</Markdown></div>
         <div id="meta">
-          <DescriptionList item={item} collection={collection} user={user} />
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+            <span></span>
+            <button onClick={() => setIsEditing(!isEditing)}>
+              {isEditing ? 'Cancel' : 'Edit'}
+            </button>
+          </div>
+          {isEditing ? (
+            <EditableDescriptionList 
+              item={item} 
+              collection={collection} 
+              user={user} 
+              onSubmit={handleEditSubmit}
+            />
+          ) : (
+            <DescriptionList item={item} collection={collection} user={user} />
+          )}
           <br />
           {navigator.share &&
             <button className='mr-1ch' onClick={() =>
@@ -179,5 +204,96 @@ function DescriptionList(props: { item: Item; collection: Collection; user: User
       <dt><abbr title={ITEM_FIELD_DESCRIPTIONS.og}>Open Graph image</abbr></dt>
       <dd className='ellipsis'><a href={item.og}>{item.og}</a></dd>
     </dl>
+  );
+}
+
+
+function EditableDescriptionList(props: { item: Item; collection: Collection; user: User; onSubmit: (updatedItem: Partial<Item>) => void; }) {
+  const [formData, setFormData] = React.useState<Record<string, any>>({});
+
+  const handleInputChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value || undefined }));
+  };
+
+  const handleAddField = (field: string) => {
+    setFormData(prev => ({ ...prev, [field]: '' }));
+  };
+
+  const handleDeleteField = (field: string) => {
+    setFormData(prev => ({ ...prev, [field]: undefined }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const updatedItem = { ...formData };
+    
+    if (formData.material !== undefined) {
+      updatedItem.material = formData.material.split(",").map((m: string) => m.trim()).filter(Boolean);
+    }
+    
+    props.onSubmit(updatedItem);
+  };
+
+  const renderField = (label: string, field: string, description?: string) => (
+    <React.Fragment key={field}>
+      <dt>
+        {description ? <abbr title={description}>{label}</abbr> : label}
+        {formData.hasOwnProperty(field) && formData[field] !== undefined && (
+          <button type="button" onClick={() => handleDeleteField(field)} style={{ marginLeft: '0.5rem', fontSize: '0.8rem' }}>
+            ✕
+          </button>
+        )}
+      </dt>
+      <dd>
+        {formData.hasOwnProperty(field) && formData[field] !== undefined ? (
+          <input
+            type="text"
+            value={formData[field] || ''}
+            onChange={(e) => handleInputChange(field, e.target.value)}
+            placeholder={field === 'material' ? 'comma separated' : ''}
+          />
+        ) : (
+          <button type="button" onClick={() => handleAddField(field)}>
+            + Add {label.toLowerCase()}
+          </button>
+        )}
+      </dd>
+    </React.Fragment>
+  );
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <dl>
+        {renderField('formal name', 'formalName', ITEM_FIELD_DESCRIPTIONS.formalName)}
+        {renderField('alt', 'alt', ITEM_FIELD_DESCRIPTIONS.alt)}
+        {renderField('release date', 'releaseDate', ITEM_FIELD_DESCRIPTIONS.releaseDate)}
+        <hr className="break" />
+        <hr className="break" />
+        {renderField('manufacturer', 'manufacturer')}
+        {renderField('manufacture date', 'manufactureDate')}
+        {renderField('manufacture location', 'manufactureLocation')}
+        {renderField('material', 'material')}
+        <hr className="break" />
+        <hr className="break" />
+        {renderField('acquisition date', 'acquisitionDate')}
+        {renderField('acquisition location', 'acquisitionLocation')}
+        <hr className="break" />
+        <hr className="break" />
+        {renderField('storage location', 'storageLocation')}
+        <hr className="break" />
+        <hr className="break" />
+        {renderField('capture date', 'captureDate')}
+        {renderField('capture location', 'captureLocation')}
+        {renderField('capture lat/lon', 'captureLatLon')}
+        {renderField('capture device', 'captureDevice')}
+        {renderField('capture app', 'captureApp')}
+        {renderField('capture method', 'captureMethod')}
+        <hr className="break" />
+        <hr className="break" />
+        {renderField('model', 'model', ITEM_FIELD_DESCRIPTIONS.model)}
+        {renderField('Open Graph image', 'og', ITEM_FIELD_DESCRIPTIONS.og)}
+      </dl>
+      <button type="submit">Save Changes</button>
+    </form>
   );
 }
