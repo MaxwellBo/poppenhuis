@@ -12,6 +12,7 @@ import { HelmetMeta } from "../components/HelmetMeta";
 import { QrCode } from "../components/QrCode";
 import { AFrameScene } from "../components/AFrameScene";
 import { doc, updateDoc, deleteField } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 export const loader = loadItem
 
@@ -229,6 +230,9 @@ function EditableDescriptionList(props: { item: Item; collection: Collection; us
     return initialData;
   });
 
+  const [modelFile, setModelFile] = React.useState<File | null>(null);
+  const [isUploading, setIsUploading] = React.useState(false);
+
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value || undefined }));
   };
@@ -241,28 +245,55 @@ function EditableDescriptionList(props: { item: Item; collection: Collection; us
     setFormData(prev => ({ ...prev, [field]: undefined }));
   };
 
+  const handleModelFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setModelFile(e.target.files[0]);
+    }
+  };
+  const uploadModelFile = async (file: File): Promise<string> => {
+    const path = `models/${props.user.id}/${props.collection.id}/${props.item.id}.${file.name.split('.').pop()}`;
+    const storageRef = ref(storage, path);
+    await uploadBytes(storageRef, file);
+    return await getDownloadURL(storageRef);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const updatedItem = { ...formData };
+    setIsUploading(true);
     
-    if (formData.material !== undefined) {
-      updatedItem.material = formData.material.split(",").map((m: string) => m.trim()).filter(Boolean);
-    }
-    
-    const itemRef = doc(db, "users2", props.user.id, "collections", props.collection.id, "items", props.item.id);
-    
-    const updates: Record<string, any> = {};
-    
-    Object.entries(updatedItem).forEach(([key, value]) => {
-      if (value === undefined) {
-        updates[key] = deleteField();
-      } else {
-        updates[key] = value;
+    try {
+      const updatedItem = { ...formData };
+      
+      if (formData.material !== undefined) {
+        updatedItem.material = formData.material.split(",").map((m: string) => m.trim()).filter(Boolean);
       }
-    });
-    
-    await updateDoc(itemRef, updates);
-    window.location.reload();
+
+      // Handle model file upload if there's a file selected
+      if (modelFile) {
+        const modelUrl = await uploadModelFile(modelFile);
+        updatedItem.model = modelUrl;
+      }
+      
+      const itemRef = doc(db, "users2", props.user.id, "collections", props.collection.id, "items", props.item.id);
+      
+      const updates: Record<string, any> = {};
+      
+      Object.entries(updatedItem).forEach(([key, value]) => {
+        if (value === undefined) {
+          updates[key] = deleteField();
+        } else {
+          updates[key] = value;
+        }
+      });
+      
+      await updateDoc(itemRef, updates);
+      window.location.reload();
+    } catch (error) {
+      console.error('Error updating item:', error);
+      alert('Error updating item. Please try again.');
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   const renderField = (label: string, field: string, description?: string) => (
@@ -287,6 +318,42 @@ function EditableDescriptionList(props: { item: Item; collection: Collection; us
           <button type="button" onClick={() => handleAddField(field)}>
             + Add {label.toLowerCase()}
           </button>
+        )}
+      </dd>
+    </React.Fragment>
+  );
+
+  const renderModelField = () => (
+    <React.Fragment key="model">
+      <dt>
+        <abbr title={ITEM_FIELD_DESCRIPTIONS.model}>model</abbr>
+        {formData.hasOwnProperty('model') && formData.model !== undefined && (
+          <button type="button" onClick={() => handleDeleteField('model')} style={{ marginLeft: '0.5rem', fontSize: '0.8rem' }}>
+            ✕
+          </button>
+        )}
+      </dt>
+      <dd>
+        {formData.hasOwnProperty('model') && formData.model !== undefined ? (
+          <input
+            type="text"
+            value={formData.model || ''}
+            onChange={(e) => handleInputChange('model', e.target.value)}
+          />
+        ) : (
+          <>
+            <input
+              type="file"
+              accept=".glb,.gltf"
+              onChange={handleModelFileChange}
+              style={{ marginBottom: '0.5rem' }}
+            />
+            {!modelFile && (
+              <button type="button" onClick={() => handleAddField('model')}>
+                + Add model URL instead
+              </button>
+            )}
+          </>
         )}
       </dd>
     </React.Fragment>
@@ -321,10 +388,12 @@ function EditableDescriptionList(props: { item: Item; collection: Collection; us
         {renderField('capture method', 'captureMethod')}
         <hr className="break" />
         <hr className="break" />
-        {renderField('model', 'model', ITEM_FIELD_DESCRIPTIONS.model)}
+        {renderModelField()}
         {renderField('Open Graph image', 'og', ITEM_FIELD_DESCRIPTIONS.og)}
       </dl>
-      <button type="submit">save?</button>
+      <button type="submit" disabled={isUploading}>
+        {isUploading ? 'uploading...' : 'save?'}
+      </button>
     </form>
   );
 }
