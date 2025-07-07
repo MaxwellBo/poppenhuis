@@ -1,5 +1,5 @@
 import { Collection, Item, ITEM_FIELD_DESCRIPTIONS, loadItem, User } from "../manifest";
-import { db } from "../firebase";
+import { db, storage } from "../firebase";
 import React from "react";
 import { useLoaderData, useSearchParams } from "react-router";
 import { ItemCards } from '../components/ItemCards';
@@ -45,22 +45,7 @@ export default function ItemPage() {
     setSearchParams(newSearchParams);
   };
 
-  const handleEditSubmit = async (updatedItem: Partial<Item>) => {
-    const itemRef = doc(db, "users2", user.id, "collections", collection.id, "items", item.id);
-    
-    const updates: Record<string, any> = {};
-    
-    Object.entries(updatedItem).forEach(([key, value]) => {
-      if (value === undefined) {
-        updates[key] = deleteField();
-      } else {
-        updates[key] = value;
-      }
-    });
-    
-    await updateDoc(itemRef, updates);
-    window.location.reload();
-  };
+ 
 
   return (
     <article className='item-page'>
@@ -99,7 +84,7 @@ export default function ItemPage() {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
             <span></span>
             <button onClick={() => setIsEditing(!isEditing)}>
-              {isEditing ? 'cancel' : 'edit'}
+              {isEditing ? 'cancel?' : 'edit?'}
             </button>
           </div>
           {isEditing ? (
@@ -107,7 +92,6 @@ export default function ItemPage() {
               item={item} 
               collection={collection} 
               user={user} 
-              onSubmit={handleEditSubmit}
             />
           ) : (
             <DescriptionList item={item} collection={collection} user={user} />
@@ -218,7 +202,7 @@ function DescriptionList(props: { item: Item; collection: Collection; user: User
 }
 
 
-function EditableDescriptionList(props: { item: Item; collection: Collection; user: User; onSubmit: (updatedItem: Partial<Item>) => void; }) {
+function EditableDescriptionList(props: { item: Item; collection: Collection; user: User; }) {
   const [formData, setFormData] = React.useState<Record<string, any>>(() => {
     const initialData: Record<string, any> = {};
     
@@ -257,7 +241,7 @@ function EditableDescriptionList(props: { item: Item; collection: Collection; us
     setFormData(prev => ({ ...prev, [field]: undefined }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const updatedItem = { ...formData };
     
@@ -265,7 +249,20 @@ function EditableDescriptionList(props: { item: Item; collection: Collection; us
       updatedItem.material = formData.material.split(",").map((m: string) => m.trim()).filter(Boolean);
     }
     
-    props.onSubmit(updatedItem);
+    const itemRef = doc(db, "users2", props.user.id, "collections", props.collection.id, "items", props.item.id);
+    
+    const updates: Record<string, any> = {};
+    
+    Object.entries(updatedItem).forEach(([key, value]) => {
+      if (value === undefined) {
+        updates[key] = deleteField();
+      } else {
+        updates[key] = value;
+      }
+    });
+    
+    await updateDoc(itemRef, updates);
+    window.location.reload();
   };
 
   const renderField = (label: string, field: string, description?: string) => (
@@ -327,7 +324,7 @@ function EditableDescriptionList(props: { item: Item; collection: Collection; us
         {renderField('model', 'model', ITEM_FIELD_DESCRIPTIONS.model)}
         {renderField('Open Graph image', 'og', ITEM_FIELD_DESCRIPTIONS.og)}
       </dl>
-      <button type="submit">submit save</button>
+      <button type="submit">save?</button>
     </form>
   );
 }
