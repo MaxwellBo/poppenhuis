@@ -147,18 +147,53 @@ export async function loadUsers({ request }: { request: Request; }) {
   }
 
 
-  if (firebaseManifest === undefined) {
-    const usersCollection = collection(db, 'users');
+if (firebaseManifest === undefined) {
+    const usersCollection = collection(db, 'users2');
     const usersSnapshot = await getDocs(usersCollection);
-    firebaseManifest = usersSnapshot.docs.map(doc => {
-      const userData = doc.data() as User;
-      return {
-        ...userData,
-        id: doc.id
-      };
-    });
-}
-
+    
+    firebaseManifest = await Promise.all(
+      usersSnapshot.docs.map(async (userDoc) => {
+        const userData = userDoc.data() as User;
+        const userId = userDoc.id;
+        
+        // Get collections for this user
+        const collectionsCollection = collection(db, 'users2', userId, 'collections');
+        const collectionsSnapshot = await getDocs(collectionsCollection);
+        
+        const collections = await Promise.all(
+          collectionsSnapshot.docs.map(async (collectionDoc) => {
+            const collectionData = collectionDoc.data() as Collection;
+            const collectionId = collectionDoc.id;
+            
+            // Get items for this collection
+            const itemsCollection = collection(db, 'users2', userId, 'collections', collectionId, 'items');
+            const itemsSnapshot = await getDocs(itemsCollection);
+            
+            const items = itemsSnapshot.docs.map((itemDoc) => {
+              const itemData = itemDoc.data() as Item;
+              return {
+                ...itemData,
+                id: itemDoc.id
+              };
+            });
+            
+            return {
+              ...collectionData,
+              id: collectionId,
+              items
+            };
+          })
+        );
+        
+        return {
+          ...userData,
+          id: userId,
+          collections
+        };
+      })
+    );
+  }
+  
   return [...firebaseManifest, ...thirdPartyManifest];
 }
 
