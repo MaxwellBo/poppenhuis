@@ -1,15 +1,20 @@
 import React from "react";
-import { useLoaderData, useSearchParams } from "react-router";
+import { Await, useLoaderData, useSearchParams } from "react-router";
 import { loadUsers, MANIFEST_URL_QUERY_PARAM, MANIFEST_SCHEMA, ARENA_PREFIX } from "../manifest";
 import { Size } from '../components/Size';
 import { ItemCard } from '../components/ItemCard';
 import { DEFAULT_META } from "../meta";
 import { HelmetMeta } from "../components/HelmetMeta";
 import { QueryPreservingLink } from "../components/QueryPreservingLink";
+import { Spinner } from "../components/Spinner";
 
 const EXAMPLE_MANIFEST_URL = 'https://raw.githubusercontent.com/MaxwellBo/maxwellbo.github.io/master/poppenhuis-manifest.json'
 
-export const loader = loadUsers;
+export function loader({ request }: { request: Request; }) {
+  return {
+    promise: loadUsers({ request })
+  }
+}
 
 export default function UsersPage() {
   const users = useLoaderData() as Awaited<ReturnType<typeof loader>>;
@@ -25,23 +30,29 @@ export default function UsersPage() {
       <div id="homepage-columns">
         <section>
           The following users have collections:
-          <ul>
-            {users.map((user) => (
-              <li key={user.id}>
-                <QueryPreservingLink to={user.id}>{user.name}</QueryPreservingLink> <Size ts={user.collections} t="collection" />
-                <ul>
-                  {
-                    user.collections.map((collection) =>
-                      <li key={collection.id}>
-                        <QueryPreservingLink to={user.id + "/" + collection.id}>{collection.name}</QueryPreservingLink> <Size ts={collection.items} t="item" />
-                        <ItemCard item={collection.items[0]} collection={collection} user={user} size='small' altName={''} />
-                      </li>
-                    )
-                  }
-                </ul>
-              </li>
-            ))}
-          </ul>
+          <React.Suspense fallback={<Spinner />}>
+            <Await resolve={users.promise}>
+              {(users) =>
+              (<ul>
+                {users.map((user) => (
+                  <li key={user.id}>
+                    <QueryPreservingLink to={user.id}>{user.name}</QueryPreservingLink> <Size ts={user.collections} t="collection" />
+                    <ul>
+                      {
+                        user.collections.map((collection) =>
+                          <li key={collection.id}>
+                            <QueryPreservingLink to={user.id + "/" + collection.id}>{collection.name}</QueryPreservingLink> <Size ts={collection.items} t="item" />
+                            <ItemCard item={collection.items[0]} collection={collection} user={user} size='small' altName={''} />
+                          </li>
+                        )
+                      }
+                    </ul>
+                  </li>
+                ))}
+              </ul>
+              )}
+            </Await>
+          </React.Suspense>
         </section>
         <section className='short'>
           <p className="p-spacing">
@@ -51,16 +62,8 @@ export default function UsersPage() {
             Have a collection you care about? of pottery? of sculptures? of guitars? of cars? of cakes? of plants? of dolls?
           </p>
           <p className="p-spacing">
-            They're welcome to live here too. Open a GitHub PR to <a href="https://github.com/MaxwellBo/poppenhuis">the poppenhuis repo</a> and:
+            They're welcome to live here too.
           </p>
-          <ol>
-            <li>
-              Upload your <code>.gltf/.glb</code> models to <a href="https://github.com/MaxwellBo/poppenhuis/tree/master/public/models"><code>//public/models/</code></a>
-            </li>
-            <li>
-              Add your metadata to <a href="https://github.com/MaxwellBo/poppenhuis/blob/master/src/manifest.tsx"><code>//src/manifest.tsx</code></a>
-            </li>
-          </ol>
           <br />
           <details>
             <summary>What file formats can poppenhuis render?</summary>
@@ -79,14 +82,14 @@ export default function UsersPage() {
               <br />
               <br />
               I also like <a href="https://scaniverse.com/">Scaniverse</a>, but I exclusively use it for <a href="https://en.wikipedia.org/wiki/Gaussian_splatting">Gaussian splatting</a>, and have not used its LiDAR mode.
-              </div>
+            </div>
           </details>
           <details>
             <summary>Want to load models from an <a href="https://www.are.na/">Are.na</a> user profile?</summary>
             <div className="explanation">
               <ArenaUserLoader />
             </div>
-            </details>
+          </details>
           <details>
             <summary>Want to mount a 3rd party manifest?</summary>
             <div className="explanation">
@@ -99,15 +102,6 @@ export default function UsersPage() {
               My partner has a large collection of dolls, so I built poppenhuis to make it easier for her to catalogue and track metadata.
 
               Some of the dolls are culturally sensitive and shouldn't be displayed on a public forum, so she hosts her collection privately with a 3rd party manifest.
-            </div>
-          </details>
-          <details>
-            <summary>Why am I being forced to use GitHub to add my collection?</summary>
-            <div className="explanation">
-              <ol>
-              <li>GitHub has everything we need for authenticated bulk uploading of models and metadata.</li>
-              <li>Rather than using a database, <q>baking</q> <a href="https://github.com/MaxwellBo/poppenhuis/blob/master/src/manifest.tsx"><code>//src/manifest.tsx</code></a> into the bundle keeps the app snappy.</li>
-              </ol>
             </div>
           </details>
           <details>

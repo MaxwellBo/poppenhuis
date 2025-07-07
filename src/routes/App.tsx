@@ -1,6 +1,6 @@
 import React from "react";
 import { Outlet, useLocation, useNavigation } from "react-router";
-
+import { FixedSpinner } from "../components/FixedSpinner";
 
 const commit = import.meta.env.COMMIT_REF?.slice(0, 7) || "HEAD";
 const deployId = import.meta.env.DEPLOY_ID || ""
@@ -95,13 +95,6 @@ function LoadingStatus() {
   const navigation = useNavigation();
   const isLoading = navigation.state === 'loading';
 
-  return isLoading ? <Spinner /> : null;
+  return isLoading ? <FixedSpinner /> : null;
 }
 
-export function Spinner() {
-  return (
-    <div className="loading-status blink">
-      <span>Loading...</span>
-    </div>
-  );
-}
