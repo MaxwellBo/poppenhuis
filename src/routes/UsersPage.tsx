@@ -7,6 +7,9 @@ import { DEFAULT_META } from "../meta";
 import { HelmetMeta } from "../components/HelmetMeta";
 import { QueryPreservingLink } from "../components/QueryPreservingLink";
 import { Spinner } from "../components/Spinner";
+import { collection, addDoc } from 'firebase/firestore';
+import { db } from "../firebase";
+
 
 const EXAMPLE_MANIFEST_URL = 'https://raw.githubusercontent.com/MaxwellBo/maxwellbo.github.io/master/poppenhuis-manifest.json'
 
@@ -53,6 +56,23 @@ export default function UsersPage() {
               )}
             </Await>
           </React.Suspense>
+          <br />
+          <button onClick={async () => {
+            const newUserId = prompt("Enter user ID (you won\'t");
+              if (newUserId) {
+                try {
+                  await addDoc(collection(db, 'users'), {
+                    id: newUserId,
+                  });
+                  window.location.reload();
+                } catch (error) {
+                  console.error('Error adding user:', error);
+                  alert('Failed to add user');
+                }
+              }
+            }}>
+            Add user namespace?
+          </button>
         </section>
         <section className='short'>
           <p className="p-spacing">

@@ -29,6 +29,8 @@ export default async function handler(request: Request, context: Context) {
 
   let meta = DEFAULT_META;
 
+  console.log("MADE IT TO HERE")
+
   try {
     if (itemId) {
       const { item, collection, user } = await loadItem({ params, request });
@@ -41,6 +43,9 @@ export default async function handler(request: Request, context: Context) {
       meta = metaForUser(user);
     }
   } catch (error) {
+    console.log("An error was thrown while running the transform function:");
+    console.error("An error was thrown while running the transform function:");
+    console.log(error);
     console.error(error);
   }
 
