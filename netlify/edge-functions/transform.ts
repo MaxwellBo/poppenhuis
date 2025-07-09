@@ -47,7 +47,7 @@ export default async function handler(request: Request, context: Context) {
   // Replace everything between the meta markers
   const modifiedHTML = text.replace(
     /<!-- OPEN META -->[\s\S]*?<!-- CLOSE META -->/,
-    `<!-- OPEN META -->\n${metaToHtml(meta)}\n  <!-- CLOSE META -->`
+    `<!-- OPEN META -->\n${metaToHtml(meta)}\n <!-- CLOSE META (POST-TEMPLATE) -->`
   );
   
   return new Response(modifiedHTML, {
