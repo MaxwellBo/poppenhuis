@@ -300,20 +300,20 @@ function EditableDescriptionList(props: { item: Item; collection: Collection; us
     <React.Fragment key={field}>
       <dt>
         {description ? <abbr title={description}>{label}</abbr> : label}
-        {formData.hasOwnProperty(field) && formData[field] !== undefined && (
-          <button type="button" onClick={() => handleDeleteField(field)} style={{ marginLeft: '0.5rem', fontSize: '0.8rem' }}>
-            ✕
-          </button>
-        )}
       </dt>
       <dd>
         {formData.hasOwnProperty(field) && formData[field] !== undefined ? (
-          <input
-            type="text"
-            value={formData[field] || ''}
-            onChange={(e) => handleInputChange(field, e.target.value)}
-            placeholder={field === 'material' ? 'comma separated' : ''}
-          />
+          <>
+            <input
+              type="text"
+              value={formData[field] || ''}
+              onChange={(e) => handleInputChange(field, e.target.value)}
+              placeholder={field === 'material' ? 'comma separated' : ''}
+            />
+            <button type="button" onClick={() => handleDeleteField(field)} style={{ marginLeft: '0.5rem', fontSize: '0.8rem' }}>
+              ✕
+            </button>
+          </>
         ) : (
           <button type="button" onClick={() => handleAddField(field)}>
             + Add {label.toLowerCase()}
@@ -327,19 +327,19 @@ function EditableDescriptionList(props: { item: Item; collection: Collection; us
     <React.Fragment key="model">
       <dt>
         <abbr title={ITEM_FIELD_DESCRIPTIONS.model}>model</abbr>
-        {formData.hasOwnProperty('model') && formData.model !== undefined && (
-          <button type="button" onClick={() => handleDeleteField('model')} style={{ marginLeft: '0.5rem', fontSize: '0.8rem' }}>
-            ✕
-          </button>
-        )}
       </dt>
       <dd>
         {formData.hasOwnProperty('model') && formData.model !== undefined ? (
-          <input
-            type="text"
-            value={formData.model || ''}
-            onChange={(e) => handleInputChange('model', e.target.value)}
-          />
+          <>
+            <input
+              type="text"
+              value={formData.model || ''}
+              onChange={(e) => handleInputChange('model', e.target.value)}
+            />
+            <button type="button" onClick={() => handleDeleteField('model')} style={{ marginLeft: '0.5rem', fontSize: '0.8rem' }}>
+              ✕
+            </button>
+          </>
         ) : (
           <>
             <input
