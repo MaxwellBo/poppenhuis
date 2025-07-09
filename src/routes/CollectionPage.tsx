@@ -1,11 +1,10 @@
 import { Size } from '../components/Size';
-import { ItemCards } from '../components/ItemCards';
 import { useLoaderData } from "react-router";
 import { loadCollection } from "../manifest";
 import { metaForCollection } from "../meta";
-import Markdown from "react-markdown";
 import { HelmetMeta } from '../components/HelmetMeta';
 import { QueryPreservingLink } from '../components/QueryPreservingLink';
+import { CollectionWithDescription } from '../components/CollectionWithDescription';
 
 export const loader = loadCollection;
 
@@ -19,7 +18,6 @@ export default function CollectionPage() {
         <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / {collection.id} / <Size ts={collection.items} t="item" />
       </h1>
     </header>
-    {collection.description && <div className='short description ugc'><Markdown>{collection.description}</Markdown></div>}
-    <ItemCards collection={collection} user={user} />
+    <CollectionWithDescription collection={collection} user={user} />
   </article>
 }

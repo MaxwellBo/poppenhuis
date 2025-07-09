@@ -7,7 +7,7 @@ import { DEFAULT_META } from "../meta";
 import { HelmetMeta } from "../components/HelmetMeta";
 import { QueryPreservingLink } from "../components/QueryPreservingLink";
 import { Spinner } from "../components/Spinner";
-import { collection, addDoc } from 'firebase/firestore';
+import { collection, addDoc, setDoc, doc } from 'firebase/firestore';
 import { db } from "../firebase";
 
 
@@ -45,7 +45,7 @@ export default function UsersPage() {
                         user.collections.map((collection) =>
                           <li key={collection.id}>
                             <QueryPreservingLink to={user.id + "/" + collection.id}>{collection.name}</QueryPreservingLink> <Size ts={collection.items} t="item" />
-                            <ItemCard item={collection.items[0]} collection={collection} user={user} size='small' altName={''} />
+                            {collection.items.length !== 0 && <ItemCard item={collection.items[0]} collection={collection} user={user} size='small' altName={''} />}
                           </li>
                         )
                       }
@@ -58,16 +58,15 @@ export default function UsersPage() {
           </React.Suspense>
           <br />
           <button onClick={async () => {
-            const newUserId = prompt("Enter user ID (you won\'t");
+            const newUserId = prompt("Enter user ID (you won\'t be able to change it later):");
               if (newUserId) {
                 try {
-                  await addDoc(collection(db, 'users'), {
-                    id: newUserId,
+                  await setDoc(doc(db, 'users2', newUserId), {
+                    name: newUserId,
                   });
                   window.location.reload();
                 } catch (error) {
-                  console.error('Error adding user:', error);
-                  alert('Failed to add user');
+                  alert('Failed to add user: ' + JSON.stringify(error));
                 }
               }
             }}>
