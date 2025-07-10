@@ -8,7 +8,7 @@ import { HelmetMeta } from "../components/HelmetMeta";
 import { QueryPreservingLink } from "../components/QueryPreservingLink";
 import { Spinner } from "../components/Spinner";
 import { rtdb } from "../firebase";
-import { ref, set } from "@firebase/database";
+import { push, ref, set } from "@firebase/database";
 
 
 const EXAMPLE_MANIFEST_URL = 'https://raw.githubusercontent.com/MaxwellBo/maxwellbo.github.io/master/poppenhuis-manifest.json'
@@ -61,9 +61,11 @@ export default function UsersPage() {
             const newUserId = prompt("Enter user ID (you won\'t be able to change it later):");
               if (newUserId) {
                 try {
-                    await set(ref(rtdb, `users2/${newUserId}`), {
-                    name: newUserId,
-                    });
+                      const newUserRef = push(ref(rtdb));
+                      await set(newUserRef, {
+                      id: newUserId,
+                      name: newUserId,
+                      });
                   window.location.reload();
                 } catch (error) {
                   alert('Failed to add user: ' + JSON.stringify(error));

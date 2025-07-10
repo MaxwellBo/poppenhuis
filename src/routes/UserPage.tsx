@@ -7,13 +7,13 @@ import { HelmetMeta } from "../components/HelmetMeta";
 import { CollectionWithDescription } from "../components/CollectionWithDescription";
 import { EditableMarkdown } from "../components/EditableMarkdown";
 import { rtdb } from "../firebase";
-import { ref, set } from "@firebase/database";
+import { push, ref, set } from "@firebase/database";
 
 export const loader = loadUser;
 
 export default function UserPage() {
   const { user } = useLoaderData() as Awaited<ReturnType<typeof loader>>;
-  const userRef = ref(rtdb, `users2/${user.id}`);
+  const userRef = ref(rtdb, `${user.id}`);
 
   return (
     <article>
@@ -34,7 +34,9 @@ export default function UserPage() {
         const newCollectionId = prompt("Enter collection ID (you won't be able to change it later):");
         if (newCollectionId) {
           try {
-            await set(ref(rtdb, `users2/${user.id}/collections/${newCollectionId}`), {
+            const newCollectionRef = push(ref(rtdb, `collections`));
+            await set(newCollectionRef, {
+              id: newCollectionId,
               name: newCollectionId,
             });
             window.location.reload();
