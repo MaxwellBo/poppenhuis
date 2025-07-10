@@ -575,12 +575,16 @@ input[type="checkbox"] {
 }
 
 .loading-status {
-  position: fixed;
   font-family: 'Fira Code', monospace;
+  animation: blink 1s step-end infinite;
   background-color: red;
   color: white;
   padding: 1ch;
-  margin: 1ch;;
+  margin: 1ch;
+}
+
+.loading-status.fixed {
+  position: fixed;
   top: 0;
   left: 0;
 }

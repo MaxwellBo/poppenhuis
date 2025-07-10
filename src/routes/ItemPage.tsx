@@ -1,4 +1,5 @@
 import { Collection, Item, ITEM_FIELD_DESCRIPTIONS, loadItem, User } from "../manifest";
+import { rtdb, storage } from "../firebase";
 import React from "react";
 import { useLoaderData, useSearchParams } from "react-router";
 import { ItemCards } from '../components/ItemCards';
@@ -10,11 +11,13 @@ import { QueryPreservingLink } from "../components/QueryPreservingLink";
 import { HelmetMeta } from "../components/HelmetMeta";
 import { QrCode } from "../components/QrCode";
 import { AFrameScene } from "../components/AFrameScene";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 export const loader = loadItem
 
 export default function ItemPage() {
   const { item, user, collection, users } = useLoaderData() as Awaited<ReturnType<typeof loadItem>>;
+  const [isEditing, setIsEditing] = React.useState(false);
 
   const currentIndex = collection.items.findIndex(i => i.id === item.id);
   const previousItem: Item = currentIndex > 0 
@@ -41,6 +44,8 @@ export default function ItemPage() {
     }
     setSearchParams(newSearchParams);
   };
+
+ 
 
   return (
     <article className='item-page'>
@@ -76,7 +81,21 @@ export default function ItemPage() {
         </div>
         <div id="description" className="description ugc"><Markdown>{item.description}</Markdown></div>
         <div id="meta">
-          <DescriptionList item={item} collection={collection} user={user} />
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+            <span></span>
+            <button onClick={() => setIsEditing(!isEditing)}>
+              {isEditing ? 'cancel?' : 'edit?'}
+            </button>
+          </div>
+          {isEditing ? (
+            <EditableDescriptionList 
+              item={item} 
+              collection={collection} 
+              user={user} 
+            />
+          ) : (
+            <DescriptionList item={item} collection={collection} user={user} />
+          )}
           <br />
           {navigator.share &&
             <button className='mr-1ch' onClick={() =>
@@ -179,5 +198,203 @@ function DescriptionList(props: { item: Item; collection: Collection; user: User
       <dt><abbr title={ITEM_FIELD_DESCRIPTIONS.og}>Open Graph image</abbr></dt>
       <dd className='ellipsis'><a href={item.og}>{item.og}</a></dd>
     </dl>
+  );
+}
+
+
+function EditableDescriptionList(props: { item: Item; collection: Collection; user: User; }) {
+  const [formData, setFormData] = React.useState<Record<string, any>>(() => {
+    const initialData: Record<string, any> = {};
+    
+    // Only set fields that are defined in the item
+    if (props.item.formalName !== undefined) initialData.formalName = props.item.formalName;
+    if (props.item.alt !== undefined) initialData.alt = props.item.alt;
+    if (props.item.releaseDate !== undefined) initialData.releaseDate = props.item.releaseDate;
+    if (props.item.manufacturer !== undefined) initialData.manufacturer = props.item.manufacturer;
+    if (props.item.manufactureDate !== undefined) initialData.manufactureDate = props.item.manufactureDate;
+    if (props.item.manufactureLocation !== undefined) initialData.manufactureLocation = props.item.manufactureLocation;
+    if (props.item.material !== undefined) initialData.material = props.item.material.join(", ");
+    if (props.item.acquisitionDate !== undefined) initialData.acquisitionDate = props.item.acquisitionDate;
+    if (props.item.acquisitionLocation !== undefined) initialData.acquisitionLocation = props.item.acquisitionLocation;
+    if (props.item.storageLocation !== undefined) initialData.storageLocation = props.item.storageLocation;
+    if (props.item.captureDate !== undefined) initialData.captureDate = props.item.captureDate;
+    if (props.item.captureLocation !== undefined) initialData.captureLocation = props.item.captureLocation;
+    if (props.item.captureLatLon !== undefined) initialData.captureLatLon = props.item.captureLatLon;
+    if (props.item.captureDevice !== undefined) initialData.captureDevice = props.item.captureDevice;
+    if (props.item.captureApp !== undefined) initialData.captureApp = props.item.captureApp;
+    if (props.item.captureMethod !== undefined) initialData.captureMethod = props.item.captureMethod;
+    if (props.item.model !== undefined) initialData.model = props.item.model;
+    if (props.item.og !== undefined) initialData.og = props.item.og;
+    
+    return initialData;
+  });
+
+  const [modelFile, setModelFile] = React.useState<File | null>(null);
+  const [isUploading, setIsUploading] = React.useState(false);
+
+  const handleInputChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value || undefined }));
+  };
+
+  const handleAddField = (field: string) => {
+    setFormData(prev => ({ ...prev, [field]: '' }));
+  };
+
+  const handleDeleteField = (field: string) => {
+    setFormData(prev => ({ ...prev, [field]: undefined }));
+  };
+
+  const handleModelFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setModelFile(e.target.files[0]);
+    }
+  };
+  const uploadModelFile = async (file: File): Promise<string> => {
+    const path = `models/${props.user.id}/${props.collection.id}/${props.item.id}.${file.name.split('.').pop()}`;
+    const storageRef = ref(storage, path);
+    await uploadBytes(storageRef, file);
+    return await getDownloadURL(storageRef);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsUploading(true);
+    
+    try {
+      const updatedItem = { ...formData };
+      
+      if (formData.material !== undefined) {
+        updatedItem.material = formData.material.split(",").map((m: string) => m.trim()).filter(Boolean);
+      }
+
+      // Handle model file upload if there's a file selected
+      if (modelFile) {
+        const modelUrl = await uploadModelFile(modelFile);
+        updatedItem.model = modelUrl;
+      }
+
+      rtdb;
+
+      // const itemRef = ref(rtdb, `users2/${props.user.id}/collections/${props.collection.id}/items/${props.item.id}`);
+
+      // const updates: Record<string, any> = {};
+      
+      // Object.entries(updatedItem).forEach(([key, value]) => {
+      //   if (value === undefined) {
+      //     updates[key] = deleteField();
+      //   } else {
+      //     updates[key] = value;
+      //   }
+      // });
+      
+      // await updateDoc(itemRef, updates);
+      window.location.reload();
+    } catch (error) {
+      console.error('Error updating item:', error);
+      alert('Error updating item. Please try again.');
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const renderField = (label: string, field: string, description?: string) => (
+    <React.Fragment key={field}>
+      <dt>
+        {description ? <abbr title={description}>{label}</abbr> : label}
+      </dt>
+      <dd>
+        {formData.hasOwnProperty(field) && formData[field] !== undefined ? (
+          <>
+            <input
+              type="text"
+              value={formData[field] || ''}
+              onChange={(e) => handleInputChange(field, e.target.value)}
+              placeholder={field === 'material' ? 'comma separated' : ''}
+            />
+            <button type="button" onClick={() => handleDeleteField(field)} style={{ marginLeft: '0.5rem', fontSize: '0.8rem' }}>
+              ✕
+            </button>
+          </>
+        ) : (
+          <button type="button" onClick={() => handleAddField(field)}>
+            + Add {label.toLowerCase()}
+          </button>
+        )}
+      </dd>
+    </React.Fragment>
+  );
+
+  const renderModelField = () => (
+    <React.Fragment key="model">
+      <dt>
+        <abbr title={ITEM_FIELD_DESCRIPTIONS.model}>model</abbr>
+      </dt>
+      <dd>
+        {formData.hasOwnProperty('model') && formData.model !== undefined ? (
+          <>
+            <input
+              type="text"
+              value={formData.model || ''}
+              onChange={(e) => handleInputChange('model', e.target.value)}
+            />
+            <button type="button" onClick={() => handleDeleteField('model')} style={{ marginLeft: '0.5rem', fontSize: '0.8rem' }}>
+              ✕
+            </button>
+          </>
+        ) : (
+          <>
+            <input
+              type="file"
+              accept=".glb,.gltf"
+              onChange={handleModelFileChange}
+              style={{ marginBottom: '0.5rem' }}
+            />
+            {!modelFile && (
+              <button type="button" onClick={() => handleAddField('model')}>
+                + Add model URL instead
+              </button>
+            )}
+          </>
+        )}
+      </dd>
+    </React.Fragment>
+  );
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <dl>
+        {renderField('formal name', 'formalName', ITEM_FIELD_DESCRIPTIONS.formalName)}
+        {renderField('alt', 'alt', ITEM_FIELD_DESCRIPTIONS.alt)}
+        {renderField('release date', 'releaseDate', ITEM_FIELD_DESCRIPTIONS.releaseDate)}
+        <hr className="break" />
+        <hr className="break" />
+        {renderField('manufacturer', 'manufacturer')}
+        {renderField('manufacture date', 'manufactureDate')}
+        {renderField('manufacture location', 'manufactureLocation')}
+        {renderField('material', 'material')}
+        <hr className="break" />
+        <hr className="break" />
+        {renderField('acquisition date', 'acquisitionDate')}
+        {renderField('acquisition location', 'acquisitionLocation')}
+        <hr className="break" />
+        <hr className="break" />
+        {renderField('storage location', 'storageLocation')}
+        <hr className="break" />
+        <hr className="break" />
+        {renderField('capture date', 'captureDate')}
+        {renderField('capture location', 'captureLocation')}
+        {renderField('capture lat/lon', 'captureLatLon')}
+        {renderField('capture device', 'captureDevice')}
+        {renderField('capture app', 'captureApp')}
+        {renderField('capture method', 'captureMethod')}
+        <hr className="break" />
+        <hr className="break" />
+        {renderModelField()}
+        {renderField('Open Graph image', 'og', ITEM_FIELD_DESCRIPTIONS.og)}
+      </dl>
+      <button type="submit" disabled={isUploading}>
+        {isUploading ? 'uploading...' : 'save?'}
+      </button>
+    </form>
   );
 }
