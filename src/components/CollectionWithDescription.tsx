@@ -1,4 +1,3 @@
-import Markdown from "react-markdown";
 import { ItemCards } from "./ItemCards";
 import { Collection, User } from "../manifest";
 import { EditableMarkdown } from "./EditableMarkdown";
