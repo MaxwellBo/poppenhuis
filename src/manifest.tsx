@@ -1,6 +1,5 @@
-import { get, ref, set } from 'firebase/database';
-import { db, rtdb } from './firebase.ts';
-import { collection, getDocs  } from 'firebase/firestore';
+import { get, ref } from 'firebase/database';
+import { rtdb } from './firebase.ts';
 
 type Manifest = User[];
 

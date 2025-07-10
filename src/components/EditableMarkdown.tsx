@@ -1,21 +1,21 @@
-import { DocumentReference, updateDoc, deleteField } from "firebase/firestore";
+import { DatabaseReference, set, remove } from "firebase/database";
 import { useState, useRef } from "react";
 import Markdown from "react-markdown";
 
 interface EditableMarkdownProps {
   value: string | undefined;
-  docRef: DocumentReference;
+  dbRef: DatabaseReference;
   fieldName: string;
 }
 
-export function EditableMarkdown({ value, docRef, fieldName }: EditableMarkdownProps) {
+export function EditableMarkdown({ value, dbRef, fieldName }: EditableMarkdownProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [content, setContent] = useState(value || "");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleSave = async () => {
     try {
-      await updateDoc(docRef, { [fieldName]: content });
+      await set(dbRef, content);
       window.location.reload();
     } catch (error) {
       console.error("Error saving:", error);
@@ -25,7 +25,7 @@ export function EditableMarkdown({ value, docRef, fieldName }: EditableMarkdownP
 
   const handleDelete = async () => {
     try {
-      await updateDoc(docRef, { [fieldName]: deleteField() });
+      await remove(dbRef);
       window.location.reload();
     } catch (error) {
       console.error("Error deleting:", error);

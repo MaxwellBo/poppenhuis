@@ -1,5 +1,5 @@
 import { Collection, Item, ITEM_FIELD_DESCRIPTIONS, loadItem, User } from "../manifest";
-import { db, storage } from "../firebase";
+import { rtdb, storage } from "../firebase";
 import React from "react";
 import { useLoaderData, useSearchParams } from "react-router";
 import { ItemCards } from '../components/ItemCards';
@@ -11,7 +11,6 @@ import { QueryPreservingLink } from "../components/QueryPreservingLink";
 import { HelmetMeta } from "../components/HelmetMeta";
 import { QrCode } from "../components/QrCode";
 import { AFrameScene } from "../components/AFrameScene";
-import { doc, updateDoc, deleteField } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 export const loader = loadItem
@@ -273,20 +272,22 @@ function EditableDescriptionList(props: { item: Item; collection: Collection; us
         const modelUrl = await uploadModelFile(modelFile);
         updatedItem.model = modelUrl;
       }
+
+      rtdb;
+
+      // const itemRef = ref(rtdb, `users2/${props.user.id}/collections/${props.collection.id}/items/${props.item.id}`);
+
+      // const updates: Record<string, any> = {};
       
-      const itemRef = doc(db, "users2", props.user.id, "collections", props.collection.id, "items", props.item.id);
+      // Object.entries(updatedItem).forEach(([key, value]) => {
+      //   if (value === undefined) {
+      //     updates[key] = deleteField();
+      //   } else {
+      //     updates[key] = value;
+      //   }
+      // });
       
-      const updates: Record<string, any> = {};
-      
-      Object.entries(updatedItem).forEach(([key, value]) => {
-        if (value === undefined) {
-          updates[key] = deleteField();
-        } else {
-          updates[key] = value;
-        }
-      });
-      
-      await updateDoc(itemRef, updates);
+      // await updateDoc(itemRef, updates);
       window.location.reload();
     } catch (error) {
       console.error('Error updating item:', error);
