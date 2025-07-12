@@ -9,6 +9,7 @@ import UserPage, { loader as userPageLoader } from './routes/UserPage.tsx';
 import CollectionPage, { loader as collectionPageLoader } from './routes/CollectionPage.tsx';
 import ItemPage, { loader as itemPageLoader } from './routes/ItemPage.tsx';
 import WallLabelPage, { loader as wallLabelPageLoader } from './routes/WallLabelPage.tsx';
+import EmbedPage, { loader as embedPageLoader } from './routes/EmbedPage.tsx';
 
 const router = createBrowserRouter([
   {
@@ -44,6 +45,12 @@ const router = createBrowserRouter([
         element: <WallLabelPage />,
         // @ts-ignore
         loader: wallLabelPageLoader
+      },
+      {
+        path: ":userId/:collectionId/:itemId/embed",
+        element: <EmbedPage />,
+        // @ts-ignore
+        loader: embedPageLoader
       }
     ]
   },
