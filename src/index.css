@@ -18,52 +18,6 @@ blink, .blink { animation: blink 1s step-end infinite; }
     margin: 0 !important;
   }  
 }
-
-/* EMBED PAGE */
-.embed-page {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-}
-
-.embed-page .model-container {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.embed-page .embed-info {
-  padding: 0.5rem;
-  border-top: 1px solid #ccc;
-  background: #f8f8f8;
-}
-
-.embed-page .breadcrumb {
-  font-size: 0.9rem;
-  margin-bottom: 0.5rem;
-}
-
-.embed-page .embed-code {
-  margin-top: 0.5rem;
-}
-
-.embed-page .embed-code pre {
-  background: #eee;
-  padding: 0.5rem;
-  border-radius: 3px;
-  overflow-x: auto;
-  font-size: 0.8rem;
-}
-
-  #content-container {
-    margin: 0 !important;
-  }
-}
-
 html {
   /* https://www.geocities.ws/morticcu/cursors.html */
   cursor: url(/arrowto.cur), auto;
@@ -308,6 +262,10 @@ pre {
 #error-page {
   max-width: min(93vw, 100ch);
   margin: 2vw auto;
+}
+
+#embed-page {
+  padding: 1ch;
 }
 
 #velocity-design-comfort-checkbox {

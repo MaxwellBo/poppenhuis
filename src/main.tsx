@@ -13,6 +13,12 @@ import EmbedPage, { loader as embedPageLoader } from './routes/EmbedPage.tsx';
 
 const router = createBrowserRouter([
   {
+    path: ":userId/:collectionId/:itemId/embed",
+    element: <EmbedPage />,
+    // @ts-ignore
+    loader: embedPageLoader
+  },
+  {
     path: "/",
     errorElement: <ErrorPage />,
     element: <App />,
@@ -46,13 +52,7 @@ const router = createBrowserRouter([
         // @ts-ignore
         loader: wallLabelPageLoader
       },
-      {
-        path: ":userId/:collectionId/:itemId/embed",
-        element: <EmbedPage />,
-        // @ts-ignore
-        loader: embedPageLoader
-      }
-    ]
+    ],
   },
 ]);
 
