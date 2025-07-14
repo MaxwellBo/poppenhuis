@@ -17,12 +17,7 @@ blink, .blink { animation: blink 1s step-end infinite; }
     background-color: white !important;
     margin: 0 !important;
   }  
-
-  #content-container {
-    margin: 0 !important;
-  }
 }
-
 html {
   /* https://www.geocities.ws/morticcu/cursors.html */
   cursor: url(/arrowto.cur), auto;
@@ -267,6 +262,10 @@ pre {
 #error-page {
   max-width: min(93vw, 100ch);
   margin: 2vw auto;
+}
+
+#embed-page {
+  padding: 1ch;
 }
 
 #velocity-design-comfort-checkbox {
