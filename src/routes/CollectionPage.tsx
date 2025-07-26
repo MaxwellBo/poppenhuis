@@ -16,7 +16,7 @@ export default function CollectionPage() {
     <HelmetMeta meta={metaForCollection(collection, user)} />
     <header>
       <h1>
-        <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / {collection.id} / <Size ts={collection.items} t="item" />
+        <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / {collection.name} / <Size ts={collection.items} t="item" />
       </h1>
     </header>
     {collection.description && <div className='short description ugc'><Markdown>{collection.description}</Markdown></div>}
