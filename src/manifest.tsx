@@ -425,6 +425,42 @@ My abject failure to use them properly convinced me to stick to the classical gu
         ]
       },
       {
+        id: "badminton-racquets",
+        name: "badminton racquets",
+        items: [
+          {
+            id: "hello-kitty",
+            name: "Hello Kitty",
+            model: "/models/mbo/badminton-racquets/hello-kitty.glb",
+            manufacturer: "Victor",
+            formalName: "Victor X Hello Kitty DriveX DX-KT Badminton Racquet 4U(83g)G5",
+            acquisitionDate: "2023 October 28",
+            acquisitionLocation: "Sydney",
+            captureDate: "2025 Jul 27",
+            captureLocation: "Darlinghurst, Sydney",
+            captureDevice: "Apple iPhone 13 Pro",
+            captureMethod: "Photo mode",
+            captureApp: "Polycam",
+            storageLocation: "Darlinghurst, Sydney",
+          },
+          {
+            id: "jetspeed",
+            name: "Jetspeed",
+            model: "/models/mbo/badminton-racquets/jetspeed.glb",
+            manufacturer: "Victor",
+            formalName: "Victor Jetspeed S T1 Badminton Racquet 4U(83g)G5",
+            acquisitionDate: "2022",
+            acquisitionLocation: "Sydney",
+            captureDate: "2025 Jul 27",
+            captureLocation: "Darlinghurst, Sydney",
+            captureDevice: "Apple iPhone 13 Pro",
+            captureMethod: "Photo mode",
+            captureApp: "Polycam",
+            storageLocation: "Darlinghurst, Sydney",
+          }
+        ]
+      },
+      {
         id: "friends",
         name: "friends",
         og: "/models/mbo/friends/og.jpeg",
