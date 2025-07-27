@@ -136,8 +136,8 @@ function DescriptionList(props: { item: Item; collection: Collection; user: User
       {customFields && <hr className="break" />}
       <dt><abbr title={ITEM_FIELD_DESCRIPTIONS.formalName}>formal name</abbr></dt>
       <dd>{item.formalName}</dd>
-      <dt><abbr title={ITEM_FIELD_DESCRIPTIONS.alt}>alt</abbr></dt>
-      <dd>{item.alt}</dd>
+      {/* <dt><abbr title={ITEM_FIELD_DESCRIPTIONS.alt}>alt</abbr></dt>
+      <dd>{item.alt}</dd> */}
       <dt><abbr title={ITEM_FIELD_DESCRIPTIONS.releaseDate}>release date</abbr></dt>
       <dd>{item.releaseDate}</dd>
       <hr className="break" />
