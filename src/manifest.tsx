@@ -698,12 +698,26 @@ My abject failure to use them properly convinced me to stick to the classical gu
             id: "tom",
             name: "Tom",
             captureMethod: "LiDAR",
+            captureApp: "Polycam",
             model: "/models/mbo/friends/Tom.glb",
             og: "/models/mbo/friends/Tom.jpeg",
             captureDevice: "Apple iPhone 13 Pro",
             captureDate: "2024 May 24 12:36 PM",
             captureLocation: "Canva, Surry Hills, Sydney",
             acquisitionDate: "2022"
+          },
+          {
+            id: "uyen",
+            name: "Uyen",
+            captureMethod: "LiDAR",
+            captureApp: "Polycam",
+            model: "/models/mbo/friends/UyenLidar.glb",
+            og: "/models/mbo/friends/UyenLidar.jpeg",
+            acquisitionDate: "2025 April 28",
+            acquisitionLocation: "Sydney, Australia",
+            captureDate: "2025 July 21",
+            captureLocation: "Canva, Surry Hills, Sydney",
+            captureDevice: "Apple iPhone 13 Pro"
           },
           {
             id: "casey",
