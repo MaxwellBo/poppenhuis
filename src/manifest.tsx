@@ -907,7 +907,6 @@ export async function loadUsers({ request }: { request: Request; }) {
     }
   }
 
-
   if (firebaseManifest === undefined) {
     const manifestRef = ref(rtdb);
     const snapshot = await get(manifestRef);
@@ -917,10 +916,10 @@ export async function loadUsers({ request }: { request: Request; }) {
       throw new Error("Firebase manifest not found");
     }
 
-    firebaseManifest = snapshot.val() as Manifest;
+    firebaseManifest = Object.values(snapshot.val()) as Manifest;
   }
 
-  return [...firebaseManifest, ...thirdPartyManifest];
+  return [...FIRST_PARTY_MANIFEST, ...firebaseManifest, ...thirdPartyManifest];
 }
 
 export const ARENA_PREFIX = 'arena:';
