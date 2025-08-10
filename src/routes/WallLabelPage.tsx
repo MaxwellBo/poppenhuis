@@ -25,10 +25,6 @@ export default function WallLabelPage() {
         <QueryPreservingLink to={`/${user.id}/${collection.id}/${item.id}`}>← non-label page</QueryPreservingLink>
       </div>
       <article id="label" className='really-short'>
-        <span className="corner-plus top-left">+</span>
-        <span className="corner-plus top-right">+</span>
-        <span className="corner-plus bottom-left">+</span>
-        <span className="corner-plus bottom-right">+</span>
         <div className='sans-serif'>
           <div className='pb-3 bigger'>
             <h2 className='pb-3'>{item.manufacturer || "Anonymous"}</h2>
@@ -49,8 +45,8 @@ export default function WallLabelPage() {
                 <small>{itemUrl}</small></code>
             </QueryPreservingLink>
           </div>
-          {/* <QrCode item={item} user={user} collection={collection} onLoad={(() => window.print())} context="print"/> */}
-          <div className="flex justify-center items-center pb-3">
+          <QrCode item={item} user={user} collection={collection} onLoad={(() => window.print())} context="print"/>
+          {/* <div>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="24" height="24">
               <path d="M 50 50 L 50 20 A 30 30 0 0 0 20 50 Z" fill="cyan"/>
               <path d="M 50 50 L 80 50 A 30 30 0 0 0 50 20 Z" fill="magenta"/>
@@ -64,7 +60,7 @@ export default function WallLabelPage() {
               <text x="40" y="62" fontFamily="Arial, sans-serif" fontSize="8" fontWeight="bold" fill="white" textAnchor="middle">Y</text>
               <text x="60" y="62" fontFamily="Arial, sans-serif" fontSize="8" fontWeight="bold" fill="white" textAnchor="middle">K</text>
             </svg>
-          </div>
+          </div> */}
         </div>
       </article>
 
