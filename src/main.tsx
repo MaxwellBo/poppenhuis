@@ -19,6 +19,12 @@ const router = createBrowserRouter([
     loader: embedPageLoader
   },
   {
+    path: ":userId/:collectionId/:itemId/label",
+    element: <WallLabelPage />,
+    // @ts-ignore
+    loader: wallLabelPageLoader
+  },
+  {
     path: "/",
     errorElement: <ErrorPage />,
     element: <App />,
@@ -45,12 +51,6 @@ const router = createBrowserRouter([
         element: <ItemPage />,
         // @ts-ignore
         loader: itemPageLoader,
-      },
-      {
-        path: ":userId/:collectionId/:itemId/label",
-        element: <WallLabelPage />,
-        // @ts-ignore
-        loader: wallLabelPageLoader
       },
     ],
   },

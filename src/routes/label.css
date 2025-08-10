@@ -1,0 +1,58 @@
+#label {
+  position: relative;
+  padding: 30px;
+}
+
+#label .corner-plus {
+  position: absolute;
+  font-size: 32px;
+  color: #000000;
+  line-height: 1;
+  pointer-events: none;
+  font-weight: 100;
+  letter-spacing: -6px;
+}
+
+#label .top-left { top: 10px; left: 10px; }
+#label .top-right { top: 10px; right: 10px; }
+#label .bottom-left { bottom: 10px; left: 10px; }
+#label .bottom-right { bottom: 10px; right: 10px; }
+
+.pb-3 {
+  padding-bottom: 0.75rem; /* 12px */
+}
+
+.pb-0 {
+  padding-bottom: 0;
+}
+
+
+.bigger {
+  font-size: 1.2rem;
+}
+
+.slightly-smaller {
+  font-size: 0.9rem;
+}
+
+
+.color-black {
+  color: black;
+}
+
+.display-inline-block {
+  display: inline-block;
+}
+
+.display-inline {
+  display: inline;
+}
+
+
+.white-space-pre-wrap {
+  white-space: pre-wrap;
+}
+
+.sans-serif {
+  font-family: sans-serif !important;
+}
