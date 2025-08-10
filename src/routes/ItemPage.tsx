@@ -52,7 +52,7 @@ export default function ItemPage() {
       <HelmetMeta meta={metaForItem(item, collection, user)} />
       <header>
         <h1>
-          <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}/${collection.id}`}>{collection.id}</QueryPreservingLink> / {item.name} <span className='index'>({collection.items.indexOf(item) + 1})</span>
+          <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}/${collection.id}`}>{collection.name}</QueryPreservingLink> / {item.name} <span className='index'>({collection.items.indexOf(item) + 1})</span>
         </h1>
       </header>
       <div className='bento'>
@@ -107,7 +107,7 @@ export default function ItemPage() {
               share?
             </button>}
           <QrCode item={item} user={user} collection={collection} context="web" />
-          <QueryPreservingLink className="action-link" to={`/${user.id}/${collection.id}/${item.id}/label`}>print label</QueryPreservingLink>, <a href={githubManifestCodeSearchUrl}>source</a>
+          <QueryPreservingLink className="action-link" to={`/${user.id}/${collection.id}/${item.id}/label`}>print label</QueryPreservingLink>, <QueryPreservingLink className="action-link" to={`/${user.id}/${collection.id}/${item.id}/embed`}>embed</QueryPreservingLink>, <a href={githubManifestCodeSearchUrl}>source</a>
         </div>
         <div id="next">
           <ItemCard 
@@ -155,8 +155,8 @@ function DescriptionList(props: { item: Item; collection: Collection; user: User
       {customFields && <hr className="break" />}
       <dt><abbr title={ITEM_FIELD_DESCRIPTIONS.formalName}>formal name</abbr></dt>
       <dd>{item.formalName}</dd>
-      <dt><abbr title={ITEM_FIELD_DESCRIPTIONS.alt}>alt</abbr></dt>
-      <dd>{item.alt}</dd>
+      {/* <dt><abbr title={ITEM_FIELD_DESCRIPTIONS.alt}>alt</abbr></dt>
+      <dd>{item.alt}</dd> */}
       <dt><abbr title={ITEM_FIELD_DESCRIPTIONS.releaseDate}>release date</abbr></dt>
       <dd>{item.releaseDate}</dd>
       <hr className="break" />

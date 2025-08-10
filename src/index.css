@@ -17,12 +17,7 @@ blink, .blink { animation: blink 1s step-end infinite; }
     background-color: white !important;
     margin: 0 !important;
   }  
-
-  #content-container {
-    margin: 0 !important;
-  }
 }
-
 html {
   /* https://www.geocities.ws/morticcu/cursors.html */
   cursor: url(/arrowto.cur), auto;
@@ -171,42 +166,6 @@ pre {
   }
 }
 
-.white-space-pre-wrap {
-  white-space: pre-wrap;
-}
-
-.sans-serif {
-  font-family: sans-serif !important;
-}
-
-.color-black {
-  color: black;
-}
-
-.pb-3 {
-  padding-bottom: 0.75rem; /* 12px */
-}
-
-.pb-0 {
-  padding-bottom: 0;
-}
-
-.bigger {
-  font-size: 1.2rem;
-}
-
-.slightly-smaller {
-  font-size: 0.9rem;
-}
-
-.display-inline-block {
-  display: inline-block;
-}
-
-.display-inline {
-  display: inline;
-}
-
 .mr-1ch {
   margin-right: 1ch;
 }
@@ -267,6 +226,10 @@ pre {
 #error-page {
   max-width: min(93vw, 100ch);
   margin: 2vw auto;
+}
+
+#embed-page {
+  padding: 1ch;
 }
 
 #velocity-design-comfort-checkbox {

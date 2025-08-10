@@ -10,8 +10,21 @@ import UserPage, { loader as userPageLoader } from './routes/UserPage.tsx';
 import CollectionPage, { loader as collectionPageLoader } from './routes/CollectionPage.tsx';
 import ItemPage, { loader as itemPageLoader } from './routes/ItemPage.tsx';
 import WallLabelPage, { loader as wallLabelPageLoader } from './routes/WallLabelPage.tsx';
+import EmbedPage, { loader as embedPageLoader } from './routes/EmbedPage.tsx';
 
 const router = createBrowserRouter([
+  {
+    path: ":userId/:collectionId/:itemId/embed",
+    element: <EmbedPage />,
+    // @ts-ignore
+    loader: embedPageLoader
+  },
+  {
+    path: ":userId/:collectionId/:itemId/label",
+    element: <WallLabelPage />,
+    // @ts-ignore
+    loader: wallLabelPageLoader
+  },
   {
     path: "/",
     errorElement: <ErrorPage />,
@@ -40,13 +53,7 @@ const router = createBrowserRouter([
         // @ts-ignore
         loader: itemPageLoader,
       },
-      {
-        path: ":userId/:collectionId/:itemId/label",
-        element: <WallLabelPage />,
-        // @ts-ignore
-        loader: wallLabelPageLoader
-      }
-    ]
+    ],
   },
 ]);
 
