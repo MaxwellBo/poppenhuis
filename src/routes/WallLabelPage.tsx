@@ -104,13 +104,13 @@ export default function WallLabelPage() {
             {(item.acquisitionDate || item.acquisitionLocation) && <small className='block'>Acquired {dateLocation(item.acquisitionDate, item.acquisitionLocation)}</small>}
           </div>
           {item.description && <p className='pb-3 white-space-pre-wrap'>{item.description}</p>}
+          <QrCode item={item} user={user} collection={collection} onLoad={(() => window.print())} context="print"/>
           <div className='pb-3'>
             <QueryPreservingLink to={`/${user.id}/${collection.id}/${item.id}`}>
               <code className='color-black even-smaller'>
                 <small>{itemUrl}</small></code>
             </QueryPreservingLink>
           </div>
-          <QrCode item={item} user={user} collection={collection} onLoad={(() => window.print())} context="print"/>
         </div>
       </article>
 
