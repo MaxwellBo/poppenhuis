@@ -73,6 +73,12 @@
   right: -20px;
 }
 
+#kcmy-test-bar {
+  position: absolute;
+  top: -0.2cm;
+  left: 0.35cm;
+}
+
 .pb-3 {
   padding-bottom: 0.75rem; /* 12px */
 }

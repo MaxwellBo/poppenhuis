@@ -37,6 +37,27 @@ function RegistrationMark({ idSuffix }: { idSuffix: string }) {
   )
 }
 
+function KcmyTestBar() {
+  const colors = ["#000000", "#00BCD4", "#E040FB", "#FFEB3B"];
+  return (
+    <div id="kcmy-test-bar" style={{ display: "flex" }}>
+      {colors.map((color, i) => (
+        <div
+          key={i}
+          style={{
+            minWidth: "0.8cm",
+            height: "0.1cm",
+            background: color,
+            margin: 0,
+            padding: 0,
+            border: "none",
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
 export default function WallLabelPage() {
   const { item, user, collection } = useLoaderData() as Awaited<ReturnType<typeof loader>>;
   const itemUrl = `poppenhu.is/${user.id}/${collection.id}/${item.id}`;
@@ -54,6 +75,9 @@ export default function WallLabelPage() {
         <QueryPreservingLink to={`/${user.id}/${collection.id}/${item.id}`}>← non-label page</QueryPreservingLink>
       </div>
       <article id="label" className='really-short'>
+        <div>
+          <KcmyTestBar />
+        </div>
         <div>
           <Plus idSuffix="top-left" />
           <Plus idSuffix="top-right" />
@@ -86,7 +110,7 @@ export default function WallLabelPage() {
                 <small>{itemUrl}</small></code>
             </QueryPreservingLink>
           </div>
-          {/* <QrCode item={item} user={user} collection={collection} onLoad={(() => window.print())} context="print"/> */}
+          <QrCode item={item} user={user} collection={collection} onLoad={(() => window.print())} context="print"/>
         </div>
       </article>
 
