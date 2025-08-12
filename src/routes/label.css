@@ -1,8 +1,76 @@
 #label {
   position: relative;
-  padding: 30px;
+  padding: 60px;
+  margin: 60px;
+  min-width: 12cm;
   font-family: monospace;
   border: 1px solid #000000;
+}
+
+#plus-top-left,
+#plus-top-right,
+#plus-bottom-left,
+#plus-bottom-right {
+  position: absolute;
+  font-size: 1.5rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000;
+}
+
+#plus-top-left {
+  top: 5px;
+  left: 5px;
+}
+
+#plus-top-right {
+  top: 5px;
+  right: 5px;
+}
+
+#plus-bottom-left {
+  bottom: 5px;
+  left: 5px;
+}
+
+#plus-bottom-right {
+  bottom: 5px;
+  right: 5px;
+}
+
+#registration-mark-top-left,
+#registration-mark-top-right,
+#registration-mark-bottom-left,
+#registration-mark-bottom-right {
+  position: absolute;
+  font-size: 1.5rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000;
+}
+
+#registration-mark-top-left {
+  top: -20px;
+  left: -20px;
+}
+
+#registration-mark-top-right {
+  top: -20px;
+  right: -20px;
+}
+
+#registration-mark-bottom-left {
+  bottom: -20px;
+  left: -20px;
+}
+
+#registration-mark-bottom-right {
+  bottom: -20px;
+  right: -20px;
 }
 
 .pb-3 {

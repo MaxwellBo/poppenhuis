@@ -6,6 +6,37 @@ import './label.css'
 
 export const loader = loadItem;
 
+function Plus({ idSuffix }: { idSuffix: string }) {
+  return (
+    <div>
+      <svg id={`plus-${idSuffix}`} width="16" height="16">
+        <line x1="8" y1="2" x2="8" y2="14" stroke="black" strokeWidth="1"/>
+        <line x1="2" y1="8" x2="14" y2="8" stroke="black" strokeWidth="1"/>
+      </svg>
+    </div>
+  );
+}
+
+function RegistrationMark({ idSuffix }: { idSuffix: string }) {
+  return (
+    <div id={`registration-mark-${idSuffix}`}>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="24" height="24">
+        <path d="M 50 50 L 50 20 A 30 30 0 0 0 20 50 Z" fill="cyan"/>
+        <path d="M 50 50 L 80 50 A 30 30 0 0 0 50 20 Z" fill="magenta"/>
+        <path d="M 50 50 L 20 50 A 30 30 0 0 0 50 80 Z" fill="yellow"/>
+        <path d="M 50 50 L 50 80 A 30 30 0 0 0 80 50 Z" fill="black"/>
+        <circle cx="50" cy="50" r="30" fill="none" stroke="black" strokeWidth="2"/>
+        <line x1="5" y1="50" x2="95" y2="50" stroke="black" strokeWidth="3"/>
+        <line x1="50" y1="5" x2="50" y2="95" stroke="black" strokeWidth="3"/>
+        <text x="40" y="42" fontFamily="Arial, sans-serif" fontSize="8" fontWeight="bold" fill="white" textAnchor="middle">C</text>
+        <text x="60" y="42" fontFamily="Arial, sans-serif" fontSize="8" fontWeight="bold" fill="white" textAnchor="middle">M</text>
+        <text x="40" y="62" fontFamily="Arial, sans-serif" fontSize="8" fontWeight="bold" fill="white" textAnchor="middle">Y</text>
+        <text x="60" y="62" fontFamily="Arial, sans-serif" fontSize="8" fontWeight="bold" fill="white" textAnchor="middle">K</text>
+      </svg>
+    </div>
+  )
+}
+
 export default function WallLabelPage() {
   const { item, user, collection } = useLoaderData() as Awaited<ReturnType<typeof loader>>;
   const itemUrl = `poppenhu.is/${user.id}/${collection.id}/${item.id}`;
@@ -17,14 +48,24 @@ export default function WallLabelPage() {
     return acc.join(", ")
   }
 
-  // NOTE: This component is styled entirely with utility classes.
-  // Please continue this convention in this component.
   return (
     <div>
       <div className='no-print' style={{ padding: "1ch" }}>
         <QueryPreservingLink to={`/${user.id}/${collection.id}/${item.id}`}>← non-label page</QueryPreservingLink>
       </div>
       <article id="label" className='really-short'>
+        <div>
+          <Plus idSuffix="top-left" />
+          <Plus idSuffix="top-right" />
+          <Plus idSuffix="bottom-left" />
+          <Plus idSuffix="bottom-right" />
+        </div>
+        <div>
+          <RegistrationMark idSuffix="top-left" />
+          <RegistrationMark idSuffix="top-right" />
+          <RegistrationMark idSuffix="bottom-left" />
+          <RegistrationMark idSuffix="bottom-right" />
+        </div>
         <div className='sans-serif'>
           <div className='pb-3 bigger'>
             <h2 className='pb-3'>{item.manufacturer || "Anonymous"}</h2>
@@ -45,22 +86,7 @@ export default function WallLabelPage() {
                 <small>{itemUrl}</small></code>
             </QueryPreservingLink>
           </div>
-          <QrCode item={item} user={user} collection={collection} onLoad={(() => window.print())} context="print"/>
-          {/* <div>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="24" height="24">
-              <path d="M 50 50 L 50 20 A 30 30 0 0 0 20 50 Z" fill="cyan"/>
-              <path d="M 50 50 L 80 50 A 30 30 0 0 0 50 20 Z" fill="magenta"/>
-              <path d="M 50 50 L 20 50 A 30 30 0 0 0 50 80 Z" fill="yellow"/>
-              <path d="M 50 50 L 50 80 A 30 30 0 0 0 80 50 Z" fill="black"/>
-              <circle cx="50" cy="50" r="30" fill="none" stroke="black" strokeWidth="2"/>
-              <line x1="5" y1="50" x2="95" y2="50" stroke="black" strokeWidth="3"/>
-              <line x1="50" y1="5" x2="50" y2="95" stroke="black" strokeWidth="3"/>
-              <text x="40" y="42" fontFamily="Arial, sans-serif" fontSize="8" fontWeight="bold" fill="white" textAnchor="middle">C</text>
-              <text x="60" y="42" fontFamily="Arial, sans-serif" fontSize="8" fontWeight="bold" fill="white" textAnchor="middle">M</text>
-              <text x="40" y="62" fontFamily="Arial, sans-serif" fontSize="8" fontWeight="bold" fill="white" textAnchor="middle">Y</text>
-              <text x="60" y="62" fontFamily="Arial, sans-serif" fontSize="8" fontWeight="bold" fill="white" textAnchor="middle">K</text>
-            </svg>
-          </div> */}
+          {/* <QrCode item={item} user={user} collection={collection} onLoad={(() => window.print())} context="print"/> */}
         </div>
       </article>
 
