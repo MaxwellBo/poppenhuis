@@ -79,41 +79,45 @@
   left: 0.35cm;
 }
 
-.pb-3 {
+#main-container {
+  font-family: sans-serif !important;
+}
+
+#header-section {
   padding-bottom: 0.75rem; /* 12px */
-}
-
-.pb-0 {
-  padding-bottom: 0;
-}
-
-
-.bigger {
   font-size: 1.2rem;
 }
 
-.slightly-smaller {
-  font-size: 0.9rem;
+#dates-section {
+  padding-bottom: 0.75rem; /* 12px */
 }
 
-
-.color-black {
-  color: black;
+#url-section {
+  padding-bottom: 0.75rem; /* 12px */
 }
 
-.display-inline-block {
-  display: inline-block;
+#manufacturer-title {
+  padding-bottom: 0.75rem; /* 12px */
 }
 
-.display-inline {
-  display: inline;
+#item-name {
+  padding-bottom: 0;
 }
 
-
-.white-space-pre-wrap {
+#description {
+  padding-bottom: 0.75rem; /* 12px */
   white-space: pre-wrap;
 }
 
-.sans-serif {
-  font-family: sans-serif !important;
+#item-url {
+  color: black;
+}
+
+#formal-name,
+#manufacture-date,
+#manufacture-location,
+#material-list,
+#release-date,
+#acquisition-info {
+  display: block;
 }

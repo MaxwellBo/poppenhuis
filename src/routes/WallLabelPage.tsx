@@ -90,24 +90,24 @@ export default function WallLabelPage() {
           <RegistrationMark idSuffix="bottom-left" />
           <RegistrationMark idSuffix="bottom-right" />
         </div>
-        <div className='sans-serif'>
-          <div className='pb-3 bigger'>
-            <h2 className='pb-3'>{item.manufacturer || "Anonymous"}</h2>
-            <h1 className='pb-0'>{item.name}</h1>
-            {item.formalName && <i className='block'>{item.formalName}</i>}
-            {item.manufactureDate && <p className='block'>{item.manufactureDate}</p>}
-            {item.manufactureLocation && <p className='block'>{item.manufactureLocation}</p>}
-            {item.material && <i className='block'>{item.material.join(", ")}</i>}
+        <div id="main-container">
+          <div id="header-section">
+            {item.manufacturer && <h2 id="manufacturer-title">{item.manufacturer}</h2>}
+            <h1 id="item-name">{item.name}</h1>
+            {item.formalName && <i id="formal-name">{item.formalName}</i>}
+            {item.manufactureDate && <p id="manufacture-date">{item.manufactureDate}</p>}
+            {item.manufactureLocation && <p id="manufacture-location">{item.manufactureLocation}</p>}
+            {item.material && <i id="material-list">{item.material.join(", ")}</i>}
           </div>
-          <div className='pb-3'>
-            {item.releaseDate && <small className='block'>Released {item.releaseDate}</small>}
-            {(item.acquisitionDate || item.acquisitionLocation) && <small className='block'>Acquired {dateLocation(item.acquisitionDate, item.acquisitionLocation)}</small>}
+          <div id="dates-section">
+            {item.releaseDate && <small id="release-date">Released {item.releaseDate}</small>}
+            {(item.acquisitionDate || item.acquisitionLocation) && <small id="acquisition-info">Acquired {dateLocation(item.acquisitionDate, item.acquisitionLocation)}</small>}
           </div>
-          {item.description && <p className='pb-3 white-space-pre-wrap'>{item.description}</p>}
+          {item.description && <p id="description">{item.description}</p>}
           <QrCode item={item} user={user} collection={collection} onLoad={(() => window.print())} context="print"/>
-          <div className='pb-3'>
+          <div id="url-section">
             <QueryPreservingLink to={`/${user.id}/${collection.id}/${item.id}`}>
-              <code className='color-black even-smaller'>
+              <code id="item-url">
                 <small>{itemUrl}</small></code>
             </QueryPreservingLink>
           </div>
