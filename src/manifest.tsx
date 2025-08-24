@@ -1,3 +1,6 @@
+import { get, onValue, ref } from 'firebase/database';
+import { rtdb } from './firebase.ts';
+
 type Manifest = User[];
 
 export interface User {
@@ -886,14 +889,16 @@ My abject failure to use them properly convinced me to stick to the classical gu
 
 export const MANIFEST_URL_QUERY_PARAM = 'manifest';
 
+let firebaseManifest: Manifest | undefined = undefined;
+
 export async function loadUsers({ request }: { request: Request; }) {
   let thirdPartyManifest: Manifest = [];
 
-  const manfiestUrl = new URL(request.url).searchParams.get(MANIFEST_URL_QUERY_PARAM);
+  const manifestUrl = new URL(request.url).searchParams.get(MANIFEST_URL_QUERY_PARAM);
 
-  if (manfiestUrl) {
+  if (manifestUrl) {
     try {
-      const response = await fetch(manfiestUrl);
+      const response = await fetch(manifestUrl);
       if (response.ok) {
         thirdPartyManifest = await response.json();
       }
@@ -902,7 +907,19 @@ export async function loadUsers({ request }: { request: Request; }) {
     }
   }
 
-  return [...FIRST_PARTY_MANIFEST, ...thirdPartyManifest];
+  if (firebaseManifest === undefined) {
+    const manifestRef = ref(rtdb);
+    const snapshot = await get(manifestRef);
+    console.log(snapshot)
+
+    if (!snapshot.exists()) {
+      throw new Error("Firebase manifest not found");
+    }
+
+    firebaseManifest = Object.values(snapshot.val()) as Manifest;
+  }
+
+  return [...FIRST_PARTY_MANIFEST, ...firebaseManifest, ...thirdPartyManifest];
 }
 
 export const ARENA_PREFIX = 'arena:';
