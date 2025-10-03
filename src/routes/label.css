@@ -92,15 +92,25 @@
   padding-bottom: 0.75rem; /* 12px */
 }
 
+#qr-code-section {
+  padding-top: 10ch;
+}
+
 #url-section {
   padding-bottom: 0.75rem; /* 12px */
 }
 
+#url-section a {
+  text-decoration: none;
+}
+
 #manufacturer-title {
+  font-size: x-large;
   padding-bottom: 0.75rem; /* 12px */
 }
 
 #item-name {
+  font-size: xx-large;
   padding-bottom: 0;
 }
 

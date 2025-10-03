@@ -104,7 +104,9 @@ export default function WallLabelPage() {
             {(item.acquisitionDate || item.acquisitionLocation) && <small id="acquisition-info">Acquired {dateLocation(item.acquisitionDate, item.acquisitionLocation)}</small>}
           </div>
           {item.description && <p id="description">{item.description}</p>}
-          <QrCode item={item} user={user} collection={collection} onLoad={(() => window.print())} context="print"/>
+          <div id="qr-code-section">
+            <QrCode item={item} user={user} collection={collection} onLoad={(() => window.print())} context="print"/>
+          </div>
           <div id="url-section">
             <QueryPreservingLink to={`/${user.id}/${collection.id}/${item.id}`}>
               <code id="item-url">
