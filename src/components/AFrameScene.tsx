@@ -3,8 +3,6 @@ import { Collection, Item, User } from '../manifest';
 // @ts-ignore
 import AFRAME from 'aframe';
 import { getStyleForModelSize } from './ModelViewerWrapper';
-import 'aframe-extras';
-import "aframe-extras/controls/index.js";
 
 declare global {
   namespace JSX {
@@ -102,20 +100,7 @@ export const AFrameScene: React.FC<AFrameSceneProps> = ({ users, startingItem })
         <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd>
       </div>
       <a-scene embedded style={getStyleForModelSize('responsive-big')}>
-        <a-entity id="rig"
-          movement-controls>
-        <a-entity 
-          camera 
-          fly={true} 
-          look-controls 
-          position={startingPosition}></a-entity>
-        </a-entity>
-        <a-entity 
-          laser-controls="hand: left">
-        </a-entity>
-        <a-entity 
-          laser-controls="hand: right">
-        </a-entity>
+        <a-entity camera fly={true} look-controls wasd-controls="acceleration:100"  position={startingPosition}></a-entity>
         <a-sky color="#fdf5e6"></a-sky>
         <a-assets>
           {items.map((item) => (
