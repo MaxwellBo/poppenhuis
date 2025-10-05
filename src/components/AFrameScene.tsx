@@ -114,7 +114,7 @@ export const AFrameScene: React.FC<AFrameSceneProps> = ({ users, startingItem })
           look-controls 
           position={startingPosition}></a-entity>
         </a-entity>
-        {/* <a-sky color="#fdf5e6"></a-sky> */}
+        <a-sky color="#fdf5e6"></a-sky>
         <a-assets>
           {items.map((item) => (
                 <a-asset-item key={item.id} id={item.id} src={item.model}></a-asset-item>
