@@ -101,7 +101,11 @@ export const AFrameScene: React.FC<AFrameSceneProps> = ({ users, startingItem })
       <div className='camera-keys'>
         <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd>
       </div>
-      <a-scene embedded style={getStyleForModelSize('responsive-big')}>
+      <a-scene 
+        embedded 
+        style={getStyleForModelSize('responsive-big')}
+        xr-mode-ui="XRMode: xr"
+        >
         <a-entity id="rig"
           movement-controls>
         <a-entity 
