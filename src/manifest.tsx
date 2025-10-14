@@ -1005,7 +1005,12 @@ export async function loadArenaUser({ userSlug }: { userSlug: string }): Promise
 
   let page = 1;
   do {
-    const searchResult: ArenaSearchResult = await fetch(`https://api.are.na/v2/search/users/${userSlug}?page=${page}&per=100`).then((res) => res.json());
+    const searchResult = await fetch(`https://api.are.na/v2/users/${userSlug}/channels?page=${page}&per=100`, {
+      headers: {
+        Authorization: "Bearer FRXPKcebPMcjwLmXTJGlkUDtwehtg_S83TYpGNkfpgw"
+      }
+    }).then((res) => res.json());
+
     resultChannels.push(...searchResult.channels);
 
     if (searchResult.current_page === searchResult.total_pages) {
@@ -1013,7 +1018,21 @@ export async function loadArenaUser({ userSlug }: { userSlug: string }): Promise
     }
   } while (page++ < 100);
 
-  const channels: ArenaChannel[] = await Promise.all(resultChannels.map(channel => fetch(`https://api.are.na/v2/channels/${channel.id}`).then((res) => res.json())));
+  const queryChannels = resultChannels.filter(
+    (channel) =>
+      channel.title?.toLowerCase().includes("🎎") ||
+      channel.title?.toLowerCase().includes("poppenhuis") ||
+      channel.title?.toLowerCase().includes("poppenhu.is") ||
+      channel.metadata?.description?.toLowerCase().includes("🎎") ||
+      channel.metadata?.description?.toLowerCase().includes("poppenhuis") ||
+      channel.metadata?.description?.toLowerCase().includes("poppenhu.is")
+  );
+
+  const channels: ArenaChannel[] = await Promise.all(
+    queryChannels.map(channel =>
+      fetch(`https://api.are.na/v2/channels/${channel.id}`).then((res) => res.json())
+    )
+  );
 
   const collections: Collection[] = [];
   for (const channel of channels) {
