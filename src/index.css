@@ -30,6 +30,10 @@ body {
   background-size: 64px 64px; */
 }
 
+code {
+  border: 1px dotted rgb(133, 133, 133);
+}
+
 footer {
   padding-top: 2ch;
   padding-bottom: 1ch;
