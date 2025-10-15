@@ -7,6 +7,10 @@
   border: 1px solid #000000;
 }
 
+#label code {
+  border: none !important;
+}
+
 #plus-top-left,
 #plus-top-right,
 #plus-bottom-left,
