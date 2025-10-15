@@ -207,6 +207,38 @@ function ArenaUserLoader() {
       <QueryPreservingLink to={`/${ARENA_PREFIX}${userSlug}`}>
         {window.location.origin}/{ARENA_PREFIX}{userSlug}
       </QueryPreservingLink>
+      <br />
+      <br />
+      <details>
+        <summary>💡 Pro tip: Add metadata with YAML in your Are.na block descriptions</summary>
+        <div className="explanation">
+          You can add structured metadata to your Are.na blocks by including YAML in the description. 
+          Add a <code>---</code> divider, then include YAML below it:
+          <br />
+          <br />
+          <strong>Example block description:</strong>
+          <pre style={{fontSize: '12px', background: '#f5f5f5', padding: '8px', borderRadius: '4px'}}>
+{`My beautiful ceramic vase, hand-thrown on the wheel.
+---
+formalName: "Ceramic Vase #42"
+releaseDate: "2023-10-15"
+manufacturer: "Jane Smith"
+material: 
+  - "stoneware clay"
+  - "celadon glaze"
+acquisitionDate: "2023-11-01"
+captureDevice: "iPhone 15 Pro"
+captureMethod: "LiDAR"`}
+          </pre>
+          <br />
+          Everything before <code>---</code> becomes the description. Everything after is parsed as YAML 
+          that can set any <code>Item</code> field (like <code>formalName</code>, <code>releaseDate</code>, 
+          <code>manufacturer</code>, <code>material</code>, etc.).
+          <br />
+          <br />
+          If there's no <code>---</code> divider, the entire description is treated normally.
+        </div>
+      </details>
     </>
   )
 }
