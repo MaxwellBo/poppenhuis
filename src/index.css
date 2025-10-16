@@ -395,6 +395,7 @@ pre {
 
 .bento #meta {
   grid-area: meta;
+  z-index: 1;
   width: 100%;
 }
 
