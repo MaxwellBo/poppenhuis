@@ -79,14 +79,14 @@ export default function UsersPage() {
               <br />
               <br />
               I also like <a href="https://scaniverse.com/">Scaniverse</a>, but I exclusively use it for <a href="https://en.wikipedia.org/wiki/Gaussian_splatting">Gaussian splatting</a>, and have not used its LiDAR mode.
-              </div>
+            </div>
           </details>
           <details>
             <summary>Want to load models from an <a href="https://www.are.na/">Are.na</a> user profile?</summary>
             <div className="explanation">
               <ArenaUserLoader />
             </div>
-            </details>
+          </details>
           <details>
             <summary>Want to mount a 3rd party manifest?</summary>
             <div className="explanation">
@@ -105,8 +105,8 @@ export default function UsersPage() {
             <summary>Why am I being forced to use GitHub to add my collection?</summary>
             <div className="explanation">
               <ol>
-              <li>GitHub has everything we need for authenticated bulk uploading of models and metadata.</li>
-              <li>Rather than using a database, <q>baking</q> <a href="https://github.com/MaxwellBo/poppenhuis/blob/master/src/manifest.tsx"><code>//src/manifest.tsx</code></a> into the bundle keeps the app snappy.</li>
+                <li>GitHub has everything we need for authenticated bulk uploading of models and metadata.</li>
+                <li>Rather than using a database, <q>baking</q> <a href="https://github.com/MaxwellBo/poppenhuis/blob/master/src/manifest.tsx"><code>//src/manifest.tsx</code></a> into the bundle keeps the app snappy.</li>
               </ol>
             </div>
           </details>
@@ -209,16 +209,13 @@ function ArenaUserLoader() {
       </QueryPreservingLink>
       <br />
       <br />
-      <details>
-        <summary>💡 Pro tip: Add metadata with YAML in your Are.na block descriptions</summary>
-        <div className="explanation">
-          You can add structured metadata to your Are.na blocks by including YAML in the description. 
-          Add a <code>---</code> divider, then include YAML below it:
-          <br />
-          <br />
-          <strong>Example block description:</strong>
-          <pre style={{fontSize: '12px', background: '#f5f5f5', padding: '8px', borderRadius: '4px'}}>
-{`My beautiful ceramic vase, hand-thrown on the wheel.
+      You can add structured metadata to your Are.na blocks by including YAML in the description.
+      Everything after a <code>---</code> divider will be parsed as YAML and used
+      to set item metadata fields, for example:
+      <br />
+      <br />
+      <pre style={{ padding: '8px' }}>
+        {`My beautiful ceramic vase, hand-thrown on the wheel.
 ---
 formalName: "Ceramic Vase #42"
 releaseDate: "2023-10-15"
@@ -229,16 +226,7 @@ material:
 acquisitionDate: "2023-11-01"
 captureDevice: "iPhone 15 Pro"
 captureMethod: "LiDAR"`}
-          </pre>
-          <br />
-          Everything before <code>---</code> becomes the description. Everything after is parsed as YAML 
-          that can set any <code>Item</code> field (like <code>formalName</code>, <code>releaseDate</code>, 
-          <code>manufacturer</code>, <code>material</code>, etc.).
-          <br />
-          <br />
-          If there's no <code>---</code> divider, the entire description is treated normally.
-        </div>
-      </details>
+      </pre>
     </>
   )
 }

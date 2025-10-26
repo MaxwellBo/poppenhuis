@@ -1045,7 +1045,7 @@ export async function loadArenaUser({ userSlug }: { userSlug: string }): Promise
         continue
       }
 
-      const { description, yamlFields } = parseDescriptionWithYAML(content.description);
+      const { description, yamlFields } = parseDescriptionWithYaml(content.description);
 
       items.push({
         id: content.id.toString(),
@@ -1092,18 +1092,17 @@ export async function loadArenaUser({ userSlug }: { userSlug: string }): Promise
  * If the description contains "---" as a divider, everything after it is treated as YAML
  * that can override Item fields. The part before "---" becomes the description.
  */
-function parseDescriptionWithYAML(rawDescription: string | null | undefined): {
+function parseDescriptionWithYaml(rawDescription: string | null | undefined): {
   description?: string;
   yamlFields: Partial<Item>;
 } {
   if (!rawDescription) {
-    return { yamlFields: {} };
+    return { description: undefined, yamlFields: {} };
   }
 
   const dividerIndex = rawDescription.indexOf('---');
   
   if (dividerIndex === -1) {
-    // No YAML divider found, treat the whole thing as description
     return {
       description: rawDescription.trim(),
       yamlFields: {}
