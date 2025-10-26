@@ -29,10 +29,6 @@ export default function ItemPage() {
 
   const githubManifestCodeSearchUrl = `https://github.com/search?q=repo%3AMaxwellBo%2Fpoppenhuis+%22id%3A+%5C%22${item.id}%5C%22%22&type=code`;
 
-  // Check if Safari AR is supported
-  const a = document.createElement("a");
-  const safariArSupported = a.relList.supports("ar");
-
   const [searchParams, setSearchParams] = useSearchParams();
   const renderAFrameScene = searchParams.get("vr") === "true";
 
@@ -68,13 +64,8 @@ export default function ItemPage() {
         <div id="model">
           {renderAFrameScene
             ? <AFrameScene users={users} startingItem={item} />
-            : safariArSupported && item.usdzModel ? (
-                <a rel="ar" href={item.usdzModel}>
-                  <img src={item.og} alt={item.name} style={getStyleForModelSize('responsive-big')} />
-                </a>
-            ) : (
-              <ModelViewerWrapper item={item} size='responsive-big' />
-            )}
+            : <ModelViewerWrapper item={item} size='responsive-big' />
+          }
           <label className="vr-toggle">
             <input 
               type="checkbox" 
