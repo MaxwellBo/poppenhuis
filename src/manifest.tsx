@@ -32,6 +32,7 @@ export interface Item {
   name: string;
   // model-viewer fields
   model: string;
+  usdzModel?: string;
   og?: string;
   alt?: string;
   // abstract details
@@ -394,6 +395,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             id: "plumes",
             name: "Plumes",
             model: "/models/mbo/pedals/plumes.glb",
+            usdzModel: "/models/mbo/pedals/plumes.usdz",
             og: "/models/mbo/pedals/plumes.jpeg",
             manufacturer: "EarthQuaker Devices",
             formalName: "EarthQuaker Devices Plumes Small Signal Shredder",
@@ -412,6 +414,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             name: "El Capistan",
             manufacturer: "Strymon",
             model: "/models/mbo/pedals/elcap.glb",
+            usdzModel: "/models/mbo/pedals/elcap.usdz",
             og: "/models/mbo/pedals/elcap.jpeg",
             formalName: "Strymon El Capistan dTape Echo",
             acquisitionDate: "2022?",
@@ -428,6 +431,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             name: "MultiStomp",
             manufacturer: "Zoom",
             model: "/models/mbo/pedals/multistomp.glb",
+            usdzModel: "/models/mbo/pedals/multistomp.usdz",
             og: "/models/mbo/pedals/multistomp.jpeg",
             formalName: "Zoom MS-70CDR MultiStomp Chorus/Delay/Reverb Pedal",
             acquisitionDate: "2022?",
@@ -443,6 +447,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             name: "Avalanche Run",
             manufacturer: "EarthQuaker Devices",
             model: "/models/mbo/pedals/avrun.glb",
+            usdzModel: "/models/mbo/pedals/avrun.usdz",
             og: "/models/mbo/pedals/avrun.jpeg",
             formalName: "EarthQuaker Devices Avalanche Run V2 Stereo Delay & Reverb",
             acquisitionLocation: "Pedal Empire, Moorooka, Brisbane",

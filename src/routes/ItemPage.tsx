@@ -5,7 +5,7 @@ import { ItemCards } from '../components/ItemCards';
 import { ItemCard } from '../components/ItemCard';
 import { metaForItem } from "../meta";
 import Markdown from "react-markdown";
-import { ModelViewerWrapper } from "../components/ModelViewerWrapper";
+import { getStyleForModelSize, ModelViewerWrapper } from "../components/ModelViewerWrapper";
 import { QueryPreservingLink } from "../components/QueryPreservingLink";
 import { HelmetMeta } from "../components/HelmetMeta";
 import { QrCode } from "../components/QrCode";
@@ -28,6 +28,10 @@ export default function ItemPage() {
   const nextItemIsFirst = currentIndex === collection.items.length - 1;
 
   const githubManifestCodeSearchUrl = `https://github.com/search?q=repo%3AMaxwellBo%2Fpoppenhuis+%22id%3A+%5C%22${item.id}%5C%22%22&type=code`;
+
+  // Check if Safari AR is supported
+  const a = document.createElement("a");
+  const safariArSupported = a.relList.supports("ar");
 
   const [searchParams, setSearchParams] = useSearchParams();
   const renderAFrameScene = searchParams.get("vr") === "true";
@@ -64,7 +68,13 @@ export default function ItemPage() {
         <div id="model">
           {renderAFrameScene
             ? <AFrameScene users={users} startingItem={item} />
-            : <ModelViewerWrapper item={item} size='responsive-big' />}
+            : safariArSupported && item.usdzModel ? (
+                <a rel="ar" href={item.usdzModel}>
+                  <img src={item.og} alt={item.name} style={getStyleForModelSize('responsive-big')} />
+                </a>
+            ) : (
+              <ModelViewerWrapper item={item} size='responsive-big' />
+            )}
           <label className="vr-toggle">
             <input 
               type="checkbox" 
