@@ -10,8 +10,13 @@ import CollectionPage, { loader as collectionPageLoader } from './routes/Collect
 import ItemPage, { loader as itemPageLoader } from './routes/ItemPage.tsx';
 import WallLabelPage, { loader as wallLabelPageLoader } from './routes/WallLabelPage.tsx';
 import EmbedPage, { loader as embedPageLoader } from './routes/EmbedPage.tsx';
+import DebugPage from './routes/DebugPage.tsx';
 
 const router = createBrowserRouter([
+  {
+    path: "debug",
+    element: <DebugPage />,
+  },
   {
     path: ":userId/:collectionId/:itemId/embed",
     element: <EmbedPage />,
