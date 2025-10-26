@@ -1,3 +1,5 @@
+import * as yaml from 'js-yaml';
+
 type Manifest = User[];
 
 export interface User {
@@ -85,7 +87,26 @@ export const ITEM_FIELD_DESCRIPTIONS = {
   alt: "Custom text that will be used to describe the model to viewers who use a screen reader or otherwise depend on additional semantic context to understand what they are viewing.",
   poster: "The image to be displayed instead of the model it is loaded and ready to render.",
   releaseDate: \`The release date and the manufacture date are subtly different. The release date is the date this item's specific variant was made available to the public. The manufacture date is the date the item was actually made.
-      e.g. while the iPhone SE 1 was released in 2016, it was manufactured up until 2018.\`
+      e.g. while the iPhone SE 1 was released in 2016, it was manufactured up until 2018.\`,
+
+  // YAML parsing feature for Are.na integration
+  yamlInDescription: \`You can include YAML metadata in Are.na block descriptions by adding a "---" divider.
+Everything before "---" becomes the description, everything after is parsed as YAML that can set Item fields.
+
+Example Are.na block description:
+This is my beautiful sculpture made from clay.
+---
+formalName: "Clay Sculpture #42"
+releaseDate: "2023-10-15"
+manufacturer: "Artist Name"
+material: 
+  - "clay"
+  - "glaze"
+acquisitionDate: "2023-11-01"
+captureDevice: "iPhone 15 Pro"
+captureMethod: "LiDAR"
+
+If there's no "---" divider, the entire description is treated normally.\`
 };
 
 export interface Item {
@@ -1029,15 +1050,19 @@ export async function loadArenaUser({ userSlug }: { userSlug: string }): Promise
         continue
       }
 
+      const { description, yamlFields } = parseDescriptionWithYaml(content.description);
+
       items.push({
         id: content.id.toString(),
         name: content.title,
         model: content.source.url,
-        description: content.description,
+        description,
         customFields: {
           "are.na block": `[https://www.are.na/block/${content.id}](https://www.are.na/block/${content.id})`
         },
         og: content.image?.display?.url,
+        // Merge in any YAML fields, allowing them to override defaults
+        ...yamlFields,
       })
     }
 
@@ -1066,6 +1091,54 @@ export async function loadArenaUser({ userSlug }: { userSlug: string }): Promise
 
   return result;
 }
+
+/**
+ * Parses a description that may contain YAML frontmatter.
+ * If the description contains "---" as a divider, everything after it is treated as YAML
+ * that can override Item fields. The part before "---" becomes the description.
+ */
+function parseDescriptionWithYaml(rawDescription: string | null | undefined): {
+  description?: string;
+  yamlFields: Partial<Item>;
+} {
+  if (!rawDescription) {
+    return { description: undefined, yamlFields: {} };
+  }
+
+  const dividerIndex = rawDescription.indexOf('---');
+  
+  if (dividerIndex === -1) {
+    return {
+      description: rawDescription.trim(),
+      yamlFields: {}
+    };
+  }
+
+  const description = rawDescription.substring(0, dividerIndex).trim();
+  const yamlContent = rawDescription.substring(dividerIndex + 3).trim();
+  
+  let yamlFields: Partial<Item> = {};
+  
+  try {
+    const parsed = yaml.load(yamlContent);
+    if (parsed && typeof parsed === 'object') {
+      yamlFields = parsed as Partial<Item>;
+    }
+  } catch (error) {
+    console.warn('Failed to parse YAML in description:', error);
+    // If YAML parsing fails, treat the whole thing as description
+    return {
+      description: rawDescription.trim(),
+      yamlFields: {}
+    };
+  }
+
+  return {
+    description: description || undefined,
+    yamlFields
+  };
+}
+
 
 /**
  * https://dev.are.na/documentation/channels#Block43472

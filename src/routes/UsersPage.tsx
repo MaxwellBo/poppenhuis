@@ -79,14 +79,14 @@ export default function UsersPage() {
               <br />
               <br />
               I also like <a href="https://scaniverse.com/">Scaniverse</a>, but I exclusively use it for <a href="https://en.wikipedia.org/wiki/Gaussian_splatting">Gaussian splatting</a>, and have not used its LiDAR mode.
-              </div>
+            </div>
           </details>
           <details>
             <summary>Want to load models from an <a href="https://www.are.na/">Are.na</a> user profile?</summary>
             <div className="explanation">
               <ArenaUserLoader />
             </div>
-            </details>
+          </details>
           <details>
             <summary>Want to mount a 3rd party manifest?</summary>
             <div className="explanation">
@@ -105,8 +105,8 @@ export default function UsersPage() {
             <summary>Why am I being forced to use GitHub to add my collection?</summary>
             <div className="explanation">
               <ol>
-              <li>GitHub has everything we need for authenticated bulk uploading of models and metadata.</li>
-              <li>Rather than using a database, <q>baking</q> <a href="https://github.com/MaxwellBo/poppenhuis/blob/master/src/manifest.tsx"><code>//src/manifest.tsx</code></a> into the bundle keeps the app snappy.</li>
+                <li>GitHub has everything we need for authenticated bulk uploading of models and metadata.</li>
+                <li>Rather than using a database, <q>baking</q> <a href="https://github.com/MaxwellBo/poppenhuis/blob/master/src/manifest.tsx"><code>//src/manifest.tsx</code></a> into the bundle keeps the app snappy.</li>
               </ol>
             </div>
           </details>
@@ -207,6 +207,26 @@ function ArenaUserLoader() {
       <QueryPreservingLink to={`/${ARENA_PREFIX}${userSlug}`}>
         {window.location.origin}/{ARENA_PREFIX}{userSlug}
       </QueryPreservingLink>
+      <br />
+      <br />
+      You can add structured metadata to your Are.na blocks by including YAML in the description.
+      Everything after a <code>---</code> divider will be parsed as YAML and used
+      to set item metadata fields, for example:
+      <br />
+      <br />
+      <pre style={{ padding: '8px' }}>
+        {`My beautiful ceramic vase, hand-thrown on the wheel.
+---
+formalName: "Ceramic Vase #42"
+releaseDate: "2023-10-15"
+manufacturer: "Jane Smith"
+material: 
+  - "stoneware clay"
+  - "celadon glaze"
+acquisitionDate: "2023-11-01"
+captureDevice: "iPhone 15 Pro"
+captureMethod: "LiDAR"`}
+      </pre>
     </>
   )
 }
