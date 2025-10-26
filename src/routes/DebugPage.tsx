@@ -1,3 +1,15 @@
+// Declare the model element for TypeScript
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      model: React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement> & {
+        stagemode?: string;
+      }, HTMLElement>;
+      source: React.DetailedHTMLProps<React.SourceHTMLAttributes<HTMLSourceElement>, HTMLSourceElement>;
+    }
+  }
+}
+
 export default function DebugPage() {
   // Test Safari AR support
   const a = document.createElement("a");
@@ -36,7 +48,6 @@ export default function DebugPage() {
         <a 
           rel="ar" 
           href={usdzPath}
-          download="plumes.usdz"
         >
           <img 
             src="https://via.placeholder.com/400x300.png?text=Tap+to+view+in+AR" 
@@ -57,6 +68,56 @@ export default function DebugPage() {
           <a href={usdzPath} download="plumes.usdz" style={{ color: "#0066cc" }}>
             Download plumes.usdz
           </a>
+        </p>
+      </section>
+
+      <section style={{ marginTop: "2rem", padding: "1rem", background: "#f0f0f0" }}>
+        <h2>Direct USDZ Link (standard href)</h2>
+        <p style={{ marginBottom: "1rem" }}>
+          Standard hyperlink that navigates directly to the USDZ asset:
+        </p>
+        <a href={usdzPath} style={{ color: "#0066cc", fontWeight: 600 }}>
+          Open plumes.usdz
+        </a>
+      </section>
+
+      <section style={{ marginTop: "2rem", padding: "1rem", background: "#f0f0f0" }}>
+        <h2>Model Element Test (USDZ with fallback)</h2>
+        <p style={{ marginBottom: "1rem" }}>
+          Using <code>&lt;model&gt;</code> element with orbit stage mode:
+        </p>
+        <model stagemode="orbit">
+          <source src="/models/mbo/pedals/plumes.usdz" type="model/vnd.usdz+zip" />
+        </model>
+        <p style={{ marginTop: "1rem", fontSize: "0.9rem", color: "#666" }}>
+          <code>stagemode="orbit"</code> | <code>type="model/vnd.usdz+zip"</code>
+        </p>
+      </section>
+
+      <section style={{ marginTop: "2rem", padding: "1rem", background: "#f0f0f0" }}>
+        <h2>Model Element Test (Multiple formats)</h2>
+        <p style={{ marginBottom: "1rem" }}>
+          Using <code>&lt;model&gt;</code> element with multiple source formats:
+        </p>
+        <model>
+          <source src="/models/mbo/pedals/elcap.usdz" type="model/vnd.pixar.usd" />
+          <source src="/models/mbo/pedals/elcap.glb" type="model/gltf-binary" />
+        </model>
+        <p style={{ marginTop: "1rem", fontSize: "0.9rem", color: "#666" }}>
+          <code>type="model/vnd.pixar.usd"</code> and <code>type="model/gltf-binary"</code>
+        </p>
+      </section>
+
+      <section style={{ marginTop: "2rem", padding: "1rem", background: "#f0f0f0" }}>
+        <h2>Model Element Test (GLB only)</h2>
+        <p style={{ marginBottom: "1rem" }}>
+          Using <code>&lt;model&gt;</code> element with only GLB format:
+        </p>
+        <model>
+          <source src="/models/mbo/pedals/multistomp.glb" type="model/gltf-binary" />
+        </model>
+        <p style={{ marginTop: "1rem", fontSize: "0.9rem", color: "#666" }}>
+          <code>type="model/gltf-binary"</code> only
         </p>
       </section>
 
