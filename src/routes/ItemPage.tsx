@@ -5,7 +5,7 @@ import { ItemCards } from '../components/ItemCards';
 import { ItemCard } from '../components/ItemCard';
 import { metaForItem } from "../meta";
 import Markdown from "react-markdown";
-import { getStyleForModelSize, ModelViewerWrapper } from "../components/ModelViewerWrapper";
+import { ModelViewerWrapper } from "../components/ModelViewerWrapper";
 import { QueryPreservingLink } from "../components/QueryPreservingLink";
 import { HelmetMeta } from "../components/HelmetMeta";
 import { QrCode } from "../components/QrCode";
