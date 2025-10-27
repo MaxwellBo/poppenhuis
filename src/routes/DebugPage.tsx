@@ -52,6 +52,17 @@ export default function DebugPage() {
         >
           <img src={ogPath} alt="AR Preview" />
         </a>
+        <a 
+          rel="ar" 
+          href={usdzPath}
+        >
+          <p>HELLO WORLD</p>
+        </a>
+        <a 
+          rel="ar" 
+          href={usdzPath}
+        >
+        </a>
         <p style={{ marginTop: "1rem", fontSize: "0.9rem", color: "#666" }}>
           <code>rel="ar"</code> | <code>href="{usdzPath}"</code> | <code>download="plumes.usdz"</code>
         </p>

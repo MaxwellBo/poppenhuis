@@ -90,6 +90,9 @@ export default function ItemPage() {
             </button>}
           <QrCode item={item} user={user} collection={collection} context="web" />
           <QueryPreservingLink className="action-link" to={`/${user.id}/${collection.id}/${item.id}/label`}>print label</QueryPreservingLink>, <QueryPreservingLink className="action-link" to={`/${user.id}/${collection.id}/${item.id}/embed`}>embed</QueryPreservingLink>, <a href={githubManifestCodeSearchUrl}>source</a>
+          <div>
+            
+          </div>
         </div>
         <div id="next">
           <ItemCard 
