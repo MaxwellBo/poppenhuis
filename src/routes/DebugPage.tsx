@@ -17,6 +17,7 @@ export default function DebugPage() {
 
   // Use a sample USDZ file from the manifest
   const usdzPath = "/models/mbo/pedals/plumes.usdz";
+  const ogPath = "/models/mbo/pedals/plumes.jpeg";
 
   return (
     <div style={{ padding: "2rem", fontFamily: "monospace" }}>
@@ -49,16 +50,7 @@ export default function DebugPage() {
           rel="ar" 
           href={usdzPath}
         >
-          <img 
-            src="https://via.placeholder.com/400x300.png?text=Tap+to+view+in+AR" 
-            alt="AR Preview"
-            style={{ 
-              maxWidth: "400px", 
-              width: "100%",
-              border: "2px solid #333",
-              borderRadius: "8px"
-            }}
-          />
+          <img src={ogPath} alt="AR Preview" />
         </a>
         <p style={{ marginTop: "1rem", fontSize: "0.9rem", color: "#666" }}>
           <code>rel="ar"</code> | <code>href="{usdzPath}"</code> | <code>download="plumes.usdz"</code>
