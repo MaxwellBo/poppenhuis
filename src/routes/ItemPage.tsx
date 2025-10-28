@@ -89,10 +89,7 @@ export default function ItemPage() {
               share?
             </button>}
           <QrCode item={item} user={user} collection={collection} context="web" />
-          <QueryPreservingLink className="action-link" to={`/${user.id}/${collection.id}/${item.id}/label`}>print label</QueryPreservingLink>, <QueryPreservingLink className="action-link" to={`/${user.id}/${collection.id}/${item.id}/embed`}>embed</QueryPreservingLink>, <a href={githubManifestCodeSearchUrl}>source</a>
-          <div>
-            
-          </div>
+          <QueryPreservingLink className="action-link" to={`/${user.id}/${collection.id}/${item.id}/label`}>print label</QueryPreservingLink>, <QueryPreservingLink className="action-link" to={`/${user.id}/${collection.id}/${item.id}/embed`}>embed</QueryPreservingLink>, <QuicklookLink item={item} />, <a href={githubManifestCodeSearchUrl}>source</a>
         </div>
         <div id="next">
           <ItemCard 
@@ -178,10 +175,46 @@ function DescriptionList(props: { item: Item; collection: Collection; user: User
       <dd>{item.captureMethod}</dd>
       <hr className="break" />
       <hr className="break" />
-      <dt><abbr title={ITEM_FIELD_DESCRIPTIONS.model}>model</abbr></dt>
+      <dt><abbr title={ITEM_FIELD_DESCRIPTIONS.model}>glTF model</abbr></dt>
       <dd className='ellipsis'><a href={item.model}>{item.model}</a></dd>
+      <dt><abbr title={ITEM_FIELD_DESCRIPTIONS.usdzModel}>USDZ model</abbr></dt>
+      <dd className='ellipsis'>{item.usdzModel && <a href={item.usdzModel}>{item.usdzModel}</a>}</dd>
       <dt><abbr title={ITEM_FIELD_DESCRIPTIONS.og}>Open Graph image</abbr></dt>
-      <dd className='ellipsis'><a href={item.og}>{item.og}</a></dd>
+      <dd className='ellipsis'>{item.og && <a href={item.og}>{item.og}</a>}</dd>
     </dl>
   );
 }
+
+function QuicklookLink(props: { item: Item; }) {
+  const { item } = props;
+
+  const a = document.createElement("a");
+  const supportsQuickLook = a.relList.supports("ar");
+
+  if (!supportsQuickLook) {
+    return (
+      <s>
+        <abbr title="Apple AR Quick Look requires Safari on iPhone/iPad (iOS 12+) or Safari on macOS (I think...)">
+          <span style={{ whiteSpace: 'nowrap' }}>Apple AR Quick Look</span>
+        </abbr>
+      </s>
+    );
+  }
+
+  if (!item.usdzModel) {
+    return (
+      <s>
+        <abbr title="This item has no .usdz model — Apple Quick Look requires a .usdz asset">
+          <span style={{ whiteSpace: 'nowrap' }}>Apple AR Quick Look</span>
+        </abbr>
+      </s>
+    );
+  }
+
+  return (
+    <a href={item.usdzModel} >
+      <span style={{ whiteSpace: 'nowrap' }}>Apple AR Quick Look</span>
+    </a>
+  );
+}
+

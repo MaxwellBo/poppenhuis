@@ -21,6 +21,7 @@ export interface Collection {
 export const ITEM_FIELD_DESCRIPTIONS = {
   formalName: "A more specific name (like a model number or a scientific name) than the general name.",
   model: "The path to the 3D model. Only glTF/GLB models are supported.",
+  usdzModel: "The path to the USDZ model for use in AR on Apple devices.",
   alt: "Custom text that will be used to describe the model to viewers who use a screen reader or otherwise depend on additional semantic context to understand what they are viewing.",
   poster: "The image to be displayed instead of the model it is loaded and ready to render.",
   releaseDate: `The release date and the manufacture date are subtly different. The release date is the date this item's specific variant was made available to the public. The manufacture date is the date the item was actually made.
