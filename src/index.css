@@ -70,10 +70,6 @@ a:hover:visited {
   text-decoration: none;
 }
 
-code {
-  font-family: 'Fira Code', monospace;
-}
-
 kbd {
   font-family: monospace;
   font-size: 0.9em;
@@ -111,6 +107,8 @@ dl > dt {
   padding-right: 1ch;
 }
 
+pre,
+code,
 dl > dd {
   font-size: 0.8rem;
   font-family: 'Fira Code', monospace;
