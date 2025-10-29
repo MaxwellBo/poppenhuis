@@ -5,7 +5,7 @@ import { ItemCards } from '../components/ItemCards';
 import { ItemCard } from '../components/ItemCard';
 import { metaForItem } from "../meta";
 import Markdown from "react-markdown";
-import { ModelViewerWrapper } from "../components/ModelViewerWrapper";
+import { UnifiedModelRenderer } from "../components/UnifiedModelRenderer";
 import { QueryPreservingLink } from "../components/QueryPreservingLink";
 import { HelmetMeta } from "../components/HelmetMeta";
 import { QrCode } from "../components/QrCode";
@@ -64,7 +64,7 @@ export default function ItemPage() {
         <div id="model">
           {renderAFrameScene
             ? <AFrameScene users={users} startingItem={item} />
-            : <ModelViewerWrapper item={item} size='responsive-big' />
+            : <UnifiedModelRenderer item={item} size='responsive-big' />
           }
           <label className="vr-toggle">
             <input 
@@ -175,7 +175,7 @@ function DescriptionList(props: { item: Item; collection: Collection; user: User
       <dd>{item.captureMethod}</dd>
       <hr className="break" />
       <hr className="break" />
-      <dt><abbr title={ITEM_FIELD_DESCRIPTIONS.model}>glTF model</abbr></dt>
+      <dt><abbr title={ITEM_FIELD_DESCRIPTIONS.model}>model</abbr></dt>
       <dd className='ellipsis'><a href={item.model}>{item.model}</a></dd>
       <dt><abbr title={ITEM_FIELD_DESCRIPTIONS.usdzModel}>USDZ model</abbr></dt>
       <dd className='ellipsis'>{item.usdzModel && <a href={item.usdzModel}>{item.usdzModel}</a>}</dd>

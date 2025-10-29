@@ -292,6 +292,17 @@ baker & baby cook
     bio: "[maxbo.me](https://maxbo.me), [twitter](https://twitter.com/_max_bo_)",
     collections: [
       {
+        id: "misc",
+        name: "misc",
+        items: [
+          {
+            id: "butterfly",
+            name: "butterfly",
+            model: "/models/mbo/misc/butterfly.spz",
+          },
+        ]
+      },
+      {
         id: "plucked-instruments",
         name: "plucked instruments",
         og: "/models/mbo/plucked-instruments/og.jpeg",

@@ -1,8 +1,7 @@
 import { Item, Collection, User } from '../manifest';
 import { ModelSize } from './ModelViewerWrapper';
-import { ModelViewerWrapper } from './ModelViewerWrapper';
+import { UnifiedModelRenderer } from './UnifiedModelRenderer';
 import { QueryPreservingLink } from './QueryPreservingLink';
-
 
 export function ItemCard(props: { 
   item: Item; 
@@ -17,7 +16,7 @@ export function ItemCard(props: {
   return (
     <div className="card">
       <div className='center'>
-        <ModelViewerWrapper item={item} size={size ?? 'normal'} />
+        <UnifiedModelRenderer item={item} size={size ?? 'normal'} />
         <QueryPreservingLink to={`/${user.id}/${collection.id}/${item.id}`} triggerKey={triggerKey}>
           {altName ?? item.name}
         </QueryPreservingLink> 

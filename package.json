@@ -4,13 +4,14 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "node --max-http-header-size=9999999999999 ./node_modules/.bin/vite",
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
   "dependencies": {
     "@google/model-viewer": "^3.5.0",
+    "@sparkjsdev/spark": "^0.1.10",
     "@types/js-yaml": "^4.0.9",
     "aframe": "^1.7.1",
     "aframe-extras": "^7.6.0",
