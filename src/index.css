@@ -31,6 +31,8 @@ body {
 }
 
 code {
+  padding-left: 0.4ch;
+  padding-right: 0.4ch;
   border: 1px dotted rgb(133, 133, 133);
 }
 
