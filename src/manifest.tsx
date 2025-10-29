@@ -348,7 +348,7 @@ baker & baby cook
             manufacturer: "Cordoba",
             captureDate: "2025 October 2 8:21PM",
             acquisitionDate: "2025 October 1",
-            acquisitionLocation: "New York City",
+            acquisitionLocation: "Rudy's Music Soho, New York City",
             captureMethod: "Guided Object Mode",
             captureDevice: "Apple iPhone 13 Pro",
             captureLatLon: "40.75 N, 74.00 W",
