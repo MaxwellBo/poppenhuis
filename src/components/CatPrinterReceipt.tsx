@@ -32,7 +32,7 @@ export function CatPrinterReceipt({ item, collection, user }: CatPrinterReceiptP
   const [isPrinting, setIsPrinting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const renderReceipt = () => {
+  const renderReceipt = async () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -127,14 +127,45 @@ export function CatPrinterReceipt({ item, collection, user }: CatPrinterReceiptP
     addLine(`glTF model: ${item.model}`);
     if (item.usdzModel) addLine(`USDZ model: ${item.usdzModel}`);
     if (item.og) addLine(`Open Graph image: ${item.og}`);
+    
+    // Draw OG image at the end if available
+    if (item.og) {
+      await new Promise<void>((resolve) => {
+        const img = new Image();
+        img.crossOrigin = 'anonymous'; // Handle CORS if needed
+        
+        img.onload = () => {
+          addLine(''); // Add spacing before image
+          
+          // Calculate image dimensions to fit printer width
+          const maxWidth = canvas.width - 20; // Leave 10px margin on each side
+          const scaleFactor = maxWidth / img.width;
+          const imgWidth = maxWidth;
+          const imgHeight = img.height * scaleFactor;
+          
+          // Draw the image
+          ctx.drawImage(img, 10, yPos, imgWidth, imgHeight);
+          yPos += imgHeight + 40;
+          
+          resolve();
+        };
+        
+        img.onerror = () => {
+          console.warn('Failed to load OG image:', item.og);
+          resolve(); // Continue even if image fails
+        };
+        
+        img.src = item.og!;
+      });
+    }
   };
 
   const printReceipt = async () => {
     setIsPrinting(true);
     setError(null);
 
-    // Render the receipt first
-    renderReceipt();
+    // Render the receipt first (now async to wait for image)
+    await renderReceipt();
 
     try {
       // Check if bluetooth is available
