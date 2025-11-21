@@ -41,28 +41,28 @@ export function CatPrinterReceipt({ item, collection, user }: CatPrinterReceiptP
 
     // Set canvas width to printer width
     canvas.width = DEF_CANVAS_WIDTH;
-    canvas.height = 200;
+    canvas.height = 400;
     
     // White background
     ctx.fillStyle = 'white';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     
-    let yPos = 20;
+    let yPos = 40;
     
     // Black text
     ctx.fillStyle = 'black';
-    ctx.font = '16px monospace';
+    ctx.font = 'bold 24px monospace';
     ctx.textAlign = 'left';
     
-    // Print 5 lines of text
+    // Print 5 lines of text with more spacing
     ctx.fillText('HELLO WORLD', 10, yPos);
-    yPos += 25;
+    yPos += 60;
     ctx.fillText('Line 2', 10, yPos);
-    yPos += 25;
+    yPos += 60;
     ctx.fillText('Line 3', 10, yPos);
-    yPos += 25;
+    yPos += 60;
     ctx.fillText('Line 4', 10, yPos);
-    yPos += 25;
+    yPos += 60;
     ctx.fillText('Line 5', 10, yPos);
   };
 
