@@ -61,29 +61,72 @@ export function CatPrinterReceipt({ item, collection, user }: CatPrinterReceiptP
       yPos += SPACING;
     };
     
-    // Print all item fields (only if defined)
-    if (item.name) addLine(`name: ${item.name}`);
-    if (item.id) addLine(`id: ${item.id}`);
-    if (item.model) addLine(`model: ${item.model}`);
-    if (item.usdzModel) addLine(`usdzModel: ${item.usdzModel}`);
-    if (item.og) addLine(`og: ${item.og}`);
-    if (item.alt) addLine(`alt: ${item.alt}`);
-    if (item.formalName) addLine(`formalName: ${item.formalName}`);
-    if (item.releaseDate) addLine(`releaseDate: ${item.releaseDate}`);
-    if (item.description) addLine(`description: ${item.description}`);
+    // Header info
+    addLine(`${user.name} / ${collection.name}`);
+    addLine(`${item.name}`);
+    addLine('');
+    
+    // Custom fields first (matching ItemPage order)
+    if (item.customFields) {
+      Object.entries(item.customFields).forEach(([key, value]) => {
+        if (value !== undefined) {
+          addLine(`${key}: ${value}`);
+        }
+      });
+      if (Object.keys(item.customFields).length > 0) {
+        addLine('');
+      }
+    }
+    
+    // Fields in ItemPage DescriptionList order
+    if (item.formalName) addLine(`formal name: ${item.formalName}`);
+    if (item.releaseDate) addLine(`release date: ${item.releaseDate}`);
+    
+    if (item.manufacturer || item.manufactureDate || item.manufactureLocation || item.material) {
+      addLine('');
+    }
     if (item.manufacturer) addLine(`manufacturer: ${item.manufacturer}`);
-    if (item.manufactureDate) addLine(`manufactureDate: ${item.manufactureDate}`);
-    if (item.manufactureLocation) addLine(`manufactureLocation: ${item.manufactureLocation}`);
+    if (item.manufactureDate) addLine(`manufacture date: ${item.manufactureDate}`);
+    if (item.manufactureLocation) addLine(`manufacture location: ${item.manufactureLocation}`);
     if (item.material && item.material.length > 0) addLine(`material: ${item.material.join(', ')}`);
-    if (item.acquisitionDate) addLine(`acquisitionDate: ${item.acquisitionDate}`);
-    if (item.acquisitionLocation) addLine(`acquisitionLocation: ${item.acquisitionLocation}`);
-    if (item.storageLocation) addLine(`storageLocation: ${item.storageLocation}`);
-    if (item.captureDate) addLine(`captureDate: ${item.captureDate}`);
-    if (item.captureLocation) addLine(`captureLocation: ${item.captureLocation}`);
-    if (item.captureLatLon) addLine(`captureLatLon: ${item.captureLatLon}`);
-    if (item.captureDevice) addLine(`captureDevice: ${item.captureDevice}`);
-    if (item.captureApp) addLine(`captureApp: ${item.captureApp}`);
-    if (item.captureMethod) addLine(`captureMethod: ${item.captureMethod}`);
+    
+    if (item.acquisitionDate || item.acquisitionLocation) {
+      addLine('');
+    }
+    if (item.acquisitionDate) addLine(`acquisition date: ${item.acquisitionDate}`);
+    if (item.acquisitionLocation) addLine(`acquisition location: ${item.acquisitionLocation}`);
+    
+    if (item.storageLocation) {
+      addLine('');
+      addLine(`storage location: ${item.storageLocation}`);
+    }
+    
+    if (item.captureDate || item.captureLocation || item.captureLatLon || item.captureDevice || item.captureApp || item.captureMethod) {
+      addLine('');
+    }
+    if (item.captureDate) addLine(`capture date: ${item.captureDate}`);
+    
+    // Handle capture location (combines captureLocation and captureLatLon like ItemPage)
+    const { captureLocation, captureLatLon } = item;
+    let location;
+    if (captureLocation && captureLatLon) {
+      location = `${captureLocation} (${captureLatLon})`;
+    } else if (captureLocation) {
+      location = captureLocation;
+    } else if (captureLatLon) {
+      location = captureLatLon;
+    }
+    if (location) addLine(`capture location: ${location}`);
+    
+    if (item.captureDevice) addLine(`capture device: ${item.captureDevice}`);
+    if (item.captureApp) addLine(`capture app: ${item.captureApp}`);
+    if (item.captureMethod) addLine(`capture method: ${item.captureMethod}`);
+    
+    // Model/resource URLs
+    addLine('');
+    addLine(`glTF model: ${item.model}`);
+    if (item.usdzModel) addLine(`USDZ model: ${item.usdzModel}`);
+    if (item.og) addLine(`Open Graph image: ${item.og}`);
   };
 
   const printReceipt = async () => {
