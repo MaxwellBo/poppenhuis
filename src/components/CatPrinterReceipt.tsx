@@ -41,7 +41,8 @@ export function CatPrinterReceipt({ item, collection, user }: CatPrinterReceiptP
 
     // Set canvas width to printer width
     canvas.width = DEF_CANVAS_WIDTH;
-    canvas.height = 400;
+    canvas.height = 600;
+    const SPACING = 100;
     
     // White background
     ctx.fillStyle = 'white';
@@ -54,16 +55,30 @@ export function CatPrinterReceipt({ item, collection, user }: CatPrinterReceiptP
     ctx.font = 'bold 24px monospace';
     ctx.textAlign = 'left';
     
-    // Print 5 lines of text with more spacing
+    // Print 10 lines of text with spacing
     ctx.fillText('HELLO WORLD', 10, yPos);
-    yPos += 60;
-    ctx.fillText('Line 2', 10, yPos);
-    yPos += 60;
-    ctx.fillText('Line 3', 10, yPos);
-    yPos += 60;
-    ctx.fillText('Line 4', 10, yPos);
-    yPos += 60;
-    ctx.fillText('Line 5', 10, yPos);
+    yPos += SPACING;
+    ctx.fillText(`Item: ${item.name}`, 10, yPos);
+    yPos += SPACING;
+    ctx.fillText(`Collection: ${collection.name}`, 10, yPos);
+    yPos += SPACING;
+    ctx.fillText(`Owner: ${user.name}`, 10, yPos);
+    yPos += SPACING;
+    ctx.fillText(`ID: ${item.id}`, 10, yPos);
+    yPos += SPACING;
+    ctx.fillText(`Description: ${item.description || 'N/A'}`, 10, yPos);
+    yPos += SPACING;
+    // Draw the OG image at the end
+    if (item.og) {
+      const img = new Image();
+      img.onload = () => {
+        yPos += SPACING;
+        const imgWidth = 200;
+        const imgHeight = 200;
+        ctx.drawImage(img, 10, yPos, imgWidth, imgHeight);
+      };
+      img.src = item.og;
+    }
   };
 
   const printReceipt = async () => {
