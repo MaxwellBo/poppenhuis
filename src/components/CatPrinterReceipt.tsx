@@ -61,29 +61,29 @@ export function CatPrinterReceipt({ item, collection, user }: CatPrinterReceiptP
       yPos += SPACING;
     };
     
-    // Print all item fields
-    addLine(`name: ${item.name}`);
-    addLine(`id: ${item.id}`);
-    addLine(`model: ${item.model ?? 'undefined'}`);
-    addLine(`usdzModel: ${item.usdzModel ?? 'undefined'}`);
-    addLine(`og: ${item.og ?? 'undefined'}`);
-    addLine(`alt: ${item.alt ?? 'undefined'}`);
-    addLine(`formalName: ${item.formalName ?? 'undefined'}`);
-    addLine(`releaseDate: ${item.releaseDate ?? 'undefined'}`);
-    addLine(`description: ${item.description ?? 'undefined'}`);
-    addLine(`manufacturer: ${item.manufacturer ?? 'undefined'}`);
-    addLine(`manufactureDate: ${item.manufactureDate ?? 'undefined'}`);
-    addLine(`manufactureLocation: ${item.manufactureLocation ?? 'undefined'}`);
-    addLine(`material: ${item.material?.join(', ') ?? 'undefined'}`);
-    addLine(`acquisitionDate: ${item.acquisitionDate ?? 'undefined'}`);
-    addLine(`acquisitionLocation: ${item.acquisitionLocation ?? 'undefined'}`);
-    addLine(`storageLocation: ${item.storageLocation ?? 'undefined'}`);
-    addLine(`captureDate: ${item.captureDate ?? 'undefined'}`);
-    addLine(`captureLocation: ${item.captureLocation ?? 'undefined'}`);
-    addLine(`captureLatLon: ${item.captureLatLon ?? 'undefined'}`);
-    addLine(`captureDevice: ${item.captureDevice ?? 'undefined'}`);
-    addLine(`captureApp: ${item.captureApp ?? 'undefined'}`);
-    addLine(`captureMethod: ${item.captureMethod ?? 'undefined'}`);
+    // Print all item fields (only if defined)
+    if (item.name) addLine(`name: ${item.name}`);
+    if (item.id) addLine(`id: ${item.id}`);
+    if (item.model) addLine(`model: ${item.model}`);
+    if (item.usdzModel) addLine(`usdzModel: ${item.usdzModel}`);
+    if (item.og) addLine(`og: ${item.og}`);
+    if (item.alt) addLine(`alt: ${item.alt}`);
+    if (item.formalName) addLine(`formalName: ${item.formalName}`);
+    if (item.releaseDate) addLine(`releaseDate: ${item.releaseDate}`);
+    if (item.description) addLine(`description: ${item.description}`);
+    if (item.manufacturer) addLine(`manufacturer: ${item.manufacturer}`);
+    if (item.manufactureDate) addLine(`manufactureDate: ${item.manufactureDate}`);
+    if (item.manufactureLocation) addLine(`manufactureLocation: ${item.manufactureLocation}`);
+    if (item.material && item.material.length > 0) addLine(`material: ${item.material.join(', ')}`);
+    if (item.acquisitionDate) addLine(`acquisitionDate: ${item.acquisitionDate}`);
+    if (item.acquisitionLocation) addLine(`acquisitionLocation: ${item.acquisitionLocation}`);
+    if (item.storageLocation) addLine(`storageLocation: ${item.storageLocation}`);
+    if (item.captureDate) addLine(`captureDate: ${item.captureDate}`);
+    if (item.captureLocation) addLine(`captureLocation: ${item.captureLocation}`);
+    if (item.captureLatLon) addLine(`captureLatLon: ${item.captureLatLon}`);
+    if (item.captureDevice) addLine(`captureDevice: ${item.captureDevice}`);
+    if (item.captureApp) addLine(`captureApp: ${item.captureApp}`);
+    if (item.captureMethod) addLine(`captureMethod: ${item.captureMethod}`);
   };
 
   const printReceipt = async () => {
