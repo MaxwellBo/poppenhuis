@@ -10,7 +10,7 @@ import { QueryPreservingLink } from "../components/QueryPreservingLink";
 import { HelmetMeta } from "../components/HelmetMeta";
 import { QrCode } from "../components/QrCode";
 import { AFrameScene } from "../components/AFrameScene";
-import { CatPrinterReceipt } from "../components/CatPrinterReceipt";
+import { PrintToCatPrinterButton } from "../components/PrintToCatPrinterButton";
 
 export const loader = loadItem
 
@@ -92,7 +92,7 @@ export default function ItemPage() {
             })}>
             share?
               </button>}
-            <CatPrinterReceipt item={item} collection={collection} user={user} />
+            <PrintToCatPrinterButton item={item} collection={collection} user={user} />
             </div>
         </div>
         <div id="next">

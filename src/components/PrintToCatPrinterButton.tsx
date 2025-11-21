@@ -13,8 +13,9 @@ import {
   DEF_ENERGY,
   DEF_FINISH_FEED,
 } from '../../kitty-printer-main/common/constants';
+import QRCode from 'qrcode';
 
-interface CatPrinterReceiptProps {
+interface PrintToCatPrinterButtonProps {
   item: Item;
   collection: Collection;
   user: User;
@@ -28,7 +29,7 @@ declare global {
   }
 }
 
-export function CatPrinterReceipt({ item, collection, user }: CatPrinterReceiptProps) {
+export function PrintToCatPrinterButton({ item, collection, user }: PrintToCatPrinterButtonProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isPrinting, setIsPrinting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -42,7 +43,7 @@ export function CatPrinterReceipt({ item, collection, user }: CatPrinterReceiptP
 
     // Set canvas width to printer width
     canvas.width = DEF_CANVAS_WIDTH;
-    canvas.height = 800;
+    canvas.height = 1000;
     const SPACING = 20; 
     
     // White background
@@ -177,6 +178,43 @@ export function CatPrinterReceipt({ item, collection, user }: CatPrinterReceiptP
       });
     }
     
+    // Draw QR code at the end
+    const itemUrl = `poppenhu.is/${user.id}/${collection.id}/${item.id}`;
+    await new Promise<void>((resolve) => {
+      QRCode.toDataURL(itemUrl, { 
+        errorCorrectionLevel: 'low',
+        margin: 0,
+        width: 256,
+        color: {
+          light: '#ffffff'
+        }
+      }, function (err, url) {
+        if (!err && url) {
+          const qrImg = new Image();
+          qrImg.onload = () => {
+            addSimpleLine(''); // Add spacing before QR code
+            
+            // Center the QR code
+            const qrSize = 256;
+            const xOffset = (canvas.width - qrSize) / 2;
+            
+            ctx.drawImage(qrImg, xOffset, yPos, qrSize, qrSize);
+            yPos += qrSize + 40;
+            
+            resolve();
+          };
+          qrImg.onerror = () => {
+            console.warn('Failed to load QR code');
+            resolve();
+          };
+          qrImg.src = url;
+        } else {
+          console.error('QR Code generation failed:', err);
+          resolve();
+        }
+      });
+    });
+    
     // Draw a black vertical line across the entire canvas height on the left
     ctx.strokeStyle = 'black';
     ctx.lineWidth = 2;
@@ -290,7 +328,7 @@ export function CatPrinterReceipt({ item, collection, user }: CatPrinterReceiptP
   };
 
   return (
-    <div className="cat-printer-receipt">
+    <div className="print-to-cat-printer-button">
       <button 
         onClick={printReceipt} 
         disabled={isPrinting}
