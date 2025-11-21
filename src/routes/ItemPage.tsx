@@ -80,17 +80,20 @@ export default function ItemPage() {
         <div id="meta">
           <DescriptionList item={item} collection={collection} user={user} />
           <br />
-          {navigator.share &&
-            <button className='mr-1ch' onClick={() =>
-              navigator.share({
-                title: item.name,
-                text: item.description ?? 'a digital dollhouse',
-                url: window.location.href
-              })}>
-              share?
-            </button>}
-          <QrCode item={item} user={user} collection={collection} context="web" />
-          <QueryPreservingLink className="action-link" to={`/${user.id}/${collection.id}/${item.id}/label`}>print label</QueryPreservingLink>, <CatPrinterReceipt item={item} collection={collection} user={user} />, <QueryPreservingLink className="action-link" to={`/${user.id}/${collection.id}/${item.id}/embed`}>embed</QueryPreservingLink>, <QuicklookLink item={item} />, <a href={githubManifestCodeSearchUrl}>source</a>
+          <div className="links">
+            <QrCode item={item} user={user} collection={collection} context="web" />
+            <QueryPreservingLink className="action-link" to={`/${user.id}/${collection.id}/${item.id}/label`}>print label</QueryPreservingLink>, <QueryPreservingLink className="action-link" to={`/${user.id}/${collection.id}/${item.id}/embed`}>embed</QueryPreservingLink>, <QuicklookLink item={item} />, <a href={githubManifestCodeSearchUrl}>source</a>
+            {navigator.share &&
+              <button onClick={() =>
+            navigator.share({
+            title: item.name,
+            text: item.description ?? 'a digital dollhouse',
+            url: window.location.href
+            })}>
+            share?
+              </button>}
+            <CatPrinterReceipt item={item} collection={collection} user={user} />
+            </div>
         </div>
         <div id="next">
           <ItemCard 

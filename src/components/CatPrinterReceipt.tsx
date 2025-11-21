@@ -2,6 +2,7 @@ import { useRef, useState, useEffect } from 'react';
 import { Item, Collection, User } from '../manifest';
 import { CatPrinter } from '../../kitty-printer-main/common/cat-protocol';
 import { rgbaToBits } from '../../kitty-printer-main/common/bitmap-utils';
+import { rgbaToGray, grayToRgba, ditherSteinberg } from '../../kitty-printer-main/common/dither-utils';
 import {
   CAT_ADV_SRV,
   CAT_PRINT_SRV,
@@ -61,33 +62,23 @@ export function CatPrinterReceipt({ item, collection, user }: CatPrinterReceiptP
       yPos += SPACING;
     };
     
-    // Helper to add a key-value line, graying out undefined or [] values
+    // Helper to add a key-value line, skip if value is undefined or []
     const addKeyValueLine = (key: string, value: any) => {
-      // Determine display value and whether it's undefined/empty
-      let displayValue: string;
-      let isGray = false;
-      
-      if (value === undefined) {
-        displayValue = 'undefined';
-        isGray = true;
-      } else if (Array.isArray(value)) {
-        if (value.length === 0) {
-          displayValue = '[]';
-          isGray = true;
-        } else {
-          displayValue = value.join(', ');
-        }
-      } else {
-        displayValue = String(value);
+      // Skip if undefined or empty array
+      if (value === undefined || (Array.isArray(value) && value.length === 0)) {
+        return;
       }
+      
+      // Format the display value
+      const displayValue = Array.isArray(value) ? value.join(', ') : String(value);
       
       // Draw key in black
       ctx.fillStyle = 'black';
       const keyText = `${key}: `;
       ctx.fillText(keyText, 10, yPos);
       
-      // Draw value (gray if undefined/empty)
-      ctx.fillStyle = isGray ? '#888888' : 'black';
+      // Draw value in black
+      ctx.fillStyle = 'black';
       const keyWidth = ctx.measureText(keyText).width;
       ctx.fillText(displayValue, 10 + keyWidth, yPos);
       
@@ -149,11 +140,6 @@ export function CatPrinterReceipt({ item, collection, user }: CatPrinterReceiptP
     addKeyValueLine('capture app', item.captureApp);
     addKeyValueLine('capture method', item.captureMethod);
     
-    // Model/resource URLs
-    addSimpleLine('');
-    addKeyValueLine('glTF model', item.model);
-    addKeyValueLine('USDZ model', item.usdzModel);
-    addKeyValueLine('Open Graph image', item.og);
     
     // Draw OG image at the end if available
     if (item.og) {
@@ -190,6 +176,14 @@ export function CatPrinterReceipt({ item, collection, user }: CatPrinterReceiptP
         img.src = item.og!;
       });
     }
+    
+    // Draw a black vertical line across the entire canvas height on the left
+    ctx.strokeStyle = 'black';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(0, canvas.height);
+    ctx.stroke();
   };
 
   // Render receipt on mount
@@ -252,34 +246,11 @@ export function CatPrinterReceipt({ item, collection, user }: CatPrinterReceiptP
 
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
         
-        // Convert RGBA to grayscale with proper weighting, then to 1-bit black/white
-        // Following the same approach as kitty-printer's image_worker.js
+        // Apply Floyd-Steinberg dithering using kitty-printer utilities
         const data = new Uint32Array(imageData.data.buffer);
-        const bwData = new Uint32Array(data.length);
-        
-        for (let i = 0; i < data.length; i++) {
-          const n = data[i];
-          // Extract RGB from little-endian RGBA
-          const r = (n & 0xff);
-          const g = ((n >> 8) & 0xff);
-          const b = ((n >> 16) & 0xff);
-          const a = ((n >> 24) & 0xff) / 0xff;
-          
-          // Convert to grayscale with proper color weighting
-          let gray = r * 0.2125 + g * 0.7154 + b * 0.0721;
-          
-          // Handle alpha - treat transparent as white
-          if (a < 1) {
-            const alpha = 1 - a;
-            gray = gray * a + 0xff * alpha;
-          }
-          
-          // Simple threshold to black or white
-          const value = gray > 128 ? 0xff : 0x00;
-          
-          // Store as RGBA where each channel is either 0x00 or 0xff
-          bwData[i] = (value << 16) | (value << 8) | value | 0xff000000;
-        }
+        const mono = rgbaToGray(data);
+        ditherSteinberg(mono, canvas.width, canvas.height);
+        const bwData = grayToRgba(mono);
 
         const bitmap = rgbaToBits(bwData);
         const pitch = canvas.width / 8 | 0;
@@ -330,9 +301,19 @@ export function CatPrinterReceipt({ item, collection, user }: CatPrinterReceiptP
         {isPrinting ? 'printing...' : 'print receipt'}
       </button>
       {error && <span style={{ color: 'red', marginLeft: '10px' }}>{error}</span>}
-      <canvas 
-        ref={canvasRef} 
-      />
+      <details>
+        <summary>preview & info</summary>
+        <p>
+          This implements the protocol for the very cheap range of "cat printers" available on <a href="https://www.aliexpress.com/w/wholesale-cat-printer.html">
+          AliExpress
+          </a>. The protocol is lifted from <a href="https://github.com/NaitLee/kitty-printer">NaitLee/kitty-printer</a>.
+
+          <canvas 
+            ref={canvasRef} 
+          />
+        </p>
+
+      </details>
     </div>
   );
 }
