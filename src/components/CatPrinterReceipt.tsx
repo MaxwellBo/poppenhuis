@@ -41,8 +41,8 @@ export function CatPrinterReceipt({ item, collection, user }: CatPrinterReceiptP
 
     // Set canvas width to printer width
     canvas.width = DEF_CANVAS_WIDTH;
-    canvas.height = 600;
-    const SPACING = 100;
+    canvas.height = 1500; // Start tall, will adjust at end
+    const SPACING = 60;
     
     // White background
     ctx.fillStyle = 'white';
@@ -55,30 +55,35 @@ export function CatPrinterReceipt({ item, collection, user }: CatPrinterReceiptP
     ctx.font = 'bold 24px monospace';
     ctx.textAlign = 'left';
     
-    // Print 10 lines of text with spacing
-    ctx.fillText('HELLO WORLD', 10, yPos);
-    yPos += SPACING;
-    ctx.fillText(`Item: ${item.name}`, 10, yPos);
-    yPos += SPACING;
-    ctx.fillText(`Collection: ${collection.name}`, 10, yPos);
-    yPos += SPACING;
-    ctx.fillText(`Owner: ${user.name}`, 10, yPos);
-    yPos += SPACING;
-    ctx.fillText(`ID: ${item.id}`, 10, yPos);
-    yPos += SPACING;
-    ctx.fillText(`Description: ${item.description || 'N/A'}`, 10, yPos);
-    yPos += SPACING;
-    // Draw the OG image at the end
-    if (item.og) {
-      const img = new Image();
-      img.onload = () => {
-        yPos += SPACING;
-        const imgWidth = 200;
-        const imgHeight = 200;
-        ctx.drawImage(img, 10, yPos, imgWidth, imgHeight);
-      };
-      img.src = item.og;
-    }
+    // Helper to add a line
+    const addLine = (text: string) => {
+      ctx.fillText(text, 10, yPos);
+      yPos += SPACING;
+    };
+    
+    // Print all item fields
+    addLine(`name: ${item.name}`);
+    addLine(`id: ${item.id}`);
+    addLine(`model: ${item.model ?? 'undefined'}`);
+    addLine(`usdzModel: ${item.usdzModel ?? 'undefined'}`);
+    addLine(`og: ${item.og ?? 'undefined'}`);
+    addLine(`alt: ${item.alt ?? 'undefined'}`);
+    addLine(`formalName: ${item.formalName ?? 'undefined'}`);
+    addLine(`releaseDate: ${item.releaseDate ?? 'undefined'}`);
+    addLine(`description: ${item.description ?? 'undefined'}`);
+    addLine(`manufacturer: ${item.manufacturer ?? 'undefined'}`);
+    addLine(`manufactureDate: ${item.manufactureDate ?? 'undefined'}`);
+    addLine(`manufactureLocation: ${item.manufactureLocation ?? 'undefined'}`);
+    addLine(`material: ${item.material?.join(', ') ?? 'undefined'}`);
+    addLine(`acquisitionDate: ${item.acquisitionDate ?? 'undefined'}`);
+    addLine(`acquisitionLocation: ${item.acquisitionLocation ?? 'undefined'}`);
+    addLine(`storageLocation: ${item.storageLocation ?? 'undefined'}`);
+    addLine(`captureDate: ${item.captureDate ?? 'undefined'}`);
+    addLine(`captureLocation: ${item.captureLocation ?? 'undefined'}`);
+    addLine(`captureLatLon: ${item.captureLatLon ?? 'undefined'}`);
+    addLine(`captureDevice: ${item.captureDevice ?? 'undefined'}`);
+    addLine(`captureApp: ${item.captureApp ?? 'undefined'}`);
+    addLine(`captureMethod: ${item.captureMethod ?? 'undefined'}`);
   };
 
   const printReceipt = async () => {
