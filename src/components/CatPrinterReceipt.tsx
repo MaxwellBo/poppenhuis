@@ -41,17 +41,29 @@ export function CatPrinterReceipt({ item, collection, user }: CatPrinterReceiptP
 
     // Set canvas width to printer width
     canvas.width = DEF_CANVAS_WIDTH;
-    canvas.height = 100;
+    canvas.height = 200;
     
     // White background
     ctx.fillStyle = 'white';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     
+    let yPos = 20;
+    
     // Black text
     ctx.fillStyle = 'black';
-    ctx.font = 'bold 32px monospace';
-    ctx.textAlign = 'center';
-    ctx.fillText('HELLO WORLD', canvas.width / 2, 50);
+    ctx.font = '16px monospace';
+    ctx.textAlign = 'left';
+    
+    // Print 5 lines of text
+    ctx.fillText('HELLO WORLD', 10, yPos);
+    yPos += 25;
+    ctx.fillText('Line 2', 10, yPos);
+    yPos += 25;
+    ctx.fillText('Line 3', 10, yPos);
+    yPos += 25;
+    ctx.fillText('Line 4', 10, yPos);
+    yPos += 25;
+    ctx.fillText('Line 5', 10, yPos);
   };
 
   const printReceipt = async () => {
