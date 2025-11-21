@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { Item, Collection, User } from '../manifest';
 import { CatPrinter } from '../../kitty-printer-main/common/cat-protocol';
 import { rgbaToBits } from '../../kitty-printer-main/common/bitmap-utils';
@@ -34,77 +34,104 @@ export function CatPrinterReceipt({ item, collection, user }: CatPrinterReceiptP
 
   const renderReceipt = async () => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (!canvas) throw new Error('Canvas not found');
 
     const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+    if (!ctx) throw new Error('Canvas context not found');
 
     // Set canvas width to printer width
     canvas.width = DEF_CANVAS_WIDTH;
-    canvas.height = 1500; // Start tall, will adjust at end
-    const SPACING = 60;
+    canvas.height = 800;
+    const SPACING = 20; 
     
     // White background
     ctx.fillStyle = 'white';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     
-    let yPos = 40;
+    let yPos = 30; // Reduced from 40
     
-    // Black text
-    ctx.fillStyle = 'black';
-    ctx.font = 'bold 24px monospace';
+    // Smaller text
+    ctx.font = 'bold 12px monospace'; // Reduced from 24px
     ctx.textAlign = 'left';
     
-    // Helper to add a line
-    const addLine = (text: string) => {
+    // Helper to add a simple text line
+    const addSimpleLine = (text: string) => {
+      ctx.fillStyle = 'black';
       ctx.fillText(text, 10, yPos);
       yPos += SPACING;
     };
     
+    // Helper to add a key-value line, graying out undefined or [] values
+    const addKeyValueLine = (key: string, value: any) => {
+      // Determine display value and whether it's undefined/empty
+      let displayValue: string;
+      let isGray = false;
+      
+      if (value === undefined) {
+        displayValue = 'undefined';
+        isGray = true;
+      } else if (Array.isArray(value)) {
+        if (value.length === 0) {
+          displayValue = '[]';
+          isGray = true;
+        } else {
+          displayValue = value.join(', ');
+        }
+      } else {
+        displayValue = String(value);
+      }
+      
+      // Draw key in black
+      ctx.fillStyle = 'black';
+      const keyText = `${key}: `;
+      ctx.fillText(keyText, 10, yPos);
+      
+      // Draw value (gray if undefined/empty)
+      ctx.fillStyle = isGray ? '#888888' : 'black';
+      const keyWidth = ctx.measureText(keyText).width;
+      ctx.fillText(displayValue, 10 + keyWidth, yPos);
+      
+      yPos += SPACING;
+    };
+    
     // Header info
-    addLine(`${user.name} / ${collection.name}`);
-    addLine(`${item.name}`);
-    addLine('');
+    addSimpleLine('');
+    addSimpleLine('');
+    addSimpleLine(`${user.name} / ${collection.name}`);
+    addSimpleLine(`${item.name}`);
+    addSimpleLine('');
     
     // Custom fields first (matching ItemPage order)
-    if (item.customFields) {
+    if (item.customFields && Object.keys(item.customFields).length > 0) {
       Object.entries(item.customFields).forEach(([key, value]) => {
-        if (value !== undefined) {
-          addLine(`${key}: ${value}`);
-        }
+        addKeyValueLine(key, value);
       });
-      if (Object.keys(item.customFields).length > 0) {
-        addLine('');
-      }
+      addSimpleLine('');
     }
     
-    // Fields in ItemPage DescriptionList order
-    if (item.formalName) addLine(`formal name: ${item.formalName}`);
-    if (item.releaseDate) addLine(`release date: ${item.releaseDate}`);
+    // Fields in ItemPage DescriptionList order - ALWAYS print them
+    addKeyValueLine('formal name', item.formalName);
+    addKeyValueLine('release date', item.releaseDate);
     
-    if (item.manufacturer || item.manufactureDate || item.manufactureLocation || item.material) {
-      addLine('');
-    }
-    if (item.manufacturer) addLine(`manufacturer: ${item.manufacturer}`);
-    if (item.manufactureDate) addLine(`manufacture date: ${item.manufactureDate}`);
-    if (item.manufactureLocation) addLine(`manufacture location: ${item.manufactureLocation}`);
-    if (item.material && item.material.length > 0) addLine(`material: ${item.material.join(', ')}`);
+    addSimpleLine('');
     
-    if (item.acquisitionDate || item.acquisitionLocation) {
-      addLine('');
-    }
-    if (item.acquisitionDate) addLine(`acquisition date: ${item.acquisitionDate}`);
-    if (item.acquisitionLocation) addLine(`acquisition location: ${item.acquisitionLocation}`);
+    addKeyValueLine('manufacturer', item.manufacturer);
+    addKeyValueLine('manufacture date', item.manufactureDate);
+    addKeyValueLine('manufacture location', item.manufactureLocation);
+    addKeyValueLine('material', item.material);
     
-    if (item.storageLocation) {
-      addLine('');
-      addLine(`storage location: ${item.storageLocation}`);
-    }
+    addSimpleLine('');
     
-    if (item.captureDate || item.captureLocation || item.captureLatLon || item.captureDevice || item.captureApp || item.captureMethod) {
-      addLine('');
-    }
-    if (item.captureDate) addLine(`capture date: ${item.captureDate}`);
+    addKeyValueLine('acquisition date', item.acquisitionDate);
+    addKeyValueLine('acquisition location', item.acquisitionLocation);
+    
+    addSimpleLine('');
+    
+    addKeyValueLine('storage location', item.storageLocation);
+    
+    addSimpleLine('');
+    
+    addKeyValueLine('capture date', item.captureDate);
     
     // Handle capture location (combines captureLocation and captureLatLon like ItemPage)
     const { captureLocation, captureLatLon } = item;
@@ -116,17 +143,17 @@ export function CatPrinterReceipt({ item, collection, user }: CatPrinterReceiptP
     } else if (captureLatLon) {
       location = captureLatLon;
     }
-    if (location) addLine(`capture location: ${location}`);
+    addKeyValueLine('capture location', location);
     
-    if (item.captureDevice) addLine(`capture device: ${item.captureDevice}`);
-    if (item.captureApp) addLine(`capture app: ${item.captureApp}`);
-    if (item.captureMethod) addLine(`capture method: ${item.captureMethod}`);
+    addKeyValueLine('capture device', item.captureDevice);
+    addKeyValueLine('capture app', item.captureApp);
+    addKeyValueLine('capture method', item.captureMethod);
     
     // Model/resource URLs
-    addLine('');
-    addLine(`glTF model: ${item.model}`);
-    if (item.usdzModel) addLine(`USDZ model: ${item.usdzModel}`);
-    if (item.og) addLine(`Open Graph image: ${item.og}`);
+    addSimpleLine('');
+    addKeyValueLine('glTF model', item.model);
+    addKeyValueLine('USDZ model', item.usdzModel);
+    addKeyValueLine('Open Graph image', item.og);
     
     // Draw OG image at the end if available
     if (item.og) {
@@ -135,16 +162,21 @@ export function CatPrinterReceipt({ item, collection, user }: CatPrinterReceiptP
         img.crossOrigin = 'anonymous'; // Handle CORS if needed
         
         img.onload = () => {
-          addLine(''); // Add spacing before image
+          addSimpleLine(''); // Add spacing before image
           
-          // Calculate image dimensions to fit printer width
-          const maxWidth = canvas.width - 20; // Leave 10px margin on each side
-          const scaleFactor = maxWidth / img.width;
-          const imgWidth = maxWidth;
-          const imgHeight = img.height * scaleFactor;
+          // Make image full width (no margins) to maximize size
+          const imgWidth = canvas.width;
+          // Calculate height to maintain aspect ratio
+          const imgHeight = (img.height / img.width) * imgWidth;
+          
+          // Center crop: use full width and let sides get chopped if needed
+          const sx = Math.max(0, (img.width - img.height * (imgWidth / imgHeight)) / 2);
+          const sy = 0;
+          const sWidth = img.width - sx * 2;
+          const sHeight = img.height;
           
           // Draw the image
-          ctx.drawImage(img, 10, yPos, imgWidth, imgHeight);
+          ctx.drawImage(img, sx, sy, sWidth, sHeight, 0, yPos, imgWidth, imgHeight);
           yPos += imgHeight + 40;
           
           resolve();
@@ -159,6 +191,11 @@ export function CatPrinterReceipt({ item, collection, user }: CatPrinterReceiptP
       });
     }
   };
+
+  // Render receipt on mount
+  useEffect(() => {
+    renderReceipt();
+  }, [item, collection, user]);
 
   const printReceipt = async () => {
     setIsPrinting(true);
@@ -295,7 +332,6 @@ export function CatPrinterReceipt({ item, collection, user }: CatPrinterReceiptP
       {error && <span style={{ color: 'red', marginLeft: '10px' }}>{error}</span>}
       <canvas 
         ref={canvasRef} 
-        style={{ display: 'none' }}
       />
     </div>
   );
