@@ -18,17 +18,15 @@ export default function ItemPage() {
   const { item, user, collection, users } = useLoaderData() as Awaited<ReturnType<typeof loadItem>>;
 
   const currentIndex = collection.items.findIndex(i => i.id === item.id);
-  const previousItem: Item = currentIndex > 0 
-    ? collection.items[currentIndex - 1] 
+  const previousItem: Item = currentIndex > 0
+    ? collection.items[currentIndex - 1]
     : collection.items[collection.items.length - 1];
-  const nextItem: Item = currentIndex < collection.items.length - 1 
-    ? collection.items[currentIndex + 1] 
+  const nextItem: Item = currentIndex < collection.items.length - 1
+    ? collection.items[currentIndex + 1]
     : collection.items[0];
 
   const previousItemIsLast = currentIndex === 0;
   const nextItemIsFirst = currentIndex === collection.items.length - 1;
-
-  const githubManifestCodeSearchUrl = `https://github.com/search?q=repo%3AMaxwellBo%2Fpoppenhuis+%22id%3A+%5C%22${item.id}%5C%22%22&type=code`;
 
   const [searchParams, setSearchParams] = useSearchParams();
   const renderAFrameScene = searchParams.get("vr") === "true";
@@ -53,13 +51,13 @@ export default function ItemPage() {
       </header>
       <div className='bento'>
         <div id="previous">
-          <ItemCard 
-            item={previousItem} 
-            collection={collection} 
+          <ItemCard
+            item={previousItem}
+            collection={collection}
             showIndex={true}
-            user={user} 
-            triggerKey="h" 
-            altName={previousItemIsLast ? "↻ go to end" : "← previous"} 
+            user={user}
+            triggerKey="h"
+            altName={previousItemIsLast ? "↻ go to end" : "← previous"}
             size='small' />
         </div>
         <div id="model">
@@ -68,9 +66,9 @@ export default function ItemPage() {
             : <ModelViewerWrapper item={item} size='responsive-big' />
           }
           <label className="vr-toggle">
-            <input 
-              type="checkbox" 
-              checked={renderAFrameScene} 
+            <input
+              type="checkbox"
+              checked={renderAFrameScene}
               onChange={handleVRToggle}
             />
             VR?
@@ -80,28 +78,15 @@ export default function ItemPage() {
         <div id="meta">
           <DescriptionList item={item} collection={collection} user={user} />
           <br />
-          <div className="links">
-            <QrCode item={item} user={user} collection={collection} context="web" />
-            <QueryPreservingLink className="action-link" to={`/${user.id}/${collection.id}/${item.id}/label`}>print label</QueryPreservingLink>, <QueryPreservingLink className="action-link" to={`/${user.id}/${collection.id}/${item.id}/embed`}>embed</QueryPreservingLink>, <QuicklookLink item={item} />, <a href={githubManifestCodeSearchUrl}>source</a>
-            {navigator.share &&
-              <button onClick={() =>
-            navigator.share({
-            title: item.name,
-            text: item.description ?? 'a digital dollhouse',
-            url: window.location.href
-            })}>
-            share?
-              </button>}
-            <PrintToCatPrinterButton item={item} collection={collection} user={user} />
-            </div>
+          <QrCodeAndLinksAndButtons item={item} collection={collection} user={user} />
         </div>
         <div id="next">
-          <ItemCard 
-            item={nextItem} 
-            collection={collection} 
+          <ItemCard
+            item={nextItem}
+            collection={collection}
             showIndex={true}
-            user={user} triggerKey="l" 
-            altName={nextItemIsFirst ? "back to start ↺" : "next →"} 
+            user={user} triggerKey="l"
+            altName={nextItemIsFirst ? "back to start ↺" : "next →"}
             size='small' />
         </div>
         <div id="cards">
@@ -187,6 +172,35 @@ function DescriptionList(props: { item: Item; collection: Collection; user: User
       <dd className='ellipsis'>{item.og && <a href={item.og}>{item.og}</a>}</dd>
     </dl>
   );
+}
+
+function QrCodeAndLinksAndButtons(props: { item: Item; collection: Collection; user: User; }) {
+  const { item, collection, user } = props;
+
+  const githubManifestCodeSearchUrl = `https://github.com/search?q=repo%3AMaxwellBo%2Fpoppenhuis+%22id%3A+%5C%22${item.id}%5C%22%22&type=code`;
+
+  return (
+    <div className="qrcode-and-links-and-buttons">
+      <div id="qrcode">
+        <QrCode item={item} user={user} collection={collection} context="web" />
+      </div>
+      <div id="links">
+        <QueryPreservingLink className="action-link" to={`/${user.id}/${collection.id}/${item.id}/label`}>print label</QueryPreservingLink>, <QueryPreservingLink className="action-link" to={`/${user.id}/${collection.id}/${item.id}/embed`}>embed</QueryPreservingLink>, <QuicklookLink item={item} />, <a href={githubManifestCodeSearchUrl}>source</a>
+      </div>
+      <div id="buttons">
+        {navigator.share &&
+          <button onClick={() =>
+            navigator.share({
+              title: item.name,
+              text: item.description ?? 'a digital dollhouse',
+              url: window.location.href
+            })}>
+            share?
+          </button>}
+        <PrintToCatPrinterButton item={item} collection={collection} user={user} />
+      </div>
+    </div>
+  )
 }
 
 function QuicklookLink(props: { item: Item; }) {

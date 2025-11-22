@@ -563,6 +563,35 @@ input[type="checkbox"] {
     display: none;
 }
 
+.qrcode-and-links-and-buttons {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto;
+  grid-template-areas:
+    "qrcode links"
+    "qrcode buttons";
+  gap: 1ch;
+  align-items: start;
+}
+
+.qrcode-and-links-and-buttons #qrcode {
+  grid-area: qrcode;
+}
+
+.qrcode-and-links-and-buttons #links {
+  grid-area: links;
+}
+
+.qrcode-and-links-and-buttons #buttons {
+  grid-area: buttons;
+  display: flex;
+  gap: 4px;
+  flex-direction: row;
+  align-items: flex-start;
+}
+
+
+
 /*
   Josh's Custom CSS Reset
   https://www.joshwcomeau.com/css/custom-css-reset/
