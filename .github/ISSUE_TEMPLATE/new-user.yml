@@ -1,0 +1,72 @@
+name: Add new user
+description: Submit a new user profile to the poppenhuis collection
+title: "[New user]: "
+labels: ["new user", "content"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for contributing a new user profile! Please fill out the YAML template below with your user information.
+        
+  - type: input
+    id: user-id
+    attributes:
+      label: User ID
+      description: A unique identifier for this user (lowercase, no spaces, use hyphens)
+      placeholder: "e.g., johndoe"
+    validations:
+      required: true
+      
+  - type: input
+    id: user-name
+    attributes:
+      label: Display Name
+      description: The user's display name
+      placeholder: "e.g., John Doe"
+    validations:
+      required: true
+      
+  - type: textarea
+    id: user-bio
+    attributes:
+      label: Bio
+      description: A short biography (supports Markdown)
+      placeholder: |
+        Artist and collector
+        [website](https://example.com)
+    validations:
+      required: false
+      
+  - type: input
+    id: og-image
+    attributes:
+      label: OG Image URL (optional)
+      description: URL to an image for social media sharing
+      placeholder: "/models/username/og.jpeg"
+    validations:
+      required: false
+      
+  - type: textarea
+    id: yaml-template
+    attributes:
+      label: User YAML
+      description: Complete YAML representation of the user (will be added to manifest.tsx)
+      placeholder: |
+        id: "johndoe"
+        name: "John Doe"
+        bio: "Artist and collector"
+        og: "/models/johndoe/og.jpeg"
+        collections: []
+      render: yaml
+    validations:
+      required: true
+      
+  - type: markdown
+    attributes:
+      value: |
+        ## Next Steps
+        
+        After submitting this issue:
+        1. A maintainer will review your user profile
+        2. If approved, your user will be added to `src/manifest.tsx`
+        3. You can then submit collections and items for this user

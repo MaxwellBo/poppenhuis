@@ -1,0 +1,127 @@
+name: Add new item
+description: Submit a new 3D item to a collection
+title: "[New item]: "
+labels: ["new item", "content"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for contributing a new 3D item! Please fill out the YAML template below and attach your `.glb` file.
+        
+        **Required**: Attach a `.glb` file to this issue.
+        
+  - type: input
+    id: user-id
+    attributes:
+      label: User ID
+      description: The ID of the user this item belongs to (will be created if it doesn't exist)
+      placeholder: "e.g., johndoe"
+    validations:
+      required: true
+      
+  - type: input
+    id: collection-id
+    attributes:
+      label: Collection ID
+      description: The ID of the collection this item belongs to (will be created if it doesn't exist)
+      placeholder: "e.g., vintage-cameras"
+    validations:
+      required: true
+      
+  - type: textarea
+    id: yaml-template
+    attributes:
+      label: Item YAML
+      description: |
+        Complete YAML representation of the item. See field descriptions below.
+        
+        **Required fields**: id, name, model
+        
+        **Field descriptions**:
+        - `id`: Unique identifier (lowercase, no spaces, use hyphens)
+        - `name`: Display name for the item
+        - `model`: Path where the .glb file will be stored (e.g., "/models/username/collection/item.glb")
+        - `usdzModel`: (Optional) Path to USDZ file for AR on Apple devices
+        - `og`: (Optional) Social media preview image
+        - `alt`: (Optional) Accessibility description
+        - `formalName`: (Optional) Scientific/model name
+        - `description`: (Optional) Item description (supports Markdown)
+        - `releaseDate`: (Optional) When this variant was released (e.g., "2016 March")
+        - `manufacturer`: (Optional) Who made it
+        - `manufactureDate`: (Optional) When it was made
+        - `manufactureLocation`: (Optional) Where it was made
+        - `material`: (Optional) Array of materials (e.g., ["plastic", "glass"])
+        - `acquisitionDate`: (Optional) When you got it
+        - `acquisitionLocation`: (Optional) Where you got it
+        - `storageLocation`: (Optional) Where you keep it
+        - `captureDate`: (Optional) When the 3D scan was made
+        - `captureLocation`: (Optional) Where the scan was made
+        - `captureLatLon`: (Optional) GPS coordinates (e.g., "40.75 N, 74.00 W")
+        - `captureDevice`: (Optional) Device used (e.g., "Apple iPhone 13 Pro")
+        - `captureApp`: (Optional) App used (e.g., "Polycam")
+        - `captureMethod`: (Optional) Method used (e.g., "LiDAR", "Photogrammetry")
+        - `customFields`: (Optional) Object with custom key-value pairs
+      placeholder: |
+        id: "nikon-f3"
+        name: "Nikon F3"
+        model: "/models/johndoe/vintage-cameras/nikon-f3.glb"
+        usdzModel: "/models/johndoe/vintage-cameras/nikon-f3.usdz"
+        og: "/models/johndoe/vintage-cameras/nikon-f3.jpeg"
+        description: "A classic 35mm SLR camera from Nikon's professional line"
+        formalName: "Nikon F3 HP"
+        releaseDate: "1980"
+        manufacturer: "Nikon"
+        manufactureDate: "1982"
+        manufactureLocation: "Tokyo, Japan"
+        material:
+          - "aluminum alloy"
+          - "glass"
+          - "leather"
+        acquisitionDate: "2023 June 15"
+        acquisitionLocation: "Brooklyn Flea Market, New York"
+        storageLocation: "Brooklyn, New York"
+        captureDate: "2023 July 1"
+        captureLocation: "Brooklyn, New York"
+        captureLatLon: "40.68 N, 73.98 W"
+        captureDevice: "Apple iPhone 13 Pro"
+        captureApp: "Polycam"
+        captureMethod: "LiDAR"
+        customFields:
+          serialNumber: "1234567"
+          condition: "Excellent"
+      render: yaml
+    validations:
+      required: true
+      
+  - type: checkboxes
+    id: file-attachment
+    attributes:
+      label: File Attachment
+      description: Please confirm you will attach the required files
+      options:
+        - label: I will attach a `.glb` file to this issue
+          required: true
+        - label: I will attach a `.usdz` file (optional, for Apple AR support)
+          required: false
+        - label: I will attach an OG image for social media preview (optional)
+          required: false
+          
+  - type: markdown
+    attributes:
+      value: |
+        ## Next Steps
+        
+        After submitting this issue:
+        1. **Attach your `.glb` file** (and optionally `.usdz` and preview image) to this issue
+        2. A maintainer will review your item
+        3. If the user or collection don't exist, they will be created
+        4. Files will be uploaded to `/public/models/[user-id]/[collection-id]/`
+        5. The item YAML will be added to the collection in `src/manifest.tsx`
+        6. Your item will appear on the website!
+        
+        ## File Naming Convention
+        
+        Please name your files to match your item ID:
+        - `[item-id].glb` (required)
+        - `[item-id].usdz` (optional)
+        - `[item-id].jpeg` or `[item-id].png` (optional, for OG image)
