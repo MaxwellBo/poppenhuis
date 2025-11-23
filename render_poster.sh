@@ -1,5 +1,4 @@
 #!/bin/bash
-# render_all_posters.sh
 
 # Exit on any error
 set -e
