@@ -1,12 +1,12 @@
-name: Add new collection
-description: Submit a new collection to a user
-title: "[New collection]: "
-labels: ["new collection", "content"]
+name: Put collection
+description: Submit a collection to a user
+title: "[Put collection]: "
+labels: ["put collection", "content"]
 body:
   - type: markdown
     attributes:
       value: |
-        Thanks for contributing a new collection! Please fill out the information below.
+        Thanks for contributing a collection! Please fill out the information below.
         
   - type: input
     id: user-id
@@ -42,15 +42,8 @@ body:
       description: A description of the collection (supports Markdown)
       placeholder: |
         A curated collection of vintage film cameras from the 1960s-1980s.
-    validations:
-      required: false
-      
-  - type: input
-    id: og-image
-    attributes:
-      label: OG image URL (optional)
-      description: URL to an image for social media sharing
-      placeholder: "/models/username/collectionname/og.jpeg"
+      value: |
+        A curated collection of vintage film cameras from the 1960s-1980s.
     validations:
       required: false
       
@@ -78,7 +71,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        ## Next Steps
+        ## Next steps
         
         After submitting this issue:
         1. A maintainer will review your collection

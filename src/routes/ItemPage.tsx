@@ -11,6 +11,7 @@ import { HelmetMeta } from "../components/HelmetMeta";
 import { QrCode } from "../components/QrCode";
 import { AFrameScene } from "../components/AFrameScene";
 import { PrintToCatPrinterButton } from "../components/PrintToCatPrinterButton";
+import * as yaml from 'js-yaml';
 
 export const loader = loadItem
 
@@ -179,13 +180,17 @@ function QrCodeAndLinksAndButtons(props: { item: Item; collection: Collection; u
 
   const githubManifestCodeSearchUrl = `https://github.com/search?q=repo%3AMaxwellBo%2Fpoppenhuis+%22id%3A+%5C%22${item.id}%5C%22%22&type=code`;
 
+  const itemYaml = yaml.dump(item);
+
+  const editYamlUrl = `https://github.com/MaxwellBo/poppenhuis/issues/new?template=put-item.yml&user-id=${user.id}&collection-id=${collection.id}&yaml-template=${encodeURIComponent(itemYaml)}`;
+
   return (
     <div className="qrcode-and-links-and-buttons">
       <div id="qrcode">
         <QrCode item={item} user={user} collection={collection} context="web" />
       </div>
       <div id="links">
-        <QueryPreservingLink className="action-link" to={`/${user.id}/${collection.id}/${item.id}/label`}>print label</QueryPreservingLink>, <QueryPreservingLink className="action-link" to={`/${user.id}/${collection.id}/${item.id}/embed`}>embed</QueryPreservingLink>, <QuicklookLink item={item} />, <a href={githubManifestCodeSearchUrl}>source</a>
+        <QueryPreservingLink className="action-link" to={`/${user.id}/${collection.id}/${item.id}/label`}>print label</QueryPreservingLink>, <QueryPreservingLink className="action-link" to={`/${user.id}/${collection.id}/${item.id}/embed`}>embed</QueryPreservingLink>, <QuicklookLink item={item} />, <a href={githubManifestCodeSearchUrl}>source</a>, <a href={editYamlUrl}>edit item yaml</a>
       </div>
       <div id="buttons">
         {navigator.share &&

@@ -41,6 +41,9 @@ export default function UsersPage() {
                 </ul>
               </li>
             ))}
+            <li>
+              <a href="https://github.com/MaxwellBo/poppenhuis/issues/new?template=put-user.yml">+ put user</a>
+            </li>
           </ul>
         </section>
         <section className='short'>

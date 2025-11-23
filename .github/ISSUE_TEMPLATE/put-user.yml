@@ -1,12 +1,12 @@
-name: Add new user
-description: Submit a new user profile to the poppenhuis collection
-title: "[New user]: "
-labels: ["new user", "content"]
+name: Put user
+description: Submit a user profile to the poppenhuis collection
+title: "[Put user]: "
+labels: ["put user", "content"]
 body:
   - type: markdown
     attributes:
       value: |
-        Thanks for contributing a new user profile! Please fill out the YAML template below with your user information.
+        Thanks for contributing a user profile! Please fill out the YAML template below with your user information.
         
   - type: input
     id: user-id
@@ -34,15 +34,9 @@ body:
       placeholder: |
         Artist and collector
         [website](https://example.com)
-    validations:
-      required: false
-      
-  - type: input
-    id: og-image
-    attributes:
-      label: OG image URL (optional)
-      description: URL to an image for social media sharing
-      placeholder: "/models/username/og.jpeg"
+      value: |
+        Artist and collector
+        [website](https://example.com)
     validations:
       required: false
       
@@ -70,7 +64,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        ## Next Steps
+        ## Next steps
         
         After submitting this issue:
         1. A maintainer will review your user profile

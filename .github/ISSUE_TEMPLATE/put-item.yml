@@ -1,12 +1,12 @@
-name: Add new item
-description: Submit a new 3D item to a collection
-title: "[New item]: "
-labels: ["new item", "content"]
+name: Put item
+description: Submit a 3D item to a collection
+title: "[Put item]: "
+labels: ["put item", "content"]
 body:
   - type: markdown
     attributes:
       value: |
-        Thanks for contributing a new 3D item! Please fill out the YAML template below and attach your `.glb` file.
+        Thanks for contributing a 3D item! Please fill out the YAML template below and attach your `.glb` file.
         
         **Required**: Attach a `.glb` file to this issue.
         
@@ -131,16 +131,14 @@ body:
           required: true
         - label: I will attach a `.usdz` file (optional, for Apple AR support)
           required: false
-        - label: I will attach an OG image for social media preview (optional)
-          required: false
           
   - type: markdown
     attributes:
       value: |
-        ## Next Steps
+        ## Next steps
         
         After submitting this issue:
-        1. **Attach your `.glb` file** (and optionally `.usdz` and preview image) to this issue
+        1. **Attach your `.glb` file** (and optionally `.usdz`) to this issue
         2. A maintainer will review your item
         3. If the user or collection don't exist, they will be created
         4. Files will be uploaded to `/public/models/[user-id]/[collection-id]/`
@@ -152,4 +150,3 @@ body:
         Please name your files to match your item ID:
         - `[item-id].glb` (required)
         - `[item-id].usdz` (optional)
-        - `[item-id].jpeg` or `[item-id].png` (optional, for OG image)
