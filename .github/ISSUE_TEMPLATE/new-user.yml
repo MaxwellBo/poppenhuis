@@ -20,7 +20,7 @@ body:
   - type: input
     id: user-name
     attributes:
-      label: Display Name
+      label: Display name
       description: The user's display name
       placeholder: "e.g., John Doe"
     validations:
@@ -40,7 +40,7 @@ body:
   - type: input
     id: og-image
     attributes:
-      label: OG Image URL (optional)
+      label: OG image URL (optional)
       description: URL to an image for social media sharing
       placeholder: "/models/username/og.jpeg"
     validations:
@@ -52,6 +52,12 @@ body:
       label: User YAML
       description: Complete YAML representation of the user (will be added to manifest.tsx)
       placeholder: |
+        id: "johndoe"
+        name: "John Doe"
+        bio: "Artist and collector"
+        og: "/models/johndoe/og.jpeg"
+        collections: []
+      value: |
         id: "johndoe"
         name: "John Doe"
         bio: "Artist and collector"

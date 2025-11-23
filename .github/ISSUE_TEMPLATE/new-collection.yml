@@ -29,7 +29,7 @@ body:
   - type: input
     id: collection-name
     attributes:
-      label: Collection Name
+      label: Collection name
       description: The display name for this collection
       placeholder: "e.g., Vintage Cameras"
     validations:
@@ -48,7 +48,7 @@ body:
   - type: input
     id: og-image
     attributes:
-      label: OG Image URL (optional)
+      label: OG image URL (optional)
       description: URL to an image for social media sharing
       placeholder: "/models/username/collectionname/og.jpeg"
     validations:
@@ -60,6 +60,12 @@ body:
       label: Collection YAML
       description: Complete YAML representation of the collection
       placeholder: |
+        id: "vintage-cameras"
+        name: "Vintage Cameras"
+        description: "A curated collection of vintage film cameras from the 1960s-1980s."
+        og: "/models/johndoe/vintage-cameras/og.jpeg"
+        items: []
+      value: |
         id: "vintage-cameras"
         name: "Vintage Cameras"
         description: "A curated collection of vintage film cameras from the 1960s-1980s."

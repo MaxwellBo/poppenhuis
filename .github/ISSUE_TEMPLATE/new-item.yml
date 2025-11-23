@@ -89,6 +89,34 @@ body:
         customFields:
           serialNumber: "1234567"
           condition: "Excellent"
+      value: |
+        id: "nikon-f3"
+        name: "Nikon F3"
+        model: "/models/johndoe/vintage-cameras/nikon-f3.glb"
+        usdzModel: "/models/johndoe/vintage-cameras/nikon-f3.usdz"
+        og: "/models/johndoe/vintage-cameras/nikon-f3.jpeg"
+        description: "A classic 35mm SLR camera from Nikon's professional line"
+        formalName: "Nikon F3 HP"
+        releaseDate: "1980"
+        manufacturer: "Nikon"
+        manufactureDate: "1982"
+        manufactureLocation: "Tokyo, Japan"
+        material:
+          - "aluminum alloy"
+          - "glass"
+          - "leather"
+        acquisitionDate: "2023 June 15"
+        acquisitionLocation: "Brooklyn Flea Market, New York"
+        storageLocation: "Brooklyn, New York"
+        captureDate: "2023 July 1"
+        captureLocation: "Brooklyn, New York"
+        captureLatLon: "40.68 N, 73.98 W"
+        captureDevice: "Apple iPhone 13 Pro"
+        captureApp: "Polycam"
+        captureMethod: "LiDAR"
+        customFields:
+          serialNumber: "1234567"
+          condition: "Excellent"
       render: yaml
     validations:
       required: true
@@ -96,7 +124,7 @@ body:
   - type: checkboxes
     id: file-attachment
     attributes:
-      label: File Attachment
+      label: File attachment
       description: Please confirm you will attach the required files
       options:
         - label: I will attach a `.glb` file to this issue
@@ -119,7 +147,7 @@ body:
         5. The item YAML will be added to the collection in `src/manifest.tsx`
         6. Your item will appear on the website!
         
-        ## File Naming Convention
+        ## File naming convention
         
         Please name your files to match your item ID:
         - `[item-id].glb` (required)
