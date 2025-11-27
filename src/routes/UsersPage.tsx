@@ -1,6 +1,6 @@
 import React from "react";
-import { useLoaderData, useSearchParams } from "react-router";
-import { loadUsers, MANIFEST_URL_QUERY_PARAM, MANIFEST_SCHEMA, ARENA_PREFIX } from "../manifest";
+import { Await, useLoaderData, useSearchParams } from "react-router";
+import { loadUsers, MANIFEST_URL_QUERY_PARAM, MANIFEST_SCHEMA, ARENA_PREFIX, User } from "../manifest";
 import { Size } from '../components/Size';
 import { ItemCard } from '../components/ItemCard';
 import { DEFAULT_META } from "../meta";
@@ -12,7 +12,7 @@ const EXAMPLE_MANIFEST_URL = 'https://raw.githubusercontent.com/MaxwellBo/maxwel
 export const loader = loadUsers;
 
 export default function UsersPage() {
-  const users = useLoaderData() as Awaited<ReturnType<typeof loader>>;
+  const { syncUsers, asyncUsersPromise, } = useLoaderData() as Awaited<ReturnType<typeof loader>>;
 
   return (
     <article>
@@ -26,23 +26,21 @@ export default function UsersPage() {
         <section>
           The following users have collections:
           <ul>
-            {users.map((user) => (
-              <li key={user.id}>
-                <QueryPreservingLink to={user.id}>{user.name}</QueryPreservingLink> <Size ts={user.collections} t="collection" />
-                <ul>
-                  {
-                    user.collections.map((collection) =>
-                      <li key={collection.id}>
-                        <QueryPreservingLink to={user.id + "/" + collection.id}>{collection.name}</QueryPreservingLink> <Size ts={collection.items} t="item" />
-                        <ItemCard item={collection.items[0]} collection={collection} user={user} size='small' altName={''} />
-                      </li>
-                    )
-                  }
-                </ul>
-              </li>
+            {syncUsers.map((user) => (
+              <UserListEntry key={user.id} user={user} />
             ))}
+            <React.Suspense fallback={<div>Loading more users...</div>}>
+              <Await resolve={asyncUsersPromise}>
+                {(asyncUsers) => <>{asyncUsers.map((user) => (
+                  <UserListEntry key={user.id} user={user} />
+                ))}</>}
+              </Await>
+            </React.Suspense>
             <li>
               <a href="https://github.com/MaxwellBo/poppenhuis/issues/new?template=put-user.yml">+ put user</a>
+            </li>
+            <li>
+              <a href="/new">+ new user</a>
             </li>
           </ul>
         </section>
@@ -137,6 +135,25 @@ export default function UsersPage() {
   );
 }
 
+function UserListEntry(props: { user: User }) {
+  const { user } = props;
+
+  return (
+    <li key={user.id}>
+      <QueryPreservingLink to={user.id}>{user.name}</QueryPreservingLink> <Size ts={user.collections} t="collection" />
+      <ul>
+        {
+          user.collections.map((collection) =>
+            <li key={collection.id}>
+              <QueryPreservingLink to={user.id + "/" + collection.id}>{collection.name}</QueryPreservingLink> <Size ts={collection.items} t="item" />
+              <ItemCard item={collection.items[0]} collection={collection} user={user} size='small' altName={''} />
+            </li>
+          )
+        }
+      </ul>
+    </li>
+  )
+}
 
 function ThirdPartyManfiestLoader() {
   const [searchParams, setSearchParams] = useSearchParams();

@@ -1,4 +1,4 @@
-import { Collection, Item, ITEM_FIELD_DESCRIPTIONS, loadItem, User, FIREBASE_PREFIX } from "../manifest";
+import { Collection, Item, ITEM_FIELD_DESCRIPTIONS, loadItem, User } from "../manifest";
 import { rtdb, storage } from "../firebase";
 import React from "react";
 import { useLoaderData, useSearchParams } from "react-router";
@@ -81,7 +81,7 @@ export default function ItemPage() {
         </div>
         <div id="description" className="description ugc"><Markdown>{item.description}</Markdown></div>
         <div id="meta">
-          {user.id.startsWith(FIREBASE_PREFIX) && (
+          {user.id && (
             <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginBottom: '1rem' }}>
               <button onClick={() => setIsEditing(!isEditing)}>
               {isEditing ? 'cancel editing' : 'edit?'}
@@ -209,7 +209,7 @@ function QrCodeAndLinksAndButtons(props: { item: Item; collection: Collection; u
         <QrCode item={item} user={user} collection={collection} context="web" />
       </div>
       <div id="links">
-        <QueryPreservingLink className="action-link" to={`/${user.id}/${collection.id}/${item.id}/label`}>print label</QueryPreservingLink>, <QueryPreservingLink className="action-link" to={`/${user.id}/${collection.id}/${item.id}/embed`}>embed</QueryPreservingLink>, <QuicklookLink item={item} />, <a href={githubManifestCodeSearchUrl}>source</a>, <a href={editYamlUrl}>edit item yaml</a>
+        <QueryPreservingLink className="action-link" to={`/${user.id}/${collection.id}/${item.id}/label`}>print label</QueryPreservingLink>, <QueryPreservingLink className="action-link" to={`/${user.id}/${collection.id}/${item.id}/embed`}>embed</QueryPreservingLink>, <QuicklookLink item={item} />, <a href={githubManifestCodeSearchUrl}>source</a>{user.source !== 'firebase' && <>, <a href={editYamlUrl}>edit</a></>}
       </div>
       <div id="buttons">
         {navigator.share &&
@@ -260,8 +260,8 @@ function QuicklookLink(props: { item: Item; }) {
   );
 }
 
-function EditableDescriptionList(props: { item: Item; collection: Collection; user: User; users: User[] }) {
-  const { item, collection, user, users } = props;
+function EditableDescriptionList(props: { item: Item; collection: Collection; user: User; }) {
+  const { item, collection, user } = props;
   const [formData, setFormData] = React.useState<Record<string, any>>({ ...item });
 
   const [modelFile, setModelFile] = React.useState<File | null>(null);
@@ -313,25 +313,7 @@ function EditableDescriptionList(props: { item: Item; collection: Collection; us
         updatedItem.model = modelUrl;
       }
 
-      // Get the user ID without the prefix
-      const userId = props.user.id.slice(FIREBASE_PREFIX.length);
-      
-      // Find the indices in the Firebase structure
-      // We need to read the entire database to find the user index
-      const rootRef = dbRef(rtdb, '/');
-      const snapshot = await get(rootRef);
-      const users: User[] = snapshot.val();
-      
-      const userIndex = users.findIndex(u => u.id === userId);
-      if (userIndex === -1) throw new Error('User not found in database');
-      
-      const collectionIndex = users[userIndex].collections.findIndex(c => c.id === props.collection.id);
-      if (collectionIndex === -1) throw new Error('Collection not found in database');
-      
-      const itemIndex = users[userIndex].collections[collectionIndex].items.findIndex(i => i.id === props.item.id);
-      if (itemIndex === -1) throw new Error('Item not found in database');
-
-      const itemRef = dbRef(rtdb, `/${userIndex}/collections/${collectionIndex}/items/${itemIndex}`);
+      const itemRef = dbRef(rtdb, `users/${user.id}/collections/${collection.id}/items/${item.id}`);
 
       await runTransaction(itemRef, (currentData) => {
         if (currentData === null) {

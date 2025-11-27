@@ -12,7 +12,6 @@ export const loader = loadCollection;
 
 export default function CollectionPage() {
   const { collection, user } = useLoaderData() as Awaited<ReturnType<typeof loader>>;
-
   const collectionYaml = yaml.dump(collection);
 
   return <article>
@@ -23,11 +22,10 @@ export default function CollectionPage() {
       </h1>
     </header>
     {collection.description && <div className='short description ugc'><Markdown>{collection.description}</Markdown></div>}
-    <div className="short">
+    {user.source !== 'firebase' && <div className="short">
       <a href={`https://github.com/MaxwellBo/poppenhuis/issues/new?template=put-item.yml&user-id=${user.id}&collection-id=${collection.id}`}>+ put item</a>
-      {' | '}
-      <a href={`https://github.com/MaxwellBo/poppenhuis/issues/new?template=put-collection.yml&user-id=${user.id}&yaml-template=${encodeURIComponent(collectionYaml)}`}>edit collection yaml</a>
-    </div>
+      , <a href={`https://github.com/MaxwellBo/poppenhuis/issues/new?template=put-collection.yml&user-id=${user.id}&yaml-template=${encodeURIComponent(collectionYaml)}`}>edit</a>
+    </div>}
     <ItemCards collection={collection} user={user} />
   </article>
 }

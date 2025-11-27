@@ -11,9 +11,11 @@ export interface User {
   og?: string;
   bio?: string;
   collections: Collection[];
+  source?: string;
 }
 export interface FirebaseUser extends Omit<User, 'collections'> {
   collections: Record<FirebaseCollection['id'], FirebaseCollection>;
+  source: 'firebase'
 }
 
 export interface Collection {
@@ -1016,51 +1018,85 @@ My abject failure to use them properly convinced me to stick to the classical gu
 
 export const MANIFEST_URL_QUERY_PARAM = 'manifest';
 
-export async function loadUsers({ request }: { request: Request; }) {
-  let thirdPartyManifest: Manifest = [];
-
+export function loadUsers({ request }: { request: Request; }) {
   const manifestUrl = new URL(request.url).searchParams.get(MANIFEST_URL_QUERY_PARAM);
 
+  let promises;
+
   if (manifestUrl) {
-    try {
-      const response = await fetch(manifestUrl);
-      if (response.ok) {
-        thirdPartyManifest = await response.json();
-      }
-    } catch (e) {
-      console.error(e);
-    }
+    promises = [loadManifest(manifestUrl), loadFirebaseUsers()];
+  } else {
+    promises = [loadFirebaseUsers()];
   }
 
-  return [...FIRST_PARTY_MANIFEST, ...thirdPartyManifest];
+  return {
+    syncUsers: FIRST_PARTY_MANIFEST,
+    asyncUsersPromise: Promise.all(promises).then(list => list.flat())
+  }
+}
+
+async function loadManifest(manifestUrl: string): Promise<Manifest> {
+  const response = await fetch(manifestUrl);
+  if (!response.ok) {
+    throw new Error(`Failed to load manifest from ${manifestUrl}: ${response.status} ${response.statusText}`);
+  }
+  return response.json();
+}
+
+async function loadFirebaseUsers(): Promise<User[]> {
+  const usersRef = ref(rtdb, '/');
+  const snapshot = await get(usersRef);
+
+  if (!snapshot.exists()) {
+    return [];
+  }
+
+  const users: FirebaseManifest = snapshot.val();
+  
+  return Object.values(users).map(firebaseUser => {
+    // Convert collections from Record to Array format
+    const collections: Collection[] = Object.values(firebaseUser.collections ?? {}).map(collection => {
+      const items: Item[] = Object.values(collection.items ?? {});
+
+      return {
+        ...collection,
+        items
+      };
+    });
+
+    return {
+      ...firebaseUser,
+      id: firebaseUser.id,
+      collections,
+      source: 'firebase'
+    };
+  });
 }
 
 export const ARENA_PREFIX = 'arena:';
-export const FIREBASE_PREFIX = 'u:';
 
 export async function loadUser({ params, request }: { params: { userId: User['id']; }; request: Request; }): Promise<{
   user: User,
   users: User[]
 }> {
   const hasArenaPrefix = params.userId.startsWith(ARENA_PREFIX);
-  const hasFirebasePrefix = params.userId.startsWith(FIREBASE_PREFIX);
 
   if (hasArenaPrefix) {
-    const userSlug = params.userId.slice(ARENA_PREFIX.length);
-    const user = await loadArenaUser({ userSlug })
+    const slug = params.userId.slice(ARENA_PREFIX.length);
+    const arenaUser = await loadArenaUser({ userSlug: slug })
+    return { user: arenaUser, users: [arenaUser] }
+  }
+
+  const users = loadUsers({ request });
+  const user = users.syncUsers.find((user) => user.id === params.userId);
+  
+  if (user) {
     return { user, users: [user] }
   }
 
-  if (hasFirebasePrefix) {
-    const userId = params.userId.slice(FIREBASE_PREFIX.length);
-    const user = await loadFirebaseUser({ userId });
-    return { user, users: [user] }
-  }
-
-  const users = await loadUsers({ request });
-  const user = users.find((user) => user.id === params.userId);
-  if (!user) throw new Error("User not found");
-  return { user, users };
+  // will throw if not found
+  const firebaseUser = await loadFirebaseUser({ userId: params.userId });
+  return { user: firebaseUser, users: [firebaseUser] }
 }
 
 export async function loadCollection({ params, request }: { params: { userId: User['id']; collectionId: Collection['id']; }; request: Request; }) {
@@ -1389,7 +1425,7 @@ export async function loadFirebaseUser({ userId }: { userId: string }): Promise<
 
   const result: User = {
     ...firebaseUser,
-    id: FIREBASE_PREFIX + firebaseUser.id,
+    source: 'firebase',
     collections
   };
 

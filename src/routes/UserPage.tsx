@@ -13,8 +13,6 @@ export const loader = loadUser;
 export default function UserPage() {
   const { user } = useLoaderData() as Awaited<ReturnType<typeof loader>>;
 
-  console.log(user)
-
   const userYaml = yaml.dump(user);
 
   return (
@@ -26,11 +24,10 @@ export default function UserPage() {
         </h1>
       </header>
       {user.bio && <div className="short description ugc"><Markdown>{user.bio}</Markdown><br /></div>}
-      <div className="short">
+      {user.source !== 'firebase' && <div className="short">
         <a href={`https://github.com/MaxwellBo/poppenhuis/issues/new?template=put-collection.yml&user-id=${user.id}`}>+ put collection</a>
-        {' | '}
-        <a href={`https://github.com/MaxwellBo/poppenhuis/issues/new?template=put-user.yml&yaml-template=${encodeURIComponent(userYaml)}`}>edit user yaml</a>
-      </div>
+        , <a href={`https://github.com/MaxwellBo/poppenhuis/issues/new?template=put-user.yml&yaml-template=${encodeURIComponent(userYaml)}`}>edit</a>
+      </div>}
       <div id="collection-rows">
         {user.collections.map((collection) =>
           <CollectionRow key={collection.id} collection={collection} user={user} />)}
