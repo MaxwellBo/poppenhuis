@@ -12,6 +12,8 @@ import WallLabelPage, { loader as wallLabelPageLoader } from './routes/WallLabel
 import EmbedPage, { loader as embedPageLoader } from './routes/EmbedPage.tsx';
 import DebugPage from './routes/DebugPage.tsx';
 import NewUserPage from './routes/NewUserPage.tsx';
+import NewCollectionPage from './routes/NewCollectionPage.tsx';
+import NewItemPage from './routes/NewItemPage.tsx';
 
 const router = createBrowserRouter([
   {
@@ -51,10 +53,18 @@ const router = createBrowserRouter([
         loader: userPageLoader,
       },
       {
+        path: ":userId/new",
+        element: <NewCollectionPage />,
+      },
+      {
         path: ":userId/:collectionId",
         element: <CollectionPage />,
         // @ts-ignore
         loader: collectionPageLoader,
+      },
+      {
+        path: ":userId/:collectionId/new",
+        element: <NewItemPage />,
       },
       {
         path: ":userId/:collectionId/:itemId",

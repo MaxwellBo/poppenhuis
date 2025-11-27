@@ -28,6 +28,9 @@ export default function UserPage() {
         <a href={`https://github.com/MaxwellBo/poppenhuis/issues/new?template=put-collection.yml&user-id=${user.id}`}>+ put collection</a>
         , <a href={`https://github.com/MaxwellBo/poppenhuis/issues/new?template=put-user.yml&yaml-template=${encodeURIComponent(userYaml)}`}>edit</a>
       </div>}
+      {user.source === 'firebase' && <div className="short">
+        <QueryPreservingLink to={`/${user.id}/new`}>+ new collection</QueryPreservingLink>
+      </div>}
       <div id="collection-rows">
         {user.collections.map((collection) =>
           <CollectionRow key={collection.id} collection={collection} user={user} />)}

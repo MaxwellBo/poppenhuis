@@ -26,6 +26,9 @@ export default function CollectionPage() {
       <a href={`https://github.com/MaxwellBo/poppenhuis/issues/new?template=put-item.yml&user-id=${user.id}&collection-id=${collection.id}`}>+ put item</a>
       , <a href={`https://github.com/MaxwellBo/poppenhuis/issues/new?template=put-collection.yml&user-id=${user.id}&yaml-template=${encodeURIComponent(collectionYaml)}`}>edit</a>
     </div>}
+    {user.source === 'firebase' && <div className="short">
+      <QueryPreservingLink to={`/${user.id}/${collection.id}/new`}>+ new item</QueryPreservingLink>
+    </div>}
     <ItemCards collection={collection} user={user} />
   </article>
 }
