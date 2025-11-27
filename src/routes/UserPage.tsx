@@ -24,7 +24,7 @@ export default function UserPage() {
         </h1>
       </header>
       {user.bio && <div className="short description ugc"><Markdown>{user.bio}</Markdown><br /></div>}
-      {user.source !== 'firebase' && <div className="short">
+      {user.source === undefined && <div className="short">
         <a href={`https://github.com/MaxwellBo/poppenhuis/issues/new?template=put-collection.yml&user-id=${user.id}`}>+ put collection</a>
         , <a href={`https://github.com/MaxwellBo/poppenhuis/issues/new?template=put-user.yml&yaml-template=${encodeURIComponent(userYaml)}`}>edit</a>
       </div>}

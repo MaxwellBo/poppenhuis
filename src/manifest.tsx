@@ -1043,36 +1043,6 @@ async function loadManifest(manifestUrl: string): Promise<Manifest> {
   return response.json();
 }
 
-async function loadFirebaseUsers(): Promise<User[]> {
-  const usersRef = ref(rtdb, '/');
-  const snapshot = await get(usersRef);
-
-  if (!snapshot.exists()) {
-    return [];
-  }
-
-  const users: FirebaseManifest = snapshot.val();
-  
-  return Object.values(users).map(firebaseUser => {
-    // Convert collections from Record to Array format
-    const collections: Collection[] = Object.values(firebaseUser.collections ?? {}).map(collection => {
-      const items: Item[] = Object.values(collection.items ?? {});
-
-      return {
-        ...collection,
-        items
-      };
-    });
-
-    return {
-      ...firebaseUser,
-      id: firebaseUser.id,
-      collections,
-      source: 'firebase'
-    };
-  });
-}
-
 export const ARENA_PREFIX = 'arena:';
 
 export async function loadUser({ params, request }: { params: { userId: User['id']; }; request: Request; }): Promise<{
@@ -1080,6 +1050,7 @@ export async function loadUser({ params, request }: { params: { userId: User['id
   users: User[]
 }> {
   const hasArenaPrefix = params.userId.startsWith(ARENA_PREFIX);
+  const manifestUrl = new URL(request.url).searchParams.get(MANIFEST_URL_QUERY_PARAM);
 
   if (hasArenaPrefix) {
     const slug = params.userId.slice(ARENA_PREFIX.length);
@@ -1092,6 +1063,14 @@ export async function loadUser({ params, request }: { params: { userId: User['id
   
   if (user) {
     return { user, users: [user] }
+  }
+
+  if (manifestUrl) {
+    const manifest = await loadManifest(manifestUrl);
+    const manifestUser = manifest.find((user) => user.id === params.userId);
+    if (manifestUser) {
+      return { user: { ...manifestUser, source: 'manifest' }, users: [manifestUser] }
+    }
   }
 
   // will throw if not found
@@ -1180,7 +1159,8 @@ export async function loadArenaUser({ userSlug }: { userSlug: string }): Promise
     id: ARENA_PREFIX + user.slug,
     name: user.full_name,
     bio: `[Are.na user](https://www.are.na/${user.slug})`,
-    collections
+    collections,
+    source: 'arena'
   };
 
   ARENA_USER_CACHE.set(userSlug, result);
@@ -1392,6 +1372,37 @@ interface ArenaSearchResult {
 }
 
 // const FIREBASE_USER_CACHE = new Map<string, User>();
+
+async function loadFirebaseUsers(): Promise<User[]> {
+  const usersRef = ref(rtdb, '/');
+  const snapshot = await get(usersRef);
+
+  if (!snapshot.exists()) {
+    return [];
+  }
+
+  const users: FirebaseManifest = snapshot.val();
+  
+  return Object.values(users).map(firebaseUser => {
+    // Convert collections from Record to Array format
+    const collections: Collection[] = Object.values(firebaseUser.collections ?? {}).map(collection => {
+      const items: Item[] = Object.values(collection.items ?? {});
+
+      return {
+        ...collection,
+        items
+      };
+    });
+
+    return {
+      ...firebaseUser,
+      id: firebaseUser.id,
+      collections,
+      source: 'firebase'
+    };
+  });
+}
+
 
 export async function loadFirebaseUser({ userId }: { userId: string }): Promise<User> {
   // const cached = FIREBASE_USER_CACHE.get(userId);

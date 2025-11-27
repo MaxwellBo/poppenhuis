@@ -209,7 +209,7 @@ function QrCodeAndLinksAndButtons(props: { item: Item; collection: Collection; u
         <QrCode item={item} user={user} collection={collection} context="web" />
       </div>
       <div id="links">
-        <QueryPreservingLink className="action-link" to={`/${user.id}/${collection.id}/${item.id}/label`}>print label</QueryPreservingLink>, <QueryPreservingLink className="action-link" to={`/${user.id}/${collection.id}/${item.id}/embed`}>embed</QueryPreservingLink>, <QuicklookLink item={item} />, <a href={githubManifestCodeSearchUrl}>source</a>{user.source !== 'firebase' && <>, <a href={editYamlUrl}>edit</a></>}
+        <QueryPreservingLink className="action-link" to={`/${user.id}/${collection.id}/${item.id}/label`}>print label</QueryPreservingLink>, <QueryPreservingLink className="action-link" to={`/${user.id}/${collection.id}/${item.id}/embed`}>embed</QueryPreservingLink>, <QuicklookLink item={item} />, <a href={githubManifestCodeSearchUrl}>source</a>{user.source === undefined && <>, <a href={editYamlUrl}>edit</a></>}
       </div>
       <div id="buttons">
         {navigator.share &&
