@@ -3,13 +3,17 @@ import { rtdb } from './firebase';
 import { ref, get } from 'firebase/database';
 
 type Manifest = User[];
+type FirebaseManifest = Record<FirebaseUser['id'], FirebaseUser>;
 
 export interface User {
   id: string;
   name: string;
   og?: string;
-  bio?: string; 
+  bio?: string;
   collections: Collection[];
+}
+interface FirebaseUser extends Omit<User, 'collections'> {
+  collections: Record<FirebaseCollection['id'], FirebaseCollection>;
 }
 
 export interface Collection {
@@ -18,6 +22,9 @@ export interface Collection {
   og?: string;
   description?: string;
   items: Item[];
+}
+interface FirebaseCollection extends Omit<Collection, 'items'> {
+  items: Record<Item['id'], Item>;
 }
 
 export const ITEM_FIELD_DESCRIPTIONS = {
@@ -1159,7 +1166,7 @@ function parseDescriptionWithYaml(rawDescription: string | null | undefined): {
   }
 
   const dividerIndex = rawDescription.indexOf('---');
-  
+
   if (dividerIndex === -1) {
     return {
       description: rawDescription.trim(),
@@ -1169,9 +1176,9 @@ function parseDescriptionWithYaml(rawDescription: string | null | undefined): {
 
   const description = rawDescription.substring(0, dividerIndex).trim();
   const yamlContent = rawDescription.substring(dividerIndex + 3).trim();
-  
+
   let yamlFields: Partial<Item> = {};
-  
+
   try {
     const parsed = yaml.load(yamlContent);
     if (parsed && typeof parsed === 'object') {
@@ -1358,26 +1365,33 @@ export async function loadFirebaseUser({ userId }: { userId: string }): Promise<
 
   const usersRef = ref(rtdb, '/');
   const snapshot = await get(usersRef);
-  
+
   if (!snapshot.exists()) {
     throw new Error("Firebase database is empty");
   }
 
-  const users: User[] = snapshot.val();
-  
-  if (!Array.isArray(users)) {
-    throw new Error("Firebase database does not contain a valid user array");
-  }
+  const users: FirebaseManifest = snapshot.val();
+  const firebaseUser: FirebaseUser = users[userId];
 
-  const user = users.find((u) => u.id === userId);
-  
-  if (!user) {
+  if (!firebaseUser) {
     throw new Error(`User with id "${userId}" not found in Firebase`);
   }
 
+  // Convert collections from Record to Array format
+  const collections: Collection[] = Object.values(firebaseUser.collections).map(collection => {
+    // Convert items from Record to Array format
+    const items: Item[] = Object.values(collection.items);
+
+    return {
+      ...collection,
+      items
+    };
+  });
+
   const result: User = {
-    ...user,
-    id: FIREBASE_PREFIX + user.id
+    ...firebaseUser,
+    id: FIREBASE_PREFIX + firebaseUser.id,
+    collections
   };
 
   // FIREBASE_USER_CACHE.set(userId, result);
