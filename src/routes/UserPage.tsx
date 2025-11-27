@@ -13,6 +13,8 @@ export const loader = loadUser;
 export default function UserPage() {
   const { user } = useLoaderData() as Awaited<ReturnType<typeof loader>>;
 
+  console.log(user)
+
   const userYaml = yaml.dump(user);
 
   return (

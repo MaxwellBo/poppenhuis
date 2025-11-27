@@ -1,4 +1,6 @@
 import * as yaml from 'js-yaml';
+import { rtdb } from './firebase';
+import { ref, get } from 'firebase/database';
 
 type Manifest = User[];
 
@@ -1010,11 +1012,11 @@ export const MANIFEST_URL_QUERY_PARAM = 'manifest';
 export async function loadUsers({ request }: { request: Request; }) {
   let thirdPartyManifest: Manifest = [];
 
-  const manfiestUrl = new URL(request.url).searchParams.get(MANIFEST_URL_QUERY_PARAM);
+  const manifestUrl = new URL(request.url).searchParams.get(MANIFEST_URL_QUERY_PARAM);
 
-  if (manfiestUrl) {
+  if (manifestUrl) {
     try {
-      const response = await fetch(manfiestUrl);
+      const response = await fetch(manifestUrl);
       if (response.ok) {
         thirdPartyManifest = await response.json();
       }
@@ -1027,16 +1029,24 @@ export async function loadUsers({ request }: { request: Request; }) {
 }
 
 export const ARENA_PREFIX = 'arena:';
+export const FIREBASE_PREFIX = 'u:';
 
 export async function loadUser({ params, request }: { params: { userId: User['id']; }; request: Request; }): Promise<{
   user: User,
   users: User[]
 }> {
   const hasArenaPrefix = params.userId.startsWith(ARENA_PREFIX);
+  const hasFirebasePrefix = params.userId.startsWith(FIREBASE_PREFIX);
 
   if (hasArenaPrefix) {
     const userSlug = params.userId.slice(ARENA_PREFIX.length);
     const user = await loadArenaUser({ userSlug })
+    return { user, users: [user] }
+  }
+
+  if (hasFirebasePrefix) {
+    const userId = params.userId.slice(FIREBASE_PREFIX.length);
+    const user = await loadFirebaseUser({ userId });
     return { user, users: [user] }
   }
 
@@ -1336,4 +1346,41 @@ interface ArenaSearchResult {
   channels: ArenaChannel[];
   blocks: ArenaContent[];
   users: any[];
+}
+
+// const FIREBASE_USER_CACHE = new Map<string, User>();
+
+export async function loadFirebaseUser({ userId }: { userId: string }): Promise<User> {
+  // const cached = FIREBASE_USER_CACHE.get(userId);
+  // if (cached) {
+  //   return cached;
+  // }
+
+  const usersRef = ref(rtdb, '/');
+  const snapshot = await get(usersRef);
+  
+  if (!snapshot.exists()) {
+    throw new Error("Firebase database is empty");
+  }
+
+  const users: User[] = snapshot.val();
+  
+  if (!Array.isArray(users)) {
+    throw new Error("Firebase database does not contain a valid user array");
+  }
+
+  const user = users.find((u) => u.id === userId);
+  
+  if (!user) {
+    throw new Error(`User with id "${userId}" not found in Firebase`);
+  }
+
+  const result: User = {
+    ...user,
+    id: FIREBASE_PREFIX + user.id
+  };
+
+  // FIREBASE_USER_CACHE.set(userId, result);
+
+  return result;
 }

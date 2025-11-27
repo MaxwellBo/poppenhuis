@@ -1,4 +1,5 @@
-import { Collection, Item, ITEM_FIELD_DESCRIPTIONS, loadItem, User } from "../manifest";
+import { Collection, Item, ITEM_FIELD_DESCRIPTIONS, loadItem, User, FIREBASE_PREFIX } from "../manifest";
+import { rtdb, storage } from "../firebase";
 import React from "react";
 import { useLoaderData, useSearchParams } from "react-router";
 import { ItemCards } from '../components/ItemCards';
@@ -12,11 +13,14 @@ import { QrCode } from "../components/QrCode";
 import { AFrameScene } from "../components/AFrameScene";
 import { PrintToCatPrinterButton } from "../components/PrintToCatPrinterButton";
 import * as yaml from 'js-yaml';
+import { ref as dbRef, update, get, runTransaction } from 'firebase/database';
+import { ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
 
 export const loader = loadItem
 
 export default function ItemPage() {
   const { item, user, collection, users } = useLoaderData() as Awaited<ReturnType<typeof loadItem>>;
+  const [isEditing, setIsEditing] = React.useState(false);
 
   const currentIndex = collection.items.findIndex(i => i.id === item.id);
   const previousItem: Item = currentIndex > 0
@@ -77,7 +81,22 @@ export default function ItemPage() {
         </div>
         <div id="description" className="description ugc"><Markdown>{item.description}</Markdown></div>
         <div id="meta">
-          <DescriptionList item={item} collection={collection} user={user} />
+          {user.id.startsWith(FIREBASE_PREFIX) && (
+            <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginBottom: '1rem' }}>
+              <button onClick={() => setIsEditing(!isEditing)}>
+              {isEditing ? 'cancel editing' : 'edit?'}
+              </button>
+            </div>
+          )}
+          {isEditing ? (
+            <EditableDescriptionList 
+              item={item} 
+              collection={collection} 
+              user={user} 
+            />
+          ) : (
+            <DescriptionList item={item} collection={collection} user={user} />
+          )}
           <br />
           <QrCodeAndLinksAndButtons item={item} collection={collection} user={user} />
         </div>
@@ -241,3 +260,201 @@ function QuicklookLink(props: { item: Item; }) {
   );
 }
 
+function EditableDescriptionList(props: { item: Item; collection: Collection; user: User; users: User[] }) {
+  const { item, collection, user, users } = props;
+  const [formData, setFormData] = React.useState<Record<string, any>>({ ...item });
+
+  const [modelFile, setModelFile] = React.useState<File | null>(null);
+  const [isUploading, setIsUploading] = React.useState(false);
+
+  const handleInputChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value || undefined }));
+  };
+
+  const handleAddField = (field: string) => {
+    setFormData(prev => ({ ...prev, [field]: '' }));
+  };
+
+  const handleDeleteField = (field: string) => {
+    setFormData(prev => {
+      const newData = { ...prev };
+      delete newData[field];
+      return newData;
+    });
+  };
+
+  const handleModelFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setModelFile(e.target.files[0]);
+    }
+  };
+
+  const uploadModelFile = async (file: File): Promise<string> => {
+    const path = `models/${props.user.id}/${props.collection.id}/${props.item.id}.${file.name.split('.').pop()}`;
+    const fileRef = storageRef(storage, path);
+    await uploadBytes(fileRef, file);
+    return await getDownloadURL(fileRef);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsUploading(true);
+    
+    try {
+      const updatedItem = { ...formData };
+      
+      if (formData.material !== undefined) {
+        updatedItem.material = formData.material.split(",").map((m: string) => m.trim()).filter(Boolean);
+      }
+
+      // Handle model file upload if there's a file selected
+      if (modelFile) {
+        const modelUrl = await uploadModelFile(modelFile);
+        updatedItem.model = modelUrl;
+      }
+
+      // Get the user ID without the prefix
+      const userId = props.user.id.slice(FIREBASE_PREFIX.length);
+      
+      // Find the indices in the Firebase structure
+      // We need to read the entire database to find the user index
+      const rootRef = dbRef(rtdb, '/');
+      const snapshot = await get(rootRef);
+      const users: User[] = snapshot.val();
+      
+      const userIndex = users.findIndex(u => u.id === userId);
+      if (userIndex === -1) throw new Error('User not found in database');
+      
+      const collectionIndex = users[userIndex].collections.findIndex(c => c.id === props.collection.id);
+      if (collectionIndex === -1) throw new Error('Collection not found in database');
+      
+      const itemIndex = users[userIndex].collections[collectionIndex].items.findIndex(i => i.id === props.item.id);
+      if (itemIndex === -1) throw new Error('Item not found in database');
+
+      const itemRef = dbRef(rtdb, `/${userIndex}/collections/${collectionIndex}/items/${itemIndex}`);
+
+      await runTransaction(itemRef, (currentData) => {
+        if (currentData === null) {
+          return
+        }
+
+        // Then, for fields that existed in the original item but not in updatedItem, set them to null
+        Object.keys(props.item).forEach(key => {
+          if (!updatedItem.hasOwnProperty(key)) {
+        updatedItem[key] = null;
+          }
+        });
+
+        updatedItem.id = props.item.id; // Ensure the item ID remains unchanged
+        updatedItem.name = props.item.name; // Ensure the item name remains unchanged
+
+        return updatedItem;
+      });
+
+      window.location.reload();
+    } catch (error) {
+      console.error('Error updating item:', error);
+      alert('Error updating item. Please try again.');
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const renderField = (label: string, field: string, description?: string) => (
+    <React.Fragment key={field}>
+      <dt>
+        {description ? <abbr title={description}>{label}</abbr> : label}
+      </dt>
+      <dd>
+        {formData.hasOwnProperty(field) && formData[field] !== undefined ? (
+          <>
+            <input
+              type="text"
+              value={formData[field] || ''}
+              onChange={(e) => handleInputChange(field, e.target.value)}
+              placeholder={field === 'material' ? 'comma separated' : ''}
+            />
+            <button type="button" onClick={() => handleDeleteField(field)} style={{ marginLeft: '0.5rem', fontSize: '0.8rem' }}>
+              ✕
+            </button>
+          </>
+        ) : (
+          <button type="button" onClick={() => handleAddField(field)}>
+            + Add {label.toLowerCase()}
+          </button>
+        )}
+      </dd>
+    </React.Fragment>
+  );
+
+  const renderModelField = () => (
+    <React.Fragment key="model">
+      <dt>
+        <abbr title={ITEM_FIELD_DESCRIPTIONS.model}>model</abbr>
+      </dt>
+      <dd>
+        {formData.hasOwnProperty('model') && formData.model !== undefined ? (
+          <>
+            <input
+              type="text"
+              value={formData.model || ''}
+              onChange={(e) => handleInputChange('model', e.target.value)}
+            />
+            <button type="button" onClick={() => handleDeleteField('model')} style={{ marginLeft: '0.5rem', fontSize: '0.8rem' }}>
+              ✕
+            </button>
+          </>
+        ) : (
+          <input
+            type="file"
+            accept=".glb,.gltf"
+            onChange={handleModelFileChange}
+            style={{ marginBottom: '0.5rem' }}
+          />
+        )}
+      </dd>
+    </React.Fragment>
+  );
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <dl>
+        {renderField('name', 'name')}
+        {renderField('id', 'id')}
+        {renderField('description', 'description')}
+        <hr className="break" />
+        <hr className="break" />
+        {renderField('formal name', 'formalName', ITEM_FIELD_DESCRIPTIONS.formalName)}
+        {renderField('alt', 'alt', ITEM_FIELD_DESCRIPTIONS.alt)}
+        {renderField('release date', 'releaseDate', ITEM_FIELD_DESCRIPTIONS.releaseDate)}
+        <hr className="break" />
+        <hr className="break" />
+        {renderField('manufacturer', 'manufacturer')}
+        {renderField('manufacture date', 'manufactureDate')}
+        {renderField('manufacture location', 'manufactureLocation')}
+        {renderField('material', 'material')}
+        <hr className="break" />
+        <hr className="break" />
+        {renderField('acquisition date', 'acquisitionDate')}
+        {renderField('acquisition location', 'acquisitionLocation')}
+        <hr className="break" />
+        <hr className="break" />
+        {renderField('storage location', 'storageLocation')}
+        <hr className="break" />
+        <hr className="break" />
+        {renderField('capture date', 'captureDate')}
+        {renderField('capture location', 'captureLocation')}
+        {renderField('capture lat/lon', 'captureLatLon')}
+        {renderField('capture device', 'captureDevice')}
+        {renderField('capture app', 'captureApp')}
+        {renderField('capture method', 'captureMethod')}
+        <hr className="break" />
+        <hr className="break" />
+        {renderModelField()}
+      </dl>
+      <button type="submit" disabled={isUploading}>
+        {isUploading ? 'uploading...' : 'save'}
+      </button>
+    </form>
+  );
+}
