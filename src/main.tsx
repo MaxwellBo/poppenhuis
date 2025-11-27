@@ -11,6 +11,7 @@ import ItemPage, { loader as itemPageLoader } from './routes/ItemPage.tsx';
 import WallLabelPage, { loader as wallLabelPageLoader } from './routes/WallLabelPage.tsx';
 import EmbedPage, { loader as embedPageLoader } from './routes/EmbedPage.tsx';
 import DebugPage from './routes/DebugPage.tsx';
+import NewUserPage from './routes/NewUserPage.tsx';
 
 const router = createBrowserRouter([
   {
@@ -38,6 +39,10 @@ const router = createBrowserRouter([
         path: "",
         element: <UsersPage />,
         loader: usersPageLoader,
+      },
+      {
+        path: "new",
+        element: <NewUserPage />,
       },
       {
         path: ":userId",

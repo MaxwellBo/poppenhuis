@@ -76,6 +76,14 @@ a:hover:visited {
   text-decoration: none;
 }
 
+/* Better approach: target the label that precedes a required input */
+label:has(+ input:required)::after,
+label:has(+ textarea:required)::after,
+label:has(+ select:required)::after {
+  content: "*";
+  color: red;
+}
+
 kbd {
   font-family: monospace;
   font-size: 0.9em;
@@ -298,6 +306,24 @@ pre {
 
 .card dl {
   font-size: 0.7rem;
+}
+
+form.table-form {
+  display: table;
+}
+
+div.table-form-row {
+  display: table-row;
+}
+
+form.table-form label,
+form.table-form input {
+  display: table-cell;
+  margin-bottom: 10px;
+}
+
+form.table-form label {
+  padding-right: 10px;
 }
 
 #homepage-columns {

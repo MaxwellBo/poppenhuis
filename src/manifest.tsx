@@ -12,7 +12,7 @@ export interface User {
   bio?: string;
   collections: Collection[];
 }
-interface FirebaseUser extends Omit<User, 'collections'> {
+export interface FirebaseUser extends Omit<User, 'collections'> {
   collections: Record<FirebaseCollection['id'], FirebaseCollection>;
 }
 
@@ -23,7 +23,7 @@ export interface Collection {
   description?: string;
   items: Item[];
 }
-interface FirebaseCollection extends Omit<Collection, 'items'> {
+export interface FirebaseCollection extends Omit<Collection, 'items'> {
   items: Record<Item['id'], Item>;
 }
 
@@ -1378,9 +1378,8 @@ export async function loadFirebaseUser({ userId }: { userId: string }): Promise<
   }
 
   // Convert collections from Record to Array format
-  const collections: Collection[] = Object.values(firebaseUser.collections).map(collection => {
-    // Convert items from Record to Array format
-    const items: Item[] = Object.values(collection.items);
+  const collections: Collection[] = Object.values(firebaseUser.collections ?? {}).map(collection => {
+    const items: Item[] = Object.values(collection.items ?? {});
 
     return {
       ...collection,
