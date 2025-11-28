@@ -25,7 +25,7 @@ const HTML_TEMPLATE = `
         }
         .grid {
             display: grid;
-            width: 1200px;
+            width: 630px;
             height: 630px;
             gap: 0;
             padding: 0;
@@ -110,7 +110,7 @@ async function renderModels(config: RenderConfig, isSingle: boolean) {
         const page = await browser.newPage();
         
         console.log(`📐 Setting viewport...`);
-        await page.setViewport({ width: 1200, height: 630 });
+        await page.setViewport({ width: 630, height: 630 });
         
         console.log(`🌐 Loading page: ${serverUrl}`);
         await page.goto(serverUrl);
