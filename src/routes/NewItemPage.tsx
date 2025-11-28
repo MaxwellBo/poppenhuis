@@ -20,6 +20,19 @@ export default function NewItemPage() {
 
   const { isSubmitting, error, upsertItem } = useFirebaseSubmit();
 
+  const handleModelFileSelect = (file: File | null) => {
+    setModelFile(file);
+  };
+
+  // Add file handler to the model field
+  const itemFieldsWithFileHandler = ITEM_FIELDS.map(field => 
+    field.name === 'model' ? { 
+      ...field, 
+      onFileChange: handleModelFileSelect,
+      selectedFileName: modelFile?.name 
+    } : field
+  );
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     await upsertItem(userId || '', collectionId || '', itemId, formData, modelFile, cleanFormData);
@@ -35,13 +48,7 @@ export default function NewItemPage() {
         value: itemId,
         onChange: setItemId,
       }}
-      fields={ITEM_FIELDS}
-      fileField={{
-        label: 'Model file (glTF/GLB)',
-        onChange: setModelFile,
-        accept: '.glb,.gltf',
-        required: true,
-      }}
+      fields={itemFieldsWithFileHandler}
       onInputChange={handleInputChange}
       onAddField={handleAddField}
       onDeleteField={handleDeleteField}

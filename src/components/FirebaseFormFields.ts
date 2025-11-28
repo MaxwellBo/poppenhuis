@@ -15,6 +15,7 @@ export const COLLECTION_FIELDS: FieldConfig[] = [
 // Item fields
 export const ITEM_FIELDS: FieldConfig[] = [
   { name: 'name', label: 'Name', required: true, placeholder: 'My Item' },
+  { name: 'model', label: 'Model', type: 'file', accept: '.glb,.gltf' },
   { name: 'alt', label: 'Alt text', placeholder: 'Description for screen readers' },
   { name: 'description', label: 'Description', type: 'textarea' },
   { name: 'formalName', label: 'Formal Name', placeholder: 'Model number or scientific name' },

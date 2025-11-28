@@ -30,6 +30,15 @@ export default function EditItemPage() {
     setModelFile(file);
   };
 
+  // Add file handler to the model field
+  const itemFieldsWithFileHandler = ITEM_FIELDS.map(field => 
+    field.name === 'model' ? { 
+      ...field, 
+      onFileChange: handleModelFileSelect,
+      selectedFileName: modelFile?.name 
+    } : field
+  );
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     await upsertItem(user.id, collection.id, item.id, formData, modelFile);
@@ -46,7 +55,7 @@ export default function EditItemPage() {
         onChange: () => {}, // ID is read-only
         readOnly: true,
       }}
-      fields={ITEM_FIELDS}
+      fields={itemFieldsWithFileHandler}
       onInputChange={handleInputChange}
       onAddField={handleAddField}
       onDeleteField={handleDeleteField}
@@ -54,11 +63,6 @@ export default function EditItemPage() {
       isSubmitting={isSubmitting}
       error={error}
       submitButtonText={isSubmitting ? "Saving..." : "Save changes"}
-      fileField={{
-        label: 'Model file',
-        accept: '.glb,.gltf',
-        onChange: handleModelFileSelect,
-      }}
     />
   );
 }

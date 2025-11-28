@@ -7,6 +7,8 @@ export interface FieldConfig {
   placeholder?: string;
   type?: 'text' | 'textarea' | 'file';
   accept?: string;
+  onFileChange?: (file: File | null) => void;
+  selectedFileName?: string;
 }
 
 interface FirebaseFormProps {
@@ -20,12 +22,6 @@ interface FirebaseFormProps {
     readOnly?: boolean;
   };
   fields: FieldConfig[];
-  fileField?: {
-    label: string;
-    onChange: (file: File | null) => void;
-    accept: string;
-    required?: boolean;
-  };
   onInputChange: (field: string, value: string) => void;
   onAddField: (field: string) => void;
   onDeleteField: (field: string) => void;
@@ -41,7 +37,6 @@ export function FirebaseForm({
   formData,
   idField,
   fields,
-  fileField,
   onInputChange,
   onAddField,
   onDeleteField,
@@ -52,50 +47,96 @@ export function FirebaseForm({
   children,
 }: FirebaseFormProps) {
   const renderField = (config: FieldConfig) => {
-    const { name, label, required = false, placeholder, type = 'text' } = config;
+    const { name, label, required = false, placeholder, type = 'text', accept, onFileChange, selectedFileName } = config;
     
     return (
       <div className="table-form-row" key={name}>
         <label htmlFor={name}>{label}:</label>
         {formData.hasOwnProperty(name) && formData[name] !== undefined ? (
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            {type === 'textarea' ? (
-              <textarea
-                id={name}
-                value={formData[name] || ''}
-                onChange={(e) => onInputChange(name, e.target.value)}
-                rows={4}
-                disabled={isSubmitting}
-                required={required}
-              />
+            {type === 'file' ? (
+              <>
+                {selectedFileName ? (
+                  <span>{selectedFileName}</span>
+                ) : (
+                  <a href={formData[name]} target="_blank" rel="noopener noreferrer">{formData[name]}</a>
+                )}
+                <button 
+                  type="button" 
+                  onClick={() => onDeleteField(name)} 
+                  style={{ fontSize: '0.8rem' }}
+                  disabled={isSubmitting}
+                >
+                  ✕
+                </button>
+              </>
+            ) : type === 'textarea' ? (
+              <>
+                <textarea
+                  id={name}
+                  value={formData[name] || ''}
+                  onChange={(e) => onInputChange(name, e.target.value)}
+                  rows={4}
+                  disabled={isSubmitting}
+                  required={required}
+                />
+                {!required && (
+                  <button 
+                    type="button" 
+                    onClick={() => onDeleteField(name)} 
+                    style={{ fontSize: '0.8rem' }}
+                    disabled={isSubmitting}
+                  >
+                    ✕
+                  </button>
+                )}
+              </>
             ) : (
-              <input
-                type="text"
-                id={name}
-                value={Array.isArray(formData[name]) ? formData[name].join(', ') : (formData[name] || '')}
-                onChange={(e) => onInputChange(name, e.target.value)}
-                placeholder={placeholder}
-                pattern={required ? ".*\\S.*" : undefined}
-                title={required ? `${label} cannot be empty or contain only whitespace` : undefined}
-                disabled={isSubmitting}
-                required={required}
-              />
-            )}
-            {!required && (
-              <button 
-                type="button" 
-                onClick={() => onDeleteField(name)} 
-                style={{ fontSize: '0.8rem' }}
-                disabled={isSubmitting}
-              >
-                ✕
-              </button>
+              <>
+                <input
+                  type="text"
+                  id={name}
+                  value={Array.isArray(formData[name]) ? formData[name].join(', ') : (formData[name] || '')}
+                  onChange={(e) => onInputChange(name, e.target.value)}
+                  placeholder={placeholder}
+                  pattern={required ? ".*\\S.*" : undefined}
+                  title={required ? `${label} cannot be empty or contain only whitespace` : undefined}
+                  disabled={isSubmitting}
+                  required={required}
+                />
+                {!required && (
+                  <button 
+                    type="button" 
+                    onClick={() => onDeleteField(name)} 
+                    style={{ fontSize: '0.8rem' }}
+                    disabled={isSubmitting}
+                  >
+                    ✕
+                  </button>
+                )}
+              </>
             )}
           </div>
         ) : (
-          <button type="button" onClick={() => onAddField(name)} disabled={isSubmitting}>
-            + Add {label.toLowerCase()}
-          </button>
+          type === 'file' ? (
+            <input
+              type="file"
+              id={name}
+              accept={accept}
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) {
+                  if (onFileChange) onFileChange(file);
+                  onAddField(name);
+                }
+              }}
+              disabled={isSubmitting}
+            />
+          ) : (
+            <button type="button" onClick={() => onAddField(name)} disabled={isSubmitting}>
+              + Add {label.toLowerCase()}
+            </button>
+          )
         )}
       </div>
     );
@@ -126,20 +167,6 @@ export function FirebaseForm({
         )}
         
         {fields.map(field => renderField(field))}
-        
-        {fileField && (
-          <div className="table-form-row">
-            <label htmlFor="fileUpload">{fileField.label}:</label>
-            <input
-              type="file"
-              id="fileUpload"
-              accept={fileField.accept}
-              onChange={(e) => fileField.onChange(e.target.files?.[0] || null)}
-              required={fileField.required}
-              disabled={isSubmitting}
-            />
-          </div>
-        )}
         
         {children}
         
