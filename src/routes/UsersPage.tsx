@@ -103,11 +103,11 @@ export default function UsersPage() {
             </div>
           </details>
           <details>
-            <summary>Why am I being forced to use GitHub to add my collection?</summary>
+            <summary>Why should I use GitHub to add my collection?</summary>
             <div className="explanation">
               <ol>
                 <li>GitHub has everything we need for authenticated bulk uploading of models and metadata.</li>
-                <li>Rather than using a database, <q>baking</q> <a href="https://github.com/MaxwellBo/poppenhuis/blob/master/src/manifest.tsx"><code>//src/manifest.tsx</code></a> into the bundle keeps the app snappy.</li>
+                <li><q>Baking</q> <a href="https://github.com/MaxwellBo/poppenhuis/blob/master/src/manifest.tsx"><code>//src/manifest.tsx</code></a> into the bundle keeps the app snappy.</li>
               </ol>
             </div>
           </details>
