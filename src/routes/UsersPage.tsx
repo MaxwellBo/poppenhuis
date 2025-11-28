@@ -1,6 +1,6 @@
 import React from "react";
 import { Await, useLoaderData, useSearchParams } from "react-router";
-import { loadUsers, MANIFEST_URL_QUERY_PARAM, MANIFEST_SCHEMA, ARENA_PREFIX, User } from "../manifest";
+import { loadUsers, MANIFEST_URL_QUERY_PARAM, MANIFEST_SCHEMA, ARENA_PREFIX, User, mergeUserLists } from "../manifest";
 import { Size } from '../components/Size';
 import { ItemCard } from '../components/ItemCard';
 import { DEFAULT_META } from "../meta";
@@ -31,9 +31,17 @@ export default function UsersPage() {
             ))}
             <React.Suspense fallback={<div>Loading more users...</div>}>
               <Await resolve={asyncUsersPromise}>
-                {(asyncUsers) => <>{asyncUsers.map((user) => (
-                  <UserListEntry key={user.id} user={user} />
-                ))}</>}
+                {(asyncUsers) => {
+                  // Merge async users with sync users, filtering out duplicates
+                  // First-party (sync) data takes precedence
+                  const syncUserIds = new Set(syncUsers.map(u => u.id));
+                  const mergedUsers = mergeUserLists(syncUsers, asyncUsers);
+                  // Only show users that weren't in the sync list
+                  const newUsers = mergedUsers.filter(u => !syncUserIds.has(u.id));
+                  return <>{newUsers.map((user) => (
+                    <UserListEntry key={user.id} user={user} />
+                  ))}</>;
+                }}
               </Await>
             </React.Suspense>
             <li>

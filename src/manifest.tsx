@@ -1089,6 +1089,103 @@ My abject failure to use them properly convinced me to stick to the classical gu
 
 export const MANIFEST_URL_QUERY_PARAM = 'manifest';
 
+/**
+ * Merges two items by field, with first-party data taking precedence.
+ * Items cannot alias - they must have unique IDs within a collection.
+ */
+function mergeItems(firstPartyItems: Item[], firebaseItems: Item[]): Item[] {
+  // Items don't merge - they exist in one source or the other
+  const itemMap = new Map<string, Item>();
+  
+  // Add Firebase items first
+  for (const item of firebaseItems) {
+    itemMap.set(item.id, item);
+  }
+  
+  // First-party items override Firebase items completely
+  for (const item of firstPartyItems) {
+    itemMap.set(item.id, item);
+  }
+  
+  return Array.from(itemMap.values());
+}
+
+/**
+ * Merges two collections by ID, merging their metadata and items.
+ * First-party collection metadata takes precedence.
+ */
+function mergeCollections(firstPartyCollections: Collection[], firebaseCollections: Collection[]): Collection[] {
+  const collectionMap = new Map<string, Collection>();
+  
+  // Add Firebase collections first
+  for (const collection of firebaseCollections) {
+    collectionMap.set(collection.id, collection);
+  }
+  
+  // Merge or override with first-party collections
+  for (const fpCollection of firstPartyCollections) {
+    const fbCollection = collectionMap.get(fpCollection.id);
+    
+    if (fbCollection) {
+      // Merge: first-party metadata takes precedence, items merge
+      collectionMap.set(fpCollection.id, {
+        ...fbCollection,
+        ...fpCollection,
+        // Merge items from both sources
+        items: mergeItems(fpCollection.items, fbCollection.items)
+      });
+    } else {
+      // No merge needed, just use first-party
+      collectionMap.set(fpCollection.id, fpCollection);
+    }
+  }
+  
+  return Array.from(collectionMap.values());
+}
+
+/**
+ * Merges two users by ID, merging their collections.
+ * First-party user metadata takes precedence.
+ */
+function mergeUsers(firstPartyUser: User, firebaseUser: User): User {
+  return {
+    ...firebaseUser,
+    ...firstPartyUser,
+    // Merge collections from both sources
+    collections: mergeCollections(firstPartyUser.collections, firebaseUser.collections),
+    // Mark as merged if data came from both sources
+    source: 'merged'
+  };
+}
+
+/**
+ * Merges two lists of users, deduplicating by user ID and merging collections.
+ * First-party user data takes precedence.
+ */
+export function mergeUserLists(firstPartyUsers: User[], otherUsers: User[]): User[] {
+  const userMap = new Map<string, User>();
+  
+  // Add other users first (Firebase, manifest, etc.)
+  for (const user of otherUsers) {
+    userMap.set(user.id, user);
+  }
+  
+  // Merge or override with first-party users
+  for (const fpUser of firstPartyUsers) {
+    const existingUser = userMap.get(fpUser.id);
+    
+    if (existingUser) {
+      // Merge the users
+      userMap.set(fpUser.id, mergeUsers(fpUser, existingUser));
+    } else {
+      // No merge needed, just use first-party
+      userMap.set(fpUser.id, fpUser);
+    }
+  }
+  
+  return Array.from(userMap.values());
+}
+
 export function loadUsers({ request }: { request: Request; }) {
   const manifestUrl = new URL(request.url).searchParams.get(MANIFEST_URL_QUERY_PARAM);
 
@@ -1129,13 +1226,34 @@ export async function loadUser({ params, request }: { params: { userId: User['id
     return { user: arenaUser, users: [arenaUser] }
   }
 
-  const users = loadUsers({ request });
-  const user = users.syncUsers.find((user) => user.id === params.userId);
+  // Check first-party manifest first (sync)
+  const firstPartyUser = FIRST_PARTY_MANIFEST.find((user) => user.id === params.userId);
   
-  if (user) {
-    return { user, users: [user] }
+  // Try to load from Firebase
+  let firebaseUser: User | null = null;
+  try {
+    firebaseUser = await loadFirebaseUser({ userId: params.userId });
+  } catch (error) {
+    // Firebase user doesn't exist, which is fine
+  }
+  
+  // If we have both, merge them with first-party taking precedence
+  if (firstPartyUser && firebaseUser) {
+    const mergedUser = mergeUsers(firstPartyUser, firebaseUser);
+    return { user: mergedUser, users: [mergedUser] };
+  }
+  
+  // If we only have first-party, return it
+  if (firstPartyUser) {
+    return { user: firstPartyUser, users: [firstPartyUser] };
+  }
+  
+  // If we only have Firebase, return it
+  if (firebaseUser) {
+    return { user: firebaseUser, users: [firebaseUser] };
   }
 
+  // Check third-party manifest if provided
   if (manifestUrl) {
     const manifest = await loadManifest(manifestUrl);
     const manifestUser = manifest.find((user) => user.id === params.userId);
@@ -1144,9 +1262,8 @@ export async function loadUser({ params, request }: { params: { userId: User['id
     }
   }
 
-  // will throw if not found
-  const firebaseUser = await loadFirebaseUser({ userId: params.userId });
-  return { user: firebaseUser, users: [firebaseUser] }
+  // User not found anywhere
+  throw new Error(`User with id "${params.userId}" not found`);
 }
 
 export async function loadCollection({ params, request }: { params: { userId: User['id']; collectionId: Collection['id']; }; request: Request; }) {
