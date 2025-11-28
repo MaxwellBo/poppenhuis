@@ -3,6 +3,7 @@ import { FirebaseForm } from "../components/FirebaseForm";
 import { USER_FIELD_SCHEMAS } from "../manifest";
 import { useFirebaseForm } from "../hooks/useFirebaseForm";
 import { useFirebaseSubmit } from "../hooks/useFirebaseSubmit";
+import { QueryPreservingLink } from "../components/QueryPreservingLink";
 
 export default function NewUserPage() {
   const [userId, setUserId] = useState("");
@@ -24,11 +25,11 @@ export default function NewUserPage() {
 
   return (
     <FirebaseForm
-      title="Create new user"
+      header={<><QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / create a new user</>}
       formData={formData}
       idField={{
         name: 'userId',
-        label: 'User ID',
+        label: 'user ID',
         value: userId,
         onChange: setUserId,
       }}
@@ -39,7 +40,7 @@ export default function NewUserPage() {
       onSubmit={handleSubmit}
       isSubmitting={isSubmitting}
       error={error}
-      submitButtonText={isSubmitting ? "Creating..." : "Create user"}
+      submitButtonText={isSubmitting ? "creating..." : "create user"}
     />
   );
 }

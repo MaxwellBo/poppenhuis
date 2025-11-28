@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useLoaderData } from "react-router";
 import { FirebaseForm } from "../components/FirebaseForm";
 import { ITEM_FIELD_SCHEMAS } from "../manifest";
 import { useFirebaseForm } from "../hooks/useFirebaseForm";
 import { useFirebaseSubmit } from "../hooks/useFirebaseSubmit";
 import { loadItem } from "../manifest";
+import { QueryPreservingLink } from "../components/QueryPreservingLink";
 
 export const loader = loadItem;
 
@@ -48,11 +49,11 @@ export default function EditItemPage() {
 
   return (
     <FirebaseForm
-      title={`Edit item: ${user.id}/${collection.id}/${item.id}`}
+      header={<><QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}/${collection.id}`}>{collection.name}</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}/${collection.id}/${item.id}`}>{item.name}</QueryPreservingLink> / edit</>}
       formData={formData}
       idField={{
         name: 'id',
-        label: 'Item ID',
+        label: 'item ID',
         value: formData.id || '',
         onChange: () => {}, // ID is read-only
         readOnly: true,
@@ -64,7 +65,7 @@ export default function EditItemPage() {
       onSubmit={handleSubmit}
       isSubmitting={isSubmitting}
       error={error}
-      submitButtonText={isSubmitting ? "Saving..." : "Save changes"}
+      submitButtonText={isSubmitting ? "saving..." : "save changes"}
     />
   );
 }

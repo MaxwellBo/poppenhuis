@@ -5,6 +5,7 @@ import { COLLECTION_FIELD_SCHEMAS } from "../manifest";
 import { useFirebaseForm } from "../hooks/useFirebaseForm";
 import { useFirebaseSubmit } from "../hooks/useFirebaseSubmit";
 import { loadCollection } from "../manifest";
+import { QueryPreservingLink } from "../components/QueryPreservingLink";
 
 export const loader = loadCollection;
 
@@ -32,11 +33,11 @@ export default function EditCollectionPage() {
 
   return (
     <FirebaseForm
-      title={`Edit collection: ${user.id}/${collection.id}`}
+      header={<><QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}/${collection.id}`}>{collection.name}</QueryPreservingLink> / edit</>}
       formData={formData}
       idField={{
         name: 'id',
-        label: 'Collection ID',
+        label: 'collection ID',
         value: formData.id || '',
         onChange: () => {}, // ID is read-only
         readOnly: true,
@@ -48,7 +49,7 @@ export default function EditCollectionPage() {
       onSubmit={handleSubmit}
       isSubmitting={isSubmitting}
       error={error}
-      submitButtonText={isSubmitting ? "Saving..." : "Save changes"}
+      submitButtonText={isSubmitting ? "saving..." : "save changes"}
     />
   );
 }

@@ -7,7 +7,7 @@ export interface FieldConfig extends FieldSchema {
 }
 
 interface FirebaseFormProps {
-  title: string;
+  header: ReactNode;
   formData: Record<string, any>;
   idField?: {
     name: string;
@@ -28,7 +28,7 @@ interface FirebaseFormProps {
 }
 
 export function FirebaseForm({
-  title,
+  header,
   formData,
   idField,
   fields,
@@ -46,16 +46,35 @@ export function FirebaseForm({
     
     return (
       <div className="table-form-row" key={name}>
-        <label htmlFor={name}>{label}:</label>
+        <label htmlFor={name}>{label}</label>
         {formData.hasOwnProperty(name) && formData[name] !== undefined ? (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            {type === 'file' ? (
-              <>
-                {selectedFileName ? (
-                  <span>{selectedFileName}</span>
-                ) : (
-                  <a href={formData[name]} target="_blank" rel="noopener noreferrer">{formData[name]}</a>
-                )}
+          type === 'file' ? (
+            <>
+              {selectedFileName ? (
+                <span>{selectedFileName}</span>
+              ) : (
+                <a href={formData[name]} target="_blank" rel="noopener noreferrer">{formData[name]}</a>
+              )}
+              <button 
+                type="button" 
+                onClick={() => onDeleteField(name)} 
+                style={{ fontSize: '0.8rem' }}
+                disabled={isSubmitting}
+              >
+                ✕
+              </button>
+            </>
+          ) : type === 'textarea' ? (
+            <>
+              <textarea
+                id={name}
+                value={formData[name] || ''}
+                onChange={(e) => onInputChange(name, e.target.value)}
+                rows={4}
+                disabled={isSubmitting}
+                required={required}
+              />
+              {!required && (
                 <button 
                   type="button" 
                   onClick={() => onDeleteField(name)} 
@@ -64,54 +83,33 @@ export function FirebaseForm({
                 >
                   ✕
                 </button>
-              </>
-            ) : type === 'textarea' ? (
-              <>
-                <textarea
-                  id={name}
-                  value={formData[name] || ''}
-                  onChange={(e) => onInputChange(name, e.target.value)}
-                  rows={4}
+              )}
+            </>
+          ) : (
+            <>
+              <input
+                type="text"
+                id={name}
+                value={Array.isArray(formData[name]) ? formData[name].join(', ') : (formData[name] || '')}
+                onChange={(e) => onInputChange(name, e.target.value)}
+                placeholder={placeholder}
+                pattern={required ? ".*\\S.*" : undefined}
+                title={required ? `${label} cannot be empty or contain only whitespace` : undefined}
+                disabled={isSubmitting}
+                required={required}
+              />
+              {!required && (
+                <button 
+                  type="button" 
+                  onClick={() => onDeleteField(name)} 
+                  style={{ fontSize: '0.8rem' }}
                   disabled={isSubmitting}
-                  required={required}
-                />
-                {!required && (
-                  <button 
-                    type="button" 
-                    onClick={() => onDeleteField(name)} 
-                    style={{ fontSize: '0.8rem' }}
-                    disabled={isSubmitting}
-                  >
-                    ✕
-                  </button>
-                )}
-              </>
-            ) : (
-              <>
-                <input
-                  type="text"
-                  id={name}
-                  value={Array.isArray(formData[name]) ? formData[name].join(', ') : (formData[name] || '')}
-                  onChange={(e) => onInputChange(name, e.target.value)}
-                  placeholder={placeholder}
-                  pattern={required ? ".*\\S.*" : undefined}
-                  title={required ? `${label} cannot be empty or contain only whitespace` : undefined}
-                  disabled={isSubmitting}
-                  required={required}
-                />
-                {!required && (
-                  <button 
-                    type="button" 
-                    onClick={() => onDeleteField(name)} 
-                    style={{ fontSize: '0.8rem' }}
-                    disabled={isSubmitting}
-                  >
-                    ✕
-                  </button>
-                )}
-              </>
-            )}
-          </div>
+                >
+                  ✕
+                </button>
+              )}
+            </>
+          )
         ) : (
           type === 'file' ? (
             <input
@@ -129,7 +127,7 @@ export function FirebaseForm({
             />
           ) : (
             <button type="button" onClick={() => onAddField(name)} disabled={isSubmitting}>
-              + Add {label.toLowerCase()}
+              + add {label.toLowerCase()}
             </button>
           )
         )}
@@ -140,12 +138,12 @@ export function FirebaseForm({
   return (
     <article>
       <header>
-        <h1>{title}</h1>
+        <h1>{header}</h1>
       </header>
       <form onSubmit={onSubmit} className="table-form">
         {idField && (
           <div className="table-form-row">
-            <label htmlFor={idField.name}>{idField.label}:</label>
+            <label htmlFor={idField.name}>{idField.label}</label>
             <input
               type="text"
               id={idField.name}
@@ -173,7 +171,7 @@ export function FirebaseForm({
         
         <div className="table-form-row">
           <button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? "Saving..." : submitButtonText}
+            {isSubmitting ? "saving..." : submitButtonText}
           </button>
         </div>
       </form>

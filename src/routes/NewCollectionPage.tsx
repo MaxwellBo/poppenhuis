@@ -4,6 +4,7 @@ import { FirebaseForm } from "../components/FirebaseForm";
 import { COLLECTION_FIELD_SCHEMAS } from "../manifest";
 import { useFirebaseForm } from "../hooks/useFirebaseForm";
 import { useFirebaseSubmit } from "../hooks/useFirebaseSubmit";
+import { QueryPreservingLink } from "../components/QueryPreservingLink";
 
 export default function NewCollectionPage() {
   const { userId } = useParams<{ userId: string }>();
@@ -26,11 +27,11 @@ export default function NewCollectionPage() {
 
   return (
     <FirebaseForm
-      title={`Create new collection${userId ? ` for ${userId}` : ""}`}
+      header={userId ? <><QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${userId}`}>{userId}</QueryPreservingLink> / create a new collection</> : <><QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / create a new collection</>}
       formData={formData}
       idField={{
         name: 'collectionId',
-        label: 'Collection ID',
+        label: 'collection ID',
         value: collectionId,
         onChange: setCollectionId,
       }}
@@ -41,7 +42,7 @@ export default function NewCollectionPage() {
       onSubmit={handleSubmit}
       isSubmitting={isSubmitting}
       error={error}
-      submitButtonText={isSubmitting ? "Creating..." : "Create collection"}
+      submitButtonText={isSubmitting ? "creating..." : "create collection"}
     />
   );
 }
