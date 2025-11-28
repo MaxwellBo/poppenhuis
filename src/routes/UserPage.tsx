@@ -30,6 +30,7 @@ export default function UserPage() {
       </div>}
       {user.source === 'firebase' && <div className="short">
         <QueryPreservingLink to={`/${user.id}/new`}>+ new collection</QueryPreservingLink>
+        , <QueryPreservingLink to={`/${user.id}/edit`}>edit</QueryPreservingLink>
       </div>}
       <div id="collection-rows">
         {user.collections.map((collection) =>

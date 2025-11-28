@@ -28,6 +28,7 @@ export default function CollectionPage() {
     </div>}
     {user.source === 'firebase' && <div className="short">
       <QueryPreservingLink to={`/${user.id}/${collection.id}/new`}>+ new item</QueryPreservingLink>
+      , <QueryPreservingLink to={`/${user.id}/${collection.id}/edit`}>edit</QueryPreservingLink>
     </div>}
     <ItemCards collection={collection} user={user} />
   </article>

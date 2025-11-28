@@ -14,6 +14,9 @@ import DebugPage from './routes/DebugPage.tsx';
 import NewUserPage from './routes/NewUserPage.tsx';
 import NewCollectionPage from './routes/NewCollectionPage.tsx';
 import NewItemPage from './routes/NewItemPage.tsx';
+import EditUserPage from './routes/EditUserPage.tsx';
+import EditCollectionPage from './routes/EditCollectionPage.tsx';
+import EditItemPage from './routes/EditItemPage.tsx';
 
 const router = createBrowserRouter([
   {
@@ -53,6 +56,10 @@ const router = createBrowserRouter([
         loader: userPageLoader,
       },
       {
+        path: ":userId/edit",
+        element: <EditUserPage />,
+      },
+      {
         path: ":userId/new",
         element: <NewCollectionPage />,
       },
@@ -63,6 +70,10 @@ const router = createBrowserRouter([
         loader: collectionPageLoader,
       },
       {
+        path: ":userId/:collectionId/edit",
+        element: <EditCollectionPage />,
+      },
+      {
         path: ":userId/:collectionId/new",
         element: <NewItemPage />,
       },
@@ -71,6 +82,10 @@ const router = createBrowserRouter([
         element: <ItemPage />,
         // @ts-ignore
         loader: itemPageLoader,
+      },
+      {
+        path: ":userId/:collectionId/:itemId/edit",
+        element: <EditItemPage />,
       },
     ],
   },
