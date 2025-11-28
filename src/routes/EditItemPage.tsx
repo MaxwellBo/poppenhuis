@@ -20,7 +20,7 @@ export default function EditItemPage() {
     handleDeleteField,
   } = useFirebaseForm();
 
-  const { isSubmitting, error, updateItem } = useFirebaseSubmit();
+  const { isSubmitting, error, upsertItem } = useFirebaseSubmit();
 
   useEffect(() => {
     setFormData({ ...item });
@@ -32,7 +32,7 @@ export default function EditItemPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await updateItem(user.id, collection.id, item.id, formData, modelFile);
+    await upsertItem(user.id, collection.id, item.id, formData, modelFile);
   };
 
   return (

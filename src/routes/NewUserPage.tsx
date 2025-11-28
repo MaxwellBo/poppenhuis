@@ -15,11 +15,11 @@ export default function NewUserPage() {
     cleanFormData,
   } = useFirebaseForm({ initialData: { name: '' } });
 
-  const { isSubmitting, error, createUser } = useFirebaseSubmit();
+  const { isSubmitting, error, upsertUser } = useFirebaseSubmit();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await createUser(userId, formData, cleanFormData);
+    await upsertUser(userId, formData, cleanFormData);
   };
 
   return (

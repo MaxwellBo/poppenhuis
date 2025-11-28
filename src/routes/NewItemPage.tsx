@@ -18,11 +18,11 @@ export default function NewItemPage() {
     cleanFormData,
   } = useFirebaseForm({ initialData: { name: '' } });
 
-  const { isSubmitting, error, createItem } = useFirebaseSubmit();
+  const { isSubmitting, error, upsertItem } = useFirebaseSubmit();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await createItem(userId || '', collectionId || '', itemId, formData, cleanFormData, modelFile);
+    await upsertItem(userId || '', collectionId || '', itemId, formData, modelFile, cleanFormData);
   };
 
   return (

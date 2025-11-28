@@ -19,7 +19,7 @@ export default function EditCollectionPage() {
     handleDeleteField,
   } = useFirebaseForm();
 
-  const { isSubmitting, error, updateCollection } = useFirebaseSubmit();
+  const { isSubmitting, error, upsertCollection } = useFirebaseSubmit();
 
   useEffect(() => {
     setFormData({ ...collection });
@@ -27,7 +27,7 @@ export default function EditCollectionPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await updateCollection(user.id, collection.id, formData);
+    await upsertCollection(user.id, collection.id, formData);
   };
 
   return (

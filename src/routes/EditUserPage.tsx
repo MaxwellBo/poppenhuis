@@ -19,7 +19,7 @@ export default function EditUserPage() {
     handleDeleteField,
   } = useFirebaseForm();
 
-  const { isSubmitting, error, updateUser } = useFirebaseSubmit();
+  const { isSubmitting, error, upsertUser } = useFirebaseSubmit();
 
   useEffect(() => {
     setFormData({ ...user });
@@ -27,7 +27,7 @@ export default function EditUserPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await updateUser(user.id, formData);
+    await upsertUser(user.id, formData);
   };
 
   return (

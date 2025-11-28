@@ -17,11 +17,11 @@ export default function NewCollectionPage() {
     cleanFormData,
   } = useFirebaseForm({ initialData: { name: '' } });
 
-  const { isSubmitting, error, createCollection } = useFirebaseSubmit();
+  const { isSubmitting, error, upsertCollection } = useFirebaseSubmit();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await createCollection(userId || '', collectionId, formData, cleanFormData);
+    await upsertCollection(userId || '', collectionId, formData, cleanFormData);
   };
 
   return (
