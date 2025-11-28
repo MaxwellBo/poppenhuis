@@ -14,9 +14,9 @@ import DebugPage from './routes/DebugPage.tsx';
 import NewUserPage from './routes/NewUserPage.tsx';
 import NewCollectionPage from './routes/NewCollectionPage.tsx';
 import NewItemPage from './routes/NewItemPage.tsx';
-import EditUserPage from './routes/EditUserPage.tsx';
-import EditCollectionPage from './routes/EditCollectionPage.tsx';
-import EditItemPage from './routes/EditItemPage.tsx';
+import EditUserPage, { loader as editUserPageLoader } from './routes/EditUserPage.tsx';
+import EditCollectionPage, { loader as editCollectionPageLoader } from './routes/EditCollectionPage.tsx';
+import EditItemPage, { loader as editItemPageLoader } from './routes/EditItemPage.tsx';
 
 const router = createBrowserRouter([
   {
@@ -58,6 +58,8 @@ const router = createBrowserRouter([
       {
         path: ":userId/edit",
         element: <EditUserPage />,
+        // @ts-ignore
+        loader: editUserPageLoader,
       },
       {
         path: ":userId/new",
@@ -72,6 +74,8 @@ const router = createBrowserRouter([
       {
         path: ":userId/:collectionId/edit",
         element: <EditCollectionPage />,
+        // @ts-ignore
+        loader: editCollectionPageLoader,
       },
       {
         path: ":userId/:collectionId/new",
@@ -86,6 +90,8 @@ const router = createBrowserRouter([
       {
         path: ":userId/:collectionId/:itemId/edit",
         element: <EditItemPage />,
+        // @ts-ignore
+        loader: editItemPageLoader,
       },
     ],
   },

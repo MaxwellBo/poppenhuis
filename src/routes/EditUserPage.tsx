@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from "react";
-import { useParams } from "react-router";
-import { rtdb } from "../firebase";
-import { ref, get } from "firebase/database";
+import React, { useEffect } from "react";
+import { useLoaderData } from "react-router";
 import { FirebaseForm } from "../components/FirebaseForm";
 import { USER_FIELDS } from "../components/FirebaseFormFields";
 import { useFirebaseForm } from "../hooks/useFirebaseForm";
 import { useFirebaseSubmit } from "../hooks/useFirebaseSubmit";
+import { loadUser } from "../manifest";
+
+export const loader = loadUser;
 
 export default function EditUserPage() {
-  const { userId } = useParams<{ userId: string }>();
-  const [isLoading, setIsLoading] = useState(true);
+  const { user } = useLoaderData() as Awaited<ReturnType<typeof loader>>;
   
   const {
     formData,
@@ -19,57 +19,20 @@ export default function EditUserPage() {
     handleDeleteField,
   } = useFirebaseForm();
 
-  const { isSubmitting, error, setError, updateUser } = useFirebaseSubmit();
+  const { isSubmitting, error, updateUser } = useFirebaseSubmit();
 
   useEffect(() => {
-    const loadUser = async () => {
-      if (!userId) {
-        setError("User ID is missing from URL");
-        setIsLoading(false);
-        return;
-      }
-
-      try {
-        const userRef = ref(rtdb, `/${userId}`);
-        const userSnapshot = await get(userRef);
-        
-        if (!userSnapshot.exists()) {
-          setError(`User '${userId}' does not exist`);
-          setIsLoading(false);
-          return;
-        }
-
-        const userData = userSnapshot.val();
-        setFormData({ ...userData });
-        setIsLoading(false);
-      } catch (err: any) {
-        console.error("Failed to load user:", err);
-        setError("Failed to load user: " + (err.message || err.toString()));
-        setIsLoading(false);
-      }
-    };
-
-    loadUser();
-  }, [userId, setFormData, setError]);
+    setFormData({ ...user });
+  }, [user, setFormData]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await updateUser(userId || '', formData);
+    await updateUser(user.id, formData);
   };
-
-  if (isLoading) {
-    return (
-      <article>
-        <header>
-          <h1>Loading...</h1>
-        </header>
-      </article>
-    );
-  }
 
   return (
     <FirebaseForm
-      title={`Edit user: ${userId}`}
+      title={`Edit user: ${user.id}`}
       formData={formData}
       idField={{
         name: 'id',
