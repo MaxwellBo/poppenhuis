@@ -1,12 +1,7 @@
 import React, { ReactNode } from "react";
+import { FieldSchema } from "../manifest";
 
-export interface FieldConfig {
-  name: string;
-  label: string;
-  required?: boolean;
-  placeholder?: string;
-  type?: 'text' | 'textarea' | 'file';
-  accept?: string;
+export interface FieldConfig extends FieldSchema {
   onFileChange?: (file: File | null) => void;
   selectedFileName?: string;
 }

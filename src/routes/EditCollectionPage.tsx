@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useLoaderData } from "react-router";
 import { FirebaseForm } from "../components/FirebaseForm";
-import { COLLECTION_FIELDS } from "../components/FirebaseFormFields";
+import { COLLECTION_FIELD_SCHEMAS } from "../manifest";
 import { useFirebaseForm } from "../hooks/useFirebaseForm";
 import { useFirebaseSubmit } from "../hooks/useFirebaseSubmit";
 import { loadCollection } from "../manifest";
@@ -41,7 +41,7 @@ export default function EditCollectionPage() {
         onChange: () => {}, // ID is read-only
         readOnly: true,
       }}
-      fields={COLLECTION_FIELDS}
+      fields={Object.values(COLLECTION_FIELD_SCHEMAS)}
       onInputChange={handleInputChange}
       onAddField={handleAddField}
       onDeleteField={handleDeleteField}

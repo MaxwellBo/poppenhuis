@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { FirebaseForm } from "../components/FirebaseForm";
-import { USER_FIELDS } from "../components/FirebaseFormFields";
+import { USER_FIELD_SCHEMAS } from "../manifest";
 import { useFirebaseForm } from "../hooks/useFirebaseForm";
 import { useFirebaseSubmit } from "../hooks/useFirebaseSubmit";
 
@@ -32,7 +32,7 @@ export default function NewUserPage() {
         value: userId,
         onChange: setUserId,
       }}
-      fields={USER_FIELDS}
+      fields={Object.values(USER_FIELD_SCHEMAS)}
       onInputChange={handleInputChange}
       onAddField={handleAddField}
       onDeleteField={handleDeleteField}

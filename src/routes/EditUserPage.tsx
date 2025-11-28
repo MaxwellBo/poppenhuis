@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useLoaderData } from "react-router";
 import { FirebaseForm } from "../components/FirebaseForm";
-import { USER_FIELDS } from "../components/FirebaseFormFields";
+import { USER_FIELD_SCHEMAS } from "../manifest";
 import { useFirebaseForm } from "../hooks/useFirebaseForm";
 import { useFirebaseSubmit } from "../hooks/useFirebaseSubmit";
 import { loadUser } from "../manifest";
@@ -41,7 +41,7 @@ export default function EditUserPage() {
         onChange: () => {}, // ID is read-only
         readOnly: true,
       }}
-      fields={USER_FIELDS}
+      fields={Object.values(USER_FIELD_SCHEMAS)}
       onInputChange={handleInputChange}
       onAddField={handleAddField}
       onDeleteField={handleDeleteField}

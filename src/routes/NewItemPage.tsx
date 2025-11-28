@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useParams } from "react-router";
 import { FirebaseForm } from "../components/FirebaseForm";
-import { ITEM_FIELDS } from "../components/FirebaseFormFields";
+import { ITEM_FIELD_SCHEMAS } from "../manifest";
 import { useFirebaseForm } from "../hooks/useFirebaseForm";
 import { useFirebaseSubmit } from "../hooks/useFirebaseSubmit";
 
@@ -24,14 +24,16 @@ export default function NewItemPage() {
     setModelFile(file);
   };
 
-  // Add file handler to the model field
-  const itemFieldsWithFileHandler = ITEM_FIELDS.map(field => 
-    field.name === 'model' ? { 
-      ...field, 
-      onFileChange: handleModelFileSelect,
-      selectedFileName: modelFile?.name 
-    } : field
-  );
+  // Add file handler to the model field and filter out non-form fields
+  const itemFieldsWithFileHandler = Object.values(ITEM_FIELD_SCHEMAS)
+    .filter(field => !['usdzModel', 'poster', 'og'].includes(field.name))
+    .map(field => 
+      field.name === 'model' ? { 
+        ...field, 
+        onFileChange: handleModelFileSelect,
+        selectedFileName: modelFile?.name 
+      } : field
+    );
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

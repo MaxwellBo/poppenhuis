@@ -29,15 +29,86 @@ export interface FirebaseCollection extends Omit<Collection, 'items'> {
   items: Record<Item['id'], Item>;
 }
 
-export const ITEM_FIELD_DESCRIPTIONS = {
-  formalName: "A more specific name (like a model number or a scientific name) than the general name.",
-  model: "The path to the 3D model. Only glTF/GLB models are supported.",
-  usdzModel: "The path to the USDZ model for use in AR on Apple devices.",
-  alt: "Custom text that will be used to describe the model to viewers who use a screen reader or otherwise depend on additional semantic context to understand what they are viewing.",
-  poster: "The image to be displayed instead of the model it is loaded and ready to render.",
-  releaseDate: `The release date and the manufacture date are subtly different. The release date is the date this item's specific variant was made available to the public. The manufacture date is the date the item was actually made.
-      e.g. while the iPhone SE 1 was released in 2016, it was manufactured up until 2018.`,
-  og: "This is the image that will be displayed when this item is shared on social media.",
+export interface FieldSchema {
+  name: string;
+  label: string;
+  description?: string;
+  required?: boolean;
+  placeholder?: string;
+  type?: 'text' | 'textarea' | 'file';
+  accept?: string;
+}
+
+// User field schemas as object mapping
+export const USER_FIELD_SCHEMAS: Record<string, FieldSchema> = {
+  name: { name: 'name', label: 'name', required: true, placeholder: 'John Doe' },
+  bio: { name: 'bio', label: 'bio', type: 'textarea' },
+};
+
+// Collection field schemas as object mapping
+export const COLLECTION_FIELD_SCHEMAS: Record<string, FieldSchema> = {
+  name: { name: 'name', label: 'name', required: true, placeholder: 'my collection' },
+  description: { name: 'description', label: 'description', type: 'textarea' },
+};
+
+// Item field schemas as object mapping
+export const ITEM_FIELD_SCHEMAS: Record<string, FieldSchema> = {
+  name: { name: 'name', label: 'name', required: true, placeholder: 'my item' },
+  model: { 
+    name: 'model', 
+    label: 'model', 
+    type: 'file', 
+    accept: '.glb,.gltf',
+    description: "The path to the 3D model. Only glTF/GLB models are supported."
+  },
+  alt: { 
+    name: 'alt', 
+    label: 'alt text', 
+    placeholder: 'description for screen readers',
+    description: "Custom text that will be used to describe the model to viewers who use a screen reader or otherwise depend on additional semantic context to understand what they are viewing."
+  },
+  description: { name: 'description', label: 'description', type: 'textarea' },
+  formalName: { 
+    name: 'formalName', 
+    label: 'formal name', 
+    placeholder: 'model number or scientific name',
+    description: "A more specific name (like a model number or a scientific name) than the general name."
+  },
+  releaseDate: { 
+    name: 'releaseDate', 
+    label: 'release date', 
+    placeholder: 'YYYY-MM-DD',
+    description: `The release date and the manufacture date are subtly different. The release date is the date this item's specific variant was made available to the public. The manufacture date is the date the item was actually made. e.g. while the iPhone SE 1 was released in 2016, it was manufactured up until 2018.`
+  },
+  manufacturer: { name: 'manufacturer', label: 'manufacturer', placeholder: 'company name' },
+  manufactureDate: { name: 'manufactureDate', label: 'manufacture date', placeholder: 'YYYY-MM-DD' },
+  manufactureLocation: { name: 'manufactureLocation', label: 'manufacture location', placeholder: 'city, country' },
+  material: { name: 'material', label: 'material', placeholder: 'plastic, metal, wood (comma separated)' },
+  acquisitionDate: { name: 'acquisitionDate', label: 'acquisition date', placeholder: 'YYYY-MM-DD' },
+  acquisitionLocation: { name: 'acquisitionLocation', label: 'acquisition location', placeholder: 'city, country' },
+  storageLocation: { name: 'storageLocation', label: 'storage location', placeholder: 'shelf, room, etc.' },
+  captureDate: { name: 'captureDate', label: 'capture date', placeholder: 'YYYY-MM-DD' },
+  captureLocation: { name: 'captureLocation', label: 'capture location', placeholder: 'city, country' },
+  captureLatLon: { name: 'captureLatLon', label: 'capture lat/lon', placeholder: '40.7128, -74.0060' },
+  captureDevice: { name: 'captureDevice', label: 'capture device', placeholder: 'iPhone 15 Pro' },
+  captureApp: { name: 'captureApp', label: 'capture app', placeholder: 'Polycam, RealityScan, etc.' },
+  captureMethod: { name: 'captureMethod', label: 'capture method', placeholder: 'LiDAR, photogrammetry, etc.' },
+  // Fields not in the form but still need descriptions
+  usdzModel: {
+    name: 'usdzModel',
+    label: 'USDZ model',
+    description: "The path to the USDZ model for use in AR on Apple devices."
+  },
+  poster: {
+    name: 'poster',
+    label: 'poster',
+    description: "The image to be displayed instead of the model it is loaded and ready to render."
+  },
+  og: {
+    name: 'og',
+    label: 'Open Graph image',
+    description: "This is the image that will be displayed when this item is shared on social media."
+  },
 };
 
 export interface Item {

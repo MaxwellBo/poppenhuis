@@ -1,4 +1,4 @@
-import { Collection, Item, ITEM_FIELD_DESCRIPTIONS, loadItem, User } from "../manifest";
+import { Collection, Item, ITEM_FIELD_SCHEMAS, loadItem, User } from "../manifest";
 import { rtdb, storage } from "../firebase";
 import React from "react";
 import { useLoaderData, useSearchParams } from "react-router";
@@ -144,11 +144,11 @@ function DescriptionList(props: { item: Item; collection: Collection; user: User
       {customFields}
       {customFields && <hr className="break" />}
       {customFields && <hr className="break" />}
-      <dt><abbr title={ITEM_FIELD_DESCRIPTIONS.formalName}>formal name</abbr></dt>
+      <dt><abbr title={ITEM_FIELD_SCHEMAS.formalName.description}>formal name</abbr></dt>
       <dd>{item.formalName}</dd>
-      {/* <dt><abbr title={ITEM_FIELD_DESCRIPTIONS.alt}>alt</abbr></dt>
+      {/* <dt><abbr title={ITEM_FIELD_SCHEMAS.alt.description}>alt</abbr></dt>
       <dd>{item.alt}</dd> */}
-      <dt><abbr title={ITEM_FIELD_DESCRIPTIONS.releaseDate}>release date</abbr></dt>
+      <dt><abbr title={ITEM_FIELD_SCHEMAS.releaseDate.description}>release date</abbr></dt>
       <dd>{item.releaseDate}</dd>
       <hr className="break" />
       <hr className="break" />
@@ -184,11 +184,11 @@ function DescriptionList(props: { item: Item; collection: Collection; user: User
       <dd>{item.captureMethod}</dd>
       <hr className="break" />
       <hr className="break" />
-      <dt><abbr title={ITEM_FIELD_DESCRIPTIONS.model}>glTF model</abbr></dt>
+      <dt><abbr title={ITEM_FIELD_SCHEMAS.model.description}>glTF model</abbr></dt>
       <dd className='ellipsis'><a href={item.model}>{item.model}</a></dd>
-      <dt><abbr title={ITEM_FIELD_DESCRIPTIONS.usdzModel}>USDZ model</abbr></dt>
+      <dt><abbr title={ITEM_FIELD_SCHEMAS.usdzModel.description}>USDZ model</abbr></dt>
       <dd className='ellipsis'>{item.usdzModel && <a href={item.usdzModel}>{item.usdzModel}</a>}</dd>
-      <dt><abbr title={ITEM_FIELD_DESCRIPTIONS.og}>Open Graph image</abbr></dt>
+      <dt><abbr title={ITEM_FIELD_SCHEMAS.og.description}>Open Graph image</abbr></dt>
       <dd className='ellipsis'>{item.og && <a href={item.og}>{item.og}</a>}</dd>
     </dl>
   );
@@ -372,7 +372,7 @@ function EditableDescriptionList(props: { item: Item; collection: Collection; us
   const renderModelField = () => (
     <React.Fragment key="model">
       <dt>
-        <abbr title={ITEM_FIELD_DESCRIPTIONS.model}>model</abbr>
+        <abbr title={ITEM_FIELD_SCHEMAS.model.description}>model</abbr>
       </dt>
       <dd>
         {formData.hasOwnProperty('model') && formData.model !== undefined ? (
@@ -406,9 +406,9 @@ function EditableDescriptionList(props: { item: Item; collection: Collection; us
         {renderField('description', 'description')}
         <hr className="break" />
         <hr className="break" />
-        {renderField('formal name', 'formalName', ITEM_FIELD_DESCRIPTIONS.formalName)}
-        {renderField('alt', 'alt', ITEM_FIELD_DESCRIPTIONS.alt)}
-        {renderField('release date', 'releaseDate', ITEM_FIELD_DESCRIPTIONS.releaseDate)}
+        {renderField('formal name', 'formalName', ITEM_FIELD_SCHEMAS.formalName.description)}
+        {renderField('alt', 'alt', ITEM_FIELD_SCHEMAS.alt.description)}
+        {renderField('release date', 'releaseDate', ITEM_FIELD_SCHEMAS.releaseDate.description)}
         <hr className="break" />
         <hr className="break" />
         {renderField('manufacturer', 'manufacturer')}
