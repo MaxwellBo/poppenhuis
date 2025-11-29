@@ -9,13 +9,15 @@ import {
   CAT_PRINT_TX_CHAR,
   CAT_PRINT_RX_CHAR,
   DEF_CANVAS_WIDTH,
-  DEF_SPEED,
-  DEF_ENERGY,
   DEF_FINISH_FEED,
   SPEED_RANGE,
   ENERGY_RANGE,
+  DEF_SPEED,
 } from '../../kitty-printer-main/common/constants';
 import QRCode from 'qrcode';
+
+const SPEED = SPEED_RANGE['speed^normal'];
+const ENERGY = ENERGY_RANGE['strength^high'];
 
 interface PrintToCatPrinterButtonProps {
   item: Item;
@@ -106,7 +108,7 @@ export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef
 
     // 2. Draw photo - either from og image or from model viewer canvas
     let imageSource: string | HTMLCanvasElement | null = null;
-    
+
     if (item.og) {
       imageSource = item.og;
     } else if (modelViewerRef?.current) {
@@ -250,7 +252,7 @@ export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef
 
     // 5. Add the URL text underneath QR code
     addSimpleLine(itemUrl);
-    
+
 
     // Draw a black vertical line across the entire canvas height on the left
     ctx.strokeStyle = 'black';
@@ -263,11 +265,39 @@ export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef
     return { actualHeight: yPos };
   };
 
+  const ditherCanvas = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    
+    // Get the content
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    
+    // Apply Floyd-Steinberg dithering
+    const data = new Uint32Array(imageData.data.buffer);
+    const mono = rgbaToGray(data);
+    ditherSteinberg(mono, canvas.width, canvas.height);
+    const bwData = grayToRgba(mono);
+    
+    // Wipe the canvas
+    ctx.fillStyle = 'white';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // Write the dithered content back
+    const ditheredImageData = ctx.createImageData(canvas.width, canvas.height);
+    const ditheredData = new Uint8ClampedArray(bwData.buffer);
+    ditheredImageData.data.set(ditheredData);
+    ctx.putImageData(ditheredImageData, 0, 0);
+  };
+
   // Render receipt on mount
   useEffect(() => {
     const delayedRender = async () => {
       await new Promise(resolve => setTimeout(resolve, 3000));
       await renderReceipt();
+      ditherCanvas();
     };
     delayedRender();
   }, [item, collection, user]);
@@ -276,8 +306,8 @@ export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef
     setIsPrinting(true);
     setError(null);
 
-    // Render the receipt first (now async to wait for image)
     await renderReceipt();
+    ditherCanvas();
 
     try {
       // Check if bluetooth is available
@@ -316,8 +346,7 @@ export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef
           .then(() => rx.addEventListener('characteristicvaluechanged', notifier))
           .catch((error: Error) => console.log(error));
 
-        
-        await printer.prepare(SPEED_RANGE['speed^normal'], ENERGY_RANGE['strength^high']);
+        await printer.prepare(SPEED, ENERGY);
 
         // Get canvas data
         const canvas = canvasRef.current;
@@ -328,13 +357,10 @@ export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef
 
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
-        // Apply Floyd-Steinberg dithering using kitty-printer utilities
+        // Canvas already has dithering applied from preview
         const data = new Uint32Array(imageData.data.buffer);
-        const mono = rgbaToGray(data);
-        ditherSteinberg(mono, canvas.width, canvas.height);
-        const bwData = grayToRgba(mono);
 
-        const bitmap = rgbaToBits(bwData);
+        const bitmap = rgbaToBits(data);
         const pitch = canvas.width / 8 | 0;
 
         let blank = 0;
