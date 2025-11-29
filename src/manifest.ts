@@ -54,8 +54,8 @@ export const ITEM_FIELD_SCHEMAS: Record<string, FieldSchema> = {
     name: 'model', 
     label: 'model', 
     type: 'file', 
-    accept: '.glb,.gltf',
-    description: "The path to the 3D model. Only glTF/GLB models are supported."
+    accept: '.glb,.gltf,.zip',
+    description: "The path to the 3D model. Supports .glb, .gltf, or .zip files (zip must contain a single .glb file)."
   },
   alt: { 
     name: 'alt', 

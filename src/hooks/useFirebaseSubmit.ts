@@ -3,9 +3,38 @@ import { useNavigate } from 'react-router';
 import { rtdb, storage } from '../firebase';
 import { ref, get, runTransaction } from 'firebase/database';
 import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
+import JSZip from 'jszip';
 
 interface UseFirebaseSubmitOptions {
   onError?: (error: string) => void;
+}
+
+/**
+ * Extracts a .glb file from a zip archive.
+ * Returns the .glb file if found, throws an error if not found or multiple .glb files exist.
+ */
+async function extractGlbFromZip(zipFile: File): Promise<File> {
+  const zip = new JSZip();
+  const contents = await zip.loadAsync(zipFile);
+  
+  const glbFiles = Object.keys(contents.files).filter(filename => 
+    filename.toLowerCase().endsWith('.glb') && !contents.files[filename].dir
+  );
+  
+  if (glbFiles.length === 0) {
+    throw new Error('No .glb file found in the zip archive');
+  }
+  
+  if (glbFiles.length > 1) {
+    throw new Error(`Zip archive contains multiple .glb files (${glbFiles.length}). Please include only one .glb file.`);
+  }
+  
+  const glbFileName = glbFiles[0];
+  const glbBlob = await contents.files[glbFileName].async('blob');
+  
+  // Create a new File object with just the filename (no path)
+  const fileName = glbFileName.split('/').pop() || 'model.glb';
+  return new File([glbBlob], fileName, { type: 'model/gltf-binary' });
 }
 
 export function useFirebaseSubmit(options: UseFirebaseSubmitOptions = {}) {
@@ -204,9 +233,16 @@ export function useFirebaseSubmit(options: UseFirebaseSubmitOptions = {}) {
 
       // Upload model file after transaction if provided
       if (modelFile) {
-        const path = `models/${userId}/${collectionId}/${itemId}.${modelFile.name.split('.').pop()}`;
+        let fileToUpload = modelFile;
+        
+        // If the file is a zip, extract the .glb file from it
+        if (modelFile.name.toLowerCase().endsWith('.zip')) {
+          fileToUpload = await extractGlbFromZip(modelFile);
+        }
+        
+        const path = `models/${userId}/${collectionId}/${itemId}.${fileToUpload.name.split('.').pop()}`;
         const fileRef = storageRef(storage, path);
-        await uploadBytes(fileRef, modelFile);
+        await uploadBytes(fileRef, fileToUpload);
         const modelUrl = await getDownloadURL(fileRef);
         
         // Update the item with the new model URL
