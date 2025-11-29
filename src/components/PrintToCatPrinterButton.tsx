@@ -98,22 +98,70 @@ export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef
       yPos += SPACING;
     };
 
-    // Header info
-    addSimpleLine('');
-    addSimpleLine('');
-    addSimpleLine(`${user.name} / ${collection.name}`);
-    addSimpleLine(`${item.name}`);
+    // 1. Add title at the top
+    addSimpleLine(`poppenhuis / ${user.name} / ${collection.name} / ${item.name}`);
     addSimpleLine('');
 
-    // Custom fields first (matching ItemPage order)
-    if (item.customFields && Object.keys(item.customFields).length > 0) {
-      Object.entries(item.customFields).forEach(([key, value]) => {
-        addKeyValueLine(key, value);
-      });
-      addSimpleLine('');
+    // 2. Draw photo - either from og image or from model viewer canvas
+    let imageSource: string | HTMLCanvasElement | null = null;
+    
+    if (item.og) {
+      imageSource = item.og;
+    } else if (modelViewerRef?.current) {
+      console.log('Attempting to get model viewer canvas');
+      // Get canvas from model-viewer's shadow DOM
+      const modelViewerCanvas = modelViewerRef.current.shadowRoot?.querySelector('canvas');
+      if (modelViewerCanvas) {
+        console.log('Found model viewer canvas:', modelViewerCanvas.width, 'x', modelViewerCanvas.height);
+        imageSource = modelViewerCanvas;
+      } else {
+        console.warn('Model viewer canvas not found in shadow DOM');
+      }
     }
 
-    // Fields in ItemPage DescriptionList order - ALWAYS print them
+    if (imageSource) {
+      await new Promise<void>((resolve) => {
+        const drawImage = (source: HTMLImageElement | HTMLCanvasElement) => {
+          // Make image full width (no margins) to maximize size
+          const imgWidth = canvas.width;
+          // Calculate height to maintain aspect ratio
+          const imgHeight = (source.height / source.width) * imgWidth;
+
+          // Center crop: use full width and let sides get chopped if needed
+          const sx = Math.max(0, (source.width - source.height * (imgWidth / imgHeight)) / 2);
+          const sy = 0;
+          const sWidth = source.width - sx * 2;
+          const sHeight = source.height;
+
+          // Draw the image
+          ctx.drawImage(source, sx, sy, sWidth, sHeight, 0, yPos, imgWidth, imgHeight);
+          yPos += imgHeight + 20;
+
+          resolve();
+        };
+
+        if (typeof imageSource === 'string') {
+          // Load from URL (og image)
+          const img = new Image();
+          img.crossOrigin = 'anonymous';
+
+          img.onload = () => drawImage(img);
+          img.onerror = () => {
+            console.warn('Failed to load OG image:', imageSource);
+            resolve();
+          };
+
+          img.src = imageSource;
+        } else {
+          // Use canvas directly (from model viewer)
+          drawImage(imageSource);
+        }
+      });
+    }
+
+    addSimpleLine('');
+
+    // 3. Text content - Standard fields first
     addKeyValueLine('formal name', item.formalName);
     addKeyValueLine('release date', item.releaseDate);
 
@@ -153,67 +201,17 @@ export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef
     addKeyValueLine('capture app', item.captureApp);
     addKeyValueLine('capture method', item.captureMethod);
 
+    addSimpleLine('');
 
-    // Draw photo - either from og image or from model viewer canvas
-    let imageSource: string | HTMLCanvasElement | null = null;
-    
-    if (item.og) {
-      imageSource = item.og;
-    } else if (modelViewerRef?.current) {
-      console.log('Attempting to get model viewer canvas');
-      // Get canvas from model-viewer's shadow DOM
-      const modelViewerCanvas = modelViewerRef.current.shadowRoot?.querySelector('canvas');
-      if (modelViewerCanvas) {
-        console.log('Found model viewer canvas:', modelViewerCanvas.width, 'x', modelViewerCanvas.height);
-        imageSource = modelViewerCanvas;
-      } else {
-        console.warn('Model viewer canvas not found in shadow DOM');
-      }
-    }
-
-    if (imageSource) {
-      await new Promise<void>((resolve) => {
-        const drawImage = (source: HTMLImageElement | HTMLCanvasElement) => {
-          addSimpleLine(''); // Add spacing before image
-
-          // Make image full width (no margins) to maximize size
-          const imgWidth = canvas.width;
-          // Calculate height to maintain aspect ratio
-          const imgHeight = (source.height / source.width) * imgWidth;
-
-          // Center crop: use full width and let sides get chopped if needed
-          const sx = Math.max(0, (source.width - source.height * (imgWidth / imgHeight)) / 2);
-          const sy = 0;
-          const sWidth = source.width - sx * 2;
-          const sHeight = source.height;
-
-          // Draw the image
-          ctx.drawImage(source, sx, sy, sWidth, sHeight, 0, yPos, imgWidth, imgHeight);
-          yPos += imgHeight + 40;
-
-          resolve();
-        };
-
-        if (typeof imageSource === 'string') {
-          // Load from URL (og image)
-          const img = new Image();
-          img.crossOrigin = 'anonymous';
-
-          img.onload = () => drawImage(img);
-          img.onerror = () => {
-            console.warn('Failed to load OG image:', imageSource);
-            resolve();
-          };
-
-          img.src = imageSource;
-        } else {
-          // Use canvas directly (from model viewer)
-          drawImage(imageSource);
-        }
+    // Custom fields last
+    if (item.customFields && Object.keys(item.customFields).length > 0) {
+      Object.entries(item.customFields).forEach(([key, value]) => {
+        addKeyValueLine(key, value);
       });
+      addSimpleLine('');
     }
 
-    // Draw QR code at the end
+    // 4. Draw QR code at the end
     const itemUrl = `poppenhu.is/${user.id}/${collection.id}/${item.id}`;
     await new Promise<void>((resolve) => {
       QRCode.toDataURL(itemUrl, {
@@ -227,14 +225,12 @@ export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef
         if (!err && url) {
           const qrImg = new Image();
           qrImg.onload = () => {
-            addSimpleLine(''); // Add spacing before QR code
-
             // Center the QR code
             const qrSize = 256;
             const xOffset = (canvas.width - qrSize) / 2;
 
             ctx.drawImage(qrImg, xOffset, yPos, qrSize, qrSize);
-            yPos += qrSize + 40;
+            yPos += qrSize + 20;
 
             resolve();
           };
@@ -250,10 +246,8 @@ export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef
       });
     });
 
-    // Add the URL text at the end
-    addSimpleLine('');
+    // 5. Add the URL text underneath QR code
     addSimpleLine(itemUrl);
-    addSimpleLine('');
     
 
     // Draw a black vertical line across the entire canvas height on the left

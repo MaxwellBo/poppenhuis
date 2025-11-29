@@ -124,9 +124,6 @@ function DescriptionList(props: { item: Item; collection: Collection; user: User
 
   return (
     <dl>
-      {customFields}
-      {customFields && <hr className="break" />}
-      {customFields && <hr className="break" />}
       <dt><abbr title={ITEM_FIELD_SCHEMAS.formalName.description}>{ITEM_FIELD_SCHEMAS.formalName.label}</abbr></dt>
       <dd>{item.formalName}</dd>
       {/* <dt><abbr title={ITEM_FIELD_SCHEMAS.alt.description}>{ITEM_FIELD_SCHEMAS.alt.label}</abbr></dt>
@@ -173,6 +170,9 @@ function DescriptionList(props: { item: Item; collection: Collection; user: User
       <dd className='ellipsis'>{item.usdzModel && <a href={item.usdzModel}>{item.usdzModel}</a>}</dd>
       <dt><abbr title={ITEM_FIELD_SCHEMAS.og.description}>{ITEM_FIELD_SCHEMAS.og.label}</abbr></dt>
       <dd className='ellipsis'>{item.og && <a href={item.og}>{item.og}</a>}</dd>
+      {customFields && <hr className="break" />}
+      {customFields && <hr className="break" />}
+      {customFields}
     </dl>
   );
 }
