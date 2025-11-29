@@ -12,6 +12,8 @@ import {
   DEF_SPEED,
   DEF_ENERGY,
   DEF_FINISH_FEED,
+  SPEED_RANGE,
+  ENERGY_RANGE,
 } from '../../kitty-printer-main/common/constants';
 import QRCode from 'qrcode';
 
@@ -314,7 +316,8 @@ export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef
           .then(() => rx.addEventListener('characteristicvaluechanged', notifier))
           .catch((error: Error) => console.log(error));
 
-        await printer.prepare(DEF_SPEED, DEF_ENERGY);
+        
+        await printer.prepare(SPEED_RANGE['speed^normal'], ENERGY_RANGE['strength^high']);
 
         // Get canvas data
         const canvas = canvasRef.current;
