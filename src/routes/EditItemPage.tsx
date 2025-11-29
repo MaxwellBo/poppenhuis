@@ -4,7 +4,7 @@ import { FirebaseForm } from "../components/FirebaseForm";
 import { ITEM_FIELD_SCHEMAS } from "../manifest";
 import { useFirebaseForm } from "../hooks/useFirebaseForm";
 import { useFirebaseSubmit } from "../hooks/useFirebaseSubmit";
-import { loadItem } from "../manifest";
+import { loadItem } from "../manifest-extras";
 import { QueryPreservingLink } from "../components/QueryPreservingLink";
 
 export const loader = loadItem;

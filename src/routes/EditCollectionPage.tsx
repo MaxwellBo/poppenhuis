@@ -4,7 +4,7 @@ import { FirebaseForm } from "../components/FirebaseForm";
 import { COLLECTION_FIELD_SCHEMAS } from "../manifest";
 import { useFirebaseForm } from "../hooks/useFirebaseForm";
 import { useFirebaseSubmit } from "../hooks/useFirebaseSubmit";
-import { loadCollection } from "../manifest";
+import { loadCollection } from "../manifest-extras";
 import { QueryPreservingLink } from "../components/QueryPreservingLink";
 
 export const loader = loadCollection;

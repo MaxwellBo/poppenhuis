@@ -1,5 +1,5 @@
 import { useLoaderData } from "react-router";
-import { loadItem } from "../manifest";
+import { loadItem } from "../manifest-extras";
 import { QueryPreservingLink } from "../components/QueryPreservingLink";
 import { ModelViewerWrapper } from "../components/ModelViewerWrapper";
 

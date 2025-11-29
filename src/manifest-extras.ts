@@ -34,6 +34,71 @@ async function loadManifest(manifestUrl: string): Promise<Manifest> {
   return response.json();
 }
 
+async function loadFirebaseUsers(): Promise<User[]> {
+  const usersRef = ref(rtdb, '/');
+  const snapshot = await get(usersRef);
+
+  if (!snapshot.exists()) {
+    return [];
+  }
+
+  const users: FirebaseManifest = snapshot.val();
+  
+  return Object.values(users).map(firebaseUser => {
+    // Convert collections from Record to Array format
+    const collections: Collection[] = Object.values(firebaseUser.collections ?? {}).map(collection => {
+      const items: Item[] = Object.values(collection.items ?? {});
+
+      return {
+        ...collection,
+        items
+      };
+    });
+
+    return {
+      ...firebaseUser,
+      id: firebaseUser.id,
+      collections,
+      source: 'firebase'
+    };
+  });
+}
+
+
+export async function loadFirebaseUser({ userId }: { userId: string }): Promise<User> {
+  const usersRef = ref(rtdb, '/');
+  const snapshot = await get(usersRef);
+
+  if (!snapshot.exists()) {
+    throw new Error("Firebase database is empty");
+  }
+
+  const users: FirebaseManifest = snapshot.val();
+  const firebaseUser: FirebaseUser = users[userId];
+
+  if (!firebaseUser) {
+    throw new Error(`User with id "${userId}" not found in Firebase`);
+  }
+
+  // Convert collections from Record to Array format
+  const collections: Collection[] = Object.values(firebaseUser.collections ?? {}).map(collection => {
+    const items: Item[] = Object.values(collection.items ?? {});
+
+    return {
+      ...collection,
+      items
+    };
+  });
+
+  const result: User = {
+    ...firebaseUser,
+    source: 'firebase',
+    collections
+  };
+
+  return result;
+}
+
 export async function loadUser({ params, request }: { params: { userId: User['id']; }; request: Request; }): Promise<{
   user: User,
   users: User[]
@@ -44,20 +109,30 @@ export async function loadUser({ params, request }: { params: { userId: User['id
   if (hasArenaPrefix) {
     const slug = params.userId.slice(ARENA_PREFIX.length);
     const arenaUser = await loadArenaUser({ userSlug: slug })
-    return { user: arenaUser, users: [arenaUser] }
+    return { user: arenaUser, users: [...FIRST_PARTY_MANIFEST, arenaUser,] }
   }
 
   if (manifestUrl) {
     const manifest = await loadManifest(manifestUrl);
     const manifestUser = manifest.find((user: User) => user.id === params.userId);
     if (manifestUser) {
-      return { user: { ...manifestUser, source: 'manifest' }, users: [manifestUser] }
+      return { user: { ...manifestUser, source: 'manifest' }, users: [...FIRST_PARTY_MANIFEST, manifestUser] }
     }
   }
 
-  // will throw if not found
-  const firebaseUser = await loadFirebaseUser({ userId: params.userId });
-  return { user: firebaseUser, users: [firebaseUser] }
+  // Check FIRST_PARTY_MANIFEST first
+  const firstPartyUser = FIRST_PARTY_MANIFEST.find((user: User) => user.id === params.userId);
+  if (firstPartyUser) {
+    return { user: { ...firstPartyUser }, users: FIRST_PARTY_MANIFEST }
+  }
+
+  // Load all firebase users and find the one we need
+  const firebaseUsers = await loadFirebaseUsers();
+  const firebaseUser = firebaseUsers.find(user => user.id === params.userId);
+  if (!firebaseUser) {
+    throw new Error(`User with id "${params.userId}" not found`);
+  }
+  return { user: firebaseUser, users: [...FIRST_PARTY_MANIFEST, ...firebaseUsers] }
 }
 
 export async function loadCollection({ params, request }: { params: { userId: User['id']; collectionId: Collection['id']; }; request: Request; }) {
@@ -351,69 +426,4 @@ interface ArenaSearchResult {
   channels: ArenaChannel[];
   blocks: ArenaContent[];
   users: any[];
-}
-
-async function loadFirebaseUsers(): Promise<User[]> {
-  const usersRef = ref(rtdb, '/');
-  const snapshot = await get(usersRef);
-
-  if (!snapshot.exists()) {
-    return [];
-  }
-
-  const users: FirebaseManifest = snapshot.val();
-  
-  return Object.values(users).map(firebaseUser => {
-    // Convert collections from Record to Array format
-    const collections: Collection[] = Object.values(firebaseUser.collections ?? {}).map(collection => {
-      const items: Item[] = Object.values(collection.items ?? {});
-
-      return {
-        ...collection,
-        items
-      };
-    });
-
-    return {
-      ...firebaseUser,
-      id: firebaseUser.id,
-      collections,
-      source: 'firebase'
-    };
-  });
-}
-
-
-export async function loadFirebaseUser({ userId }: { userId: string }): Promise<User> {
-  const usersRef = ref(rtdb, '/');
-  const snapshot = await get(usersRef);
-
-  if (!snapshot.exists()) {
-    throw new Error("Firebase database is empty");
-  }
-
-  const users: FirebaseManifest = snapshot.val();
-  const firebaseUser: FirebaseUser = users[userId];
-
-  if (!firebaseUser) {
-    throw new Error(`User with id "${userId}" not found in Firebase`);
-  }
-
-  // Convert collections from Record to Array format
-  const collections: Collection[] = Object.values(firebaseUser.collections ?? {}).map(collection => {
-    const items: Item[] = Object.values(collection.items ?? {});
-
-    return {
-      ...collection,
-      items
-    };
-  });
-
-  const result: User = {
-    ...firebaseUser,
-    source: 'firebase',
-    collections
-  };
-
-  return result;
 }

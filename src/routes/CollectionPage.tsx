@@ -1,7 +1,7 @@
 import { Size } from '../components/Size';
 import { ItemCards } from '../components/ItemCards';
 import { useLoaderData } from "react-router";
-import { loadCollection } from "../manifest";
+import { loadCollection } from "../manifest-extras";
 import { metaForCollection } from "../meta";
 import Markdown from "react-markdown";
 import { HelmetMeta } from '../components/HelmetMeta';

@@ -1,7 +1,8 @@
 import { useLoaderData } from "react-router";
 import { Size } from '../components/Size';
 import { ItemCards } from '../components/ItemCards';
-import { Collection, loadUser, User } from "../manifest";
+import { Collection, User } from "../manifest";
+import { loadUser } from "../manifest-extras";
 import { metaForUser } from "../meta";
 import Markdown from "react-markdown";
 import { QueryPreservingLink } from "../components/QueryPreservingLink";
