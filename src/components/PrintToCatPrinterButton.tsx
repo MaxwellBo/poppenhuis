@@ -19,6 +19,7 @@ interface PrintToCatPrinterButtonProps {
   item: Item;
   collection: Collection;
   user: User;
+  modelViewerRef?: React.RefObject<HTMLElement>;
 }
 
 declare global {
@@ -29,7 +30,7 @@ declare global {
   }
 }
 
-export function PrintToCatPrinterButton({ item, collection, user }: PrintToCatPrinterButtonProps) {
+export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef }: PrintToCatPrinterButtonProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isPrinting, setIsPrinting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -147,18 +148,15 @@ export function PrintToCatPrinterButton({ item, collection, user }: PrintToCatPr
     
     if (item.og) {
       imageSource = item.og;
-    } else {
+    } else if (modelViewerRef?.current) {
       console.log('Attempting to get model viewer canvas');
-      // Get primary model viewer from the #model div
-      const modelViewer = document.querySelector('#model model-viewer') as HTMLElement | null;
-      if (modelViewer?.shadowRoot) {
-        const modelViewerCanvas = modelViewer.shadowRoot.querySelector('canvas');
-        if (modelViewerCanvas) {
-          console.log('Found model viewer canvas:', modelViewerCanvas.width, 'x', modelViewerCanvas.height);
-          imageSource = modelViewerCanvas;
-        } else {
-          console.warn('Model viewer canvas not found in shadow DOM');
-        }
+      // Get canvas from model-viewer's shadow DOM
+      const modelViewerCanvas = modelViewerRef.current.shadowRoot?.querySelector('canvas');
+      if (modelViewerCanvas) {
+        console.log('Found model viewer canvas:', modelViewerCanvas.width, 'x', modelViewerCanvas.height);
+        imageSource = modelViewerCanvas;
+      } else {
+        console.warn('Model viewer canvas not found in shadow DOM');
       }
     }
 
@@ -259,7 +257,7 @@ export function PrintToCatPrinterButton({ item, collection, user }: PrintToCatPr
   // Render receipt on mount
   useEffect(() => {
     const delayedRender = async () => {
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 3000));
       await renderReceipt();
     };
     delayedRender();
@@ -268,9 +266,6 @@ export function PrintToCatPrinterButton({ item, collection, user }: PrintToCatPr
   const printReceipt = async () => {
     setIsPrinting(true);
     setError(null);
-
-    // Wait at least 1 second to ensure model viewer canvas is fully rendered
-    await new Promise(resolve => setTimeout(resolve, 1000));
 
     // Render the receipt first (now async to wait for image)
     await renderReceipt();

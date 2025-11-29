@@ -1,6 +1,6 @@
 import { Collection, Item, ITEM_FIELD_SCHEMAS, User } from "../manifest";
 import { loadItem } from "../manifest-extras";
-import React from "react";
+import React, { useRef } from "react";
 import { useLoaderData, useSearchParams } from "react-router";
 import { ItemCards } from '../components/ItemCards';
 import { ItemCard } from '../components/ItemCard';
@@ -18,6 +18,7 @@ export const loader = loadItem
 
 export default function ItemPage() {
   const { item, user, collection, users } = useLoaderData() as Awaited<ReturnType<typeof loadItem>>;
+  const modelViewerRef = useRef<HTMLElement>(null);
 
   const currentIndex = collection.items.findIndex(i => i.id === item.id);
   const previousItem: Item = currentIndex > 0
@@ -65,7 +66,7 @@ export default function ItemPage() {
         <div id="model">
           {renderAFrameScene
             ? <AFrameScene users={users} startingItem={item} />
-            : <ModelViewerWrapper item={item} size='responsive-big' />
+            : <ModelViewerWrapper modelViewerRef={modelViewerRef} item={item} size='responsive-big' />
           }
           <label className="vr-toggle">
             <input
@@ -80,7 +81,7 @@ export default function ItemPage() {
         <div id="meta">
           <DescriptionList item={item} collection={collection} user={user} />
           <br />
-          <QrCodeAndLinksAndButtons item={item} collection={collection} user={user} />
+          <QrCodeAndLinksAndButtons item={item} collection={collection} user={user} modelViewerRef={modelViewerRef} />
         </div>
         <div id="next">
           <ItemCard
@@ -176,8 +177,8 @@ function DescriptionList(props: { item: Item; collection: Collection; user: User
   );
 }
 
-function QrCodeAndLinksAndButtons(props: { item: Item; collection: Collection; user: User; }) {
-  const { item, collection, user } = props;
+function QrCodeAndLinksAndButtons(props: { item: Item; collection: Collection; user: User; modelViewerRef: React.RefObject<HTMLElement>; }) {
+  const { item, collection, user, modelViewerRef } = props;
 
   const githubManifestCodeSearchUrl = `https://github.com/search?q=repo%3AMaxwellBo%2Fpoppenhuis+%22id%3A+%5C%22${item.id}%5C%22%22&type=code`;
 
@@ -203,7 +204,7 @@ function QrCodeAndLinksAndButtons(props: { item: Item; collection: Collection; u
             })}>
             share?
           </button>}
-        <PrintToCatPrinterButton item={item} collection={collection} user={user} />
+        <PrintToCatPrinterButton item={item} collection={collection} user={user} modelViewerRef={modelViewerRef} />
       </div>
     </div>
   )

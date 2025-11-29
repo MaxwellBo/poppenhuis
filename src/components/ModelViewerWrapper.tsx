@@ -1,7 +1,8 @@
 import { Item } from '../manifest';
 import '@google/model-viewer'
+import React from 'react';
 
-export function ModelViewerWrapper(props: { item: Item; size?: ModelSize; }) {
+export function ModelViewerWrapper(props: { item: Item; size?: ModelSize; modelViewerRef?: React.RefObject<HTMLElement>; }) {
   return (
     <div className='model-viewer-wrapper'>
       {props.size !== 'small' && <div className='camera-keys'>
@@ -9,6 +10,7 @@ export function ModelViewerWrapper(props: { item: Item; size?: ModelSize; }) {
       </div>}
       {/* @ts-ignore */}
       <model-viewer
+        ref={props.modelViewerRef}
         key={props.item.model}
         style={getStyleForModelSize(props.size)}
         alt={props.item.alt ?? props.item.description}
