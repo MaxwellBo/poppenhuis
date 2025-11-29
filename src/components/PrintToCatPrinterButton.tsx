@@ -104,7 +104,6 @@ export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef
 
     // 1. Add title at the top
     addSimpleLine(`poppenhuis / ${user.name} / ${collection.name} / ${item.name}`);
-    addSimpleLine('');
 
     // 2. Draw photo - either from og image or from model viewer canvas
     let imageSource: string | HTMLCanvasElement | null = null;
@@ -163,30 +162,16 @@ export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef
       });
     }
 
-    addSimpleLine('');
-
     // 3. Text content - Standard fields first
     addKeyValueLine('formal name', item.formalName);
     addKeyValueLine('release date', item.releaseDate);
-
-    addSimpleLine('');
-
     addKeyValueLine('manufacturer', item.manufacturer);
     addKeyValueLine('manufacture date', item.manufactureDate);
     addKeyValueLine('manufacture location', item.manufactureLocation);
     addKeyValueLine('material', item.material);
-
-    addSimpleLine('');
-
     addKeyValueLine('acquisition date', item.acquisitionDate);
     addKeyValueLine('acquisition location', item.acquisitionLocation);
-
-    addSimpleLine('');
-
     addKeyValueLine('storage location', item.storageLocation);
-
-    addSimpleLine('');
-
     addKeyValueLine('capture date', item.captureDate);
 
     // Handle capture location (combines captureLocation and captureLatLon like ItemPage)
@@ -200,19 +185,16 @@ export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef
       location = captureLatLon;
     }
     addKeyValueLine('capture location', location);
-
     addKeyValueLine('capture device', item.captureDevice);
     addKeyValueLine('capture app', item.captureApp);
     addKeyValueLine('capture method', item.captureMethod);
 
-    addSimpleLine('');
 
     // Custom fields last
     if (item.customFields && Object.keys(item.customFields).length > 0) {
       Object.entries(item.customFields).forEach(([key, value]) => {
         addKeyValueLine(key, value);
       });
-      addSimpleLine('');
     }
 
     // 4. Draw QR code at the end
