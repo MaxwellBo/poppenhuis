@@ -39,10 +39,10 @@ export default function UsersPage() {
               </Await>
             </React.Suspense>
             <li>
-              <a href="https://github.com/MaxwellBo/poppenhuis/issues/new?template=put-user.yml">+ put user</a>
+              <a href="https://github.com/MaxwellBo/poppenhuis/issues/new?template=put-user.yml">+ new user (permanent)</a>
             </li>
             <li>
-              <a href="/new">+ new user</a>
+              <a href="/new">+ new user (temporary)</a>
             </li>
           </ul>
         </section>

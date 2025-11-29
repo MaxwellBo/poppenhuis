@@ -43,7 +43,7 @@ export function PrintToCatPrinterButton({ item, collection, user }: PrintToCatPr
 
     // Set canvas width to printer width
     canvas.width = DEF_CANVAS_WIDTH;
-    canvas.height = 1100;
+    canvas.height = 1300;
     const SPACING = 20;
 
     // White background
