@@ -39,12 +39,23 @@ export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef
     const canvas = canvasRef.current;
     if (!canvas) throw new Error('Canvas not found');
 
+    // First pass: measure content height
+    const measureCanvas = document.createElement('canvas');
+    measureCanvas.width = DEF_CANVAS_WIDTH;
+    measureCanvas.height = 10000; // Large temporary height for measurement
+
+    const { actualHeight } = await renderReceiptToCanvas(measureCanvas);
+
+    // Second pass: render to actual canvas with correct height
+    canvas.width = DEF_CANVAS_WIDTH;
+    canvas.height = actualHeight;
+    await renderReceiptToCanvas(canvas);
+  };
+
+  const renderReceiptToCanvas = async (canvas: HTMLCanvasElement): Promise<{ actualHeight: number }> => {
     const ctx = canvas.getContext('2d');
     if (!ctx) throw new Error('Canvas context not found');
 
-    // Set canvas width to printer width
-    canvas.width = DEF_CANVAS_WIDTH;
-    canvas.height = 1300;
     const SPACING = 20;
 
     // White background
@@ -250,8 +261,10 @@ export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef
     ctx.lineWidth = 2;
     ctx.beginPath();
     ctx.moveTo(0, 0);
-    ctx.lineTo(0, canvas.height);
+    ctx.lineTo(0, yPos);
     ctx.stroke();
+
+    return { actualHeight: yPos };
   };
 
   // Render receipt on mount
