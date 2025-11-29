@@ -142,6 +142,10 @@ export interface Item {
     [key: string]: string | undefined;
   };
 }
+
+export const MANIFEST_URL_QUERY_PARAM = 'manifest';
+export const ARENA_PREFIX = 'arena:';
+
 // KEEP THIS IN SYNC WITH THE TYPES ABOVE PLEASE
 export const MANIFEST_SCHEMA = `
 type Manifest = User[];

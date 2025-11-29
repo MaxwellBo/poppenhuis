@@ -1,6 +1,6 @@
 // netlify/edge-functions/transform.ts
 import { Context } from "@netlify/edge-functions";
-import { loadUser, loadItem, loadCollection } from "../../src/manifest.tsx";
+import { loadUser, loadItem, loadCollection } from "../../src/manifest.ts";
 import { DEFAULT_META, metaForCollection, metaForItem, metaForUser, metaToHtml } from '../../src/meta.ts'
 
 export default async function handler(request: Request, context: Context) {
@@ -31,13 +31,13 @@ export default async function handler(request: Request, context: Context) {
 
   try {
     if (itemId) {
-      const { item, collection, user } = await loadItem({ params, request });
+      const { item, collection, user } = await loadItem({ params });
       meta = metaForItem(item, collection, user);
     } else if (collectionId) {
-      const { collection, user } = await loadCollection({ params, request });
+      const { collection, user } = await loadCollection({ params });
       meta = metaForCollection(collection, user);
     } else if (userId) {
-      const { user } = await loadUser({ params, request });
+      const { user } = await loadUser({ params });
       meta = metaForUser(user);
     }
   } catch (error) {

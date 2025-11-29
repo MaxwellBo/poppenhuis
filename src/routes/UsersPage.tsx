@@ -1,6 +1,8 @@
 import React from "react";
 import { Await, useLoaderData, useSearchParams } from "react-router";
-import { loadUsers, MANIFEST_URL_QUERY_PARAM, MANIFEST_SCHEMA, ARENA_PREFIX, User } from "../manifest";
+import { loadUsers } from "../manifest-extras";
+import type { User } from "../manifest";
+import { MANIFEST_URL_QUERY_PARAM, MANIFEST_SCHEMA, ARENA_PREFIX } from "../manifest";
 import { Size } from '../components/Size';
 import { ItemCard } from '../components/ItemCard';
 import { DEFAULT_META } from "../meta";
