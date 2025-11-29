@@ -76,5 +76,5 @@ body:
         After submitting this issue:
         1. A maintainer will review your collection
         2. If the user doesn't exist, they will be created
-        3. If approved, your collection will be added to the specified user in `src/manifest.tsx`
+        3. If approved, your collection will be added to the specified user in `src/manifest.ts`
         4. You can then submit items for this collection

@@ -142,7 +142,7 @@ body:
         2. A maintainer will review your item
         3. If the user or collection don't exist, they will be created
         4. Files will be uploaded to `/public/models/[user-id]/[collection-id]/`
-        5. The item YAML will be added to the collection in `src/manifest.tsx`
+        5. The item YAML will be added to the collection in `src/manifest.ts`
         6. Your item will appear on the website!
         
         ## File naming convention

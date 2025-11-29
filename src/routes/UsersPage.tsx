@@ -38,13 +38,14 @@ export default function UsersPage() {
                 ))}</>}
               </Await>
             </React.Suspense>
-            <li>
-              <a href="https://github.com/MaxwellBo/poppenhuis/issues/new?template=put-user.yml">+ new user (permanent)</a>
-            </li>
-            <li>
-              <a href="/new">+ new user (temporary)</a>
-            </li>
           </ul>
+          <br />
+          <p>
+          <a href="https://github.com/MaxwellBo/poppenhuis/issues/new?template=put-user.yml">+ new user (permanent)</a>
+          </p>
+          <p>
+          <a href="/new">+ new user (temporary)</a>
+          </p>
         </section>
         <section className='short'>
           <p className="p-spacing">
@@ -61,7 +62,7 @@ export default function UsersPage() {
               Upload your <code>.gltf/.glb</code> models to <a href="https://github.com/MaxwellBo/poppenhuis/tree/master/public/models"><code>//public/models/</code></a>
             </li>
             <li>
-              Add your metadata to <a href="https://github.com/MaxwellBo/poppenhuis/blob/master/src/manifest.tsx"><code>//src/manifest.tsx</code></a>
+              Add your metadata to <a href="https://github.com/MaxwellBo/poppenhuis/blob/master/src/manifest.ts"><code>//src/manifest.ts</code></a>
             </li>
           </ol>
           <br />
@@ -109,7 +110,7 @@ export default function UsersPage() {
             <div className="explanation">
               <ol>
                 <li>GitHub has everything we need for authenticated bulk uploading of models and metadata.</li>
-                <li><q>Baking</q> <a href="https://github.com/MaxwellBo/poppenhuis/blob/master/src/manifest.tsx"><code>//src/manifest.tsx</code></a> into the bundle keeps the app snappy.</li>
+                <li><q>Baking</q> <a href="https://github.com/MaxwellBo/poppenhuis/blob/master/src/manifest.ts"><code>//src/manifest.ts</code></a> into the bundle keeps the app snappy.</li>
               </ol>
             </div>
           </details>
@@ -148,7 +149,7 @@ function UserListEntry(props: { user: User }) {
           user.collections.map((collection) =>
             <li key={collection.id}>
               <QueryPreservingLink to={user.id + "/" + collection.id}>{collection.name}</QueryPreservingLink> <Size ts={collection.items} t="item" />
-              <ItemCard item={collection.items[0]} collection={collection} user={user} size='small' altName={''} />
+              {collection.items[0] && <ItemCard item={collection.items[0]} collection={collection} user={user} size='small' altName={''} />}
             </li>
           )
         }

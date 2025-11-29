@@ -44,7 +44,7 @@ body:
     id: yaml-template
     attributes:
       label: User YAML
-      description: Complete YAML representation of the user (will be added to manifest.tsx)
+      description: Complete YAML representation of the user (will be added to manifest.ts)
       placeholder: |
         id: "johndoe"
         name: "John Doe"
@@ -68,5 +68,5 @@ body:
         
         After submitting this issue:
         1. A maintainer will review your user profile
-        2. If approved, your user will be added to `src/manifest.tsx`
+        2. If approved, your user will be added to `src/manifest.ts`
         3. You can then submit collections and items for this user

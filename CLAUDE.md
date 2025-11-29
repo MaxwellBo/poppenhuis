@@ -51,14 +51,14 @@ The application can also load models from [Are.na](https://are.na), providing in
 
 ## Key Files
 
-- `src/manifest.tsx` - Contains the data model and application data
+- `src/manifest.ts` - Contains the data model and application data
 - `src/main.tsx` - Entry point, sets up routing
 - `src/routes/*.tsx` - Route components for different pages
 - `src/utils.tsx` - Common utilities and shared components
 
 ## Best Practices
 
-1. When adding new items or collections, follow the existing data structure in `manifest.tsx`
+1. When adding new items or collections, follow the existing data structure in `manifest.ts`
 2. When modifying UI components, check how they're used across multiple pages
 3. Always run linting before submitting changes: `npm run lint`
 4. When working with 3D models, only use GLB format as specified in the manifest

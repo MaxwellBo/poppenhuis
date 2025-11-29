@@ -23,7 +23,7 @@ export default function CollectionPage() {
     </header>
     {collection.description && <div className='short description ugc'><Markdown>{collection.description}</Markdown></div>}
     {user.source === undefined && <div className="short">
-      <a href={`https://github.com/MaxwellBo/poppenhuis/issues/new?template=put-item.yml&user-id=${user.id}&collection-id=${collection.id}`}>+ put item</a>
+      <a href={`https://github.com/MaxwellBo/poppenhuis/issues/new?template=put-item.yml&user-id=${user.id}&collection-id=${collection.id}`}>+ add item</a>
       , <a href={`https://github.com/MaxwellBo/poppenhuis/issues/new?template=put-collection.yml&user-id=${user.id}&yaml-template=${encodeURIComponent(collectionYaml)}`}>edit</a>
     </div>}
     {user.source === 'firebase' && <div className="short">
