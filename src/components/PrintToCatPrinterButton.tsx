@@ -142,39 +142,65 @@ export function PrintToCatPrinterButton({ item, collection, user }: PrintToCatPr
     addKeyValueLine('capture method', item.captureMethod);
 
 
-    // Draw OG image at the end if available
+    // Draw photo - either from og image or from model viewer canvas
+    let imageSource: string | HTMLCanvasElement | null = null;
+    
     if (item.og) {
-      await new Promise<void>((resolve) => {
-        const img = new Image();
-        img.crossOrigin = 'anonymous'; // Handle CORS if needed
+      imageSource = item.og;
+    } else {
+      console.log('Attempting to get model viewer canvas');
+      // Get primary model viewer from the #model div
+      const modelViewer = document.querySelector('#model model-viewer') as HTMLElement | null;
+      if (modelViewer?.shadowRoot) {
+        const modelViewerCanvas = modelViewer.shadowRoot.querySelector('canvas');
+        if (modelViewerCanvas) {
+          console.log('Found model viewer canvas:', modelViewerCanvas.width, 'x', modelViewerCanvas.height);
+          imageSource = modelViewerCanvas;
+        } else {
+          console.warn('Model viewer canvas not found in shadow DOM');
+        }
+      }
+    }
 
-        img.onload = () => {
+    if (imageSource) {
+      await new Promise<void>((resolve) => {
+        const drawImage = (source: HTMLImageElement | HTMLCanvasElement) => {
           addSimpleLine(''); // Add spacing before image
 
           // Make image full width (no margins) to maximize size
           const imgWidth = canvas.width;
           // Calculate height to maintain aspect ratio
-          const imgHeight = (img.height / img.width) * imgWidth;
+          const imgHeight = (source.height / source.width) * imgWidth;
 
           // Center crop: use full width and let sides get chopped if needed
-          const sx = Math.max(0, (img.width - img.height * (imgWidth / imgHeight)) / 2);
+          const sx = Math.max(0, (source.width - source.height * (imgWidth / imgHeight)) / 2);
           const sy = 0;
-          const sWidth = img.width - sx * 2;
-          const sHeight = img.height;
+          const sWidth = source.width - sx * 2;
+          const sHeight = source.height;
 
           // Draw the image
-          ctx.drawImage(img, sx, sy, sWidth, sHeight, 0, yPos, imgWidth, imgHeight);
+          ctx.drawImage(source, sx, sy, sWidth, sHeight, 0, yPos, imgWidth, imgHeight);
           yPos += imgHeight + 40;
 
           resolve();
         };
 
-        img.onerror = () => {
-          console.warn('Failed to load OG image:', item.og);
-          resolve(); // Continue even if image fails
-        };
+        if (typeof imageSource === 'string') {
+          // Load from URL (og image)
+          const img = new Image();
+          img.crossOrigin = 'anonymous';
 
-        img.src = item.og!;
+          img.onload = () => drawImage(img);
+          img.onerror = () => {
+            console.warn('Failed to load OG image:', imageSource);
+            resolve();
+          };
+
+          img.src = imageSource;
+        } else {
+          // Use canvas directly (from model viewer)
+          drawImage(imageSource);
+        }
       });
     }
 
@@ -232,12 +258,19 @@ export function PrintToCatPrinterButton({ item, collection, user }: PrintToCatPr
 
   // Render receipt on mount
   useEffect(() => {
-    renderReceipt();
+    const delayedRender = async () => {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      await renderReceipt();
+    };
+    delayedRender();
   }, [item, collection, user]);
 
   const printReceipt = async () => {
     setIsPrinting(true);
     setError(null);
+
+    // Wait at least 1 second to ensure model viewer canvas is fully rendered
+    await new Promise(resolve => setTimeout(resolve, 1000));
 
     // Render the receipt first (now async to wait for image)
     await renderReceipt();
