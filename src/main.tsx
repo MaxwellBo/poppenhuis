@@ -21,10 +21,6 @@ import AuthPage from './routes/AuthPage.tsx';
 
 const router = createBrowserRouter([
   {
-    path: "debug",
-    element: <DebugPage />,
-  },
-  {
     path: ":userId/:collectionId/:itemId/embed",
     element: <EmbedPage />,
     // @ts-ignore
@@ -45,6 +41,10 @@ const router = createBrowserRouter([
         path: "",
         element: <UsersPage />,
         loader: usersPageLoader,
+      },
+      {
+        path: "debug",
+        element: <DebugPage />,
       },
       {
         path: "auth",
