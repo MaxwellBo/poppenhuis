@@ -238,6 +238,10 @@ pre {
 #content-container {
   max-width: min(92vw, 130ch);
   margin: 1em auto;
+  min-height: calc(100vh - 2em);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 #error-page {
