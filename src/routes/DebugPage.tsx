@@ -22,11 +22,10 @@ export default function DebugPage() {
   const [glbPositions, setGlbPositions] = useState<FilePosition[]>([]);
 
   useEffect(() => {
-    // Load and parse the .DS_Store file
-    fetch('/assets/goldens/DS_Store?t=' + Date.now())
+    fetch('/assets/goldens/DS_Store')
       .then(response => {
         if (!response.ok) {
-          throw new Error(`Failed to load .DS_Store: ${response.statusText}`);
+          throw new Error(`Failed to load DS_Store: ${response.statusText}`);
         }
         return response.arrayBuffer();
       })
