@@ -1,0 +1,31 @@
+name: Deploy Firebase Rules
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'database.rules.json'
+      - '.github/workflows/deploy-firebase-rules.yml'
+
+jobs:
+  deploy-rules:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Install Firebase CLI
+        run: npm install -g firebase-tools
+      
+      - name: Deploy Firebase Realtime Database Rules
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+        run: |
+          firebase deploy --only database --token "$FIREBASE_TOKEN" --project poppenhu-is

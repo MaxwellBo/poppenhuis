@@ -7,6 +7,7 @@ import { metaForUser } from "../meta";
 import Markdown from "react-markdown";
 import { QueryPreservingLink } from "../components/QueryPreservingLink";
 import { HelmetMeta } from "../components/HelmetMeta";
+import { PageHeader } from "../components/PageHeader";
 import * as yaml from 'js-yaml';
 
 export const loader = loadUser;
@@ -19,11 +20,9 @@ export default function UserPage() {
   return (
     <article>
       <HelmetMeta meta={metaForUser(user)} />
-      <header>
-        <h1>
-          <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / {user.name} / <Size ts={user.collections} t="collection" />
-        </h1>
-      </header>
+      <PageHeader>
+        {user.name} / <Size ts={user.collections} t="collection" />
+      </PageHeader>
       {user.bio && <div className="short description ugc"><Markdown>{user.bio}</Markdown><br /></div>}
       {user.source === undefined && <div className="short">
         <a href={`https://github.com/MaxwellBo/poppenhuis/issues/new?template=put-collection.yml&user-id=${user.id}`}>+ add collection</a>

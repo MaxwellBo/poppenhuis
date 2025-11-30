@@ -6,6 +6,7 @@ import { useFirebaseForm } from "../hooks/useFirebaseForm";
 import { useFirebaseSubmit } from "../hooks/useFirebaseSubmit";
 import { loadUser } from "../manifest-extras";
 import { QueryPreservingLink } from "../components/QueryPreservingLink";
+import { PageHeader } from "../components/PageHeader";
 
 export const loader = loadUser;
 
@@ -32,9 +33,12 @@ export default function EditUserPage() {
   };
 
   return (
-    <FirebaseForm
-      header={<><QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / edit</>}
-      formData={formData}
+    <article>
+      <PageHeader>
+        <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / edit
+      </PageHeader>
+      <FirebaseForm
+        formData={formData}
       idField={{
         name: 'id',
         label: 'user ID',
@@ -51,5 +55,6 @@ export default function EditUserPage() {
       error={error}
       submitButtonText={isSubmitting ? "saving..." : "save changes"}
     />
+    </article>
   );
 }

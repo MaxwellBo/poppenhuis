@@ -9,6 +9,7 @@ import Markdown from "react-markdown";
 import { ModelViewerWrapper } from "../components/ModelViewerWrapper";
 import { QueryPreservingLink } from "../components/QueryPreservingLink";
 import { HelmetMeta } from "../components/HelmetMeta";
+import { PageHeader } from "../components/PageHeader";
 import { QrCode } from "../components/QrCode";
 import { AFrameScene } from "../components/AFrameScene";
 import { PrintToCatPrinterButton } from "../components/PrintToCatPrinterButton";
@@ -47,11 +48,9 @@ export default function ItemPage() {
   return (
     <article className='item-page'>
       <HelmetMeta meta={metaForItem(item, collection, user)} />
-      <header>
-        <h1>
-          <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}/${collection.id}`}>{collection.name}</QueryPreservingLink> / {item.name} <span className='index'>({collection.items.indexOf(item) + 1})</span>
-        </h1>
-      </header>
+      <PageHeader>
+        <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}/${collection.id}`}>{collection.name}</QueryPreservingLink> / {item.name} <span className='index'>({collection.items.indexOf(item) + 1})</span>
+      </PageHeader>
       <div className='bento'>
         <div id="previous">
           <ItemCard

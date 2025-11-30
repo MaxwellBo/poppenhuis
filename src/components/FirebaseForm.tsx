@@ -7,7 +7,6 @@ export interface FieldConfig extends FieldSchema {
 }
 
 interface FirebaseFormProps {
-  header: ReactNode;
   formData: Record<string, any>;
   idField?: {
     name: string;
@@ -28,7 +27,6 @@ interface FirebaseFormProps {
 }
 
 export function FirebaseForm({
-  header,
   formData,
   idField,
   fields,
@@ -136,11 +134,7 @@ export function FirebaseForm({
   };
 
   return (
-    <article>
-      <header>
-        <h1>{header}</h1>
-      </header>
-      <form onSubmit={onSubmit} className="table-form">
+    <form onSubmit={onSubmit} className="table-form">
         {idField && (
           <div className="table-form-row">
             <label htmlFor={idField.name}>{idField.label}</label>
@@ -175,6 +169,5 @@ export function FirebaseForm({
           </button>
         </div>
       </form>
-    </article>
   );
 }

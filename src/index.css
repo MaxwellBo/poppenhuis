@@ -757,3 +757,63 @@ input:focus + .shake_down {
         transform: translateY(0);
     }
 }
+
+/* AUTH STYLES */
+.auth-mode-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.auth-mode-tabs button {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid #333;
+  background-color: white;
+  cursor: pointer;
+}
+
+.auth-mode-tabs button.active {
+  background-color: #333;
+  color: white;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-weight: bold;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #333;
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+.error-message {
+  color: red;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  background-color: #ffe6e6;
+  border: 1px solid red;
+}
+
+.success-message {
+  color: green;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  background-color: #e6ffe6;
+  border: 1px solid green;
+}
+
+.info-text {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: #666;
+}

@@ -3,7 +3,7 @@ import { FirebaseForm } from "../components/FirebaseForm";
 import { USER_FIELD_SCHEMAS } from "../manifest";
 import { useFirebaseForm } from "../hooks/useFirebaseForm";
 import { useFirebaseSubmit } from "../hooks/useFirebaseSubmit";
-import { QueryPreservingLink } from "../components/QueryPreservingLink";
+import { PageHeader } from "../components/PageHeader";
 
 export default function NewUserPage() {
   const [userId, setUserId] = useState("");
@@ -24,23 +24,25 @@ export default function NewUserPage() {
   };
 
   return (
-    <FirebaseForm
-      header={<><QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / create a new user</>}
-      formData={formData}
-      idField={{
-        name: 'userId',
-        label: 'user ID',
-        value: userId,
-        onChange: setUserId,
-      }}
-      fields={Object.values(USER_FIELD_SCHEMAS)}
-      onInputChange={handleInputChange}
-      onAddField={handleAddField}
-      onDeleteField={handleDeleteField}
-      onSubmit={handleSubmit}
-      isSubmitting={isSubmitting}
-      error={error}
-      submitButtonText={isSubmitting ? "creating..." : "create user"}
-    />
+    <article>
+      <PageHeader>create a new user</PageHeader>
+      <FirebaseForm
+        formData={formData}
+        idField={{
+          name: 'userId',
+          label: 'user ID',
+          value: userId,
+          onChange: setUserId,
+        }}
+        fields={Object.values(USER_FIELD_SCHEMAS)}
+        onInputChange={handleInputChange}
+        onAddField={handleAddField}
+        onDeleteField={handleDeleteField}
+        onSubmit={handleSubmit}
+        isSubmitting={isSubmitting}
+        error={error}
+        submitButtonText={isSubmitting ? "creating..." : "create user"}
+      />
+    </article>
   );
 }

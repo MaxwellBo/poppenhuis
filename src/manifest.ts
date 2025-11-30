@@ -12,6 +12,7 @@ export interface User {
 export interface FirebaseUser extends Omit<User, 'collections'> {
   collections: Record<FirebaseCollection['id'], FirebaseCollection>;
   source: 'firebase'
+  authUid?: string; // Firebase Auth UID for write permissions
 }
 
 export interface Collection {

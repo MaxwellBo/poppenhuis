@@ -8,6 +8,7 @@ import { ItemCard } from '../components/ItemCard';
 import { DEFAULT_META } from "../meta";
 import { HelmetMeta } from "../components/HelmetMeta";
 import { QueryPreservingLink } from "../components/QueryPreservingLink";
+import { PageHeader } from "../components/PageHeader";
 
 const EXAMPLE_MANIFEST_URL = 'https://raw.githubusercontent.com/MaxwellBo/maxwellbo.github.io/master/poppenhuis-manifest.json'
 
@@ -19,11 +20,9 @@ export default function UsersPage() {
   return (
     <article>
       <HelmetMeta meta={DEFAULT_META} />
-      <header>
-        <h1>
-          poppenhuis /
-        </h1>
-      </header>
+      <PageHeader>
+        <span>⌂</span>
+      </PageHeader>
       <div id="homepage-columns">
         <section>
           The following users have collections:

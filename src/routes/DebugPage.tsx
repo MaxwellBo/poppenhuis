@@ -10,6 +10,8 @@ declare global {
   }
 }
 
+import { PageHeader } from '../components/PageHeader';
+
 export default function DebugPage() {
   // Test Safari AR support
   const a = document.createElement("a");
@@ -21,7 +23,7 @@ export default function DebugPage() {
 
   return (
     <div style={{ padding: "2rem", fontFamily: "monospace" }}>
-      <h1>Debug</h1>
+      <PageHeader>debug</PageHeader>
       
       <section style={{ marginTop: "2rem", padding: "1rem", background: "#f0f0f0" }}>
         <h2>AR Support Detection</h2>

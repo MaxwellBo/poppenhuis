@@ -5,6 +5,7 @@ import { ITEM_FIELD_SCHEMAS } from "../manifest";
 import { useFirebaseForm } from "../hooks/useFirebaseForm";
 import { useFirebaseSubmit } from "../hooks/useFirebaseSubmit";
 import { QueryPreservingLink } from "../components/QueryPreservingLink";
+import { PageHeader } from "../components/PageHeader";
 
 export default function NewItemPage() {
   const { userId, collectionId } = useParams<{ userId: string; collectionId: string }>();
@@ -42,9 +43,12 @@ export default function NewItemPage() {
   };
 
   return (
-    <FirebaseForm
-      header={userId && collectionId ? <><QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${userId}`}>{userId}</QueryPreservingLink> / <QueryPreservingLink to={`/${userId}/${collectionId}`}>{collectionId}</QueryPreservingLink> / create a new item</> : <><QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / create a new item</>}
-      formData={formData}
+    <article>
+      <PageHeader>
+        {userId && collectionId ? <><QueryPreservingLink to={`/${userId}`}>{userId}</QueryPreservingLink> / <QueryPreservingLink to={`/${userId}/${collectionId}`}>{collectionId}</QueryPreservingLink> / create a new item</> : <>create a new item</>}
+      </PageHeader>
+      <FirebaseForm
+        formData={formData}
       idField={{
         name: 'itemId',
         label: 'item ID',
@@ -60,5 +64,6 @@ export default function NewItemPage() {
       error={error}
       submitButtonText={isSubmitting ? "creating..." : "create item"}
     />
+    </article>
   );
 }
