@@ -20,21 +20,19 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ children }) => {
   }, []);
 
   return (
-    <header>
-      <h1 style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <span>
-          <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / {children}
-        </span>
-        {!loading && (
-          <span style={{ fontSize: '0.8em', fontWeight: 'normal' }}>
-            {currentUser ? (
-              <QueryPreservingLink to="/auth">account?</QueryPreservingLink>
-            ) : (
-              <QueryPreservingLink to="/auth">sign in?</QueryPreservingLink>
-            )}
-          </span>
-        )}
+    <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <h1>
+      <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / {children}
       </h1>
+      {!loading && (
+      <span>
+        {currentUser ? (
+        <QueryPreservingLink to="/auth">account?</QueryPreservingLink>
+        ) : (
+        <QueryPreservingLink to="/auth">sign in?</QueryPreservingLink>
+        )}
+      </span>
+      )}
     </header>
   );
 };
