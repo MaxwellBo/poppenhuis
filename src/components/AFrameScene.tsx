@@ -173,7 +173,6 @@ export const AFrameScene: React.FC<AFrameSceneProps> = ({ users, startingItem, p
         <a-entity id="rig"
           movement-controls>
         <a-entity 
-          key={`camera-${startingItem.id}`}
           camera 
           fly={true} 
           look-controls 
