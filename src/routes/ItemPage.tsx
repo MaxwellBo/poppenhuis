@@ -2,7 +2,7 @@ import { Collection, Item, ITEM_FIELD_SCHEMAS, User } from "../manifest";
 import { loadItem } from "../manifest-extras";
 import React, { useRef } from "react";
 import { useLoaderData, useSearchParams } from "react-router";
-import { ItemCards } from '../components/ItemCards';
+import { GlobalItemCards } from '../components/ItemCards';
 import { ItemCard } from '../components/ItemCard';
 import { metaForItem } from "../meta";
 import Markdown from "react-markdown";
@@ -146,13 +146,10 @@ export default function ItemPage() {
             size='small' />
         </div>
         <div id="cards">
-          <ItemCards 
-            collection={collection} 
-            user={user} 
-            highlighted={item.id} 
-            limit={6}
+          <GlobalItemCards 
             allItems={allItems}
-            highlightedGlobalIndex={currentIndex}
+            highlighted={currentIndex}
+            limit={6}
           />
         </div>
       </div>
