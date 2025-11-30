@@ -143,7 +143,7 @@ export const AFrameScene: React.FC<AFrameSceneProps> = ({ users, startingItem, p
     const found = layout.find(entity => entity.item && entity.item.id === startingItem.id);
     if (found) {
       if (found.isDirect && 'x' in found.position && 'y' in found.position && 'z' in found.position) {
-        startingPosition = computePositionDirect({ x: found.position.x - 1.5, y: found.position.y, z: found.position.z });
+        startingPosition = computePositionDirect({ x: found.position.x, y: found.position.y, z: found.position.z + 1.5 });
       } else if ('col' in found.position && 'level' in found.position && 'depth' in found.position) {
         startingPosition = computePosition({ ...found.position, col: found.position.col - 0.3 });
       }
