@@ -33,6 +33,10 @@ const computePosition = ({ col, level, depth }: { col: number; level: number; de
   return `${depth * 2} ${level} ${-col * 4} `;
 }
 
+const computePositionDirect = ({ x, y, z }: { x: number; y: number; z: number; }): string => {
+  return `${x} ${y} ${z}`;
+}
+
 AFRAME
 
 export const AFrameScene: React.FC<AFrameSceneProps> = ({ users, startingItem, positioningMode }) => {
@@ -50,11 +54,12 @@ export const AFrameScene: React.FC<AFrameSceneProps> = ({ users, startingItem, p
   }, [positioningMode]);
 
   const layout: {
-    position: { col: number; level: number; depth: number; };
+    position: { col: number; level: number; depth: number; } | { x: number; y: number; z: number; };
     user?: User;
     collection?: Collection;
     item?: Item;
     flip: boolean;
+    isDirect?: boolean;
   }[] = [];
 
   let collectionCount = 0;
@@ -69,17 +74,17 @@ export const AFrameScene: React.FC<AFrameSceneProps> = ({ users, startingItem, p
           const position = dsStoreMap[filename];
           
           if (position) {
-            // Use .DS_Store coordinates - we'll convert them to 3D positions
-            // Scale down the coordinates and use them for x and z
-            // y will be at ground level (0)
+            // Use .DS_Store coordinates directly
+            // Scale down the coordinates to reasonable 3D space
             layout.push({
               position: { 
-                col: position.x / 100,  // Scale down x coordinate
-                level: 0,                // Keep at ground level
-                depth: position.y / 100  // Scale down y coordinate (becomes z in 3D)
+                x: position.x / 100,   // x coordinate (scaled down)
+                y: 0,                  // Keep at ground level
+                z: -position.y / 100   // z coordinate (scaled down, negated to match orientation)
               },
               item: item,
               flip: false,
+              isDirect: true,
             });
           }
         }
@@ -134,7 +139,11 @@ export const AFrameScene: React.FC<AFrameSceneProps> = ({ users, startingItem, p
   if (startingItem) {
     const found = layout.find(entity => entity.item && entity.item.id === startingItem.id);
     if (found) {
-      startingPosition = computePosition({ ...found.position, col: found.position.col - 0.3 });
+      if (found.isDirect && 'x' in found.position && 'y' in found.position && 'z' in found.position) {
+        startingPosition = computePositionDirect({ x: found.position.x - 0.3, y: found.position.y, z: found.position.z });
+      } else if ('col' in found.position && 'level' in found.position && 'depth' in found.position) {
+        startingPosition = computePosition({ ...found.position, col: found.position.col - 0.3 });
+      }
     }
   }
 
@@ -174,7 +183,16 @@ export const AFrameScene: React.FC<AFrameSceneProps> = ({ users, startingItem, p
           )}
           {/* <img id="sky" src="clouds.webp"></img> */}
         </a-assets>
-        {layout.map(({ position, item, user, collection, flip }) => {
+        {layout.map(({ position, item, user, collection, flip, isDirect }) => {
+          // Helper to get position string
+          const getPosition = (pos: any, yOffset = 0) => {
+            if (isDirect && 'x' in pos && 'y' in pos && 'z' in pos) {
+              return computePositionDirect({ x: pos.x, y: pos.y + yOffset, z: pos.z });
+            } else {
+              return computePosition(pos);
+            }
+          };
+
           if (user) {
             if (flip) {
               return (
@@ -183,7 +201,7 @@ export const AFrameScene: React.FC<AFrameSceneProps> = ({ users, startingItem, p
                   color="#000" 
                   width="10"
                   rotation="0 -180 0"
-                  position={computePosition(position)}
+                  position={getPosition(position)}
                 ></a-text>
             ) } else {
               return (
@@ -193,7 +211,7 @@ export const AFrameScene: React.FC<AFrameSceneProps> = ({ users, startingItem, p
                   color="#000" 
                   width="10"
                   rotation="0 0 0"
-                  position={computePosition(position)}
+                  position={getPosition(position)}
                 ></a-text>
               )
             }
@@ -208,7 +226,7 @@ export const AFrameScene: React.FC<AFrameSceneProps> = ({ users, startingItem, p
                   color="#000" 
                   width="5"
                   rotation="0 -180 0"
-                  position={computePosition(position)}
+                  position={getPosition(position)}
                 ></a-text>
               );
             } else {
@@ -219,7 +237,7 @@ export const AFrameScene: React.FC<AFrameSceneProps> = ({ users, startingItem, p
                   color="#000" 
                   width="5"
                   rotation="0 0 0"
-                  position={computePosition(position)}
+                  position={getPosition(position)}
                 ></a-text>
               );
             }
@@ -232,7 +250,7 @@ export const AFrameScene: React.FC<AFrameSceneProps> = ({ users, startingItem, p
                 animation="property: rotation; to: 0 360 0; dur: 20000; easing: linear; loop: true"
                 src={`#${item.id}`}
                 rotation="0 0 0"
-                position={computePosition(position)}
+                position={getPosition(position)}
               ></a-gltf-model>
               <a-text
                 key={"item-" + item.id}
@@ -240,15 +258,15 @@ export const AFrameScene: React.FC<AFrameSceneProps> = ({ users, startingItem, p
                 color="#000"
                 width="2"
                 rotation="0 -180 0"
-                position={computePosition({ ...position, level: position.level + 1 })}
+                position={getPosition(position, 1)}
               ></a-text>
               <a-text
-                key={"item-" + item.id}
+                key={"item-" + item.id + "-flip"}
                 value={item.name}
                 color="#000"
                 width="2"
                 rotation="0 0 0"
-                position={computePosition({ ...position, level: position.level + 1 })}
+                position={getPosition(position, 1)}
               ></a-text>
             </>
           }
