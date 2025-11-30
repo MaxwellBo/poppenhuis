@@ -143,7 +143,7 @@ export const AFrameScene: React.FC<AFrameSceneProps> = ({ users, startingItem, p
     const found = layout.find(entity => entity.item && entity.item.id === startingItem.id);
     if (found) {
       if (found.isDirect && 'x' in found.position && 'y' in found.position && 'z' in found.position) {
-        startingPosition = computePositionDirect({ x: found.position.x - 0.3, y: found.position.y, z: found.position.z });
+        startingPosition = computePositionDirect({ x: found.position.x - 1.5, y: found.position.y, z: found.position.z });
       } else if ('col' in found.position && 'level' in found.position && 'depth' in found.position) {
         startingPosition = computePosition({ ...found.position, col: found.position.col - 0.3 });
       }
@@ -189,11 +189,11 @@ export const AFrameScene: React.FC<AFrameSceneProps> = ({ users, startingItem, p
         </a-assets>
         {layout.map(({ position, item, user, collection, flip, isDirect }) => {
           // Helper to get position string
-          const getPosition = (pos: any, yOffset = 0) => {
+          const getPosition = (pos: any, levelOffset = 0) => {
             if (isDirect && 'x' in pos && 'y' in pos && 'z' in pos) {
-              return computePositionDirect({ x: pos.x, y: pos.y + yOffset, z: pos.z });
+              return computePositionDirect({ x: pos.x, y: pos.y + levelOffset, z: pos.z });
             } else {
-              return computePosition(pos);
+              return computePosition({ ...pos, level: pos.level + levelOffset });
             }
           };
 
