@@ -21,16 +21,35 @@ export default function ItemPage() {
   const { item, user, collection, users } = useLoaderData() as Awaited<ReturnType<typeof loadItem>>;
   const modelViewerRef = useRef<HTMLElement>(null);
 
-  const currentIndex = collection.items.findIndex(i => i.id === item.id);
-  const previousItem: Item = currentIndex > 0
-    ? collection.items[currentIndex - 1]
-    : collection.items[collection.items.length - 1];
-  const nextItem: Item = currentIndex < collection.items.length - 1
-    ? collection.items[currentIndex + 1]
-    : collection.items[0];
+  // Flatten all items across all users and collections
+  type FlatItem = { item: Item; collection: Collection; user: User };
+  const allItems: FlatItem[] = users.flatMap(u => 
+    u.collections.flatMap(c => 
+      c.items.map(i => ({ item: i, collection: c, user: u }))
+    )
+  );
+
+  const currentIndex = allItems.findIndex(
+    fi => fi.item.id === item.id && fi.collection.id === collection.id && fi.user.id === user.id
+  );
+
+  const previousFlatItem: FlatItem = currentIndex > 0
+    ? allItems[currentIndex - 1]
+    : allItems[allItems.length - 1];
+  const nextFlatItem: FlatItem = currentIndex < allItems.length - 1
+    ? allItems[currentIndex + 1]
+    : allItems[0];
+
+  const previousItem = previousFlatItem.item;
+  const previousCollection = previousFlatItem.collection;
+  const previousUser = previousFlatItem.user;
+
+  const nextItem = nextFlatItem.item;
+  const nextCollection = nextFlatItem.collection;
+  const nextUser = nextFlatItem.user;
 
   const previousItemIsLast = currentIndex === 0;
-  const nextItemIsFirst = currentIndex === collection.items.length - 1;
+  const nextItemIsFirst = currentIndex === allItems.length - 1;
 
   const [searchParams, setSearchParams] = useSearchParams();
   const renderAFrameScene = searchParams.get("vr") === "true";
@@ -63,9 +82,9 @@ export default function ItemPage() {
         <div id="previous">
           <ItemCard
             item={previousItem}
-            collection={collection}
+            collection={previousCollection}
             showIndex={true}
-            user={user}
+            user={previousUser}
             triggerKey="h"
             altName={previousItemIsLast ? "↻ go to end" : "← previous"}
             size='small' />
@@ -120,9 +139,9 @@ export default function ItemPage() {
         <div id="next">
           <ItemCard
             item={nextItem}
-            collection={collection}
+            collection={nextCollection}
             showIndex={true}
-            user={user} triggerKey="l"
+            user={nextUser} triggerKey="l"
             altName={nextItemIsFirst ? "back to start ↺" : "next →"}
             size='small' />
         </div>
