@@ -363,6 +363,12 @@ form.table-form label {
   border: 1px dotted rgba(0, 0, 0, 0);
 }
 
+#embed-page .a-scene-wrapper,
+#embed-page .model-viewer-wrapper {
+  display: inline-block;
+  width: fit-content;
+}
+
 .a-scene-wrapper:hover, 
 .model-viewer-wrapper:hover {
   border: 1px dotted black;
