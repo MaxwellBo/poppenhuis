@@ -50,6 +50,9 @@ export const AFrameScene: React.FC<AFrameSceneProps> = ({ users, startingItem, p
         setDsStoreMap(map);
         setIsLoadingDSStore(false);
       });
+    } else {
+      // Clear the map when switching back to auto mode
+      setDsStoreMap({});
     }
   }, [positioningMode]);
 
@@ -78,9 +81,9 @@ export const AFrameScene: React.FC<AFrameSceneProps> = ({ users, startingItem, p
             // Scale down the coordinates to reasonable 3D space
             layout.push({
               position: { 
-                x: position.x / 100,   // x coordinate (scaled down)
+                x: position.x / 50,    // x coordinate (scaled down less for more spacing)
                 y: 0,                  // Keep at ground level
-                z: -position.y / 100   // z coordinate (scaled down, negated to match orientation)
+                z: -position.y / 50    // z coordinate (scaled down less for more spacing, negated to match orientation)
               },
               item: item,
               flip: false,
@@ -170,6 +173,7 @@ export const AFrameScene: React.FC<AFrameSceneProps> = ({ users, startingItem, p
         <a-entity id="rig"
           movement-controls>
         <a-entity 
+          key={`camera-${startingItem.id}`}
           camera 
           fly={true} 
           look-controls 
