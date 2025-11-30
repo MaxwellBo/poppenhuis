@@ -146,7 +146,14 @@ export default function ItemPage() {
             size='small' />
         </div>
         <div id="cards">
-          <ItemCards collection={collection} user={user} highlighted={item.id} limit={6} />
+          <ItemCards 
+            collection={collection} 
+            user={user} 
+            highlighted={item.id} 
+            limit={6}
+            allItems={allItems}
+            highlightedGlobalIndex={currentIndex}
+          />
         </div>
       </div>
     </article>

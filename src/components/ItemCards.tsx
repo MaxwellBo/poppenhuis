@@ -2,8 +2,52 @@ import { Collection, User, Item } from '../manifest';
 import { ItemCard } from './ItemCard';
 import { QueryPreservingLink } from './QueryPreservingLink';
 
-export function ItemCards(props: { collection: Collection; user: User; highlighted?: Item['id']; limit?: number; }) {
-  const { highlighted, limit, collection, user } = props;
+type FlatItem = { item: Item; collection: Collection; user: User };
+
+export function ItemCards(props: { 
+  collection: Collection; 
+  user: User; 
+  highlighted?: Item['id']; 
+  limit?: number;
+  allItems?: FlatItem[];
+  highlightedGlobalIndex?: number;
+}) {
+  const { highlighted, limit, collection, user, allItems, highlightedGlobalIndex } = props;
+
+  // Use flattened items if provided, otherwise fall back to single collection behavior
+  if (allItems && highlightedGlobalIndex !== undefined && limit) {
+    const start = Math.floor(highlightedGlobalIndex / limit) * limit;
+    const end = start + limit;
+    const truncatedItems = allItems.slice(start, end);
+
+    return (
+      <>
+        <ul className='item-cards'>
+          {truncatedItems.map((flatItem, index) => {
+            const { item, collection: itemCollection, user: itemUser } = flatItem;
+            const isHighlighted = item.id === highlighted;
+            
+            // Check if we need a divider before this item
+            const needsDivider = index > 0 && 
+              (truncatedItems[index - 1].collection.id !== itemCollection.id || 
+               truncatedItems[index - 1].user.id !== itemUser.id);
+            
+            return (
+              <li 
+                key={`${itemUser.id}-${itemCollection.id}-${item.id}`} 
+                className={isHighlighted ? 'yelling highlight-model-viewer' : undefined}
+                style={needsDivider ? { borderLeft: '1px dotted var(--fg)', paddingLeft: '1ch' } : undefined}
+              >
+                <ItemCard item={item} collection={itemCollection} user={itemUser} showIndex={true} />
+              </li>
+            );
+          })}
+        </ul>
+      </>
+    );
+  }
+
+  // Original single-collection behavior
   const { items } = collection;
   const showSeeMore = limit && items.length > limit;
 
