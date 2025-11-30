@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useParams } from "react-router";
+import { Helmet } from 'react-helmet';
 import { FirebaseForm } from "../components/FirebaseForm";
 import { ITEM_FIELD_SCHEMAS } from "../manifest";
 import { useFirebaseForm } from "../hooks/useFirebaseForm";
@@ -44,6 +45,7 @@ export default function NewItemPage() {
 
   return (
     <article>
+      <Helmet><title>create item - poppenhuis</title></Helmet>
       <PageHeader>
         {userId && collectionId ? <><QueryPreservingLink to={`/${userId}`}>{userId}</QueryPreservingLink> / <QueryPreservingLink to={`/${userId}/${collectionId}`}>{collectionId}</QueryPreservingLink> / create a new item</> : <>create a new item</>}
       </PageHeader>

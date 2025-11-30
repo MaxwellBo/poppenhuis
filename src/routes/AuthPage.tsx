@@ -9,6 +9,7 @@ import {
   signInWithEmailLink,
   onAuthStateChanged,
 } from 'firebase/auth';
+import { Helmet } from 'react-helmet';
 import { auth } from '../firebase';
 import { PageHeader } from '../components/PageHeader';
 
@@ -136,6 +137,7 @@ export default function AuthPage() {
   if (authLoading) {
     return (
       <div>
+        <Helmet><title>auth - poppenhuis</title></Helmet>
         <PageHeader>loading...</PageHeader>
       </div>
     );
@@ -145,6 +147,7 @@ export default function AuthPage() {
   if (currentUser) {
     return (
       <div>
+        <Helmet><title>account - poppenhuis</title></Helmet>
         <PageHeader>account</PageHeader>
         <dl>
           <dt>email</dt>
@@ -161,7 +164,8 @@ export default function AuthPage() {
 
   return (
     <div>
-      <PageHeader>sign in</PageHeader>
+      <Helmet><title>auth - poppenhuis</title></Helmet>
+      <PageHeader>auth</PageHeader>
 
       <form onSubmit={handleSubmit} className="table-form">
         <div className="table-form-row">

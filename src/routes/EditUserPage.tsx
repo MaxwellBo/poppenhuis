@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useLoaderData } from "react-router";
+import { Helmet } from 'react-helmet';
 import { FirebaseForm } from "../components/FirebaseForm";
 import { USER_FIELD_SCHEMAS } from "../manifest";
 import { useFirebaseForm } from "../hooks/useFirebaseForm";
@@ -34,6 +35,7 @@ export default function EditUserPage() {
 
   return (
     <article>
+      <Helmet><title>edit {user.id} - poppenhuis</title></Helmet>
       <PageHeader>
         <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / edit
       </PageHeader>

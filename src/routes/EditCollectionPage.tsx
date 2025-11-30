@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useLoaderData } from "react-router";
+import { Helmet } from 'react-helmet';
 import { FirebaseForm } from "../components/FirebaseForm";
 import { COLLECTION_FIELD_SCHEMAS } from "../manifest";
 import { useFirebaseForm } from "../hooks/useFirebaseForm";
@@ -34,6 +35,7 @@ export default function EditCollectionPage() {
 
   return (
     <article>
+      <Helmet><title>edit {collection.id} - poppenhuis</title></Helmet>
       <PageHeader>
         <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}/${collection.id}`}>{collection.name}</QueryPreservingLink> / edit
       </PageHeader>

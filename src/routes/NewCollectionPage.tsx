@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useParams } from "react-router";
+import { Helmet } from 'react-helmet';
 import { FirebaseForm } from "../components/FirebaseForm";
 import { COLLECTION_FIELD_SCHEMAS } from "../manifest";
 import { useFirebaseForm } from "../hooks/useFirebaseForm";
@@ -28,6 +29,7 @@ export default function NewCollectionPage() {
 
   return (
     <article>
+      <Helmet><title>create collection - poppenhuis</title></Helmet>
       <PageHeader>
         {userId ? <><QueryPreservingLink to={`/${userId}`}>{userId}</QueryPreservingLink> / create a new collection</> : <>create a new collection</>}
       </PageHeader>

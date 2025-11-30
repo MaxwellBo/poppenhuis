@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Helmet } from 'react-helmet';
 import { FirebaseForm } from "../components/FirebaseForm";
 import { USER_FIELD_SCHEMAS } from "../manifest";
 import { useFirebaseForm } from "../hooks/useFirebaseForm";
@@ -25,6 +26,7 @@ export default function NewUserPage() {
 
   return (
     <article>
+      <Helmet><title>create user - poppenhuis</title></Helmet>
       <PageHeader>create a new user</PageHeader>
       <FirebaseForm
         formData={formData}
