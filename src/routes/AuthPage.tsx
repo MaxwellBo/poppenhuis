@@ -146,17 +146,22 @@ export default function AuthPage() {
     return (
       <div>
         <PageHeader>account</PageHeader>
-        <p>signed in as: <strong>{currentUser.email}</strong></p>
+        <dl>
+          <dt>email</dt>
+          <dd>{currentUser.email}</dd>
+          <dt>firebase uid</dt>
+          <dd><code>{currentUser.uid}</code></dd>
+        </dl>
         {message && <div>{message}</div>}
         {error && <div>{error}</div>}
-        <button onClick={handleLogout}>sign out</button>
+        <button type="button" onClick={handleLogout}>sign out</button>
       </div>
     );
   }
 
   return (
     <div>
-      <PageHeader>auth</PageHeader>
+      <PageHeader>sign in</PageHeader>
 
       <form onSubmit={handleSubmit} className="table-form">
         <div className="table-form-row">

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { rtdb, storage } from '../firebase';
+import { rtdb, storage, auth } from '../firebase';
 import { ref, get, runTransaction } from 'firebase/database';
 import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 import JSZip from 'jszip';
@@ -72,6 +72,14 @@ export function useFirebaseSubmit(options: UseFirebaseSubmitOptions = {}) {
         
         // Always set source for Firebase users
         updatedUser.source = 'firebase';
+
+        // Add authUid from current user when creating
+        if (isCreating && auth.currentUser) {
+          updatedUser.authUid = auth.currentUser.uid;
+        } else if (!isCreating && currentData.authUid) {
+          // Preserve authUid when updating
+          updatedUser.authUid = currentData.authUid;
+        }
 
         // When updating, set fields that existed in original but not in updated to null
         if (!isCreating) {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { QueryPreservingLink } from './QueryPreservingLink';
-import { onAuthStateChanged } from 'firebase/auth';
+import { onAuthStateChanged, User } from 'firebase/auth';
 import { auth } from '../firebase';
 
 interface PageHeaderProps {
@@ -8,7 +8,7 @@ interface PageHeaderProps {
 }
 
 export const PageHeader: React.FC<PageHeaderProps> = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -28,7 +28,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ children }) => {
         {!loading && (
           <span style={{ fontSize: '0.8em', fontWeight: 'normal' }}>
             {currentUser ? (
-              <QueryPreservingLink to="/auth">{currentUser.email}</QueryPreservingLink>
+              <QueryPreservingLink to="/auth">account?</QueryPreservingLink>
             ) : (
               <QueryPreservingLink to="/auth">sign in?</QueryPreservingLink>
             )}
