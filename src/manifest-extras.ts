@@ -1,10 +1,21 @@
 import * as yaml from 'js-yaml';
 import { rtdb } from './firebase';
 import { ref, get } from 'firebase/database';
-import type { User, Collection, Item, FirebaseUser, Manifest } from './manifest';
+import type { User, Collection, Item, Manifest } from './manifest';
 import { FIRST_PARTY_MANIFEST } from './manifest';
 
-type FirebaseManifest = Record<FirebaseUser['id'], FirebaseUser>;
+// Firebase-specific types
+export interface FirebaseUser extends Omit<User, 'collections'> {
+  collections: Record<FirebaseCollection['id'], FirebaseCollection>;
+  source: 'firebase';
+  creatorUid: string; // Firebase Auth UID for write permissions
+}
+
+export interface FirebaseCollection extends Omit<Collection, 'items'> {
+  items: Record<Item['id'], Item>;
+}
+
+export type FirebaseManifest = Record<FirebaseUser['id'], FirebaseUser>;
 
 export const MANIFEST_URL_QUERY_PARAM = 'manifest';
 export const ARENA_PREFIX = 'arena:';

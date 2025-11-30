@@ -1,5 +1,4 @@
 export type Manifest = User[];
-export type FirebaseManifest = Record<FirebaseUser['id'], FirebaseUser>;
 
 export interface User {
   id: string;
@@ -9,11 +8,6 @@ export interface User {
   collections: Collection[];
   source?: string;
 }
-export interface FirebaseUser extends Omit<User, 'collections'> {
-  collections: Record<FirebaseCollection['id'], FirebaseCollection>;
-  source: 'firebase'
-  authUid?: string; // Firebase Auth UID for write permissions
-}
 
 export interface Collection {
   id: string;
@@ -21,9 +15,6 @@ export interface Collection {
   og?: string;
   description?: string;
   items: Item[];
-}
-export interface FirebaseCollection extends Omit<Collection, 'items'> {
-  items: Record<Item['id'], Item>;
 }
 
 export interface FieldSchema {

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router';
 import { rtdb, storage, auth } from '../firebase';
 import { ref, get, runTransaction } from 'firebase/database';
 import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { FirebaseUser } from '../manifest-extras';
 import JSZip from 'jszip';
 
 interface UseFirebaseSubmitOptions {
@@ -61,7 +62,7 @@ export function useFirebaseSubmit(options: UseFirebaseSubmitOptions = {}) {
       await runTransaction(userRef, (currentData) => {
         const isCreating = currentData === null;
         
-        const updatedUser: Record<string, any> = {
+        const updatedUser: Partial<FirebaseUser> = {
           id: userId,
           name: dataToSave.name.trim(),
           ...dataToSave,
@@ -73,18 +74,19 @@ export function useFirebaseSubmit(options: UseFirebaseSubmitOptions = {}) {
         // Always set source for Firebase users
         updatedUser.source = 'firebase';
 
-        // Add authUid from current user when creating
+        // Add creatorUid from current user when creating
         if (isCreating && auth.currentUser) {
-          updatedUser.authUid = auth.currentUser.uid;
-        } else if (!isCreating && currentData.authUid) {
-          // Preserve authUid when updating
-          updatedUser.authUid = currentData.authUid;
+          updatedUser.creatorUid = auth.currentUser.uid;
+        } else if (!isCreating && currentData.creatorUid) {
+          // Preserve creatorUid when updating
+          updatedUser.creatorUid = currentData.creatorUid;
         }
 
         // When updating, set fields that existed in original but not in updated to null
         if (!isCreating) {
           Object.keys(currentData).forEach(key => {
             if (key !== 'collections' && key !== 'id' && !updatedUser.hasOwnProperty(key)) {
+              // @ts-ignore dont care lol
               updatedUser[key] = null;
             }
           });
