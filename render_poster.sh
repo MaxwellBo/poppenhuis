@@ -26,52 +26,24 @@ process_single_model() {
     deno run --allow-read --allow-write --allow-run --allow-env --allow-net "$DENO_SCRIPT" single "$glb_file" "$poster_path"
 }
 
-# Function to process a collection
-process_collection() {
-    local collection_dir="$1"
-    local poster_path="$collection_dir/og.jpeg"
+# Function to process all models by user (extract user prefix from filename)
+process_by_user() {
+    local user_prefix="$1"  # e.g., "mbo", "jackie", "leaonie"
+    local poster_path="public/assets/${user_prefix}_og.jpeg"
     local models=()
     
-    # Find all .glb files in the collection directory
+    # Find all .glb files matching the user prefix
     while IFS= read -r -d '' glb_file; do
         models+=("$glb_file")
-    done < <(\find "$collection_dir" -maxdepth 1 -type f -name "*.glb" -print0)
+    done < <(find public/assets -maxdepth 1 -type f -name "${user_prefix}_*.glb" -print0)
     
     if [ ${#models[@]} -eq 0 ]; then
-        echo "No GLB files found in collection: $collection_dir"
+        echo "No GLB files found for user: $user_prefix"
         return
     fi
     
-    echo "Processing collection: $collection_dir -> $poster_path"
+    echo "Processing user: $user_prefix -> $poster_path"
     echo "Found ${#models[@]} models"
-    
-    # Build the command with all models
-    cmd="deno run --allow-read --allow-write --allow-run --allow-env --allow-net \"$DENO_SCRIPT\" multi \"$poster_path\""
-    for model in "${models[@]}"; do
-        cmd+=" \"$model\""
-    done
-    
-    eval $cmd
-}
-
-# Function to process a user
-process_user() {
-    local user_dir="$1"
-    local poster_path="$user_dir/og.jpeg"
-    local models=()
-    
-    # Find all .glb files in all collection directories
-    while IFS= read -r -d '' glb_file; do
-        models+=("$glb_file")
-    done < <(\find "$user_dir" -type f -name "*.glb" -print0)
-    
-    if [ ${#models[@]} -eq 0 ]; then
-        echo "No GLB files found for user: $user_dir"
-        return
-    fi
-    
-    echo "Processing user: $user_dir -> $poster_path"
-    echo "Found ${#models[@]} models across all collections"
     
     # Build the command with all models
     cmd="deno run --allow-read --allow-write --allow-run --allow-env --allow-net \"$DENO_SCRIPT\" multi \"$poster_path\""
@@ -88,16 +60,13 @@ if [ -n "$SPECIFIC_MODEL" ]; then
     if [ -f "$SPECIFIC_MODEL" ]; then
         process_single_model "$SPECIFIC_MODEL"
         
-        # Also update the collection's og.jpeg if needed
-        MODEL_DIR=$(dirname "$SPECIFIC_MODEL")
-        if [ -n "$(\find "$MODEL_DIR" -maxdepth 1 -type f -name "*.glb")" ]; then
-            process_collection "$MODEL_DIR"
-        fi
+        # Also update the user's og.jpeg based on the model filename
+        # Extract user prefix from filename (e.g., "jackie_cakes_brat.glb" -> "jackie")
+        filename=$(basename "$SPECIFIC_MODEL")
+        user_prefix="${filename%%_*}"
         
-        # Also update the user's og.jpeg if needed
-        USER_DIR=$(dirname "$(dirname "$MODEL_DIR")")
-        if [[ "$USER_DIR" == *"/public/models/"* ]]; then
-            process_user "$USER_DIR"
+        if [ -n "$user_prefix" ]; then
+            process_by_user "$user_prefix"
         fi
     else
         echo "Error: Specified model file not found at $SPECIFIC_MODEL"
@@ -105,21 +74,14 @@ if [ -n "$SPECIFIC_MODEL" ]; then
     fi
 else
     # Process all GLB files individually
-    \find . -type f -name "*.glb" | while read -r glb_file; do
+    find public/assets -maxdepth 1 -type f -name "*.glb" | while read -r glb_file; do
         process_single_model "$glb_file"
     done
     
-    # Process all collections (directories containing GLB files)
-    \find . -type d | while read -r dir; do
-        if [ -n "$(\find "$dir" -maxdepth 1 -type f -name "*.glb")" ]; then
-            process_collection "$dir"
-        fi
-    done
-    
-    # Process all user directories
-    for user_dir in ./public/models/*/; do
-        if [ -d "$user_dir" ]; then
-            process_user "$user_dir"
+    # Process all user directories (by extracting unique user prefixes)
+    for user_prefix in mbo jackie leaonie joey; do
+        if [ -n "$(find public/assets -maxdepth 1 -type f -name "${user_prefix}_*.glb")" ]; then
+            process_by_user "$user_prefix"
         fi
     done
 fi
