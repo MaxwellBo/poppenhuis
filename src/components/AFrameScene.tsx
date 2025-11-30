@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Collection, Item, User } from '../manifest';
 // @ts-ignore
 import AFRAME from 'aframe';
 import { getStyleForModelSize } from './ModelViewerWrapper';
 import 'aframe-extras';
 import "aframe-extras/controls/index.js";
+import { loadDSStorePositionMap, extractFilename, DSStorePositionMap } from '../utils/dsstore-position-map';
 
 declare global {
   namespace JSX {
@@ -24,7 +25,8 @@ declare global {
 
 interface AFrameSceneProps {
   users: User[];
-  startingItem: Item,
+  startingItem: Item;
+  positioningMode: string;
 }
 
 const computePosition = ({ col, level, depth }: { col: number; level: number; depth: number; }): string => {
@@ -33,7 +35,20 @@ const computePosition = ({ col, level, depth }: { col: number; level: number; de
 
 AFRAME
 
-export const AFrameScene: React.FC<AFrameSceneProps> = ({ users, startingItem }) => {
+export const AFrameScene: React.FC<AFrameSceneProps> = ({ users, startingItem, positioningMode }) => {
+  const [dsStoreMap, setDsStoreMap] = useState<DSStorePositionMap>({});
+  const [isLoadingDSStore, setIsLoadingDSStore] = useState(false);
+
+  useEffect(() => {
+    if (positioningMode === 'dsstore') {
+      setIsLoadingDSStore(true);
+      loadDSStorePositionMap().then(map => {
+        setDsStoreMap(map);
+        setIsLoadingDSStore(false);
+      });
+    }
+  }, [positioningMode]);
+
   const layout: {
     position: { col: number; level: number; depth: number; };
     user?: User;
@@ -43,6 +58,35 @@ export const AFrameScene: React.FC<AFrameSceneProps> = ({ users, startingItem })
   }[] = [];
 
   let collectionCount = 0;
+  
+  // When using .DS_Store positioning, we need a different layout
+  if (positioningMode === 'dsstore') {
+    // Only add items that have positions in .DS_Store
+    for (const user of users) {
+      for (const collection of user.collections) {
+        for (const item of collection.items) {
+          const filename = extractFilename(item.model);
+          const position = dsStoreMap[filename];
+          
+          if (position) {
+            // Use .DS_Store coordinates - we'll convert them to 3D positions
+            // Scale down the coordinates and use them for x and z
+            // y will be at ground level (0)
+            layout.push({
+              position: { 
+                col: position.x / 100,  // Scale down x coordinate
+                level: 0,                // Keep at ground level
+                depth: position.y / 100  // Scale down y coordinate (becomes z in 3D)
+              },
+              item: item,
+              flip: false,
+            });
+          }
+        }
+      }
+    }
+  } else {
+    // Auto positioning mode - original layout logic
   for (const user of users) {
     layout.push({
       position: { col: collectionCount, level: 3, depth: 0 },
@@ -82,7 +126,7 @@ export const AFrameScene: React.FC<AFrameSceneProps> = ({ users, startingItem })
       user: user,
       flip: true,
     });
-
+  }
   }
 
   let startingPosition: string = computePosition({ col: 2, level: 0, depth: 6 });
@@ -95,6 +139,14 @@ export const AFrameScene: React.FC<AFrameSceneProps> = ({ users, startingItem })
   }
 
   const items = layout.filter(entity => entity.item).map(item => item.item!);
+
+  if (positioningMode === 'dsstore' && isLoadingDSStore) {
+    return (
+      <div className='a-scene-wrapper' style={{ ...getStyleForModelSize('responsive-big'), display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#fdf5e6' }}>
+        <p>Loading .DS_Store positions...</p>
+      </div>
+    );
+  }
 
   return (
     <div className='a-scene-wrapper'>

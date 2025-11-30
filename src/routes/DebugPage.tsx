@@ -23,7 +23,7 @@ export default function DebugPage() {
 
   useEffect(() => {
     // Load and parse the .DS_Store file
-    fetch('/assets/goldens/.DS_Store')
+    fetch('/assets/goldens/.DS_Store?t=' + Date.now())
       .then(response => {
         if (!response.ok) {
           throw new Error(`Failed to load .DS_Store: ${response.statusText}`);
@@ -53,8 +53,8 @@ export default function DebugPage() {
   const safariARSupported = a.relList.supports("ar");
 
   // Use a sample USDZ file from the manifest
-  const usdzPath = "/models/mbo/pedals/plumes.usdz";
-  const ogPath = "/models/mbo/pedals/plumes.jpeg";
+  const usdzPath = "assets/derived/mbo_pedals_plumes.usdz";
+  const ogPath = "assets/derived/mbo_pedals_plumes.jpeg";
 
   // Calculate bounds for the map
   const bounds = glbPositions.length > 0 ? calculateBounds(glbPositions) : null;
@@ -78,14 +78,13 @@ export default function DebugPage() {
             </p>
             <div style={{ 
               position: 'relative',
-              width: '100%',
-              minHeight: '600px',
-              overflow: 'hidden'
+              width: `${bounds.width}px`,
+              height: `${bounds.height}px`,
             }}>
               {glbPositions.map((pos, idx) => {
-                // Normalize coordinates to percentage positions
-                const xPercent = ((pos.x - bounds.minX) / bounds.width) * 100;
-                const yPercent = ((pos.y - bounds.minY) / bounds.height) * 100;
+              // Use absolute positioning as reported by .DS_Store
+              const xPixels = pos.x - bounds.minX;
+              const yPixels = pos.y - bounds.minY;
                 
                 // Convert .glb filename to .jpeg for og image
                 const jpegFilename = pos.filename.replace(/\.glb$/, '.jpeg');
@@ -96,32 +95,27 @@ export default function DebugPage() {
                     key={idx}
                     style={{
                       position: 'absolute',
-                      left: `${xPercent}%`,
-                      top: `${yPercent}%`,
+                      left: `${xPixels}px`,
+                      top: `${yPixels}px`,
                       transform: 'translate(-50%, -50%)',
                     }}
                   >
                     <div>
-                      <div>
-                        {pos.filename}
-                      </div>
                       <img
-                        src={imagePath}
-                        alt={pos.filename}
-                        style={{
-                          width: '96px',
-                          height: '96px',
-                          objectFit: 'cover',
-                          display: 'block',
-                        }}
-                        onError={(e) => {
-                          // Fallback if image doesn't exist
-                          e.currentTarget.style.display = 'none';
-                        }}
+                      src={imagePath}
+                      alt={pos.filename}
+                      style={{
+                        width: '96px',
+                        height: '96px',
+                        objectFit: 'cover',
+                        display: 'block',
+                        opacity: 0.8,
+                      }}
+                      onError={(e) => {
+                        // Fallback if image doesn't exist
+                        e.currentTarget.style.display = 'none';
+                      }}
                       />
-                      <div>
-                        ({pos.x}, {pos.y})
-                      </div>
                     </div>
                   </div>
                 );
@@ -246,7 +240,7 @@ export default function DebugPage() {
           Using <code>&lt;model&gt;</code> element with orbit stage mode:
         </p>
         <model stagemode="orbit">
-          <source src="/models/mbo/pedals/plumes.usdz" type="model/vnd.usdz+zip" />
+          <source src="assets/derived/mbo_pedals_plumes.usdz" type="model/vnd.usdz+zip" />
         </model>
         <p>
           <code>stagemode="orbit"</code> | <code>type="model/vnd.usdz+zip"</code>
@@ -259,8 +253,8 @@ export default function DebugPage() {
           Using <code>&lt;model&gt;</code> element with multiple source formats:
         </p>
         <model>
-          <source src="/models/mbo/pedals/elcap.usdz" type="model/vnd.pixar.usd" />
-          <source src="/models/mbo/pedals/elcap.glb" type="model/gltf-binary" />
+          <source src="assets/derived/mbo_pedals_elcap.usdz" type="model/vnd.pixar.usd" />
+          <source src="assets/goldens/mbo_pedals_elcap.glb" type="model/gltf-binary" />
         </model>
         <p>
           <code>type="model/vnd.pixar.usd"</code> and <code>type="model/gltf-binary"</code>
@@ -273,7 +267,7 @@ export default function DebugPage() {
           Using <code>&lt;model&gt;</code> element with only GLB format:
         </p>
         <model>
-          <source src="/models/mbo/pedals/multistomp.glb" type="model/gltf-binary" />
+          <source src="assets/goldens/mbo_pedals_multistomp.glb" type="model/gltf-binary" />
         </model>
         <p>
           <code>type="model/gltf-binary"</code> only

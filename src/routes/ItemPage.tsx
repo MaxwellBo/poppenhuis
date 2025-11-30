@@ -34,6 +34,7 @@ export default function ItemPage() {
 
   const [searchParams, setSearchParams] = useSearchParams();
   const renderAFrameScene = searchParams.get("vr") === "true";
+  const positioningMode = searchParams.get("positioning") || "auto";
 
   const handleVRToggle = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newSearchParams = new URLSearchParams(searchParams);
@@ -41,7 +42,14 @@ export default function ItemPage() {
       newSearchParams.set("vr", "true");
     } else {
       newSearchParams.delete("vr");
+      newSearchParams.delete("positioning"); // Clear positioning when VR is disabled
     }
+    setSearchParams(newSearchParams);
+  };
+
+  const handlePositioningChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newSearchParams = new URLSearchParams(searchParams);
+    newSearchParams.set("positioning", e.target.value);
     setSearchParams(newSearchParams);
   };
 
@@ -64,17 +72,44 @@ export default function ItemPage() {
         </div>
         <div id="model">
           {renderAFrameScene
-            ? <AFrameScene users={users} startingItem={item} />
+            ? <AFrameScene users={users} startingItem={item} positioningMode={positioningMode} />
             : <ModelViewerWrapper modelViewerRef={modelViewerRef} item={item} size='responsive-big' />
           }
-          <label className="vr-toggle">
-            <input
-              type="checkbox"
-              checked={renderAFrameScene}
-              onChange={handleVRToggle}
-            />
-            VR?
-          </label>
+          <div className="vr-controls" style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+            <label className="vr-toggle">
+              <input
+                type="checkbox"
+                checked={renderAFrameScene}
+                onChange={handleVRToggle}
+              />
+              VR?
+            </label>
+            {renderAFrameScene && (
+              <div className="positioning-options" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <span>positioning:</span>
+                <label>
+                  <input
+                    type="radio"
+                    name="positioning"
+                    value="auto"
+                    checked={positioningMode === "auto"}
+                    onChange={handlePositioningChange}
+                  />
+                  {' '}auto
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="positioning"
+                    value="dsstore"
+                    checked={positioningMode === "dsstore"}
+                    onChange={handlePositioningChange}
+                  />
+                  {' '}use .DS_Store
+                </label>
+              </div>
+            )}
+          </div>
         </div>
         <div id="description" className="description ugc"><Markdown>{item.description}</Markdown></div>
         <div id="meta">
