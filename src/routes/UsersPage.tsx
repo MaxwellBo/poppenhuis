@@ -40,10 +40,10 @@ export default function UsersPage() {
           </ul>
           <br />
           <p>
-          <a href="https://github.com/MaxwellBo/poppenhuis/issues/new?template=put-user.yml">+ new user (permanent)</a>
+          <a href="https://github.com/MaxwellBo/poppenhuis/issues/new?template=put-user.yml">+ new user (in bundle)</a>
           </p>
           <p>
-          <a href="/new">+ new user (temporary)</a>
+          <a href="/new">+ new user (in firebase)</a>
           </p>
         </section>
         <section className='short'>
