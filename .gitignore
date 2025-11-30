@@ -2,3 +2,4 @@
 .react-router
 .vscode
 node_modules
+dist/
