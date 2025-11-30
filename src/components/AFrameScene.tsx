@@ -203,6 +203,8 @@ export const AFrameScene: React.FC<AFrameSceneProps> = ({ users, startingItem, p
                   value={user.name} 
                   color="#000" 
                   width="10"
+                  align="center"
+                  animation="property: rotation; to: 0 180 0; dur: 20000; easing: linear; loop: true"
                   rotation="0 -180 0"
                   position={getPosition(position)}
                 ></a-text>
@@ -213,6 +215,8 @@ export const AFrameScene: React.FC<AFrameSceneProps> = ({ users, startingItem, p
                   value={user.name} 
                   color="#000" 
                   width="10"
+                  align="center"
+                  animation="property: rotation; to: 0 360 0; dur: 20000; easing: linear; loop: true"
                   rotation="0 0 0"
                   position={getPosition(position)}
                 ></a-text>
@@ -228,6 +232,8 @@ export const AFrameScene: React.FC<AFrameSceneProps> = ({ users, startingItem, p
                   value={collection.name}
                   color="#000" 
                   width="5"
+                  align="center"
+                  animation="property: rotation; to: 0 180 0; dur: 20000; easing: linear; loop: true"
                   rotation="0 -180 0"
                   position={getPosition(position)}
                 ></a-text>
@@ -239,6 +245,8 @@ export const AFrameScene: React.FC<AFrameSceneProps> = ({ users, startingItem, p
                   value={collection.name}
                   color="#000" 
                   width="5"
+                  align="center"
+                  animation="property: rotation; to: 0 360 0; dur: 20000; easing: linear; loop: true"
                   rotation="0 0 0"
                   position={getPosition(position)}
                 ></a-text>
@@ -260,6 +268,8 @@ export const AFrameScene: React.FC<AFrameSceneProps> = ({ users, startingItem, p
                 value={item.name}
                 color="#000"
                 width="2"
+                align="center"
+                animation="property: rotation; to: 0 180 0; dur: 20000; easing: linear; loop: true"
                 rotation="0 -180 0"
                 position={getPosition(position, 1)}
               ></a-text>
@@ -268,6 +278,8 @@ export const AFrameScene: React.FC<AFrameSceneProps> = ({ users, startingItem, p
                 value={item.name}
                 color="#000"
                 width="2"
+                align="center"
+                animation="property: rotation; to: 0 360 0; dur: 20000; easing: linear; loop: true"
                 rotation="0 0 0"
                 position={getPosition(position, 1)}
               ></a-text>
