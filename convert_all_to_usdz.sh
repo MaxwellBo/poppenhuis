@@ -1,30 +1,32 @@
 #!/bin/bash
 
-# Convert all GLB files in public/assets to USDZ format
-# This script works with the flattened directory structure where all files are in public/assets
-# Example: public/assets/jackie_cakes_brat.glb -> public/assets/jackie_cakes_brat.usdz
+# Convert all GLB files in public/assets/goldens to USDZ format in public/assets/derived
+# Example: public/assets/goldens/jackie_cakes_brat.glb -> public/assets/derived/jackie_cakes_brat.usdz
 
-# Check if public/assets directory exists
-if [[ ! -d "public/assets" ]]; then
-  echo "Directory public/assets does not exist"
+# Check if public/assets/goldens directory exists
+if [[ ! -d "public/assets/goldens" ]]; then
+  echo "Directory public/assets/goldens does not exist"
   exit 1
 fi
+
+# Create derived directory if it doesn't exist
+mkdir -p "public/assets/derived"
 
 # Counter for tracking conversions
 converted=0
 failed=0
 
-# Process all GLB files in public/assets (no subdirectories since it's flattened)
-for file in public/assets/*.glb; do
+# Process all GLB files in public/assets/goldens
+for file in public/assets/goldens/*.glb; do
   # Skip if no GLB files found
   if [[ ! -f "$file" ]]; then
     continue
   fi
   
-  # Get filename without extension
-  basename="${file%.*}"
-  output_file="${basename}.usdz"
-  temp_file="temp_$(basename "$basename").usdc"
+  # Get filename without extension and path
+  filename=$(basename "$file" .glb)
+  output_file="public/assets/derived/${filename}.usdz"
+  temp_file="temp_${filename}.usdc"
   
   # Convert to USDC then zip to USDZ
   if usdcat "$file" -o "$temp_file" 2>/dev/null; then

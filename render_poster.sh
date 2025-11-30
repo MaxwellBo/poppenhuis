@@ -20,7 +20,8 @@ fi
 # Function to process a single model
 process_single_model() {
     local glb_file="$1"
-    local poster_path="${glb_file%.glb}.jpeg"
+    local filename=$(basename "$glb_file" .glb)
+    local poster_path="public/assets/derived/${filename}.jpeg"
     
     echo "Processing single model: $glb_file -> $poster_path"
     deno run --allow-read --allow-write --allow-run --allow-env --allow-net "$DENO_SCRIPT" single "$glb_file" "$poster_path"
@@ -29,13 +30,13 @@ process_single_model() {
 # Function to process all models by user (extract user prefix from filename)
 process_by_user() {
     local user_prefix="$1"  # e.g., "mbo", "jackie", "leaonie"
-    local poster_path="public/assets/${user_prefix}_og.jpeg"
+    local poster_path="public/assets/derived/${user_prefix}_og.jpeg"
     local models=()
     
     # Find all .glb files matching the user prefix
     while IFS= read -r -d '' glb_file; do
         models+=("$glb_file")
-    done < <(find public/assets -maxdepth 1 -type f -name "${user_prefix}_*.glb" -print0)
+    done < <(find public/assets/goldens -maxdepth 1 -type f -name "${user_prefix}_*.glb" -print0)
     
     if [ ${#models[@]} -eq 0 ]; then
         echo "No GLB files found for user: $user_prefix"
@@ -74,13 +75,13 @@ if [ -n "$SPECIFIC_MODEL" ]; then
     fi
 else
     # Process all GLB files individually
-    find public/assets -maxdepth 1 -type f -name "*.glb" | while read -r glb_file; do
+    find public/assets/goldens -maxdepth 1 -type f -name "*.glb" | while read -r glb_file; do
         process_single_model "$glb_file"
     done
     
     # Process all user directories (by extracting unique user prefixes)
     for user_prefix in mbo jackie leaonie joey; do
-        if [ -n "$(find public/assets -maxdepth 1 -type f -name "${user_prefix}_*.glb")" ]; then
+        if [ -n "$(find public/assets/goldens -maxdepth 1 -type f -name "${user_prefix}_*.glb")" ]; then
             process_by_user "$user_prefix"
         fi
     done
