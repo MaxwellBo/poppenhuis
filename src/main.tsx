@@ -17,7 +17,7 @@ import NewItemPage from './routes/NewItemPage.tsx';
 import EditUserPage, { loader as editUserPageLoader } from './routes/EditUserPage.tsx';
 import EditCollectionPage, { loader as editCollectionPageLoader } from './routes/EditCollectionPage.tsx';
 import EditItemPage, { loader as editItemPageLoader } from './routes/EditItemPage.tsx';
-import LoginPage from './routes/LoginPage.tsx';
+import AuthPage from './routes/AuthPage.tsx';
 
 const router = createBrowserRouter([
   {
@@ -47,8 +47,8 @@ const router = createBrowserRouter([
         loader: usersPageLoader,
       },
       {
-        path: "login",
-        element: <LoginPage />,
+        path: "auth",
+        element: <AuthPage />,
       },
       {
         path: "new",

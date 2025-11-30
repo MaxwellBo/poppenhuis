@@ -28,9 +28,9 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ children }) => {
         {!loading && (
           <span style={{ fontSize: '0.8em', fontWeight: 'normal' }}>
             {currentUser ? (
-              <QueryPreservingLink to="/login">{currentUser.email}</QueryPreservingLink>
+              <QueryPreservingLink to="/auth">{currentUser.email}</QueryPreservingLink>
             ) : (
-              <QueryPreservingLink to="/login">login?</QueryPreservingLink>
+              <QueryPreservingLink to="/auth">sign in?</QueryPreservingLink>
             )}
           </span>
         )}
