@@ -23,7 +23,7 @@ export default function DebugPage() {
 
   useEffect(() => {
     // Load and parse the .DS_Store file
-    fetch('/assets/goldens/.DS_Store?t=' + Date.now())
+    fetch('/assets/goldens/DS_Store?t=' + Date.now())
       .then(response => {
         if (!response.ok) {
           throw new Error(`Failed to load .DS_Store: ${response.statusText}`);
@@ -144,7 +144,7 @@ export default function DebugPage() {
           <div>
             <p>
               Parsed <strong>{dsStoreData.length}</strong> records from{" "}
-              <code>/assets/goldens/.DS_Store</code>
+              <code>/assets/goldens/DS_Store</code>
             </p>
             <div style={{ 
               maxHeight: "500px", 

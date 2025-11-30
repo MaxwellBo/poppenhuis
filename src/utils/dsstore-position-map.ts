@@ -10,7 +10,7 @@ export interface DSStorePositionMap {
  */
 export async function loadDSStorePositionMap(): Promise<DSStorePositionMap> {
   try {
-    const response = await fetch('/assets/goldens/.DS_Store');
+    const response = await fetch('/assets/goldens/DS_Store');
     if (!response.ok) {
       throw new Error(`Failed to load .DS_Store: ${response.statusText}`);
     }
