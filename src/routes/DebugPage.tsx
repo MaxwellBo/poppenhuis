@@ -22,7 +22,7 @@ export default function DebugPage() {
   const [glbPositions, setGlbPositions] = useState<FilePosition[]>([]);
 
   useEffect(() => {
-    fetch('/assets/goldens/DS_Store')
+    fetch('/assets/goldens/binary')
       .then(response => {
         if (!response.ok) {
           throw new Error(`Failed to load DS_Store: ${response.statusText}`);
