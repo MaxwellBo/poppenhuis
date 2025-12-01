@@ -11,6 +11,7 @@ import ItemPage, { loader as itemPageLoader } from './routes/ItemPage.tsx';
 import WallLabelPage, { loader as wallLabelPageLoader } from './routes/WallLabelPage.tsx';
 import EmbedPage, { loader as embedPageLoader } from './routes/EmbedPage.tsx';
 import DebugPage from './routes/DebugPage.tsx';
+import MapPage, { loader as mapPageLoader } from './routes/MapPage.tsx';
 import NewUserPage from './routes/NewUserPage.tsx';
 import NewCollectionPage from './routes/NewCollectionPage.tsx';
 import NewItemPage from './routes/NewItemPage.tsx';
@@ -45,6 +46,12 @@ const router = createBrowserRouter([
       {
         path: "debug",
         element: <DebugPage />,
+      },
+      {
+        path: "map",
+        element: <MapPage />,
+        // @ts-ignore
+        loader: mapPageLoader,
       },
       {
         path: "auth",

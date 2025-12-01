@@ -1,0 +1,140 @@
+import { useEffect, useState } from 'react';
+import { useLoaderData } from 'react-router';
+import { loadUsers } from '../manifest-extras';
+import type { Item } from '../manifest';
+import { PageHeader } from '../components/PageHeader';
+import { ModelViewerWrapper } from '../components/ModelViewerWrapper';
+import { DSStoreParser, DSStoreRecord } from '../utils/dsstore-parser';
+import { extractFilePositions, filterGlbPositions, calculateBounds, FilePosition } from '../utils/dsstore-helpers';
+
+export const loader = loadUsers;
+
+export default function MapPage() {
+  const { syncUsers } = useLoaderData() as Awaited<ReturnType<typeof loader>>;
+  
+  const [, setDsStoreData] = useState<DSStoreRecord[] | null>(null);
+  const [dsStoreError, setDsStoreError] = useState<string | null>(null);
+  const [dsStoreLoading, setDsStoreLoading] = useState(true);
+  const [glbPositions, setGlbPositions] = useState<FilePosition[]>([]);
+
+  useEffect(() => {
+    fetch('/assets/goldens/DS_Store')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Failed to load DS_Store: ${response.statusText}`);
+        }
+        return response.arrayBuffer();
+      })
+      .then(buffer => {
+        const parser = new DSStoreParser(buffer, false);
+        const records = parser.parse();
+        setDsStoreData(records);
+        
+        // Extract GLB positions
+        const allPositions = extractFilePositions(records);
+        const glbs = filterGlbPositions(allPositions);
+        setGlbPositions(glbs);
+        
+        setDsStoreLoading(false);
+      })
+      .catch(error => {
+        setDsStoreError(error.message);
+        setDsStoreLoading(false);
+      });
+  }, []);
+
+  // Calculate bounds for the map
+  const bounds = glbPositions.length > 0 ? calculateBounds(glbPositions) : null;
+
+  // Create a map of filenames from users' items
+  const userItemsMap = new Map<string, Item & { userId: string; collectionId: string }>();
+  
+  for (const user of syncUsers) {
+    for (const collection of user.collections) {
+      for (const item of collection.items) {
+        // Extract filename from the model path
+        const modelPath = item.model;
+        const filename = modelPath.split('/').pop() || '';
+        
+        userItemsMap.set(filename, {
+          ...item,
+          userId: user.id,
+          collectionId: collection.id,
+        });
+      }
+    }
+  }
+
+  // Filter GLB positions to only include items from users
+  const userGlbPositions = glbPositions.filter(pos => userItemsMap.has(pos.filename));
+
+  return (
+    <article>
+      <PageHeader>map</PageHeader>
+
+      <section style={{ marginTop: '2rem' }}>
+        {dsStoreLoading && <p>Loading .DS_Store file...</p>}
+        {dsStoreError && (
+          <div>
+            <strong>Error:</strong> {dsStoreError}
+          </div>
+        )}
+        {userGlbPositions.length > 0 && bounds && (
+          <div>
+            <div style={{ 
+              position: 'relative',
+              width: `${bounds.width}px`,
+              height: `${bounds.height}px`,
+              margin: '2rem 0',
+            }}>
+              {userGlbPositions.map((pos, idx) => {
+                // Use absolute positioning as reported by .DS_Store
+                const xPixels = pos.x - bounds.minX;
+                const yPixels = pos.y - bounds.minY;
+                
+                // Get the item info from the map
+                const itemInfo = userItemsMap.get(pos.filename);
+                
+                if (!itemInfo) return null;
+                
+                return (
+                  <div
+                    key={idx}
+                    style={{
+                      position: 'absolute',
+                      left: `${xPixels}px`,
+                      top: `${yPixels}px`,
+                      transform: 'translate(-50%, -50%)',
+                    }}
+                  >
+                    <div style={{ textAlign: 'center' }}>
+                      <ModelViewerWrapper item={itemInfo} size="small" />
+                        <a 
+                        href={`/${itemInfo.userId}/${itemInfo.collectionId}/${itemInfo.id}`}
+                        style={{
+                          display: 'block',
+                          fontSize: '12px',
+                          marginTop: '4px',
+                          maxWidth: '96px',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap',
+                          zIndex: 9999,
+                        }}
+                        >
+                        {itemInfo.name}
+                        </a>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+        {userGlbPositions.length === 0 && !dsStoreLoading && (
+          <p>No items with position data found in .DS_Store</p>
+        )}
+      </section>
+    </article>
+  );
+}
