@@ -6,6 +6,15 @@ import { DEFAULT_META, metaForCollection, metaForItem, metaForUser, metaToHtml }
 export default async function handler(request: Request, context: Context) {
   const url = new URL(request.url);
 
+  // Skip transformation for binary assets
+  if (url.pathname.startsWith('/assets/goldens/') || 
+      url.pathname.endsWith('.glb') || 
+      url.pathname.endsWith('.usdz') ||
+      url.pathname.endsWith('.hdr') ||
+      url.pathname.endsWith('.splat')) {
+    return context.next();
+  }
+
   // Check if this request would be routed to index.html
   // This means it's not a direct file request (no extension)
   // OR it's explicitly requesting index.html

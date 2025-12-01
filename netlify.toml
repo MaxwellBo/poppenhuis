@@ -5,9 +5,3 @@
 [[edge_functions]]
   path = "/*"
   function = "transform"
-
-[[headers]]
-  for = "/assets/goldens/*"
-  [headers.values]
-    Content-Type = "application/octet-stream"
-    Cache-Control = "public, max-age=31536000, immutable"
