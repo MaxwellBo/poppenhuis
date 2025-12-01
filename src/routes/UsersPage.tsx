@@ -58,7 +58,7 @@ export default function UsersPage() {
           </p>
           <ol>
             <li>
-              Upload your <code>.gltf/.glb</code> models to <a href="https://github.com/MaxwellBo/poppenhuis/tree/master/public/models"><code>//public/models/</code></a>
+              Upload your <code>.gltf</code>/<code>.glb</code> models to <a href="https://github.com/MaxwellBo/poppenhuis/tree/master/public/models"><code>//public/models/</code></a>
             </li>
             <li>
               Add your metadata to <a href="https://github.com/MaxwellBo/poppenhuis/blob/master/src/manifest.ts"><code>//src/manifest.ts</code></a>

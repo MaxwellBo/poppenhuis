@@ -124,7 +124,7 @@ export default function ItemPage() {
                     checked={positioningMode === "dsstore"}
                     onChange={handlePositioningChange}
                   />
-                  {' '}use .DS_Store
+                  {' '}use .DS_Store locations (<a href="/map">map</a>)
                 </label>
               </div>
             )}
