@@ -116,7 +116,7 @@ export default function MapPage() {
             <div style={{ textAlign: 'center' }}>
               <ModelViewerWrapper item={itemInfo} size="small" />
             <a 
-            href={`/${itemInfo.userId}/${itemInfo.collectionId}/${itemInfo.id}?vr=true&positioning=dsstore`}
+            href={`/${itemInfo.userId}/${itemInfo.collectionId}/${itemInfo.id}?vr=dsstore`}
             style={{
               display: 'block',
               fontSize: '12px',

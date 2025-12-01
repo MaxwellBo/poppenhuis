@@ -52,23 +52,23 @@ export default function ItemPage() {
   const nextItemIsFirst = currentIndex === allItems.length - 1;
 
   const [searchParams, setSearchParams] = useSearchParams();
-  const renderAFrameScene = searchParams.get("vr") === "true";
-  const positioningMode = searchParams.get("positioning") || "auto";
+  const vrMode = searchParams.get("vr") || "";
+  const renderAFrameScene = vrMode === "auto" || vrMode === "dsstore";
+  const positioningMode = vrMode === "dsstore" ? "dsstore" : "auto";
 
   const handleVRToggle = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newSearchParams = new URLSearchParams(searchParams);
     if (e.target.checked) {
-      newSearchParams.set("vr", "true");
+      newSearchParams.set("vr", "auto");
     } else {
       newSearchParams.delete("vr");
-      newSearchParams.delete("positioning"); // Clear positioning when VR is disabled
     }
     setSearchParams(newSearchParams);
   };
 
   const handlePositioningChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newSearchParams = new URLSearchParams(searchParams);
-    newSearchParams.set("positioning", e.target.value);
+    newSearchParams.set("vr", e.target.value);
     setSearchParams(newSearchParams);
   };
 
