@@ -69,7 +69,7 @@ export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef
     let yPos = 30; // Reduced from 40
 
     // Smaller text
-    ctx.font = 'bold 12px monospace'; // Reduced from 24px
+    ctx.font = 'bold 12px "DotGothic16", sans-serif'; // Reduced from 24px
     ctx.textAlign = 'left';
 
     // Helper to add a simple text line
