@@ -234,7 +234,7 @@ export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef
 
     // 5. Add the URL text underneath QR code
     addSimpleLine(itemUrl);
-
+    addSimpleLine(`printed on ${new Date().toLocaleDateString()}`);
 
     // Draw a black vertical line across the entire canvas height on the left
     ctx.strokeStyle = 'black';
