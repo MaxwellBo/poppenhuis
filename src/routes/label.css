@@ -3,7 +3,7 @@
   padding: 60px;
   margin: 60px;
   min-width: 12cm;
-  font-family: monospace;
+  font-family: "DotGothic16", sans-serif;
   border: 1px solid #000000;
 }
 
@@ -84,7 +84,7 @@
 }
 
 #main-container {
-  font-family: sans-serif !important;
+  font-family: "DotGothic16", sans-serif !important;
 }
 
 #header-section {
