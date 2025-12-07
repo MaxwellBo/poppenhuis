@@ -498,6 +498,23 @@ baker & baby cook
 My abject failure to use them properly convinced me to stick to the classical guitar.`,
         items: [
           {
+            id: "screambox",
+            name: "Screambox",
+            model: "/assets/goldens/mbo_pedals_screambox.glb",
+            manufacturer: "Max Bo",
+            releaseDate: "2025 December 7",
+            material: ["cardboard", "LM386 amplifier chip", "speaker out of a telephone"],
+            manufactureDate: "2025 December 7",
+            manufactureLocation: "NYC Resistor, Brooklyn",
+            acquisitionDate: "2025 December 7",
+            acquisitionLocation: "NYC Resistor, Brooklyn",
+            captureDate: "2025 December 7",
+            captureMethod: "LiDAR",
+            captureDevice: "Apple iPhone 13 Pro",
+            captureApp: "Polycam",
+            storageLocation: "New York",
+          },
+          {
             id: "plumes",
             name: "Plumes",
             model: "/assets/goldens/mbo_pedals_plumes.glb",
