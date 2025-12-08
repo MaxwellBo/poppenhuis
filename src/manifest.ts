@@ -511,6 +511,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             captureDate: "2025 December 7",
             captureMethod: "LiDAR",
             captureDevice: "Apple iPhone 13 Pro",
+            captureLocation: "NYC Resistor, Brooklyn",
             captureApp: "Polycam",
             storageLocation: "New York",
           },
