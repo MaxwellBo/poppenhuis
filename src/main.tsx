@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
-import { createBrowserRouter, useRouteError } from "react-router";
+import { createBrowserRouter, useRouteError, redirect, Navigate } from "react-router";
 import { RouterProvider } from "react-router/dom";
 import App, { Spinner } from './routes/App.tsx';
 import UsersPage, { loader as usersPageLoader } from './routes/UsersPage.tsx';
@@ -21,6 +21,20 @@ import EditItemPage, { loader as editItemPageLoader } from './routes/EditItemPag
 import AuthPage from './routes/AuthPage.tsx';
 
 const router = createBrowserRouter([
+  // Redirect t:max -> mbo
+  {
+    path: "t:max",
+    element: <Navigate to="/mbo" replace />,
+  },
+  {
+    path: "t:max/*",
+    loader: ({ request }) => {
+      const url = new URL(request.url);
+      const newPath = url.pathname.replace(/^\/t:max/, '/mbo');
+      return redirect(newPath);
+    },
+  },
+  // Regular routes
   {
     path: ":userId/:collectionId/:itemId/embed",
     element: <EmbedPage />,

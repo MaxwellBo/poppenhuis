@@ -1029,6 +1029,72 @@ My abject failure to use them properly convinced me to stick to the classical gu
             captureDevice: "Apple iPhone 13 Pro",
             acquisitionDate: "2022",
             acquisitionLocation: "Surry Hills, Sydney"
+          },
+          {
+            id: "katie",
+            name: "Katie",
+            model: "https://firebasestorage.googleapis.com/v0/b/poppenhu-is.firebasestorage.app/o/models%2Ft%3Amax%2Ffriends%2Fkatie.glb?alt=media&token=be537c85-6e53-4b65-ab30-5d1a2761e72a",
+            acquisitionDate: "2026 Jan 3",
+            acquisitionLocation: "Long Island City",
+            captureApp: "Polycam",
+            captureDate: "2026 Jan 3",
+            captureDevice: "Apple iPhone 13 Pro",
+            captureLatLon: "40.7447° N, 73.9485° W",
+            captureLocation: "Long Island City",
+            captureMethod: "LiDAR",
+            manufactureDate: "1998",
+            manufactureLocation: "California",
+            manufacturer: "Catherine",
+            releaseDate: "1998"
+          },
+          {
+            id: "maja",
+            name: "Maja",
+            model: "https://firebasestorage.googleapis.com/v0/b/poppenhu-is.firebasestorage.app/o/models%2Ft%3Amax%2Ffriends%2Fmaja.glb?alt=media&token=c5cc4b6e-b1f6-4530-8ab6-c237619f63f0",
+            acquisitionDate: "2024",
+            acquisitionLocation: "Liberty House, Enmore, Sydney",
+            captureApp: "Polycam",
+            captureDate: "2025 July 3",
+            captureDevice: "iPhone 13 Pro",
+            captureLocation: "Liberty House, Enmore, Sydney",
+            captureMethod: "LiDAR",
+            manufactureDate: "1999 January",
+            manufactureLocation: "Hong Kong",
+            manufacturer: "Helen",
+            releaseDate: "1999 September",
+            storageLocation: "Sydney"
+          },
+          // {
+          //   id: "neal",
+          //   name: "Neal",
+          //   model: "https://firebasestorage.googleapis.com/v0/b/poppenhu-is.firebasestorage.app/o/models%2Ft%3Amax%2Ffriends%2Fneal.glb?alt=media&token=1738a605-d9d1-46a6-be42-0273caf0c1ae",
+          //   acquisitionDate: "2025 September",
+          //   acquisitionLocation: "Bushwick, NYC",
+          //   captureApp: "Polycam",
+          //   captureDate: "2025 November 17",
+          //   captureDevice: "iPhone 13 Pro",
+          //   captureLocation: "Hex House, East Williamsburg",
+          //   captureMethod: "LiDAR",
+          //   manufactureDate: "1997",
+          //   manufactureLocation: "Fairfax, Virginia",
+          //   manufacturer: "Payl",
+          //   releaseDate: "1998",
+          //   storageLocation: "Williamsburg, NYC"
+          // },
+          {
+            id: "penguin",
+            name: "penguin plush",
+            model: "https://firebasestorage.googleapis.com/v0/b/poppenhu-is.firebasestorage.app/o/models%2Ft%3Amax%2Ffriends%2Fpenguin.glb?alt=media&token=e5f06f11-68a1-4951-944c-ef9920f0384e",
+            description: "found on the side of the road",
+            acquisitionDate: "2020",
+            acquisitionLocation: "Glebe, Sydney",
+            captureApp: "Polycam",
+            captureDate: "2025 August 22",
+            captureDevice: "Apple iPhone 13 Pro",
+            captureLocation: "Darlinghurst, Sydney",
+            captureMethod: "LiDAR",
+            manufactureLocation: "China",
+            storageLocation: "Darlinghurst, Sydney"
           }
         ]
       }
@@ -1090,6 +1156,48 @@ My abject failure to use them properly convinced me to stick to the classical gu
             customFields: {
               "vertices": "49.4k"
             }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: "SugarPlumBoss",
+    name: "Anderson",
+    bio: "Manufactured: 3/27/22",
+    source: "firebase",
+    collections: [
+      {
+        id: "baked-goods",
+        name: "baked goods",
+        items: [
+          {
+            id: "vegan-sugar-plum-cookie",
+            name: "vegan sugar plum cookie",
+            model: "https://firebasestorage.googleapis.com/v0/b/poppenhu-is.firebasestorage.app/o/models%2FSugarPlumBoss%2Fbaked-goods%2Fvegan-sugar-plum-cookie.glb?alt=media&token=92215b7a-2599-414d-95c7-d85544d00264",
+            acquisitionDate: "2026 Jan 3",
+            acquisitionLocation: "New Jersey",
+            captureApp: "Polycam",
+            captureDate: "2026 Jan 3",
+            captureDevice: "Apple iPhone 13 Pro",
+            captureLatLon: "40.7447° N, 73.9485° W",
+            captureLocation: "Long Island City",
+            captureMethod: "LiDAR",
+            manufactureDate: "2026 Jan 3",
+            manufactureLocation: "New Jersey",
+            manufacturer: "Anderson",
+            material: [
+              "sugar plum",
+              "spiced rum",
+              "fireball",
+              "vegan butter",
+              "sugar",
+              "cinnamon",
+              "baking soda",
+              "apple cider vinegar"
+            ],
+            releaseDate: "2021 March 27",
+            storageLocation: "our stomachs"
           }
         ]
       }
