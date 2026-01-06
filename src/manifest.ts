@@ -1033,7 +1033,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
           {
             id: "katie",
             name: "Katie",
-            model: "https://firebasestorage.googleapis.com/v0/b/poppenhu-is.firebasestorage.app/o/models%2Ft%3Amax%2Ffriends%2Fkatie.glb?alt=media&token=be537c85-6e53-4b65-ab30-5d1a2761e72a",
+            model: "/assets/goldens/mbo_friends_katie.glb",
             acquisitionDate: "2026 Jan 3",
             acquisitionLocation: "Long Island City",
             captureApp: "Polycam",
@@ -1050,7 +1050,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
           {
             id: "maja",
             name: "Maja",
-            model: "https://firebasestorage.googleapis.com/v0/b/poppenhu-is.firebasestorage.app/o/models%2Ft%3Amax%2Ffriends%2Fmaja.glb?alt=media&token=c5cc4b6e-b1f6-4530-8ab6-c237619f63f0",
+            model: "/assets/goldens/mbo_friends_maja.glb",
             acquisitionDate: "2024",
             acquisitionLocation: "Liberty House, Enmore, Sydney",
             captureApp: "Polycam",
@@ -1084,7 +1084,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
           {
             id: "penguin",
             name: "penguin plush",
-            model: "https://firebasestorage.googleapis.com/v0/b/poppenhu-is.firebasestorage.app/o/models%2Ft%3Amax%2Ffriends%2Fpenguin.glb?alt=media&token=e5f06f11-68a1-4951-944c-ef9920f0384e",
+            model: "/assets/goldens/mbo_friends_penguin.glb",
             description: "found on the side of the road",
             acquisitionDate: "2020",
             acquisitionLocation: "Glebe, Sydney",
@@ -1174,7 +1174,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
           {
             id: "vegan-sugar-plum-cookie",
             name: "vegan sugar plum cookie",
-            model: "https://firebasestorage.googleapis.com/v0/b/poppenhu-is.firebasestorage.app/o/models%2FSugarPlumBoss%2Fbaked-goods%2Fvegan-sugar-plum-cookie.glb?alt=media&token=92215b7a-2599-414d-95c7-d85544d00264",
+            model: "/assets/goldens/SugarPlumBoss_baked-goods_vegan-sugar-plum-cookie.glb",
             acquisitionDate: "2026 Jan 3",
             acquisitionLocation: "New Jersey",
             captureApp: "Polycam",
