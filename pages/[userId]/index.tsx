@@ -18,6 +18,9 @@ export const getServerSideProps: GetServerSideProps<UserPageProps> = async (cont
   const { userId } = context.params as { userId: string };
   const request = new Request(`http://localhost${context.resolvedUrl}`);
   
+  console.log('UserPage getServerSideProps - userId:', userId);
+  console.log('UserPage getServerSideProps - resolvedUrl:', context.resolvedUrl);
+  
   try {
     const { user } = await loadUser({ params: { userId }, request });
     return {
@@ -26,6 +29,7 @@ export const getServerSideProps: GetServerSideProps<UserPageProps> = async (cont
       },
     };
   } catch (error) {
+    console.error('UserPage error loading user:', error);
     return {
       notFound: true,
     };
