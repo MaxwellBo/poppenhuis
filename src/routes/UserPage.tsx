@@ -3,7 +3,7 @@ import { Size } from '../components/Size';
 import { ItemCards } from '../components/ItemCards';
 import { Collection, User } from "../manifest";
 import { loadUser } from "../manifest-extras";
-import { metaForUser } from "../meta";
+import { metaForUser } from "../nextMeta";
 import Markdown from "react-markdown";
 import { QueryPreservingLink } from "../components/QueryPreservingLink";
 import { HelmetMeta } from "../components/HelmetMeta";

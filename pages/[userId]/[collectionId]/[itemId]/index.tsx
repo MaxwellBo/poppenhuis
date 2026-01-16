@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
 import { GlobalItemCards } from '../../../../src/components/NextItemCards';
 import { ItemCard } from '../../../../src/components/NextItemCard';
-import { metaForItem } from "../../../../src/meta";
+import { metaForItem } from "../../../../src/nextMeta";
 import Markdown from "react-markdown";
 import { QueryPreservingLink as NextQueryPreservingLink } from "../../../../src/components/NextQueryPreservingLink";
 import { NextMetaHead } from "../../../../src/nextMeta";

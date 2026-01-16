@@ -5,7 +5,7 @@ import type { User } from "../manifest";
 import { MANIFEST_URL_QUERY_PARAM, MANIFEST_SCHEMA, ARENA_PREFIX } from "../manifest";
 import { Size } from '../components/Size';
 import { ItemCard } from '../components/ItemCard';
-import { DEFAULT_META } from "../meta";
+import { DEFAULT_META } from "../nextMeta";
 import { HelmetMeta } from "../components/HelmetMeta";
 import { QueryPreservingLink } from "../components/QueryPreservingLink";
 import { PageHeader } from "../components/PageHeader";

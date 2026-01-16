@@ -3,7 +3,7 @@ import { Size } from '../../src/components/Size';
 import { ItemCards } from '../../src/components/NextItemCards';
 import { Collection, User } from "../../src/manifest";
 import { loadUser } from "../../src/manifest-extras";
-import { metaForUser } from "../../src/meta";
+import { metaForUser } from "../../src/nextMeta";
 import Markdown from "react-markdown";
 import { QueryPreservingLink as NextQueryPreservingLink } from "../../src/components/NextQueryPreservingLink";
 import { NextMetaHead } from "../../src/nextMeta";

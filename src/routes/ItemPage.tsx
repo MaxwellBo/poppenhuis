@@ -4,7 +4,7 @@ import React, { useRef } from "react";
 import { useLoaderData, useSearchParams } from "react-router";
 import { GlobalItemCards } from '../components/ItemCards';
 import { ItemCard } from '../components/ItemCard';
-import { metaForItem } from "../meta";
+import { metaForItem } from "../nextMeta";
 import Markdown from "react-markdown";
 import { ModelViewerWrapper } from "../components/ModelViewerWrapper";
 import { QueryPreservingLink } from "../components/QueryPreservingLink";

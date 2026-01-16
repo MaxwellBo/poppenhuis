@@ -5,7 +5,7 @@ import type { User } from "../src/manifest";
 import { MANIFEST_URL_QUERY_PARAM, MANIFEST_SCHEMA, ARENA_PREFIX } from "../src/manifest";
 import { Size } from '../src/components/Size';
 import { ItemCard } from '../src/components/NextItemCard';
-import { DEFAULT_META } from "../src/meta";
+import { DEFAULT_META } from "../src/nextMeta";
 import { NextMetaHead } from "../src/nextMeta";
 import { QueryPreservingLink as NextQueryPreservingLink } from "../src/components/NextQueryPreservingLink";
 import { PageHeader } from "../src/components/PageHeader";

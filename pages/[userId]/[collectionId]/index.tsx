@@ -2,7 +2,7 @@ import { GetServerSideProps } from "next";
 import { Size } from '../../../src/components/Size';
 import { ItemCards } from '../../../src/components/NextItemCards';
 import { loadCollection } from "../../../src/manifest-extras";
-import { metaForCollection } from "../../../src/meta";
+import { metaForCollection } from "../../../src/nextMeta";
 import Markdown from "react-markdown";
 import { NextMetaHead } from '../../../src/nextMeta';
 import { QueryPreservingLink as NextQueryPreservingLink } from '../../../src/components/NextQueryPreservingLink';

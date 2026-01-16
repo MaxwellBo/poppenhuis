@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet';
-import { Meta } from '../meta';
+import { NextMeta } from '../nextMeta';
 
-export function HelmetMeta(props: { meta: Meta }) {
+export function HelmetMeta(props: { meta: NextMeta }) {
   const { meta } = props;
   return (
     <Helmet>
