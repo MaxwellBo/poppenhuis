@@ -136,10 +136,10 @@ export default function UsersPage({ syncUsers, asyncUsers }: UsersPageProps) {
           <details>
             <summary>Technical challenges</summary>
             <div className="explanation">
-              I tried porting the app to <a href="https://nextjs.org/">Next.js</a> to get some of that sweet, sweet SSR.
-              But to my <a href="https://twitter.com/_max_bo_/status/1815536378522022130">dismay</a> I discovered that clicking any link was causing a full page load and remount, which invalidated the camera state of all <a href="https://modelviewer.dev/">model-viewer</a> components.
-              Alas, the app remains a <a href="https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts">Vite React SPA</a>.
-              If anyone has a solution to this, please reach out to <a href="https://twitter.com/_max_bo_">me on Twitter</a>.
+              After <a href="https://twitter.com/_max_bo_/status/1815536378522022130">initial challenges</a> with preserving camera state when navigating between pages, the app has been successfully ported to <a href="https://nextjs.org/">Next.js</a> with server-side rendering.
+              <br />
+              <br />
+              The migration enables server-side generation of OpenGraph metadata using Firebase data, which was previously handled by Netlify edge functions.
             </div>
           </details>
         </section>

@@ -85,7 +85,7 @@ export function useNextFirebaseSubmit(options: UseFirebaseSubmitOptions = {}) {
         // When updating, set fields that existed in original but not in updated to null
         if (!isCreating) {
           Object.keys(currentData).forEach(key => {
-            if (key !== 'collections' && key !== 'id' && !updatedUser.hasOwnProperty(key)) {
+            if (key !== 'collections' && key !== 'id' && !Object.prototype.hasOwnProperty.call(updatedUser, key)) {
               // Set removed fields to null to delete them from Firebase
               (updatedUser as any)[key] = null;
             }
@@ -147,7 +147,7 @@ export function useNextFirebaseSubmit(options: UseFirebaseSubmitOptions = {}) {
         // When updating, set fields that existed in original but not in updated to null
         if (!isCreating) {
           Object.keys(currentData).forEach(key => {
-            if (key !== 'items' && key !== 'id' && !updatedCollection.hasOwnProperty(key)) {
+            if (key !== 'items' && key !== 'id' && !Object.prototype.hasOwnProperty.call(updatedCollection, key)) {
               updatedCollection[key] = null;
             }
           });
@@ -232,7 +232,7 @@ export function useNextFirebaseSubmit(options: UseFirebaseSubmitOptions = {}) {
         // When updating, set fields that existed in original but not in updated to null
         if (!isCreating) {
           Object.keys(currentData).forEach(key => {
-            if (key !== 'id' && !updatedItem.hasOwnProperty(key)) {
+            if (key !== 'id' && !Object.prototype.hasOwnProperty.call(updatedItem, key)) {
               updatedItem[key] = null;
             }
           });
