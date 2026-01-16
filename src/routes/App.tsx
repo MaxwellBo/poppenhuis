@@ -1,10 +1,10 @@
 import React from "react";
-import { Outlet, useLocation, useNavigation } from "react-router";
+import { useRouter } from "next/router";
 
 
-const commit = import.meta.env.COMMIT_REF?.slice(0, 7) || "HEAD";
-const deployId = import.meta.env.DEPLOY_ID || ""
-let context = (import.meta.env.CONTEXT || 'local');
+const commit = process.env.NEXT_PUBLIC_COMMIT_REF?.slice(0, 7) || "HEAD";
+const deployId = process.env.NEXT_PUBLIC_DEPLOY_ID || ""
+let context = (process.env.NEXT_PUBLIC_CONTEXT || 'local');
 if (context === 'production') {
   context = 'prod';
 }
@@ -16,7 +16,7 @@ export default function App() {
       <ScrollToTop />
       <div id='content-container'>
         <main>
-          <Outlet />
+          {/* Outlet is replaced by children in Next.js */}
         </main>
         <footer className='no-print'>
             <small style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -82,18 +82,41 @@ function VelocityDesignComfort() {
 }
 
 function ScrollToTop() {
-  const { pathname } = useLocation();
+  const router = useRouter();
 
   React.useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
+    const handleRouteChange = () => {
+      window.scrollTo(0, 0);
+    };
+
+    router.events.on('routeChangeComplete', handleRouteChange);
+
+    return () => {
+      router.events.off('routeChangeComplete', handleRouteChange);
+    };
+  }, [router]);
 
   return null;
 }
 
 function LoadingStatus() {
-  const navigation = useNavigation();
-  const isLoading = navigation.state === 'loading';
+  const router = useRouter();
+  const [isLoading, setIsLoading] = React.useState(false);
+
+  React.useEffect(() => {
+    const handleStart = () => setIsLoading(true);
+    const handleComplete = () => setIsLoading(false);
+
+    router.events.on('routeChangeStart', handleStart);
+    router.events.on('routeChangeComplete', handleComplete);
+    router.events.on('routeChangeError', handleComplete);
+
+    return () => {
+      router.events.off('routeChangeStart', handleStart);
+      router.events.off('routeChangeComplete', handleComplete);
+      router.events.off('routeChangeError', handleComplete);
+    };
+  }, [router]);
 
   return isLoading ? <Spinner /> : null;
 }

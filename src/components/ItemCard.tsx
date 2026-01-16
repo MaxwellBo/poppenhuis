@@ -1,7 +1,7 @@
 import { Item, Collection, User } from '../manifest';
 import { ModelSize } from './ModelViewerWrapper';
 import { ModelViewerWrapper } from './ModelViewerWrapper';
-import { QueryPreservingLink } from './QueryPreservingLink';
+import { QueryPreservingLink } from './NextQueryPreservingLink';
 
 
 export function ItemCard(props: { 

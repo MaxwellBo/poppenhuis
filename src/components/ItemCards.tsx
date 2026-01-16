@@ -1,6 +1,6 @@
 import { Collection, User, Item } from '../manifest';
 import { ItemCard } from './ItemCard';
-import { QueryPreservingLink } from './QueryPreservingLink';
+import { QueryPreservingLink } from './NextQueryPreservingLink';
 
 export type FlatItem = { item: Item; collection: Collection; user: User };
 

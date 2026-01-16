@@ -4,9 +4,9 @@ import { useRouter } from 'next/router';
 import '../src/index.css';
 import '../src/routes/label.css';
 
-const commit = process.env.COMMIT_REF?.slice(0, 7) || "HEAD";
-const deployId = process.env.DEPLOY_ID || ""
-let context = (process.env.CONTEXT || 'local');
+const commit = process.env.NEXT_PUBLIC_COMMIT_REF?.slice(0, 7) || "HEAD";
+const deployId = process.env.NEXT_PUBLIC_DEPLOY_ID || ""
+let context = (process.env.NEXT_PUBLIC_CONTEXT || 'local');
 if (context === 'production') {
   context = 'prod';
 }

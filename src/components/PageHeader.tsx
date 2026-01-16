@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { QueryPreservingLink } from './QueryPreservingLink';
+import { QueryPreservingLink } from './NextQueryPreservingLink';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { auth } from '../firebase';
 

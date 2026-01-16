@@ -14,10 +14,17 @@ export function QueryPreservingLink(props: {
   const router = useRouter();
   const linkRef = useRef<HTMLAnchorElement>(null);
 
-  // Preserve query params
+  // List of dynamic route parameters that should not be preserved as query params
+  const routeParams = new Set(['userId', 'collectionId', 'itemId']);
+
+  // Preserve query params - only use query if router is ready to avoid hydration mismatch
   const searchParams = new URLSearchParams();
-  if (router.query) {
+  if (router.isReady && router.query) {
     Object.entries(router.query).forEach(([key, value]) => {
+      // Skip route parameters
+      if (routeParams.has(key)) {
+        return;
+      }
       if (Array.isArray(value)) {
         value.forEach(v => searchParams.append(key, v));
       } else if (value) {
@@ -62,8 +69,8 @@ export function QueryPreservingLink(props: {
     };
   }, [props.triggerKey]);
 
-  // Determine if link is active
-  const isActive = router.pathname === props.to || router.asPath.startsWith(props.to + '/');
+  // Determine if link is active - only check after router is ready to avoid hydration mismatch
+  const isActive = router.isReady && (router.pathname === props.to || router.asPath.startsWith(props.to + '/'));
   const className = isActive ? `${props.className} active` : props.className;
 
   return (
