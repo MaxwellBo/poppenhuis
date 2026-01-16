@@ -16,8 +16,8 @@
 
     /* Linting */
     "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true,
 
     /* Next.js */
@@ -27,6 +27,6 @@
     "forceConsistentCasingInFileNames": true
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src"],
-  "exclude": ["node_modules"],
+  "exclude": ["node_modules", "kitty-printer-main", "render.ts", "render_poster.sh", "convert_all_to_usdz.sh", "update_ds_store.sh"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

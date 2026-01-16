@@ -2,6 +2,7 @@ import React from 'react';
 import type { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
 import '../src/index.css';
+import '../src/routes/label.css';
 
 const commit = process.env.COMMIT_REF?.slice(0, 7) || "HEAD";
 const deployId = process.env.DEPLOY_ID || ""

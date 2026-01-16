@@ -10,10 +10,15 @@ declare global {
   }
 }
 
+import { GetServerSideProps } from 'next';
 import { PageHeader } from '../src/components/PageHeader';
 import { useEffect, useState } from 'react';
 import { DSStoreParser, DSStoreRecord, formatDSStoreValue, getFieldName } from '../src/utils/dsstore-parser';
 import { extractFilePositions, filterGlbPositions, calculateBounds, FilePosition } from '../src/utils/dsstore-helpers';
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  return { props: {} };
+};
 
 export default function DebugPage() {
   const [dsStoreData, setDsStoreData] = useState<DSStoreRecord[] | null>(null);

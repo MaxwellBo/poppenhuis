@@ -1,12 +1,17 @@
+import { GetServerSideProps } from 'next';
 import React, { useState } from "react";
 import { useRouter } from "next/router";
 import Head from 'next/head';
 import { FirebaseForm } from "../../../src/components/FirebaseForm";
 import { ITEM_FIELD_SCHEMAS } from "../../../src/manifest";
 import { useFirebaseForm } from "../../../src/hooks/useFirebaseForm";
-import { useFirebaseSubmit } from "../../../src/hooks/useFirebaseSubmit";
+import { useNextFirebaseSubmit } from "../../../src/hooks/useNextFirebaseSubmit";
 import { QueryPreservingLink as NextQueryPreservingLink } from "../../../src/components/NextQueryPreservingLink";
 import { PageHeader } from "../../../src/components/PageHeader";
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  return { props: {} };
+};
 
 export default function NewItemPage() {
   const router = useRouter();
@@ -22,7 +27,7 @@ export default function NewItemPage() {
     cleanFormData,
   } = useFirebaseForm({ initialData: { name: '' } });
 
-  const { isSubmitting, error, upsertItem } = useFirebaseSubmit();
+  const { isSubmitting, error, upsertItem } = useNextFirebaseSubmit();
 
   const handleModelFileSelect = (file: File | null) => {
     setModelFile(file);

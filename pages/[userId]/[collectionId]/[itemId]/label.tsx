@@ -2,7 +2,6 @@ import { GetServerSideProps } from "next";
 import { loadItem } from "../../../../src/manifest-extras";
 import { QueryPreservingLink as NextQueryPreservingLink } from "../../../../src/components/NextQueryPreservingLink";
 import { QrCode } from "../../../../src/components/QrCode";
-import '../../../../src/routes/label.css'
 import type { Item, Collection, User } from "../../../../src/manifest";
 
 interface WallLabelPageProps {

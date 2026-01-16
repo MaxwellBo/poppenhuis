@@ -1,10 +1,15 @@
+import { GetServerSideProps } from 'next';
 import React, { useState } from "react";
 import Head from 'next/head';
 import { FirebaseForm } from "../src/components/FirebaseForm";
 import { USER_FIELD_SCHEMAS } from "../src/manifest";
 import { useFirebaseForm } from "../src/hooks/useFirebaseForm";
-import { useFirebaseSubmit } from "../src/hooks/useFirebaseSubmit";
+import { useNextFirebaseSubmit } from "../src/hooks/useNextFirebaseSubmit";
 import { PageHeader } from "../src/components/PageHeader";
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  return { props: {} };
+};
 
 export default function NewUserPage() {
   const [userId, setUserId] = useState("");
@@ -17,7 +22,7 @@ export default function NewUserPage() {
     cleanFormData,
   } = useFirebaseForm({ initialData: { name: '' } });
 
-  const { isSubmitting, error, upsertUser } = useFirebaseSubmit();
+  const { isSubmitting, error, upsertUser } = useNextFirebaseSubmit();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

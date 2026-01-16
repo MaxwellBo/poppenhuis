@@ -4,7 +4,7 @@ import Head from 'next/head';
 import { FirebaseForm } from "../../../src/components/FirebaseForm";
 import { COLLECTION_FIELD_SCHEMAS } from "../../../src/manifest";
 import { useFirebaseForm } from "../../../src/hooks/useFirebaseForm";
-import { useFirebaseSubmit } from "../../../src/hooks/useFirebaseSubmit";
+import { useNextFirebaseSubmit } from "../../../src/hooks/useNextFirebaseSubmit";
 import { loadCollection } from "../../../src/manifest-extras";
 import { QueryPreservingLink as NextQueryPreservingLink } from "../../../src/components/NextQueryPreservingLink";
 import { PageHeader } from "../../../src/components/PageHeader";
@@ -43,7 +43,7 @@ export default function EditCollectionPage({ collection, user }: EditCollectionP
     handleDeleteField,
   } = useFirebaseForm();
 
-  const { isSubmitting, error, upsertCollection } = useFirebaseSubmit();
+  const { isSubmitting, error, upsertCollection } = useNextFirebaseSubmit();
 
   useEffect(() => {
     setFormData({ ...collection });

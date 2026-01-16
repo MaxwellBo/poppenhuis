@@ -4,7 +4,7 @@ import Head from 'next/head';
 import { FirebaseForm } from "../../../../src/components/FirebaseForm";
 import { ITEM_FIELD_SCHEMAS } from "../../../../src/manifest";
 import { useFirebaseForm } from "../../../../src/hooks/useFirebaseForm";
-import { useFirebaseSubmit } from "../../../../src/hooks/useFirebaseSubmit";
+import { useNextFirebaseSubmit } from "../../../../src/hooks/useNextFirebaseSubmit";
 import { loadItem } from "../../../../src/manifest-extras";
 import { QueryPreservingLink as NextQueryPreservingLink } from "../../../../src/components/NextQueryPreservingLink";
 import { PageHeader } from "../../../../src/components/PageHeader";
@@ -47,7 +47,7 @@ export default function EditItemPage({ item, collection, user }: EditItemPagePro
     handleDeleteField,
   } = useFirebaseForm();
 
-  const { isSubmitting, error, upsertItem } = useFirebaseSubmit();
+  const { isSubmitting, error, upsertItem } = useNextFirebaseSubmit();
 
   useEffect(() => {
     setFormData({ ...item });

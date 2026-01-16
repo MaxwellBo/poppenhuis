@@ -1,3 +1,4 @@
+import { GetServerSideProps } from 'next';
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import {
@@ -15,6 +16,10 @@ import { auth } from '../src/firebase';
 import { PageHeader } from '../src/components/PageHeader';
 
 type AuthMode = 'password' | 'emaillink';
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  return { props: {} };
+};
 
 export default function AuthPage() {
   const router = useRouter();

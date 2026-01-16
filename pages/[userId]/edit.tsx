@@ -4,7 +4,7 @@ import Head from 'next/head';
 import { FirebaseForm } from "../../src/components/FirebaseForm";
 import { USER_FIELD_SCHEMAS } from "../../src/manifest";
 import { useFirebaseForm } from "../../src/hooks/useFirebaseForm";
-import { useFirebaseSubmit } from "../../src/hooks/useFirebaseSubmit";
+import { useNextFirebaseSubmit } from "../../src/hooks/useNextFirebaseSubmit";
 import { loadUser } from "../../src/manifest-extras";
 import { QueryPreservingLink as NextQueryPreservingLink } from "../../src/components/NextQueryPreservingLink";
 import { PageHeader } from "../../src/components/PageHeader";
@@ -41,7 +41,7 @@ export default function EditUserPage({ user }: EditUserPageProps) {
     handleDeleteField,
   } = useFirebaseForm();
 
-  const { isSubmitting, error, upsertUser } = useFirebaseSubmit();
+  const { isSubmitting, error, upsertUser } = useNextFirebaseSubmit();
 
   useEffect(() => {
     setFormData({ ...user });

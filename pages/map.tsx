@@ -1,11 +1,16 @@
 import { GetServerSideProps } from 'next';
 import { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
 import { loadUsers } from '../src/manifest-extras';
 import type { Item } from '../src/manifest';
 import { PageHeader } from '../src/components/PageHeader';
-import { ModelViewerWrapper } from '../src/components/ModelViewerWrapper';
 import { DSStoreParser, DSStoreRecord } from '../src/utils/dsstore-parser';
 import { extractFilePositions, filterGlbPositions, calculateBounds, FilePosition } from '../src/utils/dsstore-helpers';
+
+const ModelViewerWrapper = dynamic(
+  () => import('../src/components/ModelViewerWrapper').then(mod => mod.ModelViewerWrapper),
+  { ssr: false }
+);
 
 interface MapPageProps {
   syncUsers: ReturnType<typeof loadUsers>['syncUsers'];

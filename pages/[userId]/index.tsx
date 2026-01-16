@@ -1,6 +1,6 @@
 import { GetServerSideProps } from "next";
 import { Size } from '../../src/components/Size';
-import { ItemCards } from '../../src/components/ItemCards';
+import { ItemCards } from '../../src/components/NextItemCards';
 import { Collection, User } from "../../src/manifest";
 import { loadUser } from "../../src/manifest-extras";
 import { metaForUser } from "../../src/meta";

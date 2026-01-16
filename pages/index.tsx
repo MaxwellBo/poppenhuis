@@ -4,7 +4,7 @@ import { loadUsers } from "../src/manifest-extras";
 import type { User } from "../src/manifest";
 import { MANIFEST_URL_QUERY_PARAM, MANIFEST_SCHEMA, ARENA_PREFIX } from "../src/manifest";
 import { Size } from '../src/components/Size';
-import { ItemCard } from '../src/components/ItemCard';
+import { ItemCard } from '../src/components/NextItemCard';
 import { DEFAULT_META } from "../src/meta";
 import { NextMetaHead } from "../src/nextMeta";
 import { QueryPreservingLink as NextQueryPreservingLink } from "../src/components/NextQueryPreservingLink";
@@ -18,8 +18,6 @@ interface UsersPageProps {
 }
 
 export const getServerSideProps: GetServerSideProps<UsersPageProps> = async (context) => {
-  const manifestUrl = context.query[MANIFEST_URL_QUERY_PARAM] as string | undefined;
-  
   const request = new Request(`http://localhost${context.resolvedUrl}`);
   const result = loadUsers({ request });
   

@@ -1,8 +1,13 @@
 import { GetServerSideProps } from "next";
+import dynamic from "next/dynamic";
 import { loadItem } from "../../../../src/manifest-extras";
 import { QueryPreservingLink as NextQueryPreservingLink } from "../../../../src/components/NextQueryPreservingLink";
-import { ModelViewerWrapper } from "../../../../src/components/ModelViewerWrapper";
 import type { Item, Collection, User } from "../../../../src/manifest";
+
+const ModelViewerWrapper = dynamic(
+  () => import("../../../../src/components/ModelViewerWrapper").then(mod => mod.ModelViewerWrapper),
+  { ssr: false }
+);
 
 interface EmbedPageProps {
   item: Item;

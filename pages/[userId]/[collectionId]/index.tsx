@@ -1,6 +1,6 @@
 import { GetServerSideProps } from "next";
 import { Size } from '../../../src/components/Size';
-import { ItemCards } from '../../../src/components/ItemCards';
+import { ItemCards } from '../../../src/components/NextItemCards';
 import { loadCollection } from "../../../src/manifest-extras";
 import { metaForCollection } from "../../../src/meta";
 import Markdown from "react-markdown";

@@ -3,18 +3,27 @@ import { loadItem } from "../../../../src/manifest-extras";
 import React, { useRef } from "react";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
-import { GlobalItemCards } from '../../../../src/components/ItemCards';
-import { ItemCard } from '../../../../src/components/ItemCard';
+import dynamic from "next/dynamic";
+import { GlobalItemCards } from '../../../../src/components/NextItemCards';
+import { ItemCard } from '../../../../src/components/NextItemCard';
 import { metaForItem } from "../../../../src/meta";
 import Markdown from "react-markdown";
-import { ModelViewerWrapper } from "../../../../src/components/ModelViewerWrapper";
 import { QueryPreservingLink as NextQueryPreservingLink } from "../../../../src/components/NextQueryPreservingLink";
 import { NextMetaHead } from "../../../../src/nextMeta";
 import { PageHeader } from "../../../../src/components/PageHeader";
 import { QrCode } from "../../../../src/components/QrCode";
-import { AFrameScene } from "../../../../src/components/AFrameScene";
 import { PrintToCatPrinterButton } from "../../../../src/components/PrintToCatPrinterButton";
 import * as yaml from 'js-yaml';
+
+const ModelViewerWrapper = dynamic(
+  () => import("../../../../src/components/ModelViewerWrapper").then(mod => mod.ModelViewerWrapper),
+  { ssr: false }
+);
+
+const AFrameScene = dynamic(
+  () => import("../../../../src/components/AFrameScene").then(mod => mod.AFrameScene),
+  { ssr: false }
+);
 
 interface ItemPageProps {
   item: Item;
