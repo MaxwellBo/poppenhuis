@@ -2,12 +2,11 @@
   "name": "poppenhuis",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview",
     "test": "vitest"
   },
   "dependencies": {
@@ -29,6 +28,7 @@
   "devDependencies": {
     "@netlify/edge-functions": "^2.11.1",
     "@types/aframe": "^1.2.8",
+    "@types/node": "^25.0.9",
     "@types/qrcode": "^1.5.5",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
