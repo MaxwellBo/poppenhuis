@@ -242,7 +242,7 @@ function ArenaUserLoader() {
       The following (shareable!) link will only display channels that contain blocks uploaded as <code>.glb</code> files:
       <br />
       <NextQueryPreservingLink to={`/${ARENA_PREFIX}${userSlug}`}>
-        {typeof window !== 'undefined' ? window.location.origin : ''}/{ARENA_PREFIX}{userSlug}
+        /{ARENA_PREFIX}{userSlug}
       </NextQueryPreservingLink>
       <br />
       <br />
