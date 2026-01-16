@@ -14,7 +14,6 @@ if (context === 'production') {
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <div>
-      <ScrollToTop />
       <div id='content-container'>
         <main>
           <Component {...pageProps} />
@@ -80,21 +79,4 @@ function VelocityDesignComfort() {
     </div>
   </>
   );
-}
-
-function ScrollToTop() {
-  const router = useRouter();
-
-  React.useEffect(() => {
-    const handleRouteChange = () => {
-      window.scrollTo(0, 0);
-    };
-
-    router.events.on('routeChangeComplete', handleRouteChange);
-    return () => {
-      router.events.off('routeChangeComplete', handleRouteChange);
-    };
-  }, [router.events]);
-
-  return null;
 }
