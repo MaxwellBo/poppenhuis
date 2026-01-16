@@ -27,6 +27,6 @@
     "forceConsistentCasingInFileNames": true
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src"],
-  "exclude": ["node_modules", "kitty-printer-main", "render.ts", "render_poster.sh", "convert_all_to_usdz.sh", "update_ds_store.sh"],
+  "exclude": ["node_modules", "kitty-printer-main", "render.ts", "render_poster.sh", "convert_all_to_usdz.sh", "update_ds_store.sh", "src/main.tsx", "src/routes"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

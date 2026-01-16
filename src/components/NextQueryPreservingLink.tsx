@@ -1,4 +1,4 @@
-import React, { KeyboardEvent, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
@@ -47,7 +47,7 @@ export function QueryPreservingLink(props: {
       return;
     }
 
-    const handleKeyDown = (event: KeyboardEvent) => {
+    const handleKeyDown = (event: globalThis.KeyboardEvent) => {
       if (event.key === props.triggerKey) {
         if (linkRef.current) {
           linkRef.current.click();
@@ -55,11 +55,9 @@ export function QueryPreservingLink(props: {
       }
     };
 
-    // @ts-ignore
     window.addEventListener('keydown', handleKeyDown);
 
     return () => {
-      // @ts-ignore
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [props.triggerKey]);

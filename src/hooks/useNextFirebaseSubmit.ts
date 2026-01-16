@@ -86,8 +86,8 @@ export function useNextFirebaseSubmit(options: UseFirebaseSubmitOptions = {}) {
         if (!isCreating) {
           Object.keys(currentData).forEach(key => {
             if (key !== 'collections' && key !== 'id' && !updatedUser.hasOwnProperty(key)) {
-              // @ts-ignore dont care lol
-              updatedUser[key] = null;
+              // Set removed fields to null to delete them from Firebase
+              (updatedUser as any)[key] = null;
             }
           });
         }
