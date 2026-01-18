@@ -133,8 +133,18 @@ export function FirebaseForm({
     );
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLFormElement>) => {
+    // Check for Command+Enter (Mac) or Ctrl+Enter (Windows/Linux)
+    if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+      e.preventDefault();
+      const form = e.currentTarget;
+      // Trigger form submission
+      form.requestSubmit();
+    }
+  };
+
   return (
-    <form onSubmit={onSubmit} className="table-form">
+    <form onSubmit={onSubmit} onKeyDown={handleKeyDown} className="table-form">
         {idField && (
           <div className="table-form-row">
             <label htmlFor={idField.name}>{idField.label}</label>
