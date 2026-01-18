@@ -243,6 +243,7 @@ export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef
     return undefined;
   };
 
+  const captureLocationValue = getCaptureLocation();
   const itemUrl = `poppenhu.is/${user.id}/${collection.id}/${item.id}`;
   const printDate = new Date().toLocaleDateString();
 
@@ -276,6 +277,7 @@ export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef
       {/* Hidden receipt structure that html2canvas will render */}
       <div
         ref={receiptRef}
+        aria-hidden="true"
         style={{
           position: 'absolute',
           left: '-9999px',
@@ -336,7 +338,7 @@ export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef
             <span style={{ color: 'black' }}>{item.manufactureLocation}</span>
           </div>
         )}
-        {item.material && item.material.length > 0 && (
+        {item.material && Array.isArray(item.material) && item.material.length > 0 && (
           <div style={{ marginBottom: '20px' }}>
             <span style={{ color: 'black' }}>material: </span>
             <span style={{ color: 'black' }}>{item.material.join(', ')}</span>
@@ -366,10 +368,10 @@ export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef
             <span style={{ color: 'black' }}>{item.captureDate}</span>
           </div>
         )}
-        {getCaptureLocation() && (
+        {captureLocationValue && (
           <div style={{ marginBottom: '20px' }}>
             <span style={{ color: 'black' }}>capture location: </span>
-            <span style={{ color: 'black' }}>{getCaptureLocation()}</span>
+            <span style={{ color: 'black' }}>{captureLocationValue}</span>
           </div>
         )}
         {item.captureDevice && (
