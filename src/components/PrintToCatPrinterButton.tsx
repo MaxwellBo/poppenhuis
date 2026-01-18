@@ -396,10 +396,12 @@ export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef
           if (value === undefined || (Array.isArray(value) && value.length === 0)) {
             return null;
           }
+          // Format the display value
+          const displayValue = Array.isArray(value) ? value.join(', ') : String(value);
           return (
             <div key={key} style={{ marginBottom: '20px' }}>
               <span style={{ color: 'black' }}>{key}: </span>
-              <span style={{ color: 'black' }}>{value}</span>
+              <span style={{ color: 'black' }}>{displayValue}</span>
             </div>
           );
         })}
