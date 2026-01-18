@@ -1,5 +1,5 @@
 import { Collection, Item, ITEM_FIELD_SCHEMAS, User } from "../manifest";
-import { loadItem } from "../manifest-extras";
+import { loadItem } from "../manifest";
 import React, { useRef } from "react";
 import { useLoaderData, useSearchParams } from "react-router";
 import { GlobalItemCards } from '../components/ItemCards';

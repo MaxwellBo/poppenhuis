@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useLoaderData } from 'react-router';
-import { loadUsers } from '../manifest-extras';
+import { loadUsers } from '../manifest';
 import type { Item } from '../manifest';
 import { PageHeader } from '../components/PageHeader';
 import { ModelViewerWrapper } from '../components/ModelViewerWrapper';

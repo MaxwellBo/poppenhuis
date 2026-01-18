@@ -40,13 +40,13 @@ export default async function handler(request: Request, context: Context) {
 
   try {
     if (itemId) {
-      const { item, collection, user } = await loadItem({ params });
+      const { item, collection, user } = await loadItem({ params, request });
       meta = metaForItem(item, collection, user);
     } else if (collectionId) {
-      const { collection, user } = await loadCollection({ params });
+      const { collection, user } = await loadCollection({ params, request });
       meta = metaForCollection(collection, user);
     } else if (userId) {
-      const { user } = await loadUser({ params });
+      const { user } = await loadUser({ params, request });
       meta = metaForUser(user);
     }
   } catch (error) {

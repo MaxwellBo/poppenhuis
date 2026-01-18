@@ -1,5 +1,5 @@
 import { useLoaderData } from "react-router";
-import { loadItem } from "../manifest-extras";
+import { loadItem } from "../manifest";
 import { QueryPreservingLink } from "../components/QueryPreservingLink";
 import { QrCode } from "../components/QrCode";
 import './label.css'

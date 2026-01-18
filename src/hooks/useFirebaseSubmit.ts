@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router';
 import { rtdb, storage, auth } from '../firebase';
 import { ref, get, runTransaction } from 'firebase/database';
 import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { FirebaseUser } from '../manifest-extras';
+import { FirebaseUser } from '../manifest';
 import JSZip from 'jszip';
 
 interface UseFirebaseSubmitOptions {
