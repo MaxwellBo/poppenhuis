@@ -136,10 +136,14 @@ export function FirebaseForm({
   const handleKeyDown = (e: React.KeyboardEvent<HTMLFormElement>) => {
     // Check for Command+Enter (Mac) or Ctrl+Enter (Windows/Linux)
     if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
-      e.preventDefault();
-      const form = e.currentTarget;
-      // Trigger form submission
-      form.requestSubmit();
+      const target = e.target as HTMLElement;
+      // Only trigger from input fields and textareas, not from buttons
+      if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
+        e.preventDefault();
+        const form = e.currentTarget;
+        // Trigger form submission with validation
+        form.requestSubmit();
+      }
     }
   };
 
