@@ -1,11 +1,13 @@
 import React, { useEffect } from "react";
 import { GetServerSideProps } from "next";
+import { useRouter } from "next/router";
 import Head from 'next/head';
 import { FirebaseForm } from "../../src/components/FirebaseForm";
 import { USER_FIELD_SCHEMAS } from "../../src/manifest";
 import { useFirebaseForm } from "../../src/hooks/useFirebaseForm";
 import { useNextFirebaseSubmit } from "../../src/hooks/useNextFirebaseSubmit";
 import { loadUser } from "../../src/manifest-extras";
+import { useLoadUser } from "../../src/hooks/useLoadUser";
 import { QueryPreservingLink as NextQueryPreservingLink } from "../../src/components/NextQueryPreservingLink";
 import { PageHeader } from "../../src/components/PageHeader";
 import type { User } from "../../src/manifest";
@@ -32,7 +34,21 @@ export const getServerSideProps: GetServerSideProps<EditUserPageProps> = async (
   }
 };
 
-export default function EditUserPage({ user }: EditUserPageProps) {
+export default function EditUserPage({ user: initialUser }: EditUserPageProps) {
+  const router = useRouter();
+  const { userId } = router.query;
+  
+  // Use client-side hook after initial load
+  const { user: clientUser, loading: loadingUser } = useLoadUser(userId as string);
+  
+  // On first render (server-side), use the props. After hydration, use client-side data
+  const [isClient, setIsClient] = React.useState(false);
+  
+  React.useEffect(() => {
+    setIsClient(true);
+  }, []);
+  
+  const user = isClient && clientUser ? clientUser : initialUser;
   const {
     formData,
     setFormData,

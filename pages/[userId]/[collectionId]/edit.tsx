@@ -1,11 +1,13 @@
 import React, { useEffect } from "react";
 import { GetServerSideProps } from "next";
+import { useRouter } from "next/router";
 import Head from 'next/head';
 import { FirebaseForm } from "../../../src/components/FirebaseForm";
 import { COLLECTION_FIELD_SCHEMAS } from "../../../src/manifest";
 import { useFirebaseForm } from "../../../src/hooks/useFirebaseForm";
 import { useNextFirebaseSubmit } from "../../../src/hooks/useNextFirebaseSubmit";
 import { loadCollection } from "../../../src/manifest-extras";
+import { useLoadCollection } from "../../../src/hooks/useLoadCollection";
 import { QueryPreservingLink as NextQueryPreservingLink } from "../../../src/components/NextQueryPreservingLink";
 import { PageHeader } from "../../../src/components/PageHeader";
 import type { Collection, User } from "../../../src/manifest";
@@ -34,7 +36,25 @@ export const getServerSideProps: GetServerSideProps<EditCollectionPageProps> = a
   }
 };
 
-export default function EditCollectionPage({ collection, user }: EditCollectionPageProps) {
+export default function EditCollectionPage({ collection: initialCollection, user: initialUser }: EditCollectionPageProps) {
+  const router = useRouter();
+  const { userId, collectionId } = router.query;
+  
+  // Use client-side hook after initial load
+  const { collection: clientCollection, user: clientUser, loading: loadingCollection } = useLoadCollection(
+    userId as string,
+    collectionId as string
+  );
+  
+  // On first render (server-side), use the props. After hydration, use client-side data
+  const [isClient, setIsClient] = React.useState(false);
+  
+  React.useEffect(() => {
+    setIsClient(true);
+  }, []);
+  
+  const collection = isClient && clientCollection ? clientCollection : initialCollection;
+  const user = isClient && clientUser ? clientUser : initialUser;
   const {
     formData,
     setFormData,

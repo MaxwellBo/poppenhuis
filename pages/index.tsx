@@ -9,6 +9,7 @@ import { DEFAULT_META } from "../src/nextMeta";
 import { NextMetaHead } from "../src/nextMeta";
 import { QueryPreservingLink as NextQueryPreservingLink } from "../src/components/NextQueryPreservingLink";
 import { PageHeader } from "../src/components/PageHeader";
+import { useLoadUsers } from "../src/hooks/useLoadUsers";
 
 const EXAMPLE_MANIFEST_URL = 'https://raw.githubusercontent.com/MaxwellBo/maxwellbo.github.io/master/poppenhuis-manifest.json'
 
@@ -32,8 +33,18 @@ export const getServerSideProps: GetServerSideProps<UsersPageProps> = async (con
   };
 };
 
-export default function UsersPage({ syncUsers, asyncUsers }: UsersPageProps) {
-  const allUsers = [...syncUsers, ...asyncUsers];
+export default function UsersPage({ syncUsers: initialSyncUsers, asyncUsers: initialAsyncUsers }: UsersPageProps) {
+  // Use client-side hook after initial load
+  const { allUsers: clientUsers, loading } = useLoadUsers();
+  
+  // On first render (server-side), use the props. After hydration, use client-side data
+  const [isClient, setIsClient] = React.useState(false);
+  
+  React.useEffect(() => {
+    setIsClient(true);
+  }, []);
+  
+  const allUsers = isClient ? clientUsers : [...initialSyncUsers, ...initialAsyncUsers];
   
   return (
     <article>

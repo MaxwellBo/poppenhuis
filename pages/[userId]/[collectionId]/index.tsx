@@ -1,4 +1,6 @@
 import { GetServerSideProps } from "next";
+import { useRouter } from "next/router";
+import React from "react";
 import { Size } from '../../../src/components/Size';
 import { ItemCards } from '../../../src/components/NextItemCards';
 import { loadCollection } from "../../../src/manifest-extras";
@@ -7,6 +9,7 @@ import Markdown from "react-markdown";
 import { NextMetaHead } from '../../../src/nextMeta';
 import { QueryPreservingLink as NextQueryPreservingLink } from '../../../src/components/NextQueryPreservingLink';
 import { PageHeader } from '../../../src/components/PageHeader';
+import { useLoadCollection } from '../../../src/hooks/useLoadCollection';
 import * as yaml from 'js-yaml';
 import type { Collection, User } from "../../../src/manifest";
 
@@ -34,7 +37,29 @@ export const getServerSideProps: GetServerSideProps<CollectionPageProps> = async
   }
 };
 
-export default function CollectionPage({ collection, user }: CollectionPageProps) {
+export default function CollectionPage({ collection: initialCollection, user: initialUser }: CollectionPageProps) {
+  const router = useRouter();
+  const { userId, collectionId } = router.query;
+  
+  // Use client-side hook after initial load
+  const { collection: clientCollection, user: clientUser, loading, error } = useLoadCollection(
+    userId as string,
+    collectionId as string
+  );
+  
+  // On first render (server-side), use the props. After hydration, use client-side data
+  const [isClient, setIsClient] = React.useState(false);
+  
+  React.useEffect(() => {
+    setIsClient(true);
+  }, []);
+  
+  const collection = isClient && clientCollection ? clientCollection : initialCollection;
+  const user = isClient && clientUser ? clientUser : initialUser;
+  
+  if (!collection || !user) {
+    return <div>Loading...</div>;
+  }
   const collectionYaml = yaml.dump(collection);
 
   return <article>

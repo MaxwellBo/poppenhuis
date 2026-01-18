@@ -1,4 +1,6 @@
 import { GetServerSideProps } from "next";
+import { useRouter } from "next/router";
+import React from "react";
 import { Size } from '../../src/components/Size';
 import { ItemCards } from '../../src/components/NextItemCards';
 import { Collection, User } from "../../src/manifest";
@@ -8,6 +10,7 @@ import Markdown from "react-markdown";
 import { QueryPreservingLink as NextQueryPreservingLink } from "../../src/components/NextQueryPreservingLink";
 import { NextMetaHead } from "../../src/nextMeta";
 import { PageHeader } from "../../src/components/PageHeader";
+import { useLoadUser } from "../../src/hooks/useLoadUser";
 import * as yaml from 'js-yaml';
 
 interface UserPageProps {
@@ -36,7 +39,25 @@ export const getServerSideProps: GetServerSideProps<UserPageProps> = async (cont
   }
 };
 
-export default function UserPage({ user }: UserPageProps) {
+export default function UserPage({ user: initialUser }: UserPageProps) {
+  const router = useRouter();
+  const { userId } = router.query;
+  
+  // Use client-side hook after initial load
+  const { user: clientUser, loading, error } = useLoadUser(userId as string);
+  
+  // On first render (server-side), use the props. After hydration, use client-side data
+  const [isClient, setIsClient] = React.useState(false);
+  
+  React.useEffect(() => {
+    setIsClient(true);
+  }, []);
+  
+  const user = isClient && clientUser ? clientUser : initialUser;
+  
+  if (!user) {
+    return <div>Loading...</div>;
+  }
   const userYaml = yaml.dump(user);
 
   return (
