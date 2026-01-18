@@ -7,11 +7,11 @@ export default async function handler(request: Request, context: Context) {
   const url = new URL(request.url);
 
   // Skip transformation for binary assets
-  if (url.pathname.startsWith('/assets/goldens/') || 
-      url.pathname.endsWith('.glb') || 
-      url.pathname.endsWith('.usdz') ||
-      url.pathname.endsWith('.hdr') ||
-      url.pathname.endsWith('.splat')) {
+  if (url.pathname.startsWith('/assets/goldens/') ||
+    url.pathname.endsWith('.glb') ||
+    url.pathname.endsWith('.usdz') ||
+    url.pathname.endsWith('.hdr') ||
+    url.pathname.endsWith('.splat')) {
     return context.next();
   }
 
@@ -19,7 +19,7 @@ export default async function handler(request: Request, context: Context) {
   // This means it's not a direct file request (no extension)
   // OR it's explicitly requesting index.html
   const isIndexHtmlRoute = !url.pathname.includes('.') || url.pathname.endsWith('index.html');
-  
+
   if (!isIndexHtmlRoute) {
     return context.next();
   }
@@ -31,22 +31,22 @@ export default async function handler(request: Request, context: Context) {
   // /:userId, /:userId/:collectionId, /:userId/:collectionId/:itemId
   const pathname = url.pathname;
   const parts = pathname.split("/").filter(Boolean);
-  const userId = parts[0];
-  const collectionId = parts[1];
-  const itemId = parts[2];
+  const userId = parts[0] ? decodeURIComponent(parts[0]) : undefined;
+  const collectionId = parts[1] ? decodeURIComponent(parts[1]) : undefined;
+  const itemId = parts[2] ? decodeURIComponent(parts[2]) : undefined;
   const params = { userId, collectionId, itemId };
 
   let meta = DEFAULT_META;
 
   try {
     if (itemId) {
-      const { item, collection, user } = await loadItem({ params, request });
+      const { item, collection, user } = await loadItem({ params: params as { userId: string; collectionId: string; itemId: string }, request });
       meta = metaForItem(item, collection, user);
     } else if (collectionId) {
-      const { collection, user } = await loadCollection({ params, request });
+      const { collection, user } = await loadCollection({ params: params as { userId: string; collectionId: string }, request });
       meta = metaForCollection(collection, user);
     } else if (userId) {
-      const { user } = await loadUser({ params, request });
+      const { user } = await loadUser({ params: params as { userId: string }, request });
       meta = metaForUser(user);
     }
   } catch (error) {
@@ -58,7 +58,7 @@ export default async function handler(request: Request, context: Context) {
     /<!-- OPEN META -->[\s\S]*?<!-- CLOSE META -->/,
     `<!-- OPEN META -->\n${metaToHtml(meta)}\n  <!-- CLOSE META -->`
   );
-  
+
   return new Response(modifiedHTML, {
     headers: response.headers
   });
