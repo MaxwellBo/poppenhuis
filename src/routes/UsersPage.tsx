@@ -24,28 +24,6 @@ export default function UsersPage() {
         <span>⌂</span>
       </PageHeader>
       <div id="homepage-columns">
-        <section>
-          The following users have collections:
-          <ul>
-            {syncUsers.map((user) => (
-              <UserListEntry key={user.id} user={user} />
-            ))}
-            <React.Suspense fallback={<div>Loading more users...</div>}>
-              <Await resolve={asyncUsersPromise}>
-                {(asyncUsers) => <>{asyncUsers.map((user) => (
-                  <UserListEntry key={user.id} user={user} />
-                ))}</>}
-              </Await>
-            </React.Suspense>
-          </ul>
-          <br />
-          <p>
-          <a href="https://github.com/MaxwellBo/poppenhuis/issues/new?template=put-user.yml">+ new user (in bundle)</a>
-          </p>
-          <p>
-          <a href="/new">+ new user (in firebase)</a>
-          </p>
-        </section>
         <section className='short'>
           <p className="p-spacing">
             poppenhuis (<i>Dutch for "dollhouse"</i>) is a space for sharing collections and their 3D scans.
@@ -131,6 +109,28 @@ export default function UsersPage() {
               If anyone has a solution to this, please reach out to <a href="https://twitter.com/_max_bo_">me on Twitter</a>.
             </div>
           </details>
+        </section>
+        <section>
+          The following users have collections:
+          <ul>
+            {syncUsers.map((user) => (
+              <UserListEntry key={user.id} user={user} />
+            ))}
+            <React.Suspense fallback={<div>Loading more users...</div>}>
+              <Await resolve={asyncUsersPromise}>
+                {(asyncUsers) => <>{asyncUsers.map((user) => (
+                  <UserListEntry key={user.id} user={user} />
+                ))}</>}
+              </Await>
+            </React.Suspense>
+          </ul>
+          <br />
+          <p>
+          <a href="https://github.com/MaxwellBo/poppenhuis/issues/new?template=put-user.yml">+ new user (in bundle)</a>
+          </p>
+          <p>
+          <a href="/new">+ new user (in firebase)</a>
+          </p>
         </section>
       </div>
     </article>
