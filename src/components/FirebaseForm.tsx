@@ -138,7 +138,7 @@ export function FirebaseForm({
     if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
       const target = e.target as HTMLElement;
       // Only trigger from input fields and textareas, not from buttons
-      if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
+      if (target.matches('input, textarea')) {
         e.preventDefault();
         const form = e.currentTarget;
         // Trigger form submission with validation
