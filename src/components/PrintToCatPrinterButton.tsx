@@ -18,6 +18,7 @@ import QRCode from 'qrcode';
 import html2canvas from 'html2canvas';
 
 const RECEIPT_RENDER_DELAY = 3000; // Wait for images to load before rendering
+const QR_CODE_SIZE = 256; // QR code dimensions in pixels
 
 const SPEED = SPEED_RANGE['speed^normal'];
 const ENERGY = ENERGY_RANGE['strength^high'];
@@ -51,7 +52,7 @@ export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef
     QRCode.toDataURL(itemUrl, {
       errorCorrectionLevel: 'low',
       margin: 0,
-      width: 256,
+      width: QR_CODE_SIZE,
       color: {
         light: '#ffffff'
       }
@@ -126,7 +127,7 @@ export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef
   useEffect(() => {
     const delayedRender = async () => {
       await new Promise(resolve => setTimeout(resolve, RECEIPT_RENDER_DELAY));
-      if (receiptRef.current) {
+      if (receiptRef.current && canvasRef.current) {
         await renderReceipt();
         ditherCanvas();
       }
@@ -409,7 +410,7 @@ export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef
         {/* QR Code */}
         {qrCodeUrl && (
           <div style={{ textAlign: 'center', marginTop: '20px', marginBottom: '20px' }}>
-            <img src={qrCodeUrl} alt="QR Code" style={{ width: '256px', height: '256px' }} />
+            <img src={qrCodeUrl} alt="QR Code" style={{ width: `${QR_CODE_SIZE}px`, height: `${QR_CODE_SIZE}px` }} />
           </div>
         )}
 
