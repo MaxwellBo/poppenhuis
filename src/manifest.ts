@@ -1335,6 +1335,8 @@ export async function loadFirebaseUser({ userId }: { userId: string }): Promise<
     collections
   };
 
+  console.log("found firebase user", firebaseUser);
+
   return result;
 }
 
@@ -1376,7 +1378,9 @@ export async function loadUser({ params, request }: { params: { userId: User['id
 
 export async function loadCollection({ params, request }: { params: { userId: User['id']; collectionId: Collection['id']; }; request: Request; }) {
   const { user, users } = await loadUser({ params, request });
+  console.log("found user", user);
   const collection = user.collections.find((collection) => collection.id === params.collectionId);
+  console.log("found collection", collection);
   if (!collection) throw new Error("Collection not found");
   return { collection, user, users };
 }
