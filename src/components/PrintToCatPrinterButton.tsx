@@ -17,6 +17,8 @@ import {
 import QRCode from 'qrcode';
 import html2canvas from 'html2canvas';
 
+const RECEIPT_RENDER_DELAY = 3000; // Wait for images to load before rendering
+
 const SPEED = SPEED_RANGE['speed^normal'];
 const ENERGY = ENERGY_RANGE['strength^high'];
 
@@ -123,7 +125,7 @@ export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef
   // Render receipt on mount
   useEffect(() => {
     const delayedRender = async () => {
-      await new Promise(resolve => setTimeout(resolve, 3000));
+      await new Promise(resolve => setTimeout(resolve, RECEIPT_RENDER_DELAY));
       if (receiptRef.current) {
         await renderReceipt();
         ditherCanvas();
@@ -296,7 +298,7 @@ export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef
             <img
               src={imageUrl}
               alt={item.name}
-              style={{ width: '100%', display: 'block' }}
+              style={{ width: '100%', height: 'auto', display: 'block' }}
               crossOrigin="anonymous"
             />
           </div>
@@ -389,12 +391,18 @@ export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef
         )}
 
         {/* Custom fields */}
-        {item.customFields && Object.entries(item.customFields).map(([key, value]) => (
-          <div key={key} style={{ marginBottom: '20px' }}>
-            <span style={{ color: 'black' }}>{key}: </span>
-            <span style={{ color: 'black' }}>{value}</span>
-          </div>
-        ))}
+        {item.customFields && Object.entries(item.customFields).map(([key, value]) => {
+          // Skip undefined or empty array values
+          if (value === undefined || (Array.isArray(value) && value.length === 0)) {
+            return null;
+          }
+          return (
+            <div key={key} style={{ marginBottom: '20px' }}>
+              <span style={{ color: 'black' }}>{key}: </span>
+              <span style={{ color: 'black' }}>{value}</span>
+            </div>
+          );
+        })}
 
         {/* QR Code */}
         {qrCodeUrl && (
