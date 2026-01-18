@@ -15,6 +15,7 @@ import {
   DEF_SPEED,
 } from '../../kitty-printer-main/common/constants';
 import QRCode from 'qrcode';
+import html2canvas from 'html2canvas';
 
 const SPEED = SPEED_RANGE['speed^normal'];
 const ENERGY = ENERGY_RANGE['strength^high'];
@@ -36,215 +37,60 @@ declare global {
 
 export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef }: PrintToCatPrinterButtonProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const receiptRef = useRef<HTMLDivElement>(null);
   const [isPrinting, setIsPrinting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [qrCodeUrl, setQrCodeUrl] = useState<string | null>(null);
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+
+  // Generate QR code URL
+  useEffect(() => {
+    const itemUrl = `poppenhu.is/${user.id}/${collection.id}/${item.id}`;
+    QRCode.toDataURL(itemUrl, {
+      errorCorrectionLevel: 'low',
+      margin: 0,
+      width: 256,
+      color: {
+        light: '#ffffff'
+      }
+    }, function (err, url) {
+      if (!err && url) {
+        setQrCodeUrl(url);
+      }
+    });
+  }, [item, collection, user]);
+
+  // Get image from OG or model viewer
+  useEffect(() => {
+    if (item.og) {
+      setImageUrl(item.og);
+    } else if (modelViewerRef?.current) {
+      const modelViewerCanvas = modelViewerRef.current.shadowRoot?.querySelector('canvas');
+      if (modelViewerCanvas) {
+        setImageUrl(modelViewerCanvas.toDataURL());
+      }
+    }
+  }, [item, modelViewerRef]);
 
   const renderReceipt = async () => {
     const canvas = canvasRef.current;
-    if (!canvas) throw new Error('Canvas not found');
+    const receiptElement = receiptRef.current;
+    if (!canvas || !receiptElement) throw new Error('Canvas or receipt element not found');
 
-    // First pass: measure content height
-    const measureCanvas = document.createElement('canvas');
-    measureCanvas.width = DEF_CANVAS_WIDTH;
-    measureCanvas.height = 10000; // Large temporary height for measurement
-
-    const { actualHeight } = await renderReceiptToCanvas(measureCanvas);
-
-    // Second pass: render to actual canvas with correct height
-    canvas.width = DEF_CANVAS_WIDTH;
-    canvas.height = actualHeight;
-    await renderReceiptToCanvas(canvas);
-  };
-
-  const renderReceiptToCanvas = async (canvas: HTMLCanvasElement): Promise<{ actualHeight: number }> => {
-    const ctx = canvas.getContext('2d');
-    if (!ctx) throw new Error('Canvas context not found');
-
-    const SPACING = 20;
-
-    // White background
-    ctx.fillStyle = 'white';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    let yPos = 30; // Reduced from 40
-
-    // Smaller text
-    ctx.font = 'bold 12px monospace'; // Reduced from 24px
-    ctx.textAlign = 'left';
-
-    // Helper to add a simple text line
-    const addSimpleLine = (text: string) => {
-      ctx.fillStyle = 'black';
-      ctx.fillText(text, 10, yPos);
-      yPos += SPACING;
-    };
-
-    // Helper to add a key-value line, skip if value is undefined or []
-    const addKeyValueLine = (key: string, value: any) => {
-      // Skip if undefined or empty array
-      if (value === undefined || (Array.isArray(value) && value.length === 0)) {
-        return;
-      }
-
-      // Format the display value
-      const displayValue = Array.isArray(value) ? value.join(', ') : String(value);
-
-      // Draw key in black
-      ctx.fillStyle = 'black';
-      const keyText = `${key}: `;
-      ctx.fillText(keyText, 10, yPos);
-
-      // Draw value in black
-      ctx.fillStyle = 'black';
-      const keyWidth = ctx.measureText(keyText).width;
-      ctx.fillText(displayValue, 10 + keyWidth, yPos);
-
-      yPos += SPACING;
-    };
-
-    // 1. Add title at the top
-    addSimpleLine(`poppenhuis / ${user.name} / ${collection.name} / ${item.name}`);
-
-    // 2. Draw photo - either from og image or from model viewer canvas
-    let imageSource: string | HTMLCanvasElement | null = null;
-
-    if (item.og) {
-      imageSource = item.og;
-    } else if (modelViewerRef?.current) {
-      console.log('Attempting to get model viewer canvas');
-      // Get canvas from model-viewer's shadow DOM
-      const modelViewerCanvas = modelViewerRef.current.shadowRoot?.querySelector('canvas');
-      if (modelViewerCanvas) {
-        console.log('Found model viewer canvas:', modelViewerCanvas.width, 'x', modelViewerCanvas.height);
-        imageSource = modelViewerCanvas;
-      } else {
-        console.warn('Model viewer canvas not found in shadow DOM');
-      }
-    }
-
-    if (imageSource) {
-      await new Promise<void>((resolve) => {
-        const drawImage = (source: HTMLImageElement | HTMLCanvasElement) => {
-          // Make image full width (no margins) to maximize size
-          const imgWidth = canvas.width;
-          // Calculate height to maintain aspect ratio
-          const imgHeight = (source.height / source.width) * imgWidth;
-
-          // Center crop: use full width and let sides get chopped if needed
-          const sx = Math.max(0, (source.width - source.height * (imgWidth / imgHeight)) / 2);
-          const sy = 0;
-          const sWidth = source.width - sx * 2;
-          const sHeight = source.height;
-
-          // Draw the image
-          ctx.drawImage(source, sx, sy, sWidth, sHeight, 0, yPos, imgWidth, imgHeight);
-          yPos += imgHeight + 20;
-
-          resolve();
-        };
-
-        if (typeof imageSource === 'string') {
-          // Load from URL (og image)
-          const img = new Image();
-          img.crossOrigin = 'anonymous';
-
-          img.onload = () => drawImage(img);
-          img.onerror = () => {
-            console.warn('Failed to load OG image:', imageSource);
-            resolve();
-          };
-
-          img.src = imageSource;
-        } else {
-          // Use canvas directly (from model viewer)
-          drawImage(imageSource);
-        }
-      });
-    }
-
-    // 3. Text content - Standard fields first
-    addKeyValueLine('formal name', item.formalName);
-    addKeyValueLine('release date', item.releaseDate);
-    addKeyValueLine('manufacturer', item.manufacturer);
-    addKeyValueLine('manufacture date', item.manufactureDate);
-    addKeyValueLine('manufacture location', item.manufactureLocation);
-    addKeyValueLine('material', item.material);
-    addKeyValueLine('acquisition date', item.acquisitionDate);
-    addKeyValueLine('acquisition location', item.acquisitionLocation);
-    addKeyValueLine('storage location', item.storageLocation);
-    addKeyValueLine('capture date', item.captureDate);
-
-    // Handle capture location (combines captureLocation and captureLatLon like ItemPage)
-    const { captureLocation, captureLatLon } = item;
-    let location;
-    if (captureLocation && captureLatLon) {
-      location = `${captureLocation} (${captureLatLon})`;
-    } else if (captureLocation) {
-      location = captureLocation;
-    } else if (captureLatLon) {
-      location = captureLatLon;
-    }
-    addKeyValueLine('capture location', location);
-    addKeyValueLine('capture device', item.captureDevice);
-    addKeyValueLine('capture app', item.captureApp);
-    addKeyValueLine('capture method', item.captureMethod);
-
-
-    // Custom fields last
-    if (item.customFields && Object.keys(item.customFields).length > 0) {
-      Object.entries(item.customFields).forEach(([key, value]) => {
-        addKeyValueLine(key, value);
-      });
-    }
-
-    // 4. Draw QR code at the end
-    const itemUrl = `poppenhu.is/${user.id}/${collection.id}/${item.id}`;
-    await new Promise<void>((resolve) => {
-      QRCode.toDataURL(itemUrl, {
-        errorCorrectionLevel: 'low',
-        margin: 0,
-        width: 256,
-        color: {
-          light: '#ffffff'
-        }
-      }, function (err, url) {
-        if (!err && url) {
-          const qrImg = new Image();
-          qrImg.onload = () => {
-            // Center the QR code
-            const qrSize = 256;
-            const xOffset = (canvas.width - qrSize) / 2;
-
-            ctx.drawImage(qrImg, xOffset, yPos, qrSize, qrSize);
-            yPos += qrSize + 20;
-
-            resolve();
-          };
-          qrImg.onerror = () => {
-            console.warn('Failed to load QR code');
-            resolve();
-          };
-          qrImg.src = url;
-        } else {
-          console.error('QR Code generation failed:', err);
-          resolve();
-        }
-      });
+    // Use html2canvas to convert the receipt HTML to canvas
+    const generatedCanvas = await html2canvas(receiptElement, {
+      width: DEF_CANVAS_WIDTH,
+      background: '#ffffff',
+      logging: false,
     });
 
-    // 5. Add the URL text underneath QR code
-    addSimpleLine(itemUrl);
-    addSimpleLine(`printed on ${new Date().toLocaleDateString()}`);
-
-    // Draw a black vertical line across the entire canvas height on the left
-    ctx.strokeStyle = 'black';
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.moveTo(0, 0);
-    ctx.lineTo(0, yPos);
-    ctx.stroke();
-
-    return { actualHeight: yPos };
+    // Copy to our canvas ref
+    canvas.width = generatedCanvas.width;
+    canvas.height = generatedCanvas.height;
+    const ctx = canvas.getContext('2d');
+    if (ctx) {
+      ctx.drawImage(generatedCanvas, 0, 0);
+    }
   };
 
   const ditherCanvas = () => {
@@ -278,11 +124,13 @@ export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef
   useEffect(() => {
     const delayedRender = async () => {
       await new Promise(resolve => setTimeout(resolve, 3000));
-      await renderReceipt();
-      ditherCanvas();
+      if (receiptRef.current) {
+        await renderReceipt();
+        ditherCanvas();
+      }
     };
     delayedRender();
-  }, [item, collection, user]);
+  }, [item, collection, user, qrCodeUrl, imageUrl]);
 
   const printReceipt = async () => {
     setIsPrinting(true);
@@ -379,6 +227,22 @@ export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef
     }
   };
 
+  // Helper to format capture location
+  const getCaptureLocation = () => {
+    const { captureLocation, captureLatLon } = item;
+    if (captureLocation && captureLatLon) {
+      return `${captureLocation} (${captureLatLon})`;
+    } else if (captureLocation) {
+      return captureLocation;
+    } else if (captureLatLon) {
+      return captureLatLon;
+    }
+    return undefined;
+  };
+
+  const itemUrl = `poppenhu.is/${user.id}/${collection.id}/${item.id}`;
+  const printDate = new Date().toLocaleDateString();
+
   return (
     <>
       <button
@@ -404,6 +268,144 @@ export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef
             />
           </p>
         </details>
+      </div>
+
+      {/* Hidden receipt structure that html2canvas will render */}
+      <div
+        ref={receiptRef}
+        style={{
+          position: 'absolute',
+          left: '-9999px',
+          width: `${DEF_CANVAS_WIDTH}px`,
+          backgroundColor: 'white',
+          fontFamily: 'monospace',
+          fontSize: '12px',
+          fontWeight: 'bold',
+          padding: '10px',
+          borderLeft: '2px solid black',
+        }}
+      >
+        {/* Title */}
+        <div style={{ marginBottom: '20px' }}>
+          poppenhuis / {user.name} / {collection.name} / {item.name}
+        </div>
+
+        {/* Image */}
+        {imageUrl && (
+          <div style={{ marginBottom: '20px' }}>
+            <img
+              src={imageUrl}
+              alt={item.name}
+              style={{ width: '100%', display: 'block' }}
+              crossOrigin="anonymous"
+            />
+          </div>
+        )}
+
+        {/* Metadata fields */}
+        {item.formalName && (
+          <div style={{ marginBottom: '20px' }}>
+            <span style={{ color: 'black' }}>formal name: </span>
+            <span style={{ color: 'black' }}>{item.formalName}</span>
+          </div>
+        )}
+        {item.releaseDate && (
+          <div style={{ marginBottom: '20px' }}>
+            <span style={{ color: 'black' }}>release date: </span>
+            <span style={{ color: 'black' }}>{item.releaseDate}</span>
+          </div>
+        )}
+        {item.manufacturer && (
+          <div style={{ marginBottom: '20px' }}>
+            <span style={{ color: 'black' }}>manufacturer: </span>
+            <span style={{ color: 'black' }}>{item.manufacturer}</span>
+          </div>
+        )}
+        {item.manufactureDate && (
+          <div style={{ marginBottom: '20px' }}>
+            <span style={{ color: 'black' }}>manufacture date: </span>
+            <span style={{ color: 'black' }}>{item.manufactureDate}</span>
+          </div>
+        )}
+        {item.manufactureLocation && (
+          <div style={{ marginBottom: '20px' }}>
+            <span style={{ color: 'black' }}>manufacture location: </span>
+            <span style={{ color: 'black' }}>{item.manufactureLocation}</span>
+          </div>
+        )}
+        {item.material && item.material.length > 0 && (
+          <div style={{ marginBottom: '20px' }}>
+            <span style={{ color: 'black' }}>material: </span>
+            <span style={{ color: 'black' }}>{item.material.join(', ')}</span>
+          </div>
+        )}
+        {item.acquisitionDate && (
+          <div style={{ marginBottom: '20px' }}>
+            <span style={{ color: 'black' }}>acquisition date: </span>
+            <span style={{ color: 'black' }}>{item.acquisitionDate}</span>
+          </div>
+        )}
+        {item.acquisitionLocation && (
+          <div style={{ marginBottom: '20px' }}>
+            <span style={{ color: 'black' }}>acquisition location: </span>
+            <span style={{ color: 'black' }}>{item.acquisitionLocation}</span>
+          </div>
+        )}
+        {item.storageLocation && (
+          <div style={{ marginBottom: '20px' }}>
+            <span style={{ color: 'black' }}>storage location: </span>
+            <span style={{ color: 'black' }}>{item.storageLocation}</span>
+          </div>
+        )}
+        {item.captureDate && (
+          <div style={{ marginBottom: '20px' }}>
+            <span style={{ color: 'black' }}>capture date: </span>
+            <span style={{ color: 'black' }}>{item.captureDate}</span>
+          </div>
+        )}
+        {getCaptureLocation() && (
+          <div style={{ marginBottom: '20px' }}>
+            <span style={{ color: 'black' }}>capture location: </span>
+            <span style={{ color: 'black' }}>{getCaptureLocation()}</span>
+          </div>
+        )}
+        {item.captureDevice && (
+          <div style={{ marginBottom: '20px' }}>
+            <span style={{ color: 'black' }}>capture device: </span>
+            <span style={{ color: 'black' }}>{item.captureDevice}</span>
+          </div>
+        )}
+        {item.captureApp && (
+          <div style={{ marginBottom: '20px' }}>
+            <span style={{ color: 'black' }}>capture app: </span>
+            <span style={{ color: 'black' }}>{item.captureApp}</span>
+          </div>
+        )}
+        {item.captureMethod && (
+          <div style={{ marginBottom: '20px' }}>
+            <span style={{ color: 'black' }}>capture method: </span>
+            <span style={{ color: 'black' }}>{item.captureMethod}</span>
+          </div>
+        )}
+
+        {/* Custom fields */}
+        {item.customFields && Object.entries(item.customFields).map(([key, value]) => (
+          <div key={key} style={{ marginBottom: '20px' }}>
+            <span style={{ color: 'black' }}>{key}: </span>
+            <span style={{ color: 'black' }}>{value}</span>
+          </div>
+        ))}
+
+        {/* QR Code */}
+        {qrCodeUrl && (
+          <div style={{ textAlign: 'center', marginTop: '20px', marginBottom: '20px' }}>
+            <img src={qrCodeUrl} alt="QR Code" style={{ width: '256px', height: '256px' }} />
+          </div>
+        )}
+
+        {/* URL and print date */}
+        <div style={{ marginBottom: '20px' }}>{itemUrl}</div>
+        <div style={{ marginBottom: '20px' }}>printed on {printDate}</div>
       </div>
     </>
   );
