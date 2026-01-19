@@ -130,7 +130,9 @@ export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef
         await takeSnapshot();
       }
     };
-    delayedRender();
+    delayedRender().catch(err => {
+      console.error('Error during initial render:', err);
+    });
   }, [item, collection, user, imageUrl]);
 
   const printReceipt = async () => {
