@@ -10,6 +10,28 @@ blink, .blink { animation: blink 1s step-end infinite; }
   67% { opacity: 0 }
 }
 
+/* VIEW TRANSITIONS */
+
+/* Enable view transitions for the root element */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.3s;
+}
+
+/* Smooth animation for transitioning model viewers */
+::view-transition-old(model-viewer),
+::view-transition-new(model-viewer) {
+  /* Disable default cross-fade for more natural morph */
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* Group animations for both old and new snapshots */
+::view-transition-group(*) {
+  animation-duration: 0.5s;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 /* GLOBAL OVERRIDES */
 
 @media print {

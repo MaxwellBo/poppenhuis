@@ -145,14 +145,19 @@ function UserListEntry(props: { user: User }) {
       <QueryPreservingLink to={user.id}>{user.name}</QueryPreservingLink> <Size ts={user.collections} t="collection" />
       <ul>
         {
-          user.collections.map((collection) =>
-            <li key={collection.id}>
-              <QueryPreservingLink to={user.id + "/" + collection.id}>{collection.name}</QueryPreservingLink> <Size ts={collection.items} t="item" />
-              <div>
-              {collection.items[0] && <ModelViewerWrapper item={collection.items[0]} size="small"/>}
-              </div>
-            </li>
-          )
+          user.collections.map((collection) => {
+            const firstItem = collection.items[0];
+            const viewTransitionName = firstItem ? `model-${user.id}-${collection.id}-${firstItem.id}` : undefined;
+            
+            return (
+              <li key={collection.id}>
+                <QueryPreservingLink to={user.id + "/" + collection.id}>{collection.name}</QueryPreservingLink> <Size ts={collection.items} t="item" />
+                <div>
+                  {firstItem && <ModelViewerWrapper item={firstItem} size="small" viewTransitionName={viewTransitionName}/>}
+                </div>
+              </li>
+            );
+          })
         }
       </ul>
     </li>

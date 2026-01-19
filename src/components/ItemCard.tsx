@@ -14,10 +14,16 @@ export function ItemCard(props: {
   triggerKey?: string; 
 }) {
   const { item, collection, user, altName, size, triggerKey, showIndex } = props;
+  const viewTransitionName = `model-${user.id}-${collection.id}-${item.id}`;
+  
   return (
     <div className="card">
       <div className='center'>
-        <ModelViewerWrapper item={item} size={size ?? 'normal'} />
+        <ModelViewerWrapper 
+          item={item} 
+          size={size ?? 'normal'} 
+          viewTransitionName={viewTransitionName}
+        />
         <QueryPreservingLink to={`/${user.id}/${collection.id}/${item.id}`} triggerKey={triggerKey}>
           {altName ?? item.name}
         </QueryPreservingLink> 

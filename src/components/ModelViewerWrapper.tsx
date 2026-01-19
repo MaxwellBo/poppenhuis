@@ -2,7 +2,22 @@ import { Item } from '../manifest';
 import '@google/model-viewer'
 import React from 'react';
 
-export function ModelViewerWrapper(props: { item: Item; size?: ModelSize; modelViewerRef?: React.RefObject<HTMLElement>; }) {
+export function ModelViewerWrapper(props: { 
+  item: Item; 
+  size?: ModelSize; 
+  modelViewerRef?: React.RefObject<HTMLElement>;
+  viewTransitionName?: string;
+}) {
+  const style: React.CSSProperties = {
+    ...getStyleForModelSize(props.size),
+  };
+
+  // Add view-transition-name as a CSS custom property
+  if (props.viewTransitionName) {
+    // @ts-ignore - viewTransitionName is a valid CSS property but not in React types yet
+    style.viewTransitionName = props.viewTransitionName;
+  }
+
   return (
     <div className='model-viewer-wrapper'>
       {props.size !== 'small' && <div className='camera-keys'>
@@ -12,7 +27,7 @@ export function ModelViewerWrapper(props: { item: Item; size?: ModelSize; modelV
       <model-viewer
         ref={props.modelViewerRef}
         key={props.item.model}
-        style={getStyleForModelSize(props.size)}
+        style={style}
         alt={props.item.alt}
         src={props.item.model}
         interaction-prompt=""

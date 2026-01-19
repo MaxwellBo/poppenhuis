@@ -93,7 +93,12 @@ export default function ItemPage() {
         <div id="model">
           {renderAFrameScene
             ? <AFrameScene users={users} startingItem={item} positioningMode={positioningMode} />
-            : <ModelViewerWrapper modelViewerRef={modelViewerRef} item={item} size='responsive-big' />
+            : <ModelViewerWrapper 
+                modelViewerRef={modelViewerRef} 
+                item={item} 
+                size='responsive-big'
+                viewTransitionName={`model-${user.id}-${collection.id}-${item.id}`}
+              />
           }
           <div className="vr-controls" style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
             <label className="vr-toggle">
