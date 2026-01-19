@@ -4,10 +4,13 @@ import { FirebaseForm } from "../components/FirebaseForm";
 import { USER_FIELD_SCHEMAS } from "../manifest";
 import { useFirebaseForm } from "../hooks/useFirebaseForm";
 import { useFirebaseSubmit } from "../hooks/useFirebaseSubmit";
+import { useAuth } from "../hooks/useAuth";
 import { PageHeader } from "../components/PageHeader";
+import { QueryPreservingLink } from "../components/QueryPreservingLink";
 
 export default function NewUserPage() {
   const [userId, setUserId] = useState("");
+  const { isAuthenticated, loading } = useAuth();
   
   const {
     formData,
@@ -28,6 +31,10 @@ export default function NewUserPage() {
     <article>
       <Helmet><title>create user - poppenhuis</title></Helmet>
       <PageHeader>create a new user</PageHeader>
+      {loading && <p>Loading authentication status...</p>}
+      {!loading && !isAuthenticated && (
+        <p className="short" style={{paddingBottom: "1ch"}}>You must be authenticated to create a user. Go to <QueryPreservingLink to="/auth">/auth</QueryPreservingLink>, create an account, and then attempt to make a user.</p>
+      )}
       <FirebaseForm
         formData={formData}
         idField={{
