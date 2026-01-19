@@ -253,7 +253,7 @@ export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef
               AliExpress
             </a>. The protocol is lifted from <a href="https://github.com/NaitLee/kitty-printer">NaitLee/kitty-printer</a>.
           </p>
-          <button onClick={takeSnapshot}>take snapshot</button>
+          <button onClick={takeSnapshot} aria-label="Regenerate receipt preview">take snapshot</button>
           <canvas
             ref={canvasRef}
           />
