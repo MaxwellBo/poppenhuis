@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useMemo } from "react";
 import { useLoaderData } from "react-router";
 import { Helmet } from 'react-helmet';
 import { FirebaseForm } from "../components/FirebaseForm";
@@ -36,6 +36,23 @@ export default function EditItemPage() {
     }
   }, [item, setFormData, setImageUrl]);
 
+  // Create a temporary URL for the model file if it's a File object
+  const modelUrl = useMemo(() => {
+    if (!formData.model) return null;
+    
+    // If it's already a string URL, use it
+    if (typeof formData.model === 'string') {
+      return formData.model;
+    }
+    
+    // If it's a File object, create a temporary blob URL
+    if (formData.model instanceof File) {
+      return URL.createObjectURL(formData.model);
+    }
+    
+    return null;
+  }, [formData.model]);
+
   // Filter out non-form fields
   const itemFields = Object.values(ITEM_FIELD_SCHEMAS)
     .filter(field => !['usdzModel', 'poster', 'og'].includes(field.name));
@@ -57,8 +74,11 @@ export default function EditItemPage() {
       }
     }
     
-    // Include the uploaded og image URL if available
-    const dataToSubmit = ogUrl ? { ...formData, og: ogUrl } : formData;
+    // Include the uploaded og image URL if available (formData already has all fields)
+    const dataToSubmit = { ...formData };
+    if (ogUrl) {
+      dataToSubmit.og = ogUrl;
+    }
     
     await upsertItem(user.id, collection.id, item.id, dataToSubmit);
   };
@@ -70,11 +90,11 @@ export default function EditItemPage() {
         <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}/${collection.id}`}>{collection.name}</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}/${collection.id}/${item.id}`}>{item.name}</QueryPreservingLink> / edit
       </PageHeader>
       
-      {formData.model && (
+      {modelUrl && (
         <div style={{ marginBottom: '20px' }}>
           <ModelViewerWrapper 
             modelViewerRef={modelViewerRef}
-            item={{ ...formData, id: item.id } as any} 
+            item={{ ...formData, model: modelUrl, id: item.id } as any} 
             size='normal' 
           />
           <div style={{ marginTop: '10px' }}>
@@ -84,7 +104,7 @@ export default function EditItemPage() {
             {imageUrl && (
               <div style={{ marginTop: '10px' }}>
                 <p>Preview of snapshotted image:</p>
-                <img src={imageUrl} alt="Snapshot preview" style={{ width: '200px', height: 'auto' }} />
+                <img key={imageUrl} src={imageUrl} alt="Snapshot preview" style={{ width: '200px', height: 'auto' }} />
                 <p style={{ fontSize: '0.875rem', color: '#666' }}>
                   {imageUrl.startsWith('data:') ? '(will be uploaded to storage on submit)' : '(uploaded)'}
                 </p>

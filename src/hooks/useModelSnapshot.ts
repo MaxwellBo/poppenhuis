@@ -24,19 +24,20 @@ export function useModelSnapshot(ogImage?: string) {
   const [uploadError, setUploadError] = useState<string | null>(null);
 
   const snapshotModel = useCallback((modelViewerRef: React.RefObject<HTMLElement>) => {
-    if (ogImage) {
-      // If there's an OG image, use it
-      setImageUrl(ogImage);
-    } else if (modelViewerRef?.current) {
-      // Otherwise, capture from model viewer
+    if (modelViewerRef?.current) {
+      // Capture from model viewer
       const modelViewerCanvas = modelViewerRef.current.shadowRoot?.querySelector('canvas');
       if (modelViewerCanvas) {
         const dataUrl = modelViewerCanvas.toDataURL('image/png');
         console.log("Snapshot captured from model viewer");
         setImageUrl(dataUrl);
+      } else {
+        console.warn("Model viewer canvas not found");
       }
+    } else {
+      console.warn("Model viewer ref not available");
     }
-  }, [ogImage]);
+  }, []);
 
   const uploadSnapshot = useCallback(async (
     userId: string,
