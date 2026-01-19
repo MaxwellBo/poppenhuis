@@ -66,12 +66,13 @@ export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef
     // Use html2canvas to convert the receipt HTML to canvas
     const generatedCanvas = await html2canvas(receiptElement, {
       width: DEF_CANVAS_WIDTH,
+      // @ts-ignore
+      scale: 1,
       background: '#ffffff',
       logging: false,
     });
-    console.log("Generated canvas")
+    console.log("Generated canvas. Width:", generatedCanvas.width, "Height:", generatedCanvas.height);
 
-    // Copy to our canvas ref
     canvas.width = generatedCanvas.width;
     canvas.height = generatedCanvas.height;
     const ctx = canvas.getContext('2d');
@@ -266,7 +267,8 @@ export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef
           left: '-9999px',
           width: `${DEF_CANVAS_WIDTH}px`,
           padding: '10px',
-          borderLeft: '4px solid black',
+          fontSize: '16px',
+          borderLeft: '2px solid black',
         }}
       >
         <span style={{ marginBottom: '20px' }}>

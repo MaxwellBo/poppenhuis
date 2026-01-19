@@ -124,7 +124,7 @@ dl > dt {
 pre,
 code,
 dl > dd {
-  font-size: 0.8rem;
+  font-size: 0.8em;
   font-family: 'Fira Code', monospace;
   letter-spacing: -0.03em;
 }
