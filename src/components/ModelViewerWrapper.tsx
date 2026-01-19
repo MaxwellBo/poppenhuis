@@ -13,7 +13,7 @@ export function ModelViewerWrapper(props: { item: Item; size?: ModelSize; modelV
         ref={props.modelViewerRef}
         key={props.item.model}
         style={getStyleForModelSize(props.size)}
-        alt={props.item.alt ?? props.item.description}
+        alt={props.item.alt}
         src={props.item.model}
         interaction-prompt=""
         progress-bar=""
