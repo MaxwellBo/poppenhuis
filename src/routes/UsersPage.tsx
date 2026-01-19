@@ -25,7 +25,20 @@ export default function UsersPage() {
       </PageHeader>
       <div id="homepage-columns">
         <section>
-          The following users have collections:
+          <div className="short">
+            <p className="p-spacing">
+              poppenhuis (<i>Dutch for "dollhouse"</i>) is a space for sharing collections and their 3D scans.
+            </p>
+            <p className="p-spacing">
+              Have a collection you care about? of pottery? of sculptures? of guitars? of cars? of cakes? of plants? of dolls?
+            </p>
+            <p className="p-spacing">
+              They're welcome to live here too. 
+            </p>
+          </div>
+          <p>
+            The following users have collections:
+          </p>
           <ul>
             {syncUsers.map((user) => (
               <UserListEntry key={user.id} user={user} />
@@ -47,16 +60,20 @@ export default function UsersPage() {
           </p>
         </section>
         <section className='short'>
-          <p className="p-spacing">
-            poppenhuis (<i>Dutch for "dollhouse"</i>) is a space for sharing collections and their 3D scans.
-          </p>
-          <p className="p-spacing">
-            Have a collection you care about? of pottery? of sculptures? of guitars? of cars? of cakes? of plants? of dolls?
-          </p>
-          <p className="p-spacing">
-            They're welcome to live here too. 
-          </p>
-          <br />
+          <details open>
+            <summary>Why?</summary>
+            {/* <div className="explanation">
+              My partner has a large collection of dolls, so I built poppenhuis to make it easier for her to catalogue and track metadata.
+
+              Some of the dolls are culturally sensitive and shouldn't be displayed on a public forum, so she hosts her collection privately with a 3rd party manifest.
+            </div> */}
+            <div className="explanation">
+              I believe it can be difficult to show others their collections.
+              Photos do not do them justice, and the most important part - the "metadata", the <i>why</i> of its membership in the collection - is hard to convey. 
+              <br />
+              poppenhuis aims to make this sharing process easier.
+            </div>
+          </details>
           <details>
             <summary>What file formats can poppenhuis render?</summary>
             <div className="explanation">
@@ -86,20 +103,6 @@ export default function UsersPage() {
             <summary>Want to mount a 3rd party manifest?</summary>
             <div className="explanation">
               <ThirdPartyManfiestLoader />
-            </div>
-          </details>
-          <details>
-            <summary>Why?</summary>
-            {/* <div className="explanation">
-              My partner has a large collection of dolls, so I built poppenhuis to make it easier for her to catalogue and track metadata.
-
-              Some of the dolls are culturally sensitive and shouldn't be displayed on a public forum, so she hosts her collection privately with a 3rd party manifest.
-            </div> */}
-            <div className="explanation">
-              I believe it is very difficult to show people the things they collect.
-              Photos do not do them justice, and the most important part - the "metadata", the <i>why</i> of its membership in the collection - is lost. 
-              <br />
-              poppenhuis aims to make this sharing process easier.
             </div>
           </details>
           <details>
