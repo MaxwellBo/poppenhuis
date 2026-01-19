@@ -13,8 +13,8 @@ import EmbedPage, { loader as embedPageLoader } from './routes/EmbedPage.tsx';
 import DebugPage from './routes/DebugPage.tsx';
 import MapPage, { loader as mapPageLoader } from './routes/MapPage.tsx';
 import NewUserPage from './routes/NewUserPage.tsx';
-import NewCollectionPage from './routes/NewCollectionPage.tsx';
-import NewItemPage from './routes/NewItemPage.tsx';
+import NewCollectionPage, { loader as newCollectionPageLoader } from './routes/NewCollectionPage.tsx';
+import NewItemPage, { loader as newItemPageLoader } from './routes/NewItemPage.tsx';
 import EditUserPage, { loader as editUserPageLoader } from './routes/EditUserPage.tsx';
 import EditCollectionPage, { loader as editCollectionPageLoader } from './routes/EditCollectionPage.tsx';
 import EditItemPage, { loader as editItemPageLoader } from './routes/EditItemPage.tsx';
@@ -90,6 +90,8 @@ const router = createBrowserRouter([
       {
         path: ":userId/new",
         element: <NewCollectionPage />,
+        // @ts-ignore
+        loader: newCollectionPageLoader,
       },
       {
         path: ":userId/:collectionId",
@@ -106,6 +108,8 @@ const router = createBrowserRouter([
       {
         path: ":userId/:collectionId/new",
         element: <NewItemPage />,
+        // @ts-ignore
+        loader: newItemPageLoader,
       },
       {
         path: ":userId/:collectionId/:itemId",

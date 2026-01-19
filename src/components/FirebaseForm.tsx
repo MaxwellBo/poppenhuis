@@ -144,8 +144,8 @@ export function FirebaseForm({
               value={idField.value}
               onChange={(e) => idField.onChange(e.target.value)}
               placeholder={idField.label.toLowerCase()}
-              pattern=".*\S.*"
-              title={`${idField.label} cannot be empty or contain only whitespace`}
+              pattern="^\S+$"
+              title={`${idField.label} cannot contain whitespace`}
               required
               disabled={isSubmitting || idField.readOnly}
               readOnly={idField.readOnly}
