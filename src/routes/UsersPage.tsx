@@ -54,16 +54,8 @@ export default function UsersPage() {
             Have a collection you care about? of pottery? of sculptures? of guitars? of cars? of cakes? of plants? of dolls?
           </p>
           <p className="p-spacing">
-            They're welcome to live here too. Open a GitHub PR to <a href="https://github.com/MaxwellBo/poppenhuis">the poppenhuis repo</a> and:
+            They're welcome to live here too. 
           </p>
-          <ol>
-            <li>
-              Upload your <code>.gltf</code>/<code>.glb</code> models to <a href="https://github.com/MaxwellBo/poppenhuis/tree/master/public/models"><code>//public/models/</code></a>
-            </li>
-            <li>
-              Add your metadata to <a href="https://github.com/MaxwellBo/poppenhuis/blob/master/src/manifest.ts"><code>//src/manifest.ts</code></a>
-            </li>
-          </ol>
           <br />
           <details>
             <summary>What file formats can poppenhuis render?</summary>
@@ -98,18 +90,32 @@ export default function UsersPage() {
           </details>
           <details>
             <summary>Why?</summary>
-            <div className="explanation">
+            {/* <div className="explanation">
               My partner has a large collection of dolls, so I built poppenhuis to make it easier for her to catalogue and track metadata.
 
               Some of the dolls are culturally sensitive and shouldn't be displayed on a public forum, so she hosts her collection privately with a 3rd party manifest.
+            </div> */}
+            <div className="explanation">
+              I believe it is very difficult to show people the things they collect.
+              Photos do not do them justice, and the most important part - the "metadata", the <i>why</i> of its membership in the collection - is lost. 
+              <br />
+              poppenhuis aims to make this sharing process easier.
             </div>
           </details>
           <details>
-            <summary>Why should I use GitHub to add my collection?</summary>
+            <summary>Why would I want to use GitHub to add my collection rather than Firebase?</summary>
             <div className="explanation">
+              <p>
+                GitHub has everything we need for authenticated bulk uploading of models and metadata.
+                Open a GitHub PR to <a href="https://github.com/MaxwellBo/poppenhuis">the poppenhuis repo</a> and:
+              </p>
               <ol>
-                <li>GitHub has everything we need for authenticated bulk uploading of models and metadata.</li>
-                <li><q>Baking</q> <a href="https://github.com/MaxwellBo/poppenhuis/blob/master/src/manifest.ts"><code>//src/manifest.ts</code></a> into the bundle keeps the app snappy.</li>
+                <li>
+                  Upload your <code>.gltf</code>/<code>.glb</code> models to <a href="https://github.com/MaxwellBo/poppenhuis/tree/master/public/models"><code>//public/models/</code></a>
+                </li>
+                <li>
+                  Add your metadata to <a href="https://github.com/MaxwellBo/poppenhuis/blob/master/src/manifest.ts"><code>//src/manifest.ts</code></a>. Baking the metadata into the bundle keeps the app snappy.
+                </li>
               </ol>
             </div>
           </details>
@@ -120,15 +126,6 @@ export default function UsersPage() {
               <br />
               <br />
               I discovered <a href="https://x.com/samdape/status/1777986265993875950">this Sam Peitz tweet</a>, <a href="https://nathannhan.art/">nathannhan.art</a>, <a href="https://jisu.world/bag/">What's in Jisu's bag?</a>, and <a href="https://rotatingsandwiches.com/">rotating sandwiches</a> after first release, and they guided poppenhuis's development in its final stages.
-            </div>
-          </details>
-          <details>
-            <summary>Technical challenges</summary>
-            <div className="explanation">
-              I tried porting the app to <a href="https://nextjs.org/">Next.js</a> to get some of that sweet, sweet SSR.
-              But to my <a href="https://twitter.com/_max_bo_/status/1815536378522022130">dismay</a> I discovered that clicking any link was causing a full page load and remount, which invalidated the camera state of all <a href="https://modelviewer.dev/">model-viewer</a> components.
-              Alas, the app remains a <a href="https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts">Vite React SPA</a>.
-              If anyone has a solution to this, please reach out to <a href="https://twitter.com/_max_bo_">me on Twitter</a>.
             </div>
           </details>
         </section>
