@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useLoaderData } from "react-router";
 import { Helmet } from 'react-helmet';
 import { FirebaseForm } from "../components/FirebaseForm";
@@ -16,7 +16,9 @@ export default function NewItemPage() {
   const [itemId, setItemId] = useState("");
   const [modelFile, setModelFile] = useState<File | null>(null);
   const [ogImageFile, setOgImageFile] = useState<File | null>(null);
-  const modelViewerRef = React.useRef<HTMLElement>(null);
+  const modelViewerRef = useRef<HTMLElement>(null);
+  const [modelPreviewUrl, setModelPreviewUrl] = useState<string | null>(null);
+  const [ogPreviewUrl, setOgPreviewUrl] = useState<string | null>(null);
   
   const {
     formData,
@@ -69,6 +71,28 @@ export default function NewItemPage() {
     setOgImageFile(null);
   };
 
+  // Cleanup model preview URL
+  useEffect(() => {
+    if (modelFile) {
+      const url = URL.createObjectURL(modelFile);
+      setModelPreviewUrl(url);
+      return () => URL.revokeObjectURL(url);
+    } else {
+      setModelPreviewUrl(null);
+    }
+  }, [modelFile]);
+
+  // Cleanup OG preview URL
+  useEffect(() => {
+    if (ogImageFile) {
+      const url = URL.createObjectURL(ogImageFile);
+      setOgPreviewUrl(url);
+      return () => URL.revokeObjectURL(url);
+    } else {
+      setOgPreviewUrl(null);
+    }
+  }, [ogImageFile]);
+
   return (
     <article>
       <Helmet><title>create item - poppenhuis</title></Helmet>
@@ -92,7 +116,7 @@ export default function NewItemPage() {
       error={error}
       submitButtonText={isSubmitting ? "creating..." : "create item"}
     >
-      {modelFile && formData.model && (
+      {modelFile && (
         <div className="table-form-row">
           <label>Model Preview</label>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -101,7 +125,7 @@ export default function NewItemPage() {
               item={{ 
                 id: itemId || 'preview',
                 name: formData.name || 'Preview',
-                model: URL.createObjectURL(modelFile)
+                model: modelPreviewUrl || ''
               }} 
               size='normal' 
             />
@@ -127,10 +151,10 @@ export default function NewItemPage() {
                 </>
               )}
             </div>
-            {ogImageFile && (
+            {ogImageFile && ogPreviewUrl && (
               <div style={{ marginTop: '10px' }}>
                 <img 
-                  src={URL.createObjectURL(ogImageFile)} 
+                  src={ogPreviewUrl} 
                   alt="OG preview" 
                   style={{ maxWidth: '200px', border: '1px solid #ccc' }}
                 />

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useLoaderData } from "react-router";
 import { Helmet } from 'react-helmet';
 import { FirebaseForm } from "../components/FirebaseForm";
@@ -16,7 +16,9 @@ export default function EditItemPage() {
   const { item, collection, user } = useLoaderData() as Awaited<ReturnType<typeof loader>>;
   const [modelFile, setModelFile] = useState<File | null>(null);
   const [ogImageFile, setOgImageFile] = useState<File | null>(null);
-  const modelViewerRef = React.useRef<HTMLElement>(null);
+  const modelViewerRef = useRef<HTMLElement>(null);
+  const [modelPreviewUrl, setModelPreviewUrl] = useState<string | null>(null);
+  const [ogPreviewUrl, setOgPreviewUrl] = useState<string | null>(null);
   
   const {
     formData,
@@ -73,6 +75,28 @@ export default function EditItemPage() {
     setOgImageFile(null);
   };
 
+  // Cleanup model preview URL
+  useEffect(() => {
+    if (modelFile) {
+      const url = URL.createObjectURL(modelFile);
+      setModelPreviewUrl(url);
+      return () => URL.revokeObjectURL(url);
+    } else {
+      setModelPreviewUrl(null);
+    }
+  }, [modelFile]);
+
+  // Cleanup OG preview URL
+  useEffect(() => {
+    if (ogImageFile) {
+      const url = URL.createObjectURL(ogImageFile);
+      setOgPreviewUrl(url);
+      return () => URL.revokeObjectURL(url);
+    } else {
+      setOgPreviewUrl(null);
+    }
+  }, [ogImageFile]);
+
   return (
     <article>
       <Helmet><title>edit {item.id} - poppenhuis</title></Helmet>
@@ -106,7 +130,7 @@ export default function EditItemPage() {
               item={{ 
                 id: item.id,
                 name: formData.name || item.name,
-                model: modelFile ? URL.createObjectURL(modelFile) : formData.model
+                model: modelPreviewUrl || formData.model
               }} 
               size='normal' 
             />
@@ -135,10 +159,10 @@ export default function EditItemPage() {
                 <span style={{ color: '#666' }}>Current: <a href={formData.og} target="_blank" rel="noopener noreferrer">view</a></span>
               )}
             </div>
-            {ogImageFile && (
+            {ogImageFile && ogPreviewUrl && (
               <div style={{ marginTop: '10px' }}>
                 <img 
-                  src={URL.createObjectURL(ogImageFile)} 
+                  src={ogPreviewUrl} 
                   alt="OG preview" 
                   style={{ maxWidth: '200px', border: '1px solid #ccc' }}
                 />
