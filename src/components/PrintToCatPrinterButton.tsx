@@ -111,24 +111,35 @@ export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef
     console.log("Dithered content written back to canvas");
   };
 
+  const takeSnapshot = async () => {
+    setError(null);
+    try {
+      await renderReceipt();
+      ditherCanvas();
+    } catch (err) {
+      console.error('Snapshot error:', err);
+      setError(err instanceof Error ? err.message : 'Failed to generate snapshot');
+    }
+  };
+
   // Render receipt on mount
   useEffect(() => {
     const delayedRender = async () => {
       await new Promise(resolve => setTimeout(resolve, RECEIPT_RENDER_DELAY));
       if (receiptRef.current && canvasRef.current) {
-        await renderReceipt();
-        ditherCanvas();
+        await takeSnapshot();
       }
     };
-    delayedRender();
+    delayedRender().catch(err => {
+      console.error('Error during initial render:', err);
+    });
   }, [item, collection, user, imageUrl]);
 
   const printReceipt = async () => {
     setIsPrinting(true);
     setError(null);
 
-    await renderReceipt();
-    ditherCanvas();
+    await takeSnapshot();
 
     try {
       // Check if bluetooth is available
@@ -249,11 +260,11 @@ export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef
             This implements the protocol for the very cheap range of "cat printers" available on <a href="https://www.aliexpress.com/w/wholesale-cat-printer.html">
               AliExpress
             </a>. The protocol is lifted from <a href="https://github.com/NaitLee/kitty-printer">NaitLee/kitty-printer</a>.
-
-            <canvas
-              ref={canvasRef}
-            />
           </p>
+          <button onClick={takeSnapshot} aria-label="Regenerate receipt preview">take snapshot</button>
+          <canvas
+            ref={canvasRef}
+          />
         </details>
       </div>
 
