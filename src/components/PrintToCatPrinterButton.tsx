@@ -17,6 +17,7 @@ import {
   DEF_SPEED,
 } from '../../kitty-printer-main/common/constants';
 import html2canvas from 'html2canvas';
+import { useModelSnapshot } from '../hooks/useModelSnapshot';
 import './receipt.css';
 
 const SPEED = SPEED_RANGE['speed^normal'];
@@ -42,19 +43,12 @@ export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef
   const receiptRef = useRef<HTMLDivElement>(null);
   const [isPrinting, setIsPrinting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [imageUrl, setImageUrl] = useState<string | null>(item.og || null);
+  const { imageUrl, snapshotModel } = useModelSnapshot(item.og);
 
   // Snapshot: capture image from model viewer (or use OG, overwriting if needed)
   const snapshotReceipt = () => {
-    if (item.og) {
-      setImageUrl(item.og);
-    } else if (modelViewerRef?.current) {
-      const modelViewerCanvas = modelViewerRef.current.shadowRoot?.querySelector('canvas');
-      if (modelViewerCanvas) {
-        const dataUrl = modelViewerCanvas.toDataURL();
-        console.log("data URL", dataUrl);
-        setImageUrl(dataUrl);
-      }
+    if (modelViewerRef) {
+      snapshotModel(modelViewerRef);
     }
   };
 
@@ -74,6 +68,8 @@ export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef
         scale: 1,
         background: '#ffffff',
         logging: false,
+        allowTaint : false,
+        useCORS: true
       });
       console.log("Generated canvas. Width:", generatedCanvas.width, "Height:", generatedCanvas.height);
 
