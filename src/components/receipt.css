@@ -1,0 +1,13 @@
+.cat-printer-receipt abbr {
+  text-decoration: none;
+  border-bottom: none;
+}
+
+
+.cat-printer-receipt dd:empty::after {
+  content: unset !important;
+}
+
+.cat-printer-receipt dd:empty.list::after {
+  content: unset !important;
+}
