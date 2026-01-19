@@ -1,15 +1,17 @@
 import React, { useState } from "react";
-import { useParams } from "react-router";
+import { useLoaderData } from "react-router";
 import { Helmet } from 'react-helmet';
 import { FirebaseForm } from "../components/FirebaseForm";
-import { ITEM_FIELD_SCHEMAS } from "../manifest";
+import { ITEM_FIELD_SCHEMAS, loadCollection } from "../manifest";
 import { useFirebaseForm } from "../hooks/useFirebaseForm";
 import { useFirebaseSubmit } from "../hooks/useFirebaseSubmit";
 import { QueryPreservingLink } from "../components/QueryPreservingLink";
 import { PageHeader } from "../components/PageHeader";
 
+export const loader = loadCollection;
+
 export default function NewItemPage() {
-  const { userId, collectionId } = useParams<{ userId: string; collectionId: string }>();
+  const { user, collection } = useLoaderData() as Awaited<ReturnType<typeof loader>>;
   const [itemId, setItemId] = useState("");
   const [modelFile, setModelFile] = useState<File | null>(null);
   
@@ -40,14 +42,14 @@ export default function NewItemPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await upsertItem(userId || '', collectionId || '', itemId, formData, modelFile, cleanFormData);
+    await upsertItem(user.id, collection.id, itemId, formData, modelFile, cleanFormData);
   };
 
   return (
     <article>
       <Helmet><title>create item - poppenhuis</title></Helmet>
       <PageHeader>
-        {userId && collectionId ? <><QueryPreservingLink to={`/${userId}`}>{userId}</QueryPreservingLink> / <QueryPreservingLink to={`/${userId}/${collectionId}`}>{collectionId}</QueryPreservingLink> / create a new item</> : <>create a new item</>}
+        <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}/${collection.id}`}>{collection.name}</QueryPreservingLink> / create a new item
       </PageHeader>
       <FirebaseForm
         formData={formData}

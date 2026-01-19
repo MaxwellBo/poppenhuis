@@ -1,15 +1,17 @@
 import React, { useState } from "react";
-import { useParams } from "react-router";
+import { useLoaderData } from "react-router";
 import { Helmet } from 'react-helmet';
 import { FirebaseForm } from "../components/FirebaseForm";
-import { COLLECTION_FIELD_SCHEMAS } from "../manifest";
+import { COLLECTION_FIELD_SCHEMAS, loadUser } from "../manifest";
 import { useFirebaseForm } from "../hooks/useFirebaseForm";
 import { useFirebaseSubmit } from "../hooks/useFirebaseSubmit";
 import { QueryPreservingLink } from "../components/QueryPreservingLink";
 import { PageHeader } from "../components/PageHeader";
 
+export const loader = loadUser;
+
 export default function NewCollectionPage() {
-  const { userId } = useParams<{ userId: string }>();
+  const { user } = useLoaderData() as Awaited<ReturnType<typeof loader>>;
   const [collectionId, setCollectionId] = useState("");
   
   const {
@@ -24,14 +26,14 @@ export default function NewCollectionPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await upsertCollection(userId || '', collectionId, formData, cleanFormData);
+    await upsertCollection(user.id, collectionId, formData, cleanFormData);
   };
 
   return (
     <article>
       <Helmet><title>create collection - poppenhuis</title></Helmet>
       <PageHeader>
-        {userId ? <><QueryPreservingLink to={`/${userId}`}>{userId}</QueryPreservingLink> / create a new collection</> : <>create a new collection</>}
+        <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / create a new collection
       </PageHeader>
       <FirebaseForm
         formData={formData}
