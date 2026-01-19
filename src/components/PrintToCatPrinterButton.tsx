@@ -112,8 +112,14 @@ export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef
   };
 
   const takeSnapshot = async () => {
-    await renderReceipt();
-    ditherCanvas();
+    setError(null);
+    try {
+      await renderReceipt();
+      ditherCanvas();
+    } catch (err) {
+      console.error('Snapshot error:', err);
+      setError(err instanceof Error ? err.message : 'Failed to generate snapshot');
+    }
   };
 
   // Render receipt on mount
