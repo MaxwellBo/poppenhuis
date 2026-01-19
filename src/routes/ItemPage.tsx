@@ -1,4 +1,4 @@
-import { Collection, Item, ITEM_FIELD_SCHEMAS, User } from "../manifest";
+import { Collection, Item, User } from "../manifest";
 import { loadItem } from "../manifest";
 import React, { useRef } from "react";
 import { useLoaderData, useSearchParams } from "react-router";
