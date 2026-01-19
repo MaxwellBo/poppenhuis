@@ -1,5 +1,7 @@
 import { useRef, useState, useEffect } from 'react';
 import { Item, Collection, User } from '../manifest';
+import { DescriptionList } from './DescriptionList';
+import { QrCode } from './QrCode';
 import { CatPrinter } from '../../kitty-printer-main/common/cat-protocol';
 import { rgbaToBits } from '../../kitty-printer-main/common/bitmap-utils';
 import { rgbaToGray, grayToRgba, ditherSteinberg } from '../../kitty-printer-main/common/dither-utils';
@@ -14,11 +16,10 @@ import {
   ENERGY_RANGE,
   DEF_SPEED,
 } from '../../kitty-printer-main/common/constants';
-import QRCode from 'qrcode';
 import html2canvas from 'html2canvas';
+import './receipt.css';
 
 const RECEIPT_RENDER_DELAY = 3000; // Wait for images to load before rendering
-const QR_CODE_SIZE = 256; // QR code dimensions in pixels
 
 const SPEED = SPEED_RANGE['speed^normal'];
 const ENERGY = ENERGY_RANGE['strength^high'];
@@ -43,25 +44,7 @@ export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef
   const receiptRef = useRef<HTMLDivElement>(null);
   const [isPrinting, setIsPrinting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [qrCodeUrl, setQrCodeUrl] = useState<string | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
-
-  // Generate QR code URL
-  useEffect(() => {
-    const itemUrl = `poppenhu.is/${user.id}/${collection.id}/${item.id}`;
-    QRCode.toDataURL(itemUrl, {
-      errorCorrectionLevel: 'low',
-      margin: 0,
-      width: QR_CODE_SIZE,
-      color: {
-        light: '#ffffff'
-      }
-    }, function (err, url) {
-      if (!err && url) {
-        setQrCodeUrl(url);
-      }
-    });
-  }, [item, collection, user]);
 
   // Get image from OG or model viewer
   useEffect(() => {
@@ -86,6 +69,7 @@ export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef
       background: '#ffffff',
       logging: false,
     });
+    console.log("Generated canvas")
 
     // Copy to our canvas ref
     canvas.width = generatedCanvas.width;
@@ -93,6 +77,7 @@ export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef
     const ctx = canvas.getContext('2d');
     if (ctx) {
       ctx.drawImage(generatedCanvas, 0, 0);
+      console.log("Drew generated canvas onto main canvas");
     }
   };
 
@@ -115,12 +100,14 @@ export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef
     // Wipe the canvas
     ctx.fillStyle = 'white';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+    console.log("Wiped canvas");
     
     // Write the dithered content back
     const ditheredImageData = ctx.createImageData(canvas.width, canvas.height);
     const ditheredData = new Uint8ClampedArray(bwData.buffer);
     ditheredImageData.data.set(ditheredData);
     ctx.putImageData(ditheredImageData, 0, 0);
+    console.log("Dithered content written back to canvas");
   };
 
   // Render receipt on mount
@@ -133,7 +120,7 @@ export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef
       }
     };
     delayedRender();
-  }, [item, collection, user, qrCodeUrl, imageUrl]);
+  }, [item, collection, user, imageUrl]);
 
   const printReceipt = async () => {
     setIsPrinting(true);
@@ -189,13 +176,18 @@ export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef
         if (!ctx) throw new Error('Canvas context not found');
 
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        console.log("Got image data from canvas");
 
         // Canvas already has dithering applied from preview
         const data = new Uint32Array(imageData.data.buffer);
 
         const bitmap = rgbaToBits(data);
+        console.log("Converted image data to bitmap");
         const pitch = canvas.width / 8 | 0;
-
+        console.log("Calculated pitch:", pitch);
+        console.log("Bitmap length:", bitmap.length);
+        console.log("Canvas height:", canvas.height);
+        console.log("Canvas width:", canvas.width);
         let blank = 0;
         for (let i = 0; i < canvas.height * pitch; i += pitch) {
           const line = bitmap.slice(i, i + pitch);
@@ -211,15 +203,19 @@ export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef
             await printer.draw(line);
           }
         }
+        console.log("Finished drawing bitmap to printer");
 
-        await printer.finish(blank + DEF_FINISH_FEED);
+        await printer.finish(blank + DEF_FINISH_FEED + DEF_FINISH_FEED); // need extra finish feed
+        console.log("Finished printing");
         await rx.stopNotifications().then(() =>
           rx.removeEventListener('characteristicvaluechanged', notifier)
         );
 
       } finally {
+        console.log("Disconnecting from printer");
         await new Promise(resolve => setTimeout(resolve, 500));
         if (server) server.disconnect();
+        console.log("Disconnected from printer");
       }
 
     } catch (err) {
@@ -230,20 +226,6 @@ export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef
     }
   };
 
-  // Helper to format capture location
-  const getCaptureLocation = () => {
-    const { captureLocation, captureLatLon } = item;
-    if (captureLocation && captureLatLon) {
-      return `${captureLocation} (${captureLatLon})`;
-    } else if (captureLocation) {
-      return captureLocation;
-    } else if (captureLatLon) {
-      return captureLatLon;
-    }
-    return undefined;
-  };
-
-  const captureLocationValue = getCaptureLocation();
   const itemUrl = `poppenhu.is/${user.id}/${collection.id}/${item.id}`;
   const printDate = new Date().toLocaleDateString();
 
@@ -278,24 +260,19 @@ export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef
       <div
         ref={receiptRef}
         aria-hidden="true"
+        className="cat-printer-receipt"
         style={{
           position: 'absolute',
           left: '-9999px',
           width: `${DEF_CANVAS_WIDTH}px`,
-          backgroundColor: 'white',
-          fontFamily: 'monospace',
-          fontSize: '12px',
-          fontWeight: 'bold',
           padding: '10px',
-          borderLeft: '2px solid black',
+          borderLeft: '4px solid black',
         }}
       >
-        {/* Title */}
-        <div style={{ marginBottom: '20px' }}>
+        <span style={{ marginBottom: '20px' }}>
           poppenhuis / {user.name} / {collection.name} / {item.name}
-        </div>
+        </span>
 
-        {/* Image */}
         {imageUrl && (
           <div style={{ marginBottom: '20px' }}>
             <img
@@ -307,116 +284,12 @@ export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef
           </div>
         )}
 
-        {/* Metadata fields */}
-        {item.formalName && (
-          <div style={{ marginBottom: '20px' }}>
-            <span style={{ color: 'black' }}>formal name: </span>
-            <span style={{ color: 'black' }}>{item.formalName}</span>
-          </div>
-        )}
-        {item.releaseDate && (
-          <div style={{ marginBottom: '20px' }}>
-            <span style={{ color: 'black' }}>release date: </span>
-            <span style={{ color: 'black' }}>{item.releaseDate}</span>
-          </div>
-        )}
-        {item.manufacturer && (
-          <div style={{ marginBottom: '20px' }}>
-            <span style={{ color: 'black' }}>manufacturer: </span>
-            <span style={{ color: 'black' }}>{item.manufacturer}</span>
-          </div>
-        )}
-        {item.manufactureDate && (
-          <div style={{ marginBottom: '20px' }}>
-            <span style={{ color: 'black' }}>manufacture date: </span>
-            <span style={{ color: 'black' }}>{item.manufactureDate}</span>
-          </div>
-        )}
-        {item.manufactureLocation && (
-          <div style={{ marginBottom: '20px' }}>
-            <span style={{ color: 'black' }}>manufacture location: </span>
-            <span style={{ color: 'black' }}>{item.manufactureLocation}</span>
-          </div>
-        )}
-        {item.material && Array.isArray(item.material) && item.material.length > 0 && (
-          <div style={{ marginBottom: '20px' }}>
-            <span style={{ color: 'black' }}>material: </span>
-            <span style={{ color: 'black' }}>{item.material.join(', ')}</span>
-          </div>
-        )}
-        {item.acquisitionDate && (
-          <div style={{ marginBottom: '20px' }}>
-            <span style={{ color: 'black' }}>acquisition date: </span>
-            <span style={{ color: 'black' }}>{item.acquisitionDate}</span>
-          </div>
-        )}
-        {item.acquisitionLocation && (
-          <div style={{ marginBottom: '20px' }}>
-            <span style={{ color: 'black' }}>acquisition location: </span>
-            <span style={{ color: 'black' }}>{item.acquisitionLocation}</span>
-          </div>
-        )}
-        {item.storageLocation && (
-          <div style={{ marginBottom: '20px' }}>
-            <span style={{ color: 'black' }}>storage location: </span>
-            <span style={{ color: 'black' }}>{item.storageLocation}</span>
-          </div>
-        )}
-        {item.captureDate && (
-          <div style={{ marginBottom: '20px' }}>
-            <span style={{ color: 'black' }}>capture date: </span>
-            <span style={{ color: 'black' }}>{item.captureDate}</span>
-          </div>
-        )}
-        {captureLocationValue && (
-          <div style={{ marginBottom: '20px' }}>
-            <span style={{ color: 'black' }}>capture location: </span>
-            <span style={{ color: 'black' }}>{captureLocationValue}</span>
-          </div>
-        )}
-        {item.captureDevice && (
-          <div style={{ marginBottom: '20px' }}>
-            <span style={{ color: 'black' }}>capture device: </span>
-            <span style={{ color: 'black' }}>{item.captureDevice}</span>
-          </div>
-        )}
-        {item.captureApp && (
-          <div style={{ marginBottom: '20px' }}>
-            <span style={{ color: 'black' }}>capture app: </span>
-            <span style={{ color: 'black' }}>{item.captureApp}</span>
-          </div>
-        )}
-        {item.captureMethod && (
-          <div style={{ marginBottom: '20px' }}>
-            <span style={{ color: 'black' }}>capture method: </span>
-            <span style={{ color: 'black' }}>{item.captureMethod}</span>
-          </div>
-        )}
+        <DescriptionList item={item} collection={collection} user={user} hideUrls={true} />
 
-        {/* Custom fields */}
-        {item.customFields && Object.entries(item.customFields).map(([key, value]) => {
-          // Skip undefined or empty array values
-          if (value === undefined || (Array.isArray(value) && value.length === 0)) {
-            return null;
-          }
-          // Format the display value
-          const displayValue = Array.isArray(value) ? value.join(', ') : String(value);
-          return (
-            <div key={key} style={{ marginBottom: '20px' }}>
-              <span style={{ color: 'black' }}>{key}: </span>
-              <span style={{ color: 'black' }}>{displayValue}</span>
-            </div>
-          );
-        })}
+        <div style={{ textAlign: 'center', marginTop: '20px', marginBottom: '20px' }}>
+          <QrCode item={item} user={user} collection={collection} context="print" />
+        </div>
 
-        {/* QR Code */}
-        {qrCodeUrl && (
-          <div style={{ textAlign: 'center', marginTop: '20px', marginBottom: '20px' }}>
-            <img src={qrCodeUrl} alt="QR Code" style={{ width: `${QR_CODE_SIZE}px`, height: `${QR_CODE_SIZE}px` }} />
-          </div>
-        )}
-
-        {/* URL and print date */}
         <div style={{ marginBottom: '20px' }}>{itemUrl}</div>
         <div style={{ marginBottom: '20px' }}>printed on {printDate}</div>
       </div>
