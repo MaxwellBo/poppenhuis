@@ -1,4 +1,4 @@
-import React, { useState, useRef, useMemo } from "react";
+import React, { useState, useRef, useMemo, useEffect } from "react";
 import { useLoaderData } from "react-router";
 import { Helmet } from 'react-helmet';
 import { FirebaseForm } from "../components/FirebaseForm";
@@ -9,6 +9,7 @@ import { QueryPreservingLink } from "../components/QueryPreservingLink";
 import { PageHeader } from "../components/PageHeader";
 import { ModelViewerWrapper } from "../components/ModelViewerWrapper";
 import { useModelSnapshot } from "../hooks/useModelSnapshot";
+import JSZip from 'jszip';
 
 export const loader = loadCollection;
 
@@ -27,22 +28,70 @@ export default function NewItemPage() {
 
   const { isSubmitting, error, upsertItem } = useFirebaseSubmit();
   const { imageUrl, isUploading, uploadError, snapshotModel, uploadSnapshot } = useModelSnapshot();
+  const [modelUrl, setModelUrl] = useState<string | null>(null);
 
   // Create a temporary URL for the model file if it's a File object
-  const modelUrl = useMemo(() => {
-    if (!formData.model) return null;
+  useEffect(() => {
+    if (!formData.model) {
+      setModelUrl(null);
+      return;
+    }
     
     // If it's already a string URL, use it
     if (typeof formData.model === 'string') {
-      return formData.model;
+      setModelUrl(formData.model);
+      return;
     }
     
-    // If it's a File object, create a temporary blob URL
+    // If it's a File object, handle it based on type
     if (formData.model instanceof File) {
-      return URL.createObjectURL(formData.model);
+      const file = formData.model;
+      
+      // If it's a zip file, extract the .glb
+      if (file.name.toLowerCase().endsWith('.zip')) {
+        const extractGlbFromZip = async () => {
+          try {
+            const zip = new JSZip();
+            const contents = await zip.loadAsync(file);
+            
+            const glbFiles = Object.keys(contents.files).filter(filename => 
+              filename.toLowerCase().endsWith('.glb') && !contents.files[filename].dir
+            );
+            
+            if (glbFiles.length === 0) {
+              console.error('No .glb file found in the zip archive');
+              setModelUrl(null);
+              return;
+            }
+            
+            if (glbFiles.length > 1) {
+              console.error(`Zip archive contains multiple .glb files (${glbFiles.length}). Using the first one.`);
+            }
+            
+            const glbFileName = glbFiles[0];
+            const glbBlob = await contents.files[glbFileName].async('blob');
+            const url = URL.createObjectURL(glbBlob);
+            setModelUrl(url);
+          } catch (err) {
+            console.error('Failed to extract .glb from zip:', err);
+            setModelUrl(null);
+          }
+        };
+        
+        extractGlbFromZip();
+      } else {
+        // For non-zip files, create a blob URL directly
+        const url = URL.createObjectURL(file);
+        setModelUrl(url);
+      }
     }
     
-    return null;
+    // Cleanup function to revoke object URLs
+    return () => {
+      if (modelUrl && modelUrl.startsWith('blob:')) {
+        URL.revokeObjectURL(modelUrl);
+      }
+    };
   }, [formData.model]);
 
   // Filter out non-form fields
