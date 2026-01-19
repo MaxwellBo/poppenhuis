@@ -19,8 +19,6 @@ import {
 import html2canvas from 'html2canvas';
 import './receipt.css';
 
-const RECEIPT_RENDER_DELAY = 3000; // Wait for images to load before rendering
-
 const SPEED = SPEED_RANGE['speed^normal'];
 const ENERGY = ENERGY_RANGE['strength^high'];
 
@@ -44,92 +42,86 @@ export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef
   const receiptRef = useRef<HTMLDivElement>(null);
   const [isPrinting, setIsPrinting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [imageUrl, setImageUrl] = useState<string | null>(item.og || null);
 
-  // Get image from OG or model viewer
-  const captureImage = () => {
+  // Snapshot: capture image from model viewer (or use OG, overwriting if needed)
+  const snapshotReceipt = () => {
     if (item.og) {
       setImageUrl(item.og);
     } else if (modelViewerRef?.current) {
       const modelViewerCanvas = modelViewerRef.current.shadowRoot?.querySelector('canvas');
       if (modelViewerCanvas) {
-        console.log("data URL", modelViewerCanvas.toDataURL());
-        setImageUrl(modelViewerCanvas.toDataURL());
+        const dataUrl = modelViewerCanvas.toDataURL();
+        console.log("data URL", dataUrl);
+        setImageUrl(dataUrl);
       }
     }
   };
 
-  const renderReceipt = async () => {
-    const canvas = canvasRef.current;
-    const receiptElement = receiptRef.current;
-    if (!canvas || !receiptElement) throw new Error('Canvas or receipt element not found');
-
-    // Use html2canvas to convert the receipt HTML to canvas
-    const generatedCanvas = await html2canvas(receiptElement, {
-      width: DEF_CANVAS_WIDTH,
-      // @ts-ignore
-      scale: 1,
-      background: '#ffffff',
-      logging: false,
-    });
-    console.log("Generated canvas. Width:", generatedCanvas.width, "Height:", generatedCanvas.height);
-
-    canvas.width = generatedCanvas.width;
-    canvas.height = generatedCanvas.height;
-    const ctx = canvas.getContext('2d');
-    if (ctx) {
-      ctx.drawImage(generatedCanvas, 0, 0);
-      console.log("Drew generated canvas onto main canvas");
-    }
-  };
-
-  const ditherCanvas = () => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-    
-    // Get the content
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    
-    // Apply Floyd-Steinberg dithering
-    const data = new Uint32Array(imageData.data.buffer);
-    const mono = rgbaToGray(data);
-    ditherSteinberg(mono, canvas.width, canvas.height);
-    const bwData = grayToRgba(mono);
-    
-    // Wipe the canvas
-    ctx.fillStyle = 'white';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    console.log("Wiped canvas");
-    
-    // Write the dithered content back
-    const ditheredImageData = ctx.createImageData(canvas.width, canvas.height);
-    const ditheredData = new Uint8ClampedArray(bwData.buffer);
-    ditheredImageData.data.set(ditheredData);
-    ctx.putImageData(ditheredImageData, 0, 0);
-    console.log("Dithered content written back to canvas");
-  };
-
-  // Render receipt on mount
+  // Render preview whenever imageUrl changes
   useEffect(() => {
-    const delayedRender = async () => {
-      await new Promise(resolve => setTimeout(resolve, RECEIPT_RENDER_DELAY));
-      if (receiptRef.current && canvasRef.current) {
-        await renderReceipt();
-        ditherCanvas();
+    if (!imageUrl || !receiptRef.current || !canvasRef.current) return;
+
+    const renderReceipt = async () => {
+      const canvas = canvasRef.current;
+      const receiptElement = receiptRef.current;
+      if (!canvas || !receiptElement) return;
+
+      // Use html2canvas to convert the receipt HTML to canvas
+      const generatedCanvas = await html2canvas(receiptElement, {
+        width: DEF_CANVAS_WIDTH,
+        // @ts-ignore
+        scale: 1,
+        background: '#ffffff',
+        logging: false,
+      });
+      console.log("Generated canvas. Width:", generatedCanvas.width, "Height:", generatedCanvas.height);
+
+      canvas.width = generatedCanvas.width;
+      canvas.height = generatedCanvas.height;
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        ctx.drawImage(generatedCanvas, 0, 0);
+        console.log("Drew generated canvas onto main canvas");
+
+        // Apply dithering
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const data = new Uint32Array(imageData.data.buffer);
+        const mono = rgbaToGray(data);
+        ditherSteinberg(mono, canvas.width, canvas.height);
+        const bwData = grayToRgba(mono);
+        
+        // Wipe the canvas
+        ctx.fillStyle = 'white';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        console.log("Wiped canvas");
+        
+        // Write the dithered content back
+        const ditheredImageData = ctx.createImageData(canvas.width, canvas.height);
+        const ditheredData = new Uint8ClampedArray(bwData.buffer);
+        ditheredImageData.data.set(ditheredData);
+        ctx.putImageData(ditheredImageData, 0, 0);
+        console.log("Dithered content written back to canvas");
       }
     };
-    delayedRender();
-  }, [item, collection, user, imageUrl]);
+
+    renderReceipt();
+  }, [imageUrl, item, collection, user]);
 
   const printReceipt = async () => {
+    if (!imageUrl) {
+      setError('Please run snapshot first');
+      return;
+    }
+
+    const canvas = canvasRef.current;
+    if (!canvas) {
+      setError('Canvas not ready');
+      return;
+    }
+
     setIsPrinting(true);
     setError(null);
-
-    await renderReceipt();
-    ditherCanvas();
 
     try {
       // Check if bluetooth is available
@@ -169,10 +161,6 @@ export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef
           .catch((error: Error) => console.log(error));
 
         await printer.prepare(SPEED, ENERGY);
-
-        // Get canvas data
-        const canvas = canvasRef.current;
-        if (!canvas) throw new Error('Canvas not found');
 
         const ctx = canvas.getContext('2d');
         if (!ctx) throw new Error('Canvas context not found');
@@ -233,33 +221,38 @@ export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef
 
   return (
     <>
-      <button
-        onClick={printReceipt}
-        disabled={isPrinting}
-        style={{
-          cursor: isPrinting ? 'wait' : 'pointer',
-        }}
-      >
-        {isPrinting ? 'printing...' : 'print receipt'}
-      </button>
-      {!imageUrl && <span style={{ color: 'orange', marginLeft: '10px', fontWeight: 'bold' }}>⚠️ NOT READY TO PRINT</span>}
-      {error && <span style={{ color: 'red', marginLeft: '10px' }}>{error}</span>}
       <div>
-        <details onToggle={(e) => {
-          if ((e.target as HTMLDetailsElement).open) {
-            captureImage();
-          }
-        }}>
-          <summary>preview & info</summary>
+        <details>
+          <summary>print receipt</summary>
+          <div style={{ marginTop: '10px', marginBottom: '10px' }}>
+            <button
+              onClick={snapshotReceipt}
+              style={{ marginRight: '10px' }}
+            >
+              snapshot receipt
+            </button>
+            <button
+              onClick={printReceipt}
+              disabled={!imageUrl || isPrinting}
+              style={{
+                cursor: (!imageUrl || isPrinting) ? 'not-allowed' : 'pointer',
+                opacity: !imageUrl ? 0.5 : 1,
+              }}
+            >
+              {isPrinting ? 'printing...' : 'print receipt'}
+            </button>
+            {error && <div style={{ color: 'red', marginTop: '10px' }}>{error}</div>}
+          </div>
           <p>
             This implements the protocol for the very cheap range of "cat printers" available on <a href="https://www.aliexpress.com/w/wholesale-cat-printer.html">
               AliExpress
             </a>. The protocol is lifted from <a href="https://github.com/NaitLee/kitty-printer">NaitLee/kitty-printer</a>.
-
-            <canvas
-              ref={canvasRef}
-            />
           </p>
+          {!imageUrl ? (
+            <div style={{ padding: '10px' }}><i>need snapshot</i></div>
+          ) : (
+            <canvas ref={canvasRef} />
+          )}
         </details>
       </div>
 
