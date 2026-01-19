@@ -286,7 +286,7 @@ export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef
           </div>
         )}
 
-        <DescriptionList item={item} collection={collection} user={user} hideUrls={true} hideUnsaturatedFields={true} />
+        <DescriptionList item={item} collection={collection} user={user} hideUrls={true} />
 
         <div style={{ textAlign: 'center', marginTop: '20px', marginBottom: '20px' }}>
           <QrCode item={item} user={user} collection={collection} context="print" />
