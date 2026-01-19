@@ -365,10 +365,6 @@ form.table-form label {
 .a-scene-wrapper,
 .model-viewer-wrapper {
   border: 1px dotted rgba(0, 0, 0, 0);
-}
-
-#embed-page .a-scene-wrapper,
-#embed-page .model-viewer-wrapper {
   display: inline-block;
   width: fit-content;
 }
