@@ -172,7 +172,8 @@ export function useFirebaseSubmit(options: UseFirebaseSubmitOptions = {}) {
     itemId: string,
     formData: Record<string, any>,
     modelFile: File | null,
-    cleanFormData?: () => Record<string, any>
+    cleanFormData?: () => Record<string, any>,
+    ogImageFile?: File | null
   ) => {
     setError('');
     setIsSubmitting(true);
@@ -259,6 +260,20 @@ export function useFirebaseSubmit(options: UseFirebaseSubmitOptions = {}) {
         await runTransaction(itemRef, (currentData) => {
           if (currentData === null) return null;
           return { ...currentData, model: modelUrl };
+        });
+      }
+
+      // Upload OG image file after transaction if provided
+      if (ogImageFile) {
+        const path = `og-images/${userId}/${collectionId}/${itemId}.png`;
+        const fileRef = storageRef(storage, path);
+        await uploadBytes(fileRef, ogImageFile);
+        const ogUrl = await getDownloadURL(fileRef);
+        
+        // Update the item with the new OG image URL
+        await runTransaction(itemRef, (currentData) => {
+          if (currentData === null) return null;
+          return { ...currentData, og: ogUrl };
         });
       }
 
