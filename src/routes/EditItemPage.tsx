@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useLoaderData } from "react-router";
 import { Helmet } from 'react-helmet';
 import { FirebaseForm } from "../components/FirebaseForm";
@@ -13,7 +13,6 @@ export const loader = loadItem;
 
 export default function EditItemPage() {
   const { item, collection, user } = useLoaderData() as Awaited<ReturnType<typeof loader>>;
-  const [modelFile, setModelFile] = useState<File | null>(null);
   
   const {
     formData,
@@ -29,24 +28,13 @@ export default function EditItemPage() {
     setFormData({ ...item });
   }, [item, setFormData]);
 
-  const handleModelFileSelect = (file: File | null) => {
-    setModelFile(file);
-  };
-
-  // Add file handler to the model field and filter out non-form fields
-  const itemFieldsWithFileHandler = Object.values(ITEM_FIELD_SCHEMAS)
-    .filter(field => !['usdzModel', 'poster', 'og'].includes(field.name))
-    .map(field => 
-      field.name === 'model' ? { 
-        ...field, 
-        onFileChange: handleModelFileSelect,
-        selectedFileName: modelFile?.name 
-      } : field
-    );
+  // Filter out non-form fields
+  const itemFields = Object.values(ITEM_FIELD_SCHEMAS)
+    .filter(field => !['usdzModel', 'poster', 'og'].includes(field.name));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await upsertItem(user.id, collection.id, item.id, formData, modelFile);
+    await upsertItem(user.id, collection.id, item.id, formData);
   };
 
   return (
@@ -64,7 +52,7 @@ export default function EditItemPage() {
         onChange: () => {}, // ID is read-only
         readOnly: true,
       }}
-      fields={itemFieldsWithFileHandler}
+      fields={itemFields}
       onInputChange={handleInputChange}
       onAddField={handleAddField}
       onDeleteField={handleDeleteField}

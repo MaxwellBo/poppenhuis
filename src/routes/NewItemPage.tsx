@@ -13,7 +13,6 @@ export const loader = loadCollection;
 export default function NewItemPage() {
   const { user, collection } = useLoaderData() as Awaited<ReturnType<typeof loader>>;
   const [itemId, setItemId] = useState("");
-  const [modelFile, setModelFile] = useState<File | null>(null);
   
   const {
     formData,
@@ -25,24 +24,13 @@ export default function NewItemPage() {
 
   const { isSubmitting, error, upsertItem } = useFirebaseSubmit();
 
-  const handleModelFileSelect = (file: File | null) => {
-    setModelFile(file);
-  };
-
-  // Add file handler to the model field and filter out non-form fields
-  const itemFieldsWithFileHandler = Object.values(ITEM_FIELD_SCHEMAS)
-    .filter(field => !['usdzModel', 'poster', 'og'].includes(field.name))
-    .map(field => 
-      field.name === 'model' ? { 
-        ...field, 
-        onFileChange: handleModelFileSelect,
-        selectedFileName: modelFile?.name 
-      } : field
-    );
+  // Filter out non-form fields
+  const itemFields = Object.values(ITEM_FIELD_SCHEMAS)
+    .filter(field => !['usdzModel', 'poster', 'og'].includes(field.name));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await upsertItem(user.id, collection.id, itemId, formData, modelFile, cleanFormData);
+    await upsertItem(user.id, collection.id, itemId, formData, cleanFormData);
   };
 
   return (
@@ -59,7 +47,7 @@ export default function NewItemPage() {
         value: itemId,
         onChange: setItemId,
       }}
-      fields={itemFieldsWithFileHandler}
+      fields={itemFields}
       onInputChange={handleInputChange}
       onAddField={handleAddField}
       onDeleteField={handleDeleteField}

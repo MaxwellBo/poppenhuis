@@ -171,7 +171,6 @@ export function useFirebaseSubmit(options: UseFirebaseSubmitOptions = {}) {
     collectionId: string,
     itemId: string,
     formData: Record<string, any>,
-    modelFile: File | null,
     cleanFormData?: () => Record<string, any>
   ) => {
     setError('');
@@ -201,6 +200,9 @@ export function useFirebaseSubmit(options: UseFirebaseSubmitOptions = {}) {
         throw new Error(`Collection '${collectionId}' does not exist`);
       }
 
+      // Extract model file if it exists in formData
+      const modelFile = formData.model instanceof File ? formData.model : null;
+      
       const dataToSave = cleanFormData ? cleanFormData() : formData;
       const itemRef = ref(rtdb, `/${userId}/collections/${collectionId}/items/${itemId}`);
 

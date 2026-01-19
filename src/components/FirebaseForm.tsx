@@ -2,7 +2,6 @@ import React, { ReactNode } from "react";
 import { FieldSchema } from "../manifest";
 
 export interface FieldConfig extends FieldSchema {
-  onFileChange?: (file: File | null) => void;
   selectedFileName?: string;
 }
 
@@ -16,7 +15,7 @@ interface FirebaseFormProps {
     readOnly?: boolean;
   };
   fields: FieldConfig[];
-  onInputChange: (field: string, value: string) => void;
+  onInputChange: (field: string, value: string | File) => void;
   onAddField: (field: string) => void;
   onDeleteField: (field: string) => void;
   onSubmit: (e: React.FormEvent) => void;
@@ -40,7 +39,7 @@ export function FirebaseForm({
   children,
 }: FirebaseFormProps) {
   const renderField = (config: FieldConfig) => {
-    const { name, label, required = false, placeholder, type = 'text', accept, onFileChange, selectedFileName } = config;
+    const { name, label, required = false, placeholder, type = 'text', accept, selectedFileName } = config;
     
     return (
       <div className="table-form-row" key={name}>
@@ -48,7 +47,9 @@ export function FirebaseForm({
         {formData.hasOwnProperty(name) && formData[name] !== undefined ? (
           type === 'file' ? (
             <>
-              {selectedFileName ? (
+              {formData[name] instanceof File ? (
+                <span>{formData[name].name}</span>
+              ) : selectedFileName ? (
                 <span>{selectedFileName}</span>
               ) : (
                 <a href={formData[name]} target="_blank" rel="noopener noreferrer">{formData[name]}</a>
@@ -117,8 +118,7 @@ export function FirebaseForm({
               onChange={(e) => {
                 const file = e.target.files?.[0];
                 if (file) {
-                  if (onFileChange) onFileChange(file);
-                  onAddField(name);
+                  onInputChange(name, file);
                 }
               }}
               disabled={isSubmitting}

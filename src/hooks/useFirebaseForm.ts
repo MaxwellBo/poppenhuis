@@ -8,7 +8,7 @@ export interface UseFirebaseFormOptions {
 export function useFirebaseForm({ initialData = {}, requiredFields = ['name'] }: UseFirebaseFormOptions = {}) {
   const [formData, setFormData] = useState<Record<string, any>>(initialData);
 
-  const handleInputChange = (field: string, value: string) => {
+  const handleInputChange = (field: string, value: string | File) => {
     setFormData(prev => ({ ...prev, [field]: value || undefined }));
   };
 
@@ -32,6 +32,11 @@ export function useFirebaseForm({ initialData = {}, requiredFields = ['name'] }:
     const cleaned: Record<string, any> = {};
     
     Object.entries(formData).forEach(([key, value]) => {
+      // Skip File objects and empty values
+      if (value instanceof File) {
+        return;
+      }
+      
       if (value !== undefined && value !== '') {
         // Handle material field - convert to array
         if (key === 'material' && typeof value === 'string') {
