@@ -47,16 +47,17 @@ export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef
   const [imageUrl, setImageUrl] = useState<string | null>(null);
 
   // Get image from OG or model viewer
-  useEffect(() => {
+  const captureImage = () => {
     if (item.og) {
       setImageUrl(item.og);
     } else if (modelViewerRef?.current) {
       const modelViewerCanvas = modelViewerRef.current.shadowRoot?.querySelector('canvas');
       if (modelViewerCanvas) {
+        console.log("data URL", modelViewerCanvas.toDataURL());
         setImageUrl(modelViewerCanvas.toDataURL());
       }
     }
-  }, [item, modelViewerRef]);
+  };
 
   const renderReceipt = async () => {
     const canvas = canvasRef.current;
@@ -241,9 +242,14 @@ export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef
       >
         {isPrinting ? 'printing...' : 'print receipt'}
       </button>
+      {!imageUrl && <span style={{ color: 'orange', marginLeft: '10px', fontWeight: 'bold' }}>⚠️ NOT READY TO PRINT</span>}
       {error && <span style={{ color: 'red', marginLeft: '10px' }}>{error}</span>}
       <div>
-        <details>
+        <details onToggle={(e) => {
+          if ((e.target as HTMLDetailsElement).open) {
+            captureImage();
+          }
+        }}>
           <summary>preview & info</summary>
           <p>
             This implements the protocol for the very cheap range of "cat printers" available on <a href="https://www.aliexpress.com/w/wholesale-cat-printer.html">
