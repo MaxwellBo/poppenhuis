@@ -52,7 +52,7 @@ export function FirebaseForm({
   const [modelUrl, setModelUrl] = useState<string | null>(null);
   
   // Use snapshot hook - get og from formData if it exists
-  const { imageUrl, isUploading, uploadError, snapshotModel, uploadSnapshot } = useModelSnapshot(formData.og);
+  const { imageUrl, isUploading, uploadError, snapshotModel } = useModelSnapshot(formData.og);
 
   // Extract model URL from file or use existing URL
   useEffect(() => {
