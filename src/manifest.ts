@@ -64,14 +64,14 @@ export const ITEM_FIELD_SCHEMAS: Record<string, FieldSchema> = {
   alt: { 
     name: 'alt', 
     label: 'alt text', 
-    placeholder: 'description for screen readers',
+    placeholder: 'A ceramic vase with textured sides',
     description: "Custom text that will be used to describe the model to viewers who use a screen reader or otherwise depend on additional semantic context to understand what they are viewing."
   },
   description: { name: 'description', label: 'description', type: 'textarea' },
   formalName: { 
     name: 'formalName', 
     label: 'formal name', 
-    placeholder: 'model number or scientific name',
+    placeholder: 'Yamaha CGX171CCA',
     description: "A more specific name (like a model number or a scientific name) than the general name."
   },
   releaseDate: { 
@@ -83,14 +83,14 @@ export const ITEM_FIELD_SCHEMAS: Record<string, FieldSchema> = {
   manufacturer: { name: 'manufacturer', label: 'manufacturer', placeholder: 'EarthQuaker Devices' },
   manufactureDate: { name: 'manufactureDate', label: 'manufacture date', placeholder: '2024 July 21' },
   manufactureLocation: { name: 'manufactureLocation', label: 'manufacture location', placeholder: 'Darlinghurst, Sydney' },
-  material: { name: 'material', label: 'material', placeholder: 'plastic, metal, wood' },
+  material: { name: 'material', label: 'material', placeholder: 'clay, glaze' },
   acquisitionDate: { name: 'acquisitionDate', label: 'acquisition date', placeholder: '2024 July 21' },
-  acquisitionLocation: { name: 'acquisitionLocation', label: 'acquisition location', placeholder: 'Surry Hills, Sydney' },
+  acquisitionLocation: { name: 'acquisitionLocation', label: 'acquisition location', placeholder: 'Darlinghurst, Sydney' },
   storageLocation: { name: 'storageLocation', label: 'storage location', placeholder: 'Darlinghurst, Sydney' },
   captureDate: { name: 'captureDate', label: 'capture date', placeholder: '2024 July 21, 10:35AM' },
   captureLocation: { name: 'captureLocation', label: 'capture location', placeholder: 'Darlinghurst, Sydney' },
   captureLatLon: { name: 'captureLatLon', label: 'capture lat/lon', placeholder: '33.88 S, 151.21 E' },
-  captureDevice: { name: 'captureDevice', label: 'capture device', placeholder: 'iPhone 15 Pro' },
+  captureDevice: { name: 'captureDevice', label: 'capture device', placeholder: 'Apple iPhone 13 Pro' },
   captureApp: { name: 'captureApp', label: 'capture app', placeholder: 'Polycam' },
   captureMethod: { name: 'captureMethod', label: 'capture method', placeholder: 'LiDAR' },
   model: { 
