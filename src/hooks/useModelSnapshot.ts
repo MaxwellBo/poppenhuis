@@ -23,16 +23,24 @@ export function useModelSnapshot(ogImage?: string) {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
 
-  const snapshotModel = useCallback((modelViewerRef: React.RefObject<HTMLElement>) => {
+  const snapshotModel = useCallback(async (modelViewerRef: React.RefObject<HTMLElement>) => {
     if (modelViewerRef?.current) {
-      // Capture from model viewer
-      const modelViewerCanvas = modelViewerRef.current.shadowRoot?.querySelector('canvas');
-      if (modelViewerCanvas) {
-        const dataUrl = modelViewerCanvas.toDataURL('image/png');
+      // Use model-viewer's built-in toDataURL method which handles WebGL buffer properly
+      const modelViewer = modelViewerRef.current as any;
+      if (typeof modelViewer.toDataURL === 'function') {
+        const dataUrl = await modelViewer.toDataURL('image/png');
         console.log("Snapshot captured from model viewer");
         setImageUrl(dataUrl);
       } else {
-        console.warn("Model viewer canvas not found");
+        // Fallback: try to get canvas directly (may have issues with WebGL buffer)
+        const modelViewerCanvas = modelViewerRef.current.shadowRoot?.querySelector('canvas');
+        if (modelViewerCanvas) {
+          const dataUrl = (modelViewerCanvas as HTMLCanvasElement).toDataURL('image/png');
+          console.log("Snapshot captured from canvas fallback");
+          setImageUrl(dataUrl);
+        } else {
+          console.warn("Model viewer canvas not found");
+        }
       }
     } else {
       console.warn("Model viewer ref not available");
