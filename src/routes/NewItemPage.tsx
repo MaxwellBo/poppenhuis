@@ -26,12 +26,12 @@ export default function NewItemPage() {
 
   // Filter out non-form fields
   const itemFields = Object.values(ITEM_FIELD_SCHEMAS)
-    .filter(field => !['usdzModel', 'poster', 'og'].includes(field.name));
+    .filter(field => !['usdzModel', 'poster'].includes(field.name));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Clean the form data (og field will be added by FirebaseForm if snapshot was taken)
+    // Clean the form data
     const cleanedData = cleanFormData();
     const dataToSubmit = { ...cleanedData, ...formData };
     

@@ -30,15 +30,12 @@ export default function EditItemPage() {
 
   // Filter out non-form fields
   const itemFields = Object.values(ITEM_FIELD_SCHEMAS)
-    .filter(field => !['usdzModel', 'poster', 'og'].includes(field.name));
+    .filter(field => !['uszdModel', 'poster'].includes(field.name));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Create a copy of formData (og field will be added by FirebaseForm if snapshot was taken)
-    const dataToSubmit = { ...formData };
-    
-    await upsertItem(user.id, collection.id, item.id, dataToSubmit);
+    await upsertItem(user.id, collection.id, item.id, formData);
   };
 
   return (

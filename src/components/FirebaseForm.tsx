@@ -118,32 +118,30 @@ export function FirebaseForm({
     };
   }, [formData.model]);
 
+  // When snapshot is taken, also store the data URL in formData
+  const handleSnapshotModel = () => {
+    snapshotModel(modelViewerRef);
+    // After snapshot is captured, the imageUrl will be set via useEffect below
+  };
+
+  // Sync imageUrl to formData.og when it changes (for data URLs)
+  useEffect(() => {
+    if (imageUrl && imageUrl.startsWith('data:')) {
+      onInputChange('og', imageUrl);
+    }
+  }, [imageUrl]);
+
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Upload snapshot if we have one and upload props are provided
-    if (imageUrl && snapshotUploadProps) {
-      const { userId, collectionId, itemId } = snapshotUploadProps;
-      
-      // Only upload if it's a new snapshot (data URL) or not already uploaded
-      if (imageUrl.startsWith('data:')) {
-        const ogUrl = await uploadSnapshot(userId, collectionId, itemId);
-        if (!ogUrl && uploadError) {
-          // If upload failed, the error is already shown in the UI
-          return;
-        }
-        // Add the og URL to formData before submitting
-        if (ogUrl) {
-          onInputChange('og', ogUrl);
-        }
-      }
-    }
-    
-    // Call the original onSubmit
     onSubmit(e);
   };
   const renderField = (config: FieldConfig) => {
     const { name, label, required = false, placeholder, type = 'text', accept, selectedFileName } = config;
+    
+    // Don't render og field when snapshotter is available - it's shown in the model section
+    if (name === 'og' && snapshotUploadProps) {
+      return null;
+    }
     
     // Special handling for model field - show preview and snapshot UI above the file input
     if (name === 'model' && modelUrl && snapshotUploadProps) {
@@ -157,7 +155,7 @@ export function FirebaseForm({
             />
             <div style={{ marginTop: '10px' }}>
               <button 
-                onClick={() => snapshotModel(modelViewerRef)} 
+                onClick={handleSnapshotModel} 
                 type="button"
                 disabled={isSubmitting || isUploading}
               >
@@ -172,6 +170,12 @@ export function FirebaseForm({
                     alt="Snapshot preview" 
                     style={{ width: '200px', height: 'auto' }} 
                   />
+                </div>
+              )}
+              {formData.og && !imageUrl && (
+                <div style={{ marginTop: '10px' }}>
+                  <p>Current Open Graph image:</p>
+                  <a href={formData.og} target="_blank" rel="noopener noreferrer">{formData.og}</a>
                 </div>
               )}
               {uploadError && (

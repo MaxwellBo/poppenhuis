@@ -264,6 +264,32 @@ export function useFirebaseSubmit(options: UseFirebaseSubmitOptions = {}) {
         });
       }
 
+      // Upload og image if it's a data URL
+      if (formData.og && typeof formData.og === 'string' && formData.og.startsWith('data:')) {
+        const dataUrl = formData.og;
+        const arr = dataUrl.split(',');
+        const mimeMatch = arr[0].match(/:(.*?);/);
+        const mime = mimeMatch ? mimeMatch[1] : 'image/png';
+        const bstr = atob(arr[1]);
+        let n = bstr.length;
+        const u8arr = new Uint8Array(n);
+        while (n--) {
+          u8arr[n] = bstr.charCodeAt(n);
+        }
+        const blob = new Blob([u8arr], { type: mime });
+        
+        const path = `og-images/${userId}/${collectionId}/${itemId}.png`;
+        const fileRef = storageRef(storage, path);
+        await uploadBytes(fileRef, blob);
+        const ogUrl = await getDownloadURL(fileRef);
+        
+        // Update the item with the new og URL
+        await runTransaction(itemRef, (currentData) => {
+          if (currentData === null) return null;
+          return { ...currentData, og: ogUrl };
+        });
+      }
+
       navigate(`/${userId}/${collectionId}/${itemId}`);
     } catch (err: any) {
       console.error('Failed to save item:', err);
