@@ -2,6 +2,16 @@ import type { Collection, Item, User } from "./manifest";
 
 const BASE_URL = "https://poppenhu.is";
 
+function resolveOgUrl(og: string | undefined): string {
+  if (!og) return `${BASE_URL}/og.jpeg`;
+  // If it's already an absolute URL, use it directly
+  if (og.startsWith('http://') || og.startsWith('https://')) {
+    return og;
+  }
+  // Otherwise, it's relative - prepend base URL
+  return `${BASE_URL}${og}`;
+}
+
 export interface Meta {
   title: string;
   description: string;
@@ -20,7 +30,7 @@ export function metaForItem(item: Item, collection: Collection, user: User): Met
   return {
     title: `${item.name} - poppenhuis`,
     description: item.description ?? `3D model in the collection ${collection.name} by ${user.name}`,
-    image: item.og ? `${BASE_URL}${item.og}` : `${BASE_URL}/og.jpeg`,
+    image: resolveOgUrl(item.og),
     url: `${BASE_URL}/${encodeURIComponent(user.id)}/${encodeURIComponent(collection.id)}/${encodeURIComponent(item.id)}`,
   };
 }
@@ -29,7 +39,7 @@ export function metaForCollection(collection: Collection, user: User): Meta {
   return {
     title: `${collection.name} - poppenhuis`,
     description: collection.description ?? `Collection of 3D models by ${user.name}`,
-    image: collection.og ? `${BASE_URL}${collection.og}` : `${BASE_URL}/og.jpeg`,
+    image: resolveOgUrl(collection.og),
     url: `${BASE_URL}/${encodeURIComponent(user.id)}/${encodeURIComponent(collection.id)}`,
   };
 }
@@ -38,7 +48,7 @@ export function metaForUser(user: User): Meta {
   return {
     title: `${user.name} - poppenhuis`,
     description: user.bio ?? `User page for ${user.name}`,
-    image: user.og ? `${BASE_URL}${user.og}` : `${BASE_URL}/og.jpeg`,
+    image: resolveOgUrl(user.og),
     url: `${BASE_URL}/${encodeURIComponent(user.id)}`,
   };
 }
