@@ -1,5 +1,8 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useRef, useState, useEffect } from "react";
 import { FieldSchema } from "../manifest";
+import { ModelViewerWrapper } from "./ModelViewerWrapper";
+import { useModelSnapshot } from "../hooks/useModelSnapshot";
+import JSZip from 'jszip';
 
 export interface FieldConfig extends FieldSchema {
   selectedFileName?: string;
@@ -23,6 +26,12 @@ interface FirebaseFormProps {
   error: string;
   submitButtonText?: string;
   children?: ReactNode;
+  // Props for snapshot upload to storage
+  snapshotUploadProps?: {
+    userId: string;
+    collectionId: string;
+    itemId: string;
+  };
 }
 
 export function FirebaseForm({
@@ -37,9 +46,179 @@ export function FirebaseForm({
   error,
   submitButtonText = "Submit",
   children,
+  snapshotUploadProps,
 }: FirebaseFormProps) {
+  const modelViewerRef = useRef<HTMLElement>(null);
+  const [modelUrl, setModelUrl] = useState<string | null>(null);
+  
+  // Use snapshot hook - get og from formData if it exists
+  const { imageUrl, isUploading, uploadError, snapshotModel, uploadSnapshot } = useModelSnapshot(formData.og);
+
+  // Extract model URL from file or use existing URL
+  useEffect(() => {
+    if (!formData.model) {
+      setModelUrl(null);
+      return;
+    }
+    
+    // If it's already a string URL, use it
+    if (typeof formData.model === 'string') {
+      setModelUrl(formData.model);
+      return;
+    }
+    
+    // If it's a File object, handle it based on type
+    if (formData.model instanceof File) {
+      const file = formData.model;
+      
+      // If it's a zip file, extract the .glb
+      if (file.name.toLowerCase().endsWith('.zip')) {
+        const extractGlbFromZip = async () => {
+          try {
+            const zip = new JSZip();
+            const contents = await zip.loadAsync(file);
+            
+            const glbFiles = Object.keys(contents.files).filter(filename => 
+              filename.toLowerCase().endsWith('.glb') && !contents.files[filename].dir
+            );
+            
+            if (glbFiles.length === 0) {
+              console.error('No .glb file found in the zip archive');
+              setModelUrl(null);
+              return;
+            }
+            
+            if (glbFiles.length > 1) {
+              console.error(`Zip archive contains multiple .glb files (${glbFiles.length}). Using the first one.`);
+            }
+            
+            const glbFileName = glbFiles[0];
+            const glbBlob = await contents.files[glbFileName].async('blob');
+            const url = URL.createObjectURL(glbBlob);
+            setModelUrl(url);
+          } catch (err) {
+            console.error('Failed to extract .glb from zip:', err);
+            setModelUrl(null);
+          }
+        };
+        
+        extractGlbFromZip();
+      } else {
+        // For non-zip files, create a blob URL directly
+        const url = URL.createObjectURL(file);
+        setModelUrl(url);
+      }
+    }
+    
+    // Cleanup function to revoke object URLs
+    return () => {
+      if (modelUrl && modelUrl.startsWith('blob:')) {
+        URL.revokeObjectURL(modelUrl);
+      }
+    };
+  }, [formData.model]);
+
+  const handleFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Upload snapshot if we have one and upload props are provided
+    if (imageUrl && snapshotUploadProps) {
+      const { userId, collectionId, itemId } = snapshotUploadProps;
+      
+      // Only upload if it's a new snapshot (data URL) or not already uploaded
+      if (imageUrl.startsWith('data:')) {
+        const ogUrl = await uploadSnapshot(userId, collectionId, itemId);
+        if (!ogUrl && uploadError) {
+          // If upload failed, the error is already shown in the UI
+          return;
+        }
+        // Add the og URL to formData before submitting
+        if (ogUrl) {
+          onInputChange('og', ogUrl);
+        }
+      }
+    }
+    
+    // Call the original onSubmit
+    onSubmit(e);
+  };
   const renderField = (config: FieldConfig) => {
     const { name, label, required = false, placeholder, type = 'text', accept, selectedFileName } = config;
+    
+    // Special handling for model field - show preview and snapshot UI above the file input
+    if (name === 'model' && modelUrl && snapshotUploadProps) {
+      return (
+        <React.Fragment key={name}>
+          <div style={{ gridColumn: '1 / -1', marginBottom: '20px' }}>
+            <ModelViewerWrapper 
+              modelViewerRef={modelViewerRef}
+              item={{ ...formData, model: modelUrl, id: idField?.value || 'preview' } as any} 
+              size='normal' 
+            />
+            <div style={{ marginTop: '10px' }}>
+              <button 
+                onClick={() => snapshotModel(modelViewerRef)} 
+                type="button"
+                disabled={isSubmitting || isUploading}
+              >
+                snapshot model for og image
+              </button>
+              {imageUrl && (
+                <div style={{ marginTop: '10px' }}>
+                  <p>Open Graph image preview</p>
+                  <img 
+                    key={imageUrl} 
+                    src={imageUrl} 
+                    alt="Snapshot preview" 
+                    style={{ width: '200px', height: 'auto' }} 
+                  />
+                </div>
+              )}
+              {uploadError && (
+                <div style={{ color: 'red', marginTop: '10px' }}>
+                  Upload error: {uploadError}
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="table-form-row" key={`${name}-input`}>
+            <label htmlFor={name}>{label}</label>
+            {formData.hasOwnProperty(name) && formData[name] !== undefined ? (
+              <>
+                {formData[name] instanceof File ? (
+                  <span>{formData[name].name}</span>
+                ) : selectedFileName ? (
+                  <span>{selectedFileName}</span>
+                ) : (
+                  <a href={formData[name]} target="_blank" rel="noopener noreferrer">{formData[name]}</a>
+                )}
+                <button 
+                  type="button" 
+                  onClick={() => onDeleteField(name)} 
+                  style={{ fontSize: '0.8rem' }}
+                  disabled={isSubmitting}
+                >
+                  ✕
+                </button>
+              </>
+            ) : (
+              <input
+                type="file"
+                id={name}
+                accept={accept}
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    onInputChange(name, file);
+                  }
+                }}
+                disabled={isSubmitting}
+              />
+            )}
+          </div>
+        </React.Fragment>
+      );
+    }
     
     return (
       <div className="table-form-row" key={name}>
@@ -134,7 +313,7 @@ export function FirebaseForm({
   };
 
   return (
-    <form onSubmit={onSubmit} className="table-form">
+    <form onSubmit={handleFormSubmit} className="table-form">
         {idField && (
           <div className="table-form-row">
             <label htmlFor={idField.name}>{idField.label}</label>
@@ -164,8 +343,8 @@ export function FirebaseForm({
         )}
         
         <div className="table-form-row">
-          <button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? "saving..." : submitButtonText}
+          <button type="submit" disabled={isSubmitting || isUploading}>
+            {isSubmitting || isUploading ? "saving..." : submitButtonText}
           </button>
         </div>
       </form>
