@@ -135,57 +135,24 @@ export function FirebaseForm({
     e.preventDefault();
     onSubmit(e);
   };
+
   const renderField = (config: FieldConfig) => {
     const { name, label, required = false, placeholder, type = 'text', accept, selectedFileName } = config;
     
-    // Don't render og field when snapshotter is available - it's shown in the model section
-    if (name === 'og' && snapshotUploadProps) {
-      return null;
-    }
-    
-    // Special handling for model field - show preview and snapshot UI above the file input
-    if (name === 'model' && modelUrl && snapshotUploadProps) {
+    // Model field: show preview above file input
+    if (name === 'model' && snapshotUploadProps) {
       return (
         <React.Fragment key={name}>
-          <div style={{ gridColumn: '1 / -1', marginBottom: '20px' }}>
-            <ModelViewerWrapper 
-              modelViewerRef={modelViewerRef}
-              item={{ ...formData, model: modelUrl, id: idField?.value || 'preview' } as any} 
-              size='normal' 
-            />
-            <div style={{ marginTop: '10px' }}>
-              <button 
-                onClick={handleSnapshotModel} 
-                type="button"
-                disabled={isSubmitting || isUploading}
-              >
-                snapshot model for og image
-              </button>
-              {imageUrl && (
-                <div style={{ marginTop: '10px' }}>
-                  <p>Open Graph image preview</p>
-                  <img 
-                    key={imageUrl} 
-                    src={imageUrl} 
-                    alt="Snapshot preview" 
-                    style={{ width: '200px', height: 'auto' }} 
-                  />
-                </div>
-              )}
-              {formData.og && !imageUrl && (
-                <div style={{ marginTop: '10px' }}>
-                  <p>Current Open Graph image:</p>
-                  <a href={formData.og} target="_blank" rel="noopener noreferrer">{formData.og}</a>
-                </div>
-              )}
-              {uploadError && (
-                <div style={{ color: 'red', marginTop: '10px' }}>
-                  Upload error: {uploadError}
-                </div>
-              )}
+          {modelUrl && (
+            <div style={{ marginBottom: '10px' }}>
+              <ModelViewerWrapper 
+                modelViewerRef={modelViewerRef}
+                item={{ ...formData, model: modelUrl, id: idField?.value || 'preview' } as any} 
+                size='normal' 
+              />
             </div>
-          </div>
-          <div className="table-form-row" key={`${name}-input`}>
+          )}
+          <div className="table-form-row">
             <label htmlFor={name}>{label}</label>
             {formData.hasOwnProperty(name) && formData[name] !== undefined ? (
               <>
@@ -196,30 +163,53 @@ export function FirebaseForm({
                 ) : (
                   <a href={formData[name]} target="_blank" rel="noopener noreferrer">{formData[name]}</a>
                 )}
-                <button 
-                  type="button" 
-                  onClick={() => onDeleteField(name)} 
-                  style={{ fontSize: '0.8rem' }}
-                  disabled={isSubmitting}
-                >
-                  ✕
-                </button>
+                <button type="button" onClick={() => onDeleteField(name)} style={{ fontSize: '0.8rem' }} disabled={isSubmitting}>✕</button>
               </>
             ) : (
               <input
                 type="file"
                 id={name}
                 accept={accept}
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    onInputChange(name, file);
-                  }
-                }}
+                onChange={(e) => { const file = e.target.files?.[0]; if (file) onInputChange(name, file); }}
                 disabled={isSubmitting}
               />
             )}
           </div>
+        </React.Fragment>
+      );
+    }
+    
+    // OG field: show preview and snapshot button above
+    if (name === 'og' && snapshotUploadProps) {
+      return (
+        <React.Fragment key={name}>
+          {(imageUrl || (formData.og && typeof formData.og === 'string')) && (
+            <div style={{ marginBottom: '10px' }}>
+              <img 
+                src={imageUrl || formData.og} 
+                alt="OG preview" 
+                style={{ width: '200px', height: 'auto' }} 
+              />
+            </div>
+          )}
+          <div className="table-form-row">
+            <label htmlFor={name}>{label}</label>
+            {modelUrl ? (
+              <button 
+                onClick={handleSnapshotModel} 
+                type="button"
+                disabled={isSubmitting || isUploading}
+              >
+                snapshot model for og image
+              </button>
+            ) : (
+              <span style={{ color: '#999' }}>upload model first</span>
+            )}
+            {formData.og && (
+              <button type="button" onClick={() => onDeleteField(name)} style={{ fontSize: '0.8rem' }} disabled={isSubmitting}>✕</button>
+            )}
+          </div>
+          {uploadError && <p style={{ color: 'red' }}>Upload error: {uploadError}</p>}
         </React.Fragment>
       );
     }
@@ -318,39 +308,41 @@ export function FirebaseForm({
 
   return (
     <form onSubmit={handleFormSubmit} className="table-form">
-        {idField && (
-          <div className="table-form-row">
-            <label htmlFor={idField.name}>{idField.label}</label>
-            <input
-              type="text"
-              id={idField.name}
-              value={idField.value}
-              onChange={(e) => idField.onChange(e.target.value)}
-              placeholder={idField.label.toLowerCase()}
-              pattern="^\S+$"
-              title={`${idField.label} cannot contain whitespace`}
-              required
-              disabled={isSubmitting || idField.readOnly}
-              readOnly={idField.readOnly}
-            />
-          </div>
-        )}
-        
-        {fields.map(field => renderField(field))}
-        
-        {children}
-        
-        {error && (
-          <p style={{ color: "red" }}>
-            Error: {error}
-          </p>
-        )}
-        
+      {idField && (
         <div className="table-form-row">
-          <button type="submit" disabled={isSubmitting || isUploading}>
-            {isSubmitting || isUploading ? "saving..." : submitButtonText}
-          </button>
+          <label htmlFor={idField.name}>{idField.label}</label>
+          <input
+            type="text"
+            id={idField.name}
+            value={idField.value}
+            onChange={(e) => idField.onChange(e.target.value)}
+            placeholder={idField.label.toLowerCase()}
+            pattern="^\S+$"
+            title={`${idField.label} cannot contain whitespace`}
+            required
+            disabled={isSubmitting || idField.readOnly}
+            readOnly={idField.readOnly}
+          />
         </div>
-      </form>
+      )}
+
+      
+      {fields.map(field => renderField(field))}
+
+      
+      {children}
+      
+      {error && (
+        <p style={{ color: "red" }}>
+          Error: {error}
+        </p>
+      )}
+      
+      <div className="table-form-row">
+        <button type="submit" disabled={isSubmitting || isUploading}>
+          {isSubmitting || isUploading ? "saving..." : submitButtonText}
+        </button>
+      </div>
+    </form>
   );
 }

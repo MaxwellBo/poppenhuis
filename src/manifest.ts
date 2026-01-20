@@ -61,13 +61,6 @@ export const COLLECTION_FIELD_SCHEMAS: Record<string, FieldSchema> = {
 // Item field schemas as object mapping
 export const ITEM_FIELD_SCHEMAS: Record<string, FieldSchema> = {
   name: { name: 'name', label: 'name', required: true, placeholder: 'my item' },
-  model: { 
-    name: 'model', 
-    label: 'model', 
-    type: 'file', 
-    accept: '.glb,.gltf,.zip',
-    description: "The path to the 3D model. Supports .glb, .gltf, or .zip files (zip must contain a single .glb file)."
-  },
   alt: { 
     name: 'alt', 
     label: 'alt text', 
@@ -100,6 +93,19 @@ export const ITEM_FIELD_SCHEMAS: Record<string, FieldSchema> = {
   captureDevice: { name: 'captureDevice', label: 'capture device', placeholder: 'iPhone 15 Pro' },
   captureApp: { name: 'captureApp', label: 'capture app', placeholder: 'Polycam' },
   captureMethod: { name: 'captureMethod', label: 'capture method', placeholder: 'LiDAR' },
+  model: { 
+    name: 'model', 
+    label: 'model', 
+    type: 'file', 
+    required: true,
+    accept: '.glb,.gltf,.zip',
+    description: "The path to the 3D model. Supports .glb, .gltf, or .zip files (zip must contain a single .glb file)."
+  },
+  og: {
+    name: 'og',
+    label: 'Open Graph image',
+    description: "This is the image that will be displayed when this item is shared on social media."
+  },
   // Fields not in the form but still need descriptions
   usdzModel: {
     name: 'usdzModel',
@@ -110,11 +116,6 @@ export const ITEM_FIELD_SCHEMAS: Record<string, FieldSchema> = {
     name: 'poster',
     label: 'poster',
     description: "The image to be displayed instead of the model it is loaded and ready to render."
-  },
-  og: {
-    name: 'og',
-    label: 'Open Graph image',
-    description: "This is the image that will be displayed when this item is shared on social media."
   },
 };
 
