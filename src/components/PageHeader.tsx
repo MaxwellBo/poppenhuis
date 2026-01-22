@@ -4,14 +4,19 @@ import { onAuthStateChanged, User } from 'firebase/auth';
 import { auth } from '../firebase';
 import type { FirebaseUser, FirebaseManifest } from '../manifest';
 
+// Module-level cache to persist state across component remounts
+let cachedCurrentUser: User | null = null;
+let cachedLoading = true;
+let cachedAccountUsers: FirebaseUser[] = [];
+
 interface PageHeaderProps {
   children: React.ReactNode;
 }
 
 export const PageHeader: React.FC<PageHeaderProps> = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [accountUsers, setAccountUsers] = useState<FirebaseUser[]>([]);
+  const [currentUser, setCurrentUser] = useState<User | null>(cachedCurrentUser);
+  const [loading, setLoading] = useState(cachedLoading);
+  const [accountUsers, setAccountUsers] = useState<FirebaseUser[]>(cachedAccountUsers);
 
   const totalCollections = accountUsers.reduce((count, user) => {
     return count + (user.collections ? Object.keys(user.collections).length : 0);
@@ -37,6 +42,8 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ children }) => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
+      cachedCurrentUser = user;
+      cachedLoading = false;
       setCurrentUser(user);
       setLoading(false);
     });
@@ -46,6 +53,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ children }) => {
   // Fetch Firebase users when authenticated
   useEffect(() => {
     if (!currentUser) {
+      cachedAccountUsers = [];
       setAccountUsers([]);
       return;
     }
@@ -61,6 +69,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ children }) => {
         const users = Object.values(data)
           .filter((user: FirebaseUser) => user.creatorUid === currentUser.uid);
         
+        cachedAccountUsers = users;
         setAccountUsers(users);
       } catch (error) {
         console.error('Error fetching users:', error);
