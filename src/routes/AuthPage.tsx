@@ -179,6 +179,8 @@ export default function AuthPage() {
       <div>
         <Helmet><title>account - poppenhuis</title></Helmet>
         <PageHeader>account</PageHeader>
+        {message && <div style={{ padding: '1ch', margin: '1ch', border: "1px dotted black"}}>{message}</div>}
+        {error && <div style={{ padding: '1ch', margin: '1ch', border: "1px dotted black"}}>{error}</div>}
         <dl>
           <dt>email</dt>
           <dd>{currentUser.email}</dd>
@@ -217,8 +219,6 @@ export default function AuthPage() {
           <button type="button" onClick={handleLogout}>sign out</button>
         </div>
 
-        {message && <div>{message}</div>}
-        {error && <div>{error}</div>}
       </div>
     );
   }

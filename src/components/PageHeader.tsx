@@ -104,8 +104,8 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ children }) => {
           </>
         ) : (
           <>
-            <QueryPreservingLink to="/new"><s>+ new item</s></QueryPreservingLink>
-            <QueryPreservingLink to="/new"><s>+ new collection</s></QueryPreservingLink>
+            <abbr title="sign in to create an item"><s>+ new item</s></abbr>
+            <abbr title="sign in to create a collection"><s>+ new collection</s></abbr>
             <span>→</span>
             <QueryPreservingLink to="/auth">sign in?</QueryPreservingLink>
           </>
