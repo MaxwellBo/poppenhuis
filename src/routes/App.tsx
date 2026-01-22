@@ -21,7 +21,7 @@ export default function App() {
         <footer className='no-print'>
             <small style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
               <div>
-                🎎 c. 2025, <a href="https://maxbo.me">Max Bo</a>, <a href="https://github.com/MaxwellBo/poppenhuis">source code</a>, <a href="https://dashboard.simpleanalytics.com/poppenhu.is">analytics</a>, <a href="https://github.com/MaxwellBo/poppenhuis/issues/new?template=put-item.yml">submit item?</a>
+                🎎 c. 2025, <a href="https://maxbo.me">Max Bo</a>, <a href="https://github.com/MaxwellBo/poppenhuis">source code</a>, <a href="https://dashboard.simpleanalytics.com/poppenhu.is">analytics</a>
                 <VelocityDesignComfort />
               </div>
               <div>
