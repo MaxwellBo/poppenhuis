@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router';
+import { useNavigate } from 'react-router';
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
@@ -22,7 +22,6 @@ type AuthMode = 'password' | 'emaillink';
 
 export default function AuthPage() {
   const navigate = useNavigate();
-  const location = useLocation();
   const [mode, setMode] = useState<AuthMode>('password');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
