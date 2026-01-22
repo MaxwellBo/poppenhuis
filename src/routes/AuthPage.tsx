@@ -93,8 +93,7 @@ export default function AuthPage() {
     try {
       await createUserWithEmailAndPassword(auth, email, password);
       setMessage('account created successfully!');
-      const from = (location.state as any)?.from?.pathname || '/';
-      navigate(from);
+      navigate('/new');
     } catch (err: any) {
       setError(err.message || 'an error occurred');
     } finally {

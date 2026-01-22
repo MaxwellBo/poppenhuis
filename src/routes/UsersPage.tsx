@@ -51,13 +51,6 @@ export default function UsersPage() {
               </Await>
             </React.Suspense>
           </ul>
-          <br />
-          <p>
-          <a href="https://github.com/MaxwellBo/poppenhuis/issues/new?template=put-user.yml">+ new user (in bundle)</a>
-          </p>
-          <p>
-          <a href="/new">+ new user (in firebase)</a>
-          </p>
         </section>
         <section className='short'>
           <details open>
