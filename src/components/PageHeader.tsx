@@ -11,7 +11,29 @@ interface PageHeaderProps {
 export const PageHeader: React.FC<PageHeaderProps> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const [usersList, setUsersList] = useState<FirebaseUser[]>([]);
+  const [accountUsers, setAccountUsers] = useState<FirebaseUser[]>([]);
+
+  const totalCollections = accountUsers.reduce((count, user) => {
+    return count + (user.collections ? Object.keys(user.collections).length : 0);
+  }, 0);
+
+  const getNewCollectionLink = () => {
+    if (accountUsers.length === 1) {
+      return `/${accountUsers[0].id}/new`;
+    }
+    return '/auth';
+  };
+
+  const getNewItemLink = () => {
+    if (accountUsers.length === 1 && totalCollections === 1) {
+      const user = accountUsers[0];
+      const collectionId = user.collections ? Object.keys(user.collections)[0] : null;
+      if (collectionId) {
+        return `/${user.id}/${collectionId}/new`;
+      }
+    }
+    return null;
+  };
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -24,7 +46,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ children }) => {
   // Fetch Firebase users when authenticated
   useEffect(() => {
     if (!currentUser) {
-      setUsersList([]);
+      setAccountUsers([]);
       return;
     }
 
@@ -39,7 +61,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ children }) => {
         const users = Object.values(data)
           .filter((user: FirebaseUser) => user.creatorUid === currentUser.uid);
         
-        setUsersList(users);
+        setAccountUsers(users);
       } catch (error) {
         console.error('Error fetching users:', error);
       }
@@ -57,21 +79,34 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ children }) => {
       <span style={{ display: 'flex', gap: '1ch', alignItems: 'center' }}>
         {currentUser ? (
           <>
-            {usersList.length > 0 && (
+            {getNewItemLink() ? (
+              <QueryPreservingLink to={getNewItemLink()!}>+ new item</QueryPreservingLink>
+            ) : totalCollections === 0 ? (
+              <abbr title="create a collection first"><s>+ new item</s></abbr>
+            ) : (
+              <abbr title="more than one collection"><s>+ new item</s></abbr>
+            )}
+            {accountUsers.length === 1 ? (
+              <QueryPreservingLink to={getNewCollectionLink()}>+ new collection</QueryPreservingLink>
+            ) : (
+              <abbr title="more than one user"><s>+ new collection</s></abbr>
+            )}
+            {accountUsers.length > 0 && (
               <span style={{ display: 'flex', gap: '0.5ch' }}>
-                {usersList.map((user) => (
+                {accountUsers.map((user) => (
                   <QueryPreservingLink key={user.id} to={`/${user.id}`}>
                     /{user.id}
                   </QueryPreservingLink>
                 ))}
               </span>
             )}
-            <QueryPreservingLink to="/new">+ new user</QueryPreservingLink>
             <QueryPreservingLink to="/auth">account?</QueryPreservingLink>
           </>
         ) : (
           <>
-            <QueryPreservingLink to="/new">+ new user</QueryPreservingLink>
+            <QueryPreservingLink to="/new"><s>+ new item</s></QueryPreservingLink>
+            <QueryPreservingLink to="/new"><s>+ new collection</s></QueryPreservingLink>
+            <span>→</span>
             <QueryPreservingLink to="/auth">sign in?</QueryPreservingLink>
           </>
         )}

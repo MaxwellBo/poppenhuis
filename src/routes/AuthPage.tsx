@@ -13,6 +13,10 @@ import {
 import { Helmet } from 'react-helmet';
 import { auth } from '../firebase';
 import { PageHeader } from '../components/PageHeader';
+import { QueryPreservingLink } from '../components/QueryPreservingLink';
+import { Size } from '../components/Size';
+import { ModelViewerWrapper } from '../components/ModelViewerWrapper';
+import type { FirebaseUser, FirebaseManifest } from '../manifest';
 
 type AuthMode = 'password' | 'emaillink';
 
@@ -27,6 +31,7 @@ export default function AuthPage() {
   const [loading, setLoading] = useState(false);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
+  const [usersList, setUsersList] = useState<FirebaseUser[]>([]);
 
   // Check auth state
   useEffect(() => {
@@ -36,6 +41,33 @@ export default function AuthPage() {
     });
     return unsubscribe;
   }, []);
+
+  // Fetch Firebase users when authenticated
+  useEffect(() => {
+    if (!currentUser) {
+      setUsersList([]);
+      return;
+    }
+
+    const fetchUsers = async () => {
+      try {
+        const response = await fetch('https://poppenhu-is-default-rtdb.firebaseio.com/.json');
+        if (!response.ok) return;
+
+        const data: FirebaseManifest | null = await response.json();
+        if (!data) return;
+
+        const users = Object.values(data)
+          .filter((user: FirebaseUser) => user.creatorUid === currentUser.uid);
+
+        setUsersList(users);
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      }
+    };
+
+    fetchUsers();
+  }, [currentUser]);
 
   // Check if URL is an email link sign-in on mount
   useEffect(() => {
@@ -76,8 +108,7 @@ export default function AuthPage() {
 
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      const from = (location.state as any)?.from?.pathname || '/';
-      navigate(from);
+      navigate('/auth');
     } catch (err: any) {
       setError(err.message || 'an error occurred');
     } finally {
@@ -93,7 +124,7 @@ export default function AuthPage() {
     try {
       await createUserWithEmailAndPassword(auth, email, password);
       setMessage('account created successfully!');
-      navigate('/new');
+      navigate('/auth');
     } catch (err: any) {
       setError(err.message || 'an error occurred');
     } finally {
@@ -106,7 +137,7 @@ export default function AuthPage() {
       url: window.location.origin + '/auth',
       handleCodeInApp: true,
     };
-    
+
     await sendSignInLinkToEmail(auth, email, actionCodeSettings);
     window.localStorage.setItem('emailForSignIn', email);
   };
@@ -116,8 +147,7 @@ export default function AuthPage() {
       await signInWithEmailLink(auth, email, window.location.href);
       window.localStorage.removeItem('emailForSignIn');
       window.history.replaceState(null, '', '/auth');
-      const from = (location.state as any)?.from?.pathname || '/';
-      navigate(from);
+      navigate('/auth');
     } catch (error) {
       console.error('Error completing email link sign in:', error);
       setError('Failed to complete sign in');
@@ -155,9 +185,40 @@ export default function AuthPage() {
           <dt>firebase uid</dt>
           <dd><code>{currentUser.uid}</code></dd>
         </dl>
+
+        <div style={{ marginTop: '1ch' }}>
+          {usersList.length > 0 ? (
+            <ul>
+              {usersList.map((user) => (
+                <li key={user.id}>
+                  <QueryPreservingLink to={`/${user.id}`}>{user.name || user.id}</QueryPreservingLink> <Size ts={user.collections ? Object.values(user.collections) : []} t="collection" />
+                  <ul>
+                    {user.collections && Object.entries(user.collections).map(([collectionId, collection]) => (
+                      <li key={collectionId}>
+                        <QueryPreservingLink to={`/${user.id}/${collectionId}`}>{collection.name}</QueryPreservingLink> <Size ts={collection.items ? Object.values(collection.items) : []} t="item" />
+                        <div>
+                          {collection.items && Object.values(collection.items)[0] && (
+                            <ModelViewerWrapper item={Object.values(collection.items)[0]} size="small" />
+                          )}
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>you haven't created any users yet.</p>
+          )}
+        </div>
+
+        <div style={{ marginTop: '1rem', display: 'flex', gap: '1ch' }}>
+          <QueryPreservingLink to="/new">+ new user</QueryPreservingLink>
+          <button type="button" onClick={handleLogout}>sign out</button>
+        </div>
+
         {message && <div>{message}</div>}
         {error && <div>{error}</div>}
-        <button type="button" onClick={handleLogout}>sign out</button>
       </div>
     );
   }
