@@ -179,14 +179,16 @@ export default function AuthPage() {
       <div>
         <Helmet><title>account - poppenhuis</title></Helmet>
         <PageHeader>account</PageHeader>
-        {message && <div style={{ padding: '1ch', margin: '1ch', border: "1px dotted black"}}>{message}</div>}
-        {error && <div style={{ padding: '1ch', margin: '1ch', border: "1px dotted black"}}>{error}</div>}
+        {message && <span style={{ padding: '1ch', margin: '1ch', border: "1px dotted black"}}>{message}</span>}
+        {error && <span style={{ padding: '1ch', margin: '1ch', border: "1px dotted black"}}>{error}</span>}
         <dl>
           <dt>email</dt>
           <dd>{currentUser.email}</dd>
           <dt>firebase uid</dt>
           <dd><code>{currentUser.uid}</code></dd>
         </dl>
+
+        <button type="button" onClick={handleLogout}>sign out</button>
 
         <div style={{ marginTop: '1ch' }}>
           {usersList.length > 0 ? (
@@ -210,13 +212,17 @@ export default function AuthPage() {
               ))}
             </ul>
           ) : (
+            <>
             <p>you haven't created any users yet.</p>
+            <p>
+              create a user, then you can create your first collection and add items to it.
+            </p>
+            </>
           )}
         </div>
 
         <div style={{ marginTop: '1rem', display: 'flex', gap: '1ch' }}>
           <QueryPreservingLink to="/new">+ new user</QueryPreservingLink>
-          <button type="button" onClick={handleLogout}>sign out</button>
         </div>
 
       </div>
