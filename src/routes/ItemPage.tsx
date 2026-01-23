@@ -12,7 +12,7 @@ import { HelmetMeta } from "../components/HelmetMeta";
 import { PageHeader } from "../components/PageHeader";
 import { QrCode } from "../components/QrCode";
 import { AFrameScene } from "../components/AFrameScene";
-import { PrintToCatPrinterButton } from "../components/PrintToCatPrinterButton";
+import { Receipt } from "../components/Receipt";
 import { DescriptionList } from "../components/DescriptionList";
 import * as yaml from 'js-yaml';
 
@@ -185,7 +185,7 @@ function QrCodeAndLinksAndButtons(props: { item: Item; collection: Collection; u
             })}>
             share?
           </button>}
-        <PrintToCatPrinterButton
+        <Receipt
           key={`${user.id}/${collection.id}/${item.id}`}
           item={item}
           collection={collection}

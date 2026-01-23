@@ -23,7 +23,7 @@ import './receipt.css';
 const SPEED = SPEED_RANGE['speed^normal'];
 const ENERGY = ENERGY_RANGE['strength^high'];
 
-interface PrintToCatPrinterButtonProps {
+interface ReceiptProps {
   item: Item;
   collection: Collection;
   user: User;
@@ -38,7 +38,7 @@ declare global {
   }
 }
 
-export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef }: PrintToCatPrinterButtonProps) {
+export function Receipt({ item, collection, user, modelViewerRef }: ReceiptProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const receiptRef = useRef<HTMLDivElement>(null);
   const [isPrinting, setIsPrinting] = useState(false);
@@ -47,9 +47,9 @@ export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef
   const imageUrl = snapshotImageUrl ?? item.og ?? null;
 
   // Snapshot: capture image from model viewer (or use OG, overwriting if needed)
-  const snapshotReceipt = () => {
+  const snapshotReceipt = async () => {
     if (modelViewerRef) {
-      snapshotModel(modelViewerRef);
+      await snapshotModel(modelViewerRef);
     }
   };
 
@@ -274,6 +274,7 @@ export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef
         {imageUrl && (
           <div style={{ marginBottom: '20px' }}>
             <img
+              key={imageUrl}
               src={imageUrl}
               alt={item.name}
               style={{ width: '100%', height: 'auto', display: 'block' }}
