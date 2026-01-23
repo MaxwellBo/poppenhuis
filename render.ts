@@ -11,7 +11,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 interface RenderTask {
-  url: string;
+  items: Item[];
   outputPath: string;
 }
 
@@ -48,35 +48,6 @@ function getAllUserItems(user: User): Item[] {
   return items;
 }
 
-function parseUrlToItems(url: string): Item[] {
-  // Parse URL like /userId/collectionId/itemId or /userId/collectionId or /userId
-  const parts = url.split('/').filter(p => p && !p.includes('?'));
-
-  if (parts.length === 3) {
-    // Single item: /userId/collectionId/itemId
-    const [userId, collectionId, itemId] = parts;
-    const user = FIRST_PARTY_MANIFEST.find(u => u.id === userId);
-    if (!user) return [];
-    const collection = user.collections.find(c => c.id === collectionId);
-    if (!collection) return [];
-    const item = collection.items.find(i => i.id === itemId);
-    return item ? [item] : [];
-  } else if (parts.length === 2) {
-    // Collection: /userId/collectionId
-    const [userId, collectionId] = parts;
-    const user = FIRST_PARTY_MANIFEST.find(u => u.id === userId);
-    if (!user) return [];
-    const collection = user.collections.find(c => c.id === collectionId);
-    return collection ? collection.items : [];
-  } else if (parts.length === 1) {
-    // User: /userId
-    const [userId] = parts;
-    const user = FIRST_PARTY_MANIFEST.find(u => u.id === userId);
-    if (!user) return [];
-    return getAllUserItems(user);
-  }
-  return [];
-}
 
 function modelPathToFsPath(modelPath: string): string {
   // Convert web path like /assets/goldens/model.glb to filesystem path
@@ -166,7 +137,7 @@ async function renderWithBlender(task: ModelRenderTask): Promise<void> {
   }
 }
 
-export async function renderBatch(tasks: RenderTask[], baseUrl: string = 'http://localhost:5173') {
+export async function renderBatch(tasks: RenderTask[]): Promise<void> {
   if (tasks.length === 0) {
     console.error('Error: No render tasks provided');
     process.exit(1);
@@ -175,22 +146,19 @@ export async function renderBatch(tasks: RenderTask[], baseUrl: string = 'http:/
   console.log(`📁 Processing ${tasks.length} render task(s)`);
 
   try {
-    // Convert URL tasks to model render tasks
     for (let i = 0; i < tasks.length; i++) {
       const task = tasks[i];
-      console.log(`\n[${i + 1}/${tasks.length}] Processing: ${task.url}`);
+      const itemNames = task.items.map(item => item.name).join(', ');
+      console.log(`\n[${i + 1}/${tasks.length}] Processing: ${itemNames}`);
 
-      // Parse URL to get items
-      const items = parseUrlToItems(task.url);
-
-      if (items.length === 0) {
-        console.log(`   ⚠️  No items found for URL: ${task.url}, skipping...`);
+      if (task.items.length === 0) {
+        console.log(`   ⚠️  No items in task, skipping...`);
         continue;
       }
 
       // Get model paths
-      const modelPaths = items.map(item => item.model);
-      const isSingle = items.length === 1;
+      const modelPaths = task.items.map(item => item.model);
+      const isSingle = task.items.length === 1;
 
       // Render with Blender
       await renderWithBlender({
@@ -208,11 +176,8 @@ export async function renderBatch(tasks: RenderTask[], baseUrl: string = 'http:/
   console.log(`\n✅ All renders complete!`);
 }
 
-export async function renderSingle(url: string, outputPath: string, baseUrl: string = 'http://localhost:5173') {
-  await renderBatch([{ url, outputPath }], baseUrl);
-}
 
-async function renderAll(baseUrl: string = 'http://localhost:5173') {
+async function renderAll(): Promise<void> {
   console.log('🎨 Starting render-all process with Blender...\n');
 
   const allTasks: RenderTask[] = [];
@@ -232,20 +197,12 @@ async function renderAll(baseUrl: string = 'http://localhost:5173') {
     // 1. Generate single model screenshots for each item
     console.log(`   📸 Generating ${userItems.length} item poster(s)...`);
     for (const item of userItems) {
-      // Find which collection this item belongs to
-      const collection = user.collections.find(c => c.items.some(i => i.id === item.id));
-      if (!collection) {
-        console.log(`   ⚠️  Could not find collection for item ${item.id}, skipping...`);
-        continue;
-      }
-
       // Use existing og path if specified, otherwise generate expected path
       const ogPath = item.og || getItemOGPath(item.model);
       const outputFsPath = webPathToFsOutput(ogPath);
 
-      const url = `/${user.id}/${collection.id}/${item.id}`;
       allTasks.push({
-        url,
+        items: [item],
         outputPath: outputFsPath
       });
     }
@@ -256,7 +213,7 @@ async function renderAll(baseUrl: string = 'http://localhost:5173') {
   // Now render all single-model tasks in batch
   if (allTasks.length > 0) {
     console.log(`\n🚀 Rendering ${allTasks.length} single-model poster(s) in batch...\n`);
-    await renderBatch(allTasks, baseUrl);
+    await renderBatch(allTasks);
   }
 
   // Now handle multi-model renders
@@ -272,7 +229,7 @@ async function renderAll(baseUrl: string = 'http://localhost:5173') {
     const ogPath = user.og || getUserOGPath(user.id);
     const outputFsPath = webPathToFsOutput(ogPath);
     multiModelTasks.push({
-      url: `/${user.id}`,
+      items: userItems,
       outputPath: outputFsPath
     });
 
@@ -283,7 +240,7 @@ async function renderAll(baseUrl: string = 'http://localhost:5173') {
       const collectionOgPath = collection.og || getCollectionOGPath(user.id, collection.id);
       const collectionOutputFsPath = webPathToFsOutput(collectionOgPath);
       multiModelTasks.push({
-        url: `/${user.id}/${collection.id}`,
+        items: collection.items,
         outputPath: collectionOutputFsPath
       });
     }
@@ -291,8 +248,8 @@ async function renderAll(baseUrl: string = 'http://localhost:5173') {
 
   // Render all multi-model tasks
   for (const task of multiModelTasks) {
-    console.log(`📸 Rendering multi-model: ${task.url} -> ${path.basename(task.outputPath)}`);
-    await renderSingle(task.url, task.outputPath, baseUrl);
+    console.log(`📸 Rendering multi-model: ${task.items.length} item(s) -> ${path.basename(task.outputPath)}`);
+    await renderBatch([task]);
   }
 
   console.log('\n✅ All renders complete!');
@@ -303,16 +260,13 @@ async function main() {
   const args = process.argv.slice(2);
   if (args.length === 0) {
     console.error('Usage:');
-    console.error('  All posters (from manifest): tsx render.ts all [baseUrl]');
-    console.error('  Single URL: tsx render.ts single <url> <output.jpeg> [baseUrl]');
-    console.error('  Batch URLs: tsx render.ts batch <url1> <output1.jpeg> [url2 output2.jpeg ...] [baseUrl]');
-    console.error('  Test root: tsx render.ts test [baseUrl] [output.jpeg]');
+    console.error('  All posters (from manifest): npm run render all');
+    console.error('  Test mode: npm run render test [output.jpeg]');
     console.error('');
     console.error('Examples:');
-    console.error('  tsx render.ts all');
-    console.error('  tsx render.ts all http://localhost:5173');
-    console.error('  tsx render.ts single /jackie/cakes/brat?render=true output.jpeg');
-    console.error('  tsx render.ts test');
+    console.error('  npm run render all');
+    console.error('  npm run render test');
+    console.error('  npm run render test test-render.jpeg');
     process.exit(1);
   }
 
@@ -320,8 +274,7 @@ async function main() {
   try {
     if (mode === 'test') {
       // Test mode: render first item from first user
-      const baseUrl = args[1] || 'http://localhost:5173';
-      const outputPath = args[2] || 'test-render.jpeg';
+      const outputPath = args[1] || 'test-render.jpeg';
       console.log(`🧪 Test mode: Rendering first item`);
       if (FIRST_PARTY_MANIFEST.length > 0) {
         const firstUser = FIRST_PARTY_MANIFEST[0];
@@ -329,7 +282,10 @@ async function main() {
           const firstCollection = firstUser.collections[0];
           if (firstCollection.items.length > 0) {
             const firstItem = firstCollection.items[0];
-            await renderSingle(`/${firstUser.id}/${firstCollection.id}/${firstItem.id}`, outputPath, baseUrl);
+            await renderBatch([{
+              items: [firstItem],
+              outputPath
+            }]);
           } else {
             console.error('No items found in first collection');
             process.exit(1);
@@ -344,43 +300,9 @@ async function main() {
       }
     } else if (mode === 'all') {
       // Render all posters from manifest
-      const baseUrl = args[1] || 'http://localhost:5173';
-      await renderAll(baseUrl);
-    } else if (mode === 'single') {
-      // Single URL mode
-      if (args.length < 3) {
-        console.error('Error: Single mode requires <url> <output.jpeg>');
-        process.exit(1);
-      }
-      const [url, outputPath, baseUrl = 'http://localhost:5173'] = args.slice(1);
-      await renderSingle(url, outputPath, baseUrl);
-    } else if (mode === 'batch') {
-      // Batch mode: pairs of url and output
-      const pairs = args.slice(1);
-      // Last arg might be baseUrl if odd number
-      let baseUrl = 'http://localhost:5173';
-      let actualPairs = pairs;
-      if (pairs.length % 2 === 1) {
-        baseUrl = pairs[pairs.length - 1];
-        actualPairs = pairs.slice(0, -1);
-      }
-
-      if (actualPairs.length % 2 !== 0) {
-        console.error('Error: Batch mode requires pairs of <url> <output.jpeg>');
-        process.exit(1);
-      }
-
-      const tasks: RenderTask[] = [];
-      for (let i = 0; i < actualPairs.length; i += 2) {
-        tasks.push({
-          url: actualPairs[i],
-          outputPath: actualPairs[i + 1]
-        });
-      }
-
-      await renderBatch(tasks, baseUrl);
+      await renderAll();
     } else {
-      console.error('Error: First argument must be "test", "all", "single", or "batch"');
+      console.error('Error: First argument must be "test" or "all"');
       process.exit(1);
     }
   } catch (error) {
