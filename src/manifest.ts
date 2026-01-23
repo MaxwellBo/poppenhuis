@@ -1203,7 +1203,6 @@ My abject failure to use them properly convinced me to stick to the classical gu
     id: "SugarPlumBoss",
     name: "Anderson",
     bio: "Manufactured: 3/27/22",
-    source: "firebase",
     collections: [
       {
         id: "baked-goods",
