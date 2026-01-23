@@ -823,3 +823,32 @@ input:focus + .shake_down {
   font-size: 0.9rem;
   color: #666;
 }
+
+.page-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
+.page-header-auth {
+  display: flex;
+  justify-content: flex-end;
+}
+
+@media (min-width: 768px) {
+  .page-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2ch;
+  }
+  
+  .page-header-auth {
+    order: 2;
+  }
+  
+  .page-header h1 {
+    order: 1;
+    padding-bottom: 0;
+  }
+}

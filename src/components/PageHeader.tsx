@@ -80,47 +80,51 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ children }) => {
   }, [currentUser]);
 
   return (
-    <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-      <h1>
-      <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / {children}
-      </h1>
-      {!loading && (
-      <span style={{ display: 'flex', gap: '1ch', alignItems: 'center' }}>
-        {currentUser ? (
-          <>
-            {getNewItemLink() ? (
-              <QueryPreservingLink to={getNewItemLink()!}>+ new item</QueryPreservingLink>
-            ) : totalCollections === 0 ? (
-              <abbr title="create a collection first"><s>+ new item</s></abbr>
-            ) : (
-              <abbr title="more than one collection"><s>+ new item</s></abbr>
-            )}
-            {accountUsers.length === 1 ? (
-              <QueryPreservingLink to={getNewCollectionLink()}>+ new collection</QueryPreservingLink>
-            ) : (
-              <abbr title="more than one user"><s>+ new collection</s></abbr>
-            )}
-            {accountUsers.length > 0 && (
-              <span style={{ display: 'flex', gap: '0.5ch' }}>
-                {accountUsers.map((user) => (
-                  <QueryPreservingLink key={user.id} to={`/${user.id}`}>
-                    /{user.id}
-                  </QueryPreservingLink>
-                ))}
-              </span>
-            )}
-            <QueryPreservingLink to="/auth">account?</QueryPreservingLink>
-          </>
+    <header className="page-header">
+      <div className="page-header-auth">
+        {loading ? (
+          <span>loading</span>
         ) : (
-          <>
-            <abbr title="sign in to create an item"><s>+ new item</s></abbr>
-            <abbr title="sign in to create a collection"><s>+ new collection</s></abbr>
-            <span>→</span>
-            <QueryPreservingLink to="/auth">sign in?</QueryPreservingLink>
-          </>
+          <span style={{ display: 'flex', gap: '1ch', alignItems: 'center' }}>
+            {currentUser ? (
+              <>
+                {getNewItemLink() ? (
+                  <QueryPreservingLink to={getNewItemLink()!}>+ new item</QueryPreservingLink>
+                ) : totalCollections === 0 ? (
+                  <abbr title="create a collection first"><s>+ new item</s></abbr>
+                ) : (
+                  <abbr title="more than one collection"><s>+ new item</s></abbr>
+                )}
+                {accountUsers.length === 1 ? (
+                  <QueryPreservingLink to={getNewCollectionLink()}>+ new collection</QueryPreservingLink>
+                ) : (
+                  <abbr title="more than one user"><s>+ new collection</s></abbr>
+                )}
+                {accountUsers.length > 0 && (
+                  <span style={{ display: 'flex', gap: '0.5ch' }}>
+                    {accountUsers.map((user) => (
+                      <QueryPreservingLink key={user.id} to={`/${user.id}`}>
+                        /{user.id}
+                      </QueryPreservingLink>
+                    ))}
+                  </span>
+                )}
+                <QueryPreservingLink to="/auth">account?</QueryPreservingLink>
+              </>
+            ) : (
+              <>
+                <abbr title="sign in to create an item"><s>+ new item</s></abbr>
+                <abbr title="sign in to create a collection"><s>+ new collection</s></abbr>
+                <span>→</span>
+                <QueryPreservingLink to="/auth">sign in?</QueryPreservingLink>
+              </>
+            )}
+          </span>
         )}
-      </span>
-      )}
+      </div>
+      <h1>
+        <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / {children}
+      </h1>
     </header>
   );
 };
