@@ -1,21 +1,34 @@
-import { useLoaderData } from "react-router";
+import { useLoaderData, useSearchParams } from "react-router";
 import { Size } from '../components/Size';
 import { ItemCards } from '../components/ItemCards';
-import { Collection, User } from "../manifest";
+import { Collection, User, Item } from "../manifest";
 import { loadUser } from "../manifest";
 import { metaForUser } from "../meta";
 import Markdown from "react-markdown";
 import { QueryPreservingLink } from "../components/QueryPreservingLink";
 import { HelmetMeta } from "../components/HelmetMeta";
 import { PageHeader } from "../components/PageHeader";
+import { RenderPage } from "../components/RenderPage";
 import * as yaml from 'js-yaml';
 
 export const loader = loadUser;
 
 export default function UserPage() {
   const { user } = useLoaderData() as Awaited<ReturnType<typeof loader>>;
+  const [searchParams] = useSearchParams();
+  const renderMode = searchParams.get("render") === "true";
 
   const userYaml = yaml.dump(user);
+
+  if (renderMode) {
+    // Collect all items across all collections
+    const allItems: Item[] = [];
+    for (const collection of user.collections) {
+      allItems.push(...collection.items);
+    }
+    
+    return <RenderPage items={allItems} />;
+  }
 
   return (
     <article>

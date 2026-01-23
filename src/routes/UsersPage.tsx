@@ -1,7 +1,7 @@
 import React from "react";
 import { Await, useLoaderData, useSearchParams } from "react-router";
 import { loadUsers } from "../manifest";
-import type { User } from "../manifest";
+import type { User, Item } from "../manifest";
 import { MANIFEST_URL_QUERY_PARAM, MANIFEST_SCHEMA, ARENA_PREFIX } from "../manifest";
 import { Size } from '../components/Size';
 import { DEFAULT_META } from "../meta";
@@ -9,6 +9,7 @@ import { HelmetMeta } from "../components/HelmetMeta";
 import { QueryPreservingLink } from "../components/QueryPreservingLink";
 import { PageHeader } from "../components/PageHeader";
 import { ModelViewerWrapper } from "../components/ModelViewerWrapper";
+import { RenderPage } from "../components/RenderPage";
 
 const EXAMPLE_MANIFEST_URL = 'https://raw.githubusercontent.com/MaxwellBo/maxwellbo.github.io/master/poppenhuis-manifest.json'
 
@@ -16,6 +17,20 @@ export const loader = loadUsers;
 
 export default function UsersPage() {
   const { syncUsers, asyncUsersPromise, } = useLoaderData() as Awaited<ReturnType<typeof loader>>;
+  const [searchParams] = useSearchParams();
+  const renderMode = searchParams.get("render") === "true";
+
+  if (renderMode) {
+    // Collect all items from all users
+    const allItems: Item[] = [];
+    for (const user of syncUsers) {
+      for (const collection of user.collections) {
+        allItems.push(...collection.items);
+      }
+    }
+    
+    return <RenderPage items={allItems} />;
+  }
 
   return (
     <article>
