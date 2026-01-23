@@ -9,7 +9,12 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "test": "vitest",
-    "render": "tsx render.ts"
+    "render": "tsc --project tsconfig.node.json && node render.js",
+    "render:all": "npm run render -- all",
+    "render:single": "npm run render -- single",
+    "render:batch": "npm run render -- batch",
+    "render:test": "npm run render -- test",
+    "render:clean": "rm -f render.js src/manifest.js vite.config.js"
   },
   "dependencies": {
     "@google/model-viewer": "^3.5.0",
@@ -42,8 +47,6 @@
     "eslint": "^8.57.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.6",
-    "puppeteer": "^21.11.0",
-    "tsx": "^4.7.0",
     "typescript": "^5.2.2",
     "vitest": "^4.0.14"
   }
