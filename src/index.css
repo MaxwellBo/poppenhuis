@@ -510,14 +510,19 @@ form.table-form label {
   vertical-align: top;
   margin-right: 8px;
   border: 1px dotted #ccc;
-  transform-origin: bottom left;
+  transform-origin: center;
 }
 
 .qrcode.web:hover,
 .qrcode.web:active {
   transform: scale(5);
   z-index: 100;
-  position: relative;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .qrcode.web {
+    transform-origin: bottom left;
+  }
 }
 
 
