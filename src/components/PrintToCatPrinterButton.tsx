@@ -43,7 +43,8 @@ export function PrintToCatPrinterButton({ item, collection, user, modelViewerRef
   const receiptRef = useRef<HTMLDivElement>(null);
   const [isPrinting, setIsPrinting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { imageUrl, snapshotModel } = useModelSnapshot(item.og);
+  const { snapshotImageUrl, snapshotModel } = useModelSnapshot();
+  const imageUrl = snapshotImageUrl ?? item.og ?? null;
 
   // Snapshot: capture image from model viewer (or use OG, overwriting if needed)
   const snapshotReceipt = () => {

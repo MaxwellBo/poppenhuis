@@ -185,7 +185,13 @@ function QrCodeAndLinksAndButtons(props: { item: Item; collection: Collection; u
             })}>
             share?
           </button>}
-        <PrintToCatPrinterButton item={item} collection={collection} user={user} modelViewerRef={modelViewerRef} />
+        <PrintToCatPrinterButton
+          key={`${user.id}/${collection.id}/${item.id}`}
+          item={item}
+          collection={collection}
+          user={user}
+          modelViewerRef={modelViewerRef}
+        />
       </div>
     </div>
   )

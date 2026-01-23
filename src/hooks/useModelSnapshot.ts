@@ -18,8 +18,8 @@ function dataUrlToBlob(dataUrl: string): Blob {
   return new Blob([u8arr], { type: mime });
 }
 
-export function useModelSnapshot(ogImage?: string) {
-  const [imageUrl, setImageUrl] = useState<string | null>(ogImage || null);
+export function useModelSnapshot() {
+  const [snapshotImageUrl, setSnapshotImageUrl] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
 
@@ -30,14 +30,14 @@ export function useModelSnapshot(ogImage?: string) {
       if (typeof modelViewer.toDataURL === 'function') {
         const dataUrl = await modelViewer.toDataURL('image/png');
         console.log("Snapshot captured from model viewer");
-        setImageUrl(dataUrl);
+        setSnapshotImageUrl(dataUrl);
       } else {
         // Fallback: try to get canvas directly (may have issues with WebGL buffer)
         const modelViewerCanvas = modelViewerRef.current.shadowRoot?.querySelector('canvas');
         if (modelViewerCanvas) {
           const dataUrl = (modelViewerCanvas as HTMLCanvasElement).toDataURL('image/png');
           console.log("Snapshot captured from canvas fallback");
-          setImageUrl(dataUrl);
+          setSnapshotImageUrl(dataUrl);
         } else {
           console.warn("Model viewer canvas not found");
         }
@@ -52,14 +52,14 @@ export function useModelSnapshot(ogImage?: string) {
     collectionId: string,
     itemId: string
   ): Promise<string | null> => {
-    if (!imageUrl) {
+    if (!snapshotImageUrl) {
       setUploadError('No snapshot to upload');
       return null;
     }
 
     // If it's already a URL (not a data URL), return it as-is
-    if (!imageUrl.startsWith('data:')) {
-      return imageUrl;
+    if (!snapshotImageUrl.startsWith('data:')) {
+      return snapshotImageUrl;
     }
 
     setIsUploading(true);
@@ -67,7 +67,7 @@ export function useModelSnapshot(ogImage?: string) {
 
     try {
       // Convert data URL to blob
-      const blob = dataUrlToBlob(imageUrl);
+      const blob = dataUrlToBlob(snapshotImageUrl);
       
       // Upload to Firebase Storage
       const path = `og-images/${userId}/${collectionId}/${itemId}.png`;
@@ -79,7 +79,7 @@ export function useModelSnapshot(ogImage?: string) {
       console.log("Snapshot uploaded to:", publicUrl);
       
       // Update local state with the public URL
-      setImageUrl(publicUrl);
+      setSnapshotImageUrl(publicUrl);
       
       return publicUrl;
     } catch (err) {
@@ -90,20 +90,19 @@ export function useModelSnapshot(ogImage?: string) {
     } finally {
       setIsUploading(false);
     }
-  }, [imageUrl]);
+  }, [snapshotImageUrl]);
 
   const clearSnapshot = useCallback(() => {
-    setImageUrl(null);
+    setSnapshotImageUrl(null);
     setUploadError(null);
   }, []);
 
   return {
-    imageUrl,
+    snapshotImageUrl,
     isUploading,
     uploadError,
     snapshotModel,
     uploadSnapshot,
     clearSnapshot,
-    setImageUrl,
   };
 }
