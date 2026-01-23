@@ -43,6 +43,7 @@ export function Receipt({ item, collection, user, modelViewerRef }: ReceiptProps
   const receiptRef = useRef<HTMLDivElement>(null);
   const [isPrinting, setIsPrinting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [qrCodeLoaded, setQrCodeLoaded] = useState(false);
   const { snapshotImageUrl, snapshotModel } = useModelSnapshot();
   const imageUrl = snapshotImageUrl ?? item.og ?? null;
 
@@ -53,7 +54,7 @@ export function Receipt({ item, collection, user, modelViewerRef }: ReceiptProps
     }
   };
 
-  // Render preview whenever imageUrl changes
+  // Render preview whenever imageUrl or qrCodeLoaded changes
   useEffect(() => {
     if (!imageUrl || !receiptRef.current || !canvasRef.current) return;
 
@@ -103,7 +104,7 @@ export function Receipt({ item, collection, user, modelViewerRef }: ReceiptProps
     };
 
     renderReceipt();
-  }, [imageUrl, item, collection, user]);
+  }, [imageUrl, item, collection, user, qrCodeLoaded]);
 
   const printReceipt = async () => {
     if (!imageUrl) {
@@ -286,7 +287,13 @@ export function Receipt({ item, collection, user, modelViewerRef }: ReceiptProps
         <DescriptionList item={item} collection={collection} user={user} hideUrls={true} />
 
         <div style={{ textAlign: 'center', marginTop: '20px', marginBottom: '20px' }}>
-          <QrCode item={item} user={user} collection={collection} context="print" />
+          <QrCode 
+            item={item} 
+            user={user} 
+            collection={collection} 
+            context="print" 
+            onLoad={() => setQrCodeLoaded(true)}
+          />
         </div>
 
         <div style={{ marginBottom: '20px' }}>{itemUrl}</div>
