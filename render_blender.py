@@ -232,16 +232,96 @@ def arrange_models_grid(model_groups, grid_cols=5, spacing=2.5):
             obj.location += offset
 
 def render_single_model(model_path, output_path, output_width=1200, output_height=630):
-    """Render a single GLB model."""
+    """Render a single GLB model from 4 cardinal directions (North, East, South, West)
+    in a single image, positioned side by side.
+    
+    Preserves the 45-degree elevation angle while rotating each model copy around the Z-axis.
+    """
+    from mathutils import Vector
+    import math
+    
     scene, camera = setup_scene(output_width, output_height)
     
     # Load model
-    objects = load_glb(model_path)
+    original_objects = load_glb(model_path)
     
-    # Center and frame
-    center_and_frame_objects(objects, camera)
+    if not original_objects:
+        raise ValueError("No objects loaded from model")
     
-    # Render
+    # Calculate bounding box of the original model to determine spacing
+    min_coords = [float('inf')] * 3
+    max_coords = [float('-inf')] * 3
+    
+    for obj in original_objects:
+        if obj.type == 'MESH' and len(obj.bound_box) > 0:
+            matrix_world = obj.matrix_world
+            for corner in obj.bound_box:
+                world_corner = matrix_world @ Vector(corner)
+                for i in range(3):
+                    min_coords[i] = min(min_coords[i], world_corner[i])
+                    max_coords[i] = max(max_coords[i], world_corner[i])
+        else:
+            loc = obj.location
+            for i in range(3):
+                min_coords[i] = min(min_coords[i], loc[i])
+                max_coords[i] = max(max_coords[i], loc[i])
+    
+    if min_coords[0] == float('inf'):
+        raise ValueError("Could not calculate bounding box")
+    
+    # Calculate model size and center
+    model_center = Vector([(min_coords[i] + max_coords[i]) / 2 for i in range(3)])
+    model_size = max(max_coords[i] - min_coords[i] for i in range(3))
+    
+    # Center the original model at origin
+    offset = Vector((-model_center.x, -model_center.y, -model_center.z))
+    for obj in original_objects:
+        obj.location += offset
+    
+    # Calculate spacing based on model's maximum dimension to ensure proper spacing
+    # regardless of model orientation
+    spacing = model_size * 1.2  # 20% padding between models
+    
+    # Cardinal directions: North (0°), East (90°), South (180°), West (270°)
+    directions = [
+        (0, "north"),      # 0° = North
+        (math.pi / 2, "east"),  # 90° = East
+        (math.pi, "south"), # 180° = South
+        (3 * math.pi / 2, "west")  # 270° = West
+    ]
+    
+    # Store references to all model groups (one per direction)
+    model_groups = [original_objects]
+    
+    # Create 3 duplicates for the other 3 directions (all start at origin)
+    for _ in range(3):
+        bpy.ops.object.select_all(action='DESELECT')
+        for obj in original_objects:
+            obj.select_set(True)
+        bpy.ops.object.duplicate()
+        duplicated_objects = [obj for obj in bpy.context.selected_objects]
+        model_groups.append(duplicated_objects)
+    
+    # Now rotate and position each of the 4 model groups
+    all_objects = []
+    for idx, (rotation_z, _) in enumerate(directions):
+        model_objects = model_groups[idx]
+        all_objects.extend(model_objects)
+        
+        # Rotate each object around Z-axis
+        for obj in model_objects:
+            obj.rotation_euler.z = rotation_z
+        
+        # Position this copy horizontally
+        # 4 models centered: positions at -1.5, -0.5, 0.5, 1.5 * spacing
+        x_offset = (idx - 1.5) * spacing
+        for obj in model_objects:
+            obj.location.x = x_offset
+    
+    # Frame all objects without centering (preserve layout)
+    center_and_frame_objects(all_objects, camera, padding=1.0, center_objects=False)
+    
+    # Render single image with all 4 views
     scene.render.filepath = str(output_path)
     bpy.ops.render.render(write_still=True)
     
