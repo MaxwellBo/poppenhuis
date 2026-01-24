@@ -299,16 +299,91 @@ async function renderAll(): Promise<void> {
   console.log('\n✅ All renders complete!');
 }
 
+async function renderUsers(): Promise<void> {
+  console.log('🎨 Starting render-users process...\n');
+
+  const multiModelTasks: RenderTask[] = [];
+
+  for (const user of FIRST_PARTY_MANIFEST) {
+    const userItems = getAllUserItems(user);
+    if (userItems.length === 0) {
+      console.log(`   ⚠️  No items found for user ${user.id}, skipping...`);
+      continue;
+    }
+
+    // User OG image
+    const ogPath = user.og || getUserOGPath(user.id);
+    const outputFsPath = webPathToFsOutput(ogPath);
+    multiModelTasks.push({
+      items: userItems,
+      outputPath: outputFsPath
+    });
+  }
+
+  if (multiModelTasks.length === 0) {
+    console.log('⚠️  No users with items found to render');
+    return;
+  }
+
+  // Render all user OG images
+  for (const task of multiModelTasks) {
+    console.log(`📸 Rendering user: ${task.items.length} item(s) -> ${path.basename(task.outputPath)}`);
+    await renderBatch([task]);
+  }
+
+  console.log('\n✅ All user renders complete!');
+}
+
+async function renderCollections(): Promise<void> {
+  console.log('🎨 Starting render-collections process...\n');
+
+  const multiModelTasks: RenderTask[] = [];
+
+  for (const user of FIRST_PARTY_MANIFEST) {
+    // Collection OG images
+    for (const collection of user.collections) {
+      if (collection.items.length === 0) {
+        console.log(`   ⚠️  No items found for collection ${user.id}/${collection.id}, skipping...`);
+        continue;
+      }
+
+      const collectionOgPath = collection.og || getCollectionOGPath(user.id, collection.id);
+      const collectionOutputFsPath = webPathToFsOutput(collectionOgPath);
+      multiModelTasks.push({
+        items: collection.items,
+        outputPath: collectionOutputFsPath
+      });
+    }
+  }
+
+  if (multiModelTasks.length === 0) {
+    console.log('⚠️  No collections with items found to render');
+    return;
+  }
+
+  // Render all collection OG images
+  for (const task of multiModelTasks) {
+    console.log(`📸 Rendering collection: ${task.items.length} item(s) -> ${path.basename(task.outputPath)}`);
+    await renderBatch([task]);
+  }
+
+  console.log('\n✅ All collection renders complete!');
+}
+
 // Parse command line arguments and execute
 async function main() {
   const args = process.argv.slice(2);
   if (args.length === 0) {
     console.error('Usage:');
     console.error('  All posters (from manifest): npm run render all');
+    console.error('  User OG images: npm run render users');
+    console.error('  Collection OG images: npm run render collections');
     console.error('  Test mode: npm run render test [output.png]');
     console.error('');
     console.error('Examples:');
     console.error('  npm run render all');
+    console.error('  npm run render users');
+    console.error('  npm run render collections');
     console.error('  npm run render test');
     console.error('  npm run render test test-render.png');
     process.exit(1);
@@ -345,8 +420,14 @@ async function main() {
     } else if (mode === 'all') {
       // Render all posters from manifest
       await renderAll();
+    } else if (mode === 'users') {
+      // Render only user OG images
+      await renderUsers();
+    } else if (mode === 'collections') {
+      // Render only collection OG images
+      await renderCollections();
     } else {
-      console.error('Error: First argument must be "test" or "all"');
+      console.error('Error: First argument must be "test", "all", "users", or "collections"');
       process.exit(1);
     }
   } catch (error) {

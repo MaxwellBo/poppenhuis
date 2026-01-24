@@ -11,8 +11,8 @@
     "test": "vitest",
     "render": "tsx render.ts",
     "render:all": "npm run render -- all",
-    "render:single": "npm run render -- single",
-    "render:batch": "npm run render -- batch",
+    "render:users": "npm run render -- users",
+    "render:collections": "npm run render -- collections",
     "render:test": "npm run render -- test"
   },
   "dependencies": {
