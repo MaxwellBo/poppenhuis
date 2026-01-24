@@ -29,15 +29,15 @@ function webPathToFsOutput(webPath: string): string {
 
 function getItemOGPath(modelPath: string): string {
   const filename = path.basename(modelPath, '.glb');
-  return `/assets/derived/${filename}.jpeg`;
+  return `/assets/derived/${filename}.png`;
 }
 
 function getCollectionOGPath(userId: string, collectionId: string): string {
-  return `/assets/derived/${userId}_${collectionId}_og.jpeg`;
+  return `/assets/derived/${userId}_${collectionId}_og.png`;
 }
 
 function getUserOGPath(userId: string): string {
-  return `/assets/derived/${userId}_og.jpeg`;
+  return `/assets/derived/${userId}_og.png`;
 }
 
 function getAllUserItems(user: User): Item[] {
@@ -305,12 +305,12 @@ async function main() {
   if (args.length === 0) {
     console.error('Usage:');
     console.error('  All posters (from manifest): npm run render all');
-    console.error('  Test mode: npm run render test [output.jpeg]');
+    console.error('  Test mode: npm run render test [output.png]');
     console.error('');
     console.error('Examples:');
     console.error('  npm run render all');
     console.error('  npm run render test');
-    console.error('  npm run render test test-render.jpeg');
+    console.error('  npm run render test test-render.png');
     process.exit(1);
   }
 
@@ -318,7 +318,7 @@ async function main() {
   try {
     if (mode === 'test') {
       // Test mode: render first item from first user
-      const outputPath = args[1] || 'test-render.jpeg';
+      const outputPath = args[1] || 'test-render.png';
       console.log(`🧪 Test mode: Rendering first item`);
       if (FIRST_PARTY_MANIFEST.length > 0) {
         const firstUser = FIRST_PARTY_MANIFEST[0];

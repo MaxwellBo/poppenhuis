@@ -29,11 +29,11 @@ bash convert_all_to_usdz.sh
 **Purpose**: Generates poster images (OG images) for individual items and user collections using Blender's Python API.
 
 **What it does**:
-- **Individual item posters**: Creates a JPEG for each GLB file at `public/assets/derived/${filename}.jpeg`
-  - Example: `public/assets/goldens/jackie_cakes_brat.glb` → `public/assets/derived/jackie_cakes_brat.jpeg`
-- **User OG images**: Creates composite OG images showing multiple models in a grid at `public/assets/derived/${user_prefix}_og.jpeg`
-  - Example: All items for a user → `public/assets/derived/mbo_og.jpeg`
-- **Collection OG images**: Creates composite OG images for collections at `public/assets/derived/${user}_${collection}_og.jpeg`
+- **Individual item posters**: Creates a PNG with transparent background for each GLB file at `public/assets/derived/${filename}.png`
+  - Example: `public/assets/goldens/jackie_cakes_brat.glb` → `public/assets/derived/jackie_cakes_brat.png`
+- **User OG images**: Creates composite OG images showing multiple models in a grid at `public/assets/derived/${user_prefix}_og.png`
+  - Example: All items for a user → `public/assets/derived/mbo_og.png`
+- **Collection OG images**: Creates composite OG images for collections at `public/assets/derived/${user}_${collection}_og.png`
 
 **Requirements**:
 - Node.js (for running TypeScript)
@@ -56,16 +56,16 @@ npm run render all
 npm run render test
 
 # Test mode with custom output path
-npm run render test test-render.jpeg
+npm run render test test-render.png
 ```
 
 The script works directly with items from `src/manifest.ts` - no URL parsing or web server required. It:
 1. Reads items from the manifest
 2. Loads GLB files directly into Blender
 3. Renders them with proper lighting and camera setup
-4. Outputs JPEG images at 1200x630 (OG image size)
+4. Outputs PNG images with transparent backgrounds at 1200x630 (OG image size)
 
-**After running**: Update `src/manifest.ts` to add `og` properties pointing to the new JPEG files:
+**After running**: Update `src/manifest.ts` to add `og` properties pointing to the new PNG files:
 - Individual item `og` properties for each item
 - User-level `og` properties for each user
 - Collection-level `og` properties for each collection (if applicable)
@@ -100,11 +100,11 @@ When new GLB files are added to `public/assets/goldens/`, follow this process:
 3. **Update `src/manifest.ts`**
    - For each new item, add:
      - `usdzModel: "/assets/derived/${filename}.usdz"` (if the item should support AR viewing)
-     - `og: "/assets/derived/${filename}.jpeg"` (for social media previews)
+     - `og: "/assets/derived/${filename}.png"` (for social media previews)
    - For new users, add:
-     - `og: "/assets/derived/${user_prefix}_og.jpeg"` (for user page previews)
+     - `og: "/assets/derived/${user_prefix}_og.png"` (for user page previews)
    - For new collections, add:
-     - `og: "/assets/derived/${collection_prefix}_og.jpeg"` (if collection OG images are generated)
+     - `og: "/assets/derived/${collection_prefix}_og.png"` (if collection OG images are generated)
 
 4. **Verify**
    - Check that all new files are properly referenced in the manifest
@@ -115,9 +115,9 @@ When new GLB files are added to `public/assets/goldens/`, follow this process:
 
 - **GLB source files**: `public/assets/goldens/${user}_${collection}_${item}.glb`
 - **USDZ derived files**: `public/assets/derived/${user}_${collection}_${item}.usdz`
-- **Item poster images**: `public/assets/derived/${user}_${collection}_${item}.jpeg`
-- **User OG images**: `public/assets/derived/${user}_og.jpeg`
-- **Collection OG images**: `public/assets/derived/${user}_${collection}_og.jpeg`
+- **Item poster images**: `public/assets/derived/${user}_${collection}_${item}.png`
+- **User OG images**: `public/assets/derived/${user}_og.png`
+- **Collection OG images**: `public/assets/derived/${user}_${collection}_og.png`
 
 ## Troubleshooting
 
@@ -155,8 +155,8 @@ After running the scripts, check which new files were created:
 # List all USDZ files
 ls public/assets/derived/*.usdz
 
-# List all JPEG files
-ls public/assets/derived/*.jpeg
+# List all PNG files
+ls public/assets/derived/*.png
 ```
 
 Then verify each file is referenced in `src/manifest.ts` with the appropriate property (`usdzModel` or `og`).

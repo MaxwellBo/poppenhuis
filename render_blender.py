@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Blender Python script to render GLB models to JPEG images.
+Blender Python script to render GLB models to PNG images with transparent backgrounds.
 Can handle single model or multi-model grid layouts.
 """
 
@@ -25,9 +25,9 @@ def setup_scene(output_width=1200, output_height=630, background_color=(0.992, 0
     scene.render.resolution_x = output_width
     scene.render.resolution_y = output_height
     scene.render.resolution_percentage = 100
-    scene.render.image_settings.file_format = 'JPEG'
-    scene.render.image_settings.quality = 95
-    scene.render.film_transparent = False
+    scene.render.image_settings.file_format = 'PNG'
+    scene.render.image_settings.color_mode = 'RGBA'
+    scene.render.film_transparent = True
     
     # Set background color (oldlace: #fdf5e6)
     world = scene.world
@@ -281,7 +281,7 @@ def main():
     parser.add_argument('--mode', choices=['single', 'multi'], required=True,
                        help='Render mode: single model or multiple models')
     parser.add_argument('--output', required=True,
-                       help='Output JPEG file path')
+                       help='Output PNG file path')
     parser.add_argument('--width', type=int, default=1200,
                        help='Output width (default: 1200)')
     parser.add_argument('--height', type=int, default=630,
@@ -306,11 +306,11 @@ def main():
         if args.mode == 'single':
             if len(args.models) != 1:
                 raise ValueError("Single mode requires exactly one model")
-            render_single_model(args.models[0], args.output, args.width, args.height)
+            render_single_model(args.models[0], output_path, args.width, args.height)
         else:
             if len(args.models) < 1:
                 raise ValueError("Multi mode requires at least one model")
-            render_multiple_models(args.models, args.output, args.width, args.height, args.grid_cols)
+            render_multiple_models(args.models, output_path, args.width, args.height, args.grid_cols)
     except Exception as e:
         print(f"❌ Error: {e}", file=sys.stderr)
         sys.exit(1)
