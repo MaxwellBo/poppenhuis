@@ -1,6 +1,6 @@
 import { Collection, Item, User } from "../manifest";
 import { loadItem } from "../manifest";
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { useLoaderData, useSearchParams } from "react-router";
 import { GlobalItemCards } from '../components/ItemCards';
 import { ItemCard } from '../components/ItemCard';
@@ -19,16 +19,37 @@ import * as yaml from 'js-yaml';
 export const loader = loadItem
 
 export default function ItemPage() {
-  const { item, user, collection, users } = useLoaderData() as Awaited<ReturnType<typeof loadItem>>;
+  const { item, user, collection, users, asyncUsersPromise } = useLoaderData() as Awaited<ReturnType<typeof loadItem>>;
+  const [asyncUsers, setAsyncUsers] = useState<User[] | null>(null);
   const modelViewerRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    asyncUsersPromise.then(setAsyncUsers).catch(() => {
+      // Silently fail if promise rejects
+      setAsyncUsers([]);
+    });
+  }, [asyncUsersPromise]);
 
   // Flatten all items across all users and collections
   type FlatItem = { item: Item; collection: Collection; user: User };
-  const allItems: FlatItem[] = users.flatMap(u => 
+  
+  const baseAllItems: FlatItem[] = users.flatMap(u => 
     u.collections.flatMap(c => 
       c.items.map(i => ({ item: i, collection: c, user: u }))
     )
   );
+
+  // If user source is Firebase, async users are already loaded in users array
+  // Otherwise, add async users to allItems
+  const asyncAllItems: FlatItem[] = (asyncUsers && user.source !== 'firebase')
+    ? asyncUsers.flatMap(u => 
+        u.collections.flatMap(c => 
+          c.items.map(i => ({ item: i, collection: c, user: u }))
+        )
+      )
+    : [];
+
+  const allItems: FlatItem[] = [...baseAllItems, ...asyncAllItems];
 
   const currentIndex = allItems.findIndex(
     fi => fi.item.id === item.id && fi.collection.id === collection.id && fi.user.id === user.id
@@ -73,6 +94,9 @@ export default function ItemPage() {
     setSearchParams(newSearchParams);
   };
 
+  // Merge async users into users for AFrameScene (only if not Firebase user)
+  const allUsers = (asyncUsers && user.source !== 'firebase') ? [...users, ...asyncUsers] : users;
+
   return (
     <article className='item-page'>
       <HelmetMeta meta={metaForItem(item, collection, user)} />
@@ -92,7 +116,7 @@ export default function ItemPage() {
         </div>
         <div id="model">
           {renderAFrameScene
-            ? <AFrameScene users={users} startingItem={item} positioningMode={positioningMode} />
+            ? <AFrameScene users={allUsers} startingItem={item} positioningMode={positioningMode} />
             : <ModelViewerWrapper modelViewerRef={modelViewerRef} item={item} size='responsive-big' />
           }
           <div className="vr-controls" style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>

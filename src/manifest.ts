@@ -1349,29 +1349,38 @@ export async function loadFirebaseUser({ userId }: { userId: string }): Promise<
 
 export async function loadUser({ params, request }: { params: { userId: User['id']; }; request: Request; }): Promise<{
   user: User,
-  users: User[]
+  users: User[],
+  asyncUsersPromise: Promise<User[]>
 }> {
   const hasArenaPrefix = params.userId.startsWith(ARENA_PREFIX);
   const manifestUrl = new URL(request.url).searchParams.get(MANIFEST_URL_QUERY_PARAM);
 
+  let asyncUsersPromise: Promise<User[]>;
+
+  if (manifestUrl) {
+    asyncUsersPromise = Promise.all([loadManifest(manifestUrl), loadFirebaseUsers()]).then(list => list.flat());
+  } else {
+    asyncUsersPromise = loadFirebaseUsers();
+  }
+
   if (hasArenaPrefix) {
     const slug = params.userId.slice(ARENA_PREFIX.length);
     const arenaUser = await loadArenaUser({ userSlug: slug })
-    return { user: arenaUser, users: [...FIRST_PARTY_MANIFEST, arenaUser,] }
+    return { user: arenaUser, users: [...FIRST_PARTY_MANIFEST, arenaUser,], asyncUsersPromise }
   }
 
   if (manifestUrl) {
     const manifest = await loadManifest(manifestUrl);
     const manifestUser = manifest.find((user: User) => user.id === params.userId);
     if (manifestUser) {
-      return { user: { ...manifestUser, source: 'manifest' }, users: [...FIRST_PARTY_MANIFEST, manifestUser] }
+      return { user: { ...manifestUser, source: 'manifest' }, users: [...FIRST_PARTY_MANIFEST, manifestUser], asyncUsersPromise }
     }
   }
 
   // Check FIRST_PARTY_MANIFEST first
   const firstPartyUser = FIRST_PARTY_MANIFEST.find((user: User) => user.id === params.userId);
   if (firstPartyUser) {
-    return { user: { ...firstPartyUser }, users: FIRST_PARTY_MANIFEST }
+    return { user: { ...firstPartyUser }, users: FIRST_PARTY_MANIFEST, asyncUsersPromise }
   }
 
   // Load all firebase users and find the one we need
@@ -1380,21 +1389,21 @@ export async function loadUser({ params, request }: { params: { userId: User['id
   if (!firebaseUser) {
     throw new Error(`User with id "${params.userId}" not found`);
   }
-  return { user: firebaseUser, users: [...FIRST_PARTY_MANIFEST, ...firebaseUsers] }
+  return { user: firebaseUser, users: [...FIRST_PARTY_MANIFEST, ...firebaseUsers], asyncUsersPromise }
 }
 
 export async function loadCollection({ params, request }: { params: { userId: User['id']; collectionId: Collection['id']; }; request: Request; }) {
-  const { user, users } = await loadUser({ params, request });
+  const { user, users, asyncUsersPromise } = await loadUser({ params, request });
   const collection = user.collections.find((collection) => collection.id === params.collectionId);
   if (!collection) throw new Error("Collection not found");
-  return { collection, user, users };
+  return { collection, user, users, asyncUsersPromise };
 }
 
 export async function loadItem({ params, request }: { params: { userId: User['id']; collectionId: Collection['id']; itemId: Item['id']; }; request: Request; }) {
-  const { collection, user, users } = await loadCollection({ params, request });
+  const { collection, user, users, asyncUsersPromise } = await loadCollection({ params, request });
   const item = collection.items.find((item) => item.id === params.itemId);
   if (!item) throw new Error("Item not found");
-  return { collection, user, item, users };
+  return { collection, user, item, users, asyncUsersPromise };
 }
 
 const ARENA_USER_CACHE = new Map<string, User>();
