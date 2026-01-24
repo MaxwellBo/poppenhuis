@@ -24,42 +24,46 @@ bash convert_all_to_usdz.sh
 
 **After running**: Update `src/manifest.ts` to add `usdzModel` properties pointing to the new USDZ files for any items that don't already have them.
 
-### 2. `render_poster.sh`
+### 2. `render.ts`
 
-**Purpose**: Generates poster images (OG images) for individual items and user collections using the `render.ts` Deno script.
+**Purpose**: Generates poster images (OG images) for individual items and user collections using Blender's Python API.
 
 **What it does**:
 - **Individual item posters**: Creates a JPEG for each GLB file at `public/assets/derived/${filename}.jpeg`
   - Example: `public/assets/goldens/jackie_cakes_brat.glb` → `public/assets/derived/jackie_cakes_brat.jpeg`
 - **User OG images**: Creates composite OG images showing multiple models in a grid at `public/assets/derived/${user_prefix}_og.jpeg`
-  - Example: All `mbo_*.glb` files → `public/assets/derived/mbo_og.jpeg`
-  - Example: All `jackie_*.glb` files → `public/assets/derived/jackie_og.jpeg`
+  - Example: All items for a user → `public/assets/derived/mbo_og.jpeg`
+- **Collection OG images**: Creates composite OG images for collections at `public/assets/derived/${user}_${collection}_og.jpeg`
 
 **Requirements**:
-- Deno runtime (tested with Deno 2.5.6)
-- Puppeteer browser binary (see installation instructions below)
-- Network access (for downloading dependencies and running local server)
+- Node.js (for running TypeScript)
+- Blender (must be installed and accessible in PATH or at standard location)
+  - macOS: `/Applications/Blender.app/Contents/MacOS/Blender`
+  - Linux: `/usr/bin/blender` or in PATH
+  - Windows: `C:\Program Files\Blender Foundation\Blender\blender.exe`
 
-**Installing Puppeteer Browser**:
-The script requires a Chrome/Chromium browser for Puppeteer. To install it:
-
-```bash
-# For Deno 2.x (current)
-PUPPETEER_PRODUCT=chrome deno run -A https://deno.land/x/puppeteer@16.2.0/install.ts
-
-# If that fails, try with a newer Puppeteer version or check Deno compatibility
-```
-
-Note: The browser binary will be downloaded to `~/.deno/puppeteer/` on first use if not already installed.
+**Installing Blender**:
+Download and install Blender from [blender.org](https://www.blender.org/download/). The script will automatically detect Blender if it's:
+- In your system PATH (as `blender` command), or
+- At one of the standard installation locations listed above
 
 **Usage**:
 ```bash
-# Process all models
-bash render_poster.sh
+# Render all posters from manifest
+npm run render all
 
-# Process a specific model (also updates user OG image)
-bash render_poster.sh --model public/assets/goldens/jackie_cakes_brat.glb
+# Test mode: render first item only
+npm run render test
+
+# Test mode with custom output path
+npm run render test test-render.jpeg
 ```
+
+The script works directly with items from `src/manifest.ts` - no URL parsing or web server required. It:
+1. Reads items from the manifest
+2. Loads GLB files directly into Blender
+3. Renders them with proper lighting and camera setup
+4. Outputs JPEG images at 1200x630 (OG image size)
 
 **After running**: Update `src/manifest.ts` to add `og` properties pointing to the new JPEG files:
 - Individual item `og` properties for each item
@@ -88,10 +92,10 @@ When new GLB files are added to `public/assets/goldens/`, follow this process:
    - This generates USDZ files for all GLB files
    - Check the output for any failures
 
-2. **Run `render_poster.sh`**
+2. **Run `npm run render all`**
    - This generates individual item poster images
-   - This also generates/updates user OG images
-   - Note: If Puppeteer browser is not installed, you may need to install it first (see requirements above)
+   - This also generates/updates user OG images and collection OG images
+   - Note: Blender must be installed and accessible (see requirements above)
 
 3. **Update `src/manifest.ts`**
    - For each new item, add:
@@ -117,23 +121,28 @@ When new GLB files are added to `public/assets/goldens/`, follow this process:
 
 ## Troubleshooting
 
-### `render_poster.sh` fails with browser error
-If you see an error about missing browser revision, install the Puppeteer browser:
-```bash
-# For Deno 2.x
-PUPPETEER_PRODUCT=chrome deno run -A https://deno.land/x/puppeteer@16.2.0/install.ts
-```
+### `npm run render all` fails with "Blender not found"
+If you see an error that Blender is not found:
+1. Ensure Blender is installed on your system
+2. If Blender is installed but not in PATH, you can:
+   - Add Blender to your system PATH, or
+   - Create a symlink: `ln -s /Applications/Blender.app/Contents/MacOS/Blender /usr/local/bin/blender` (macOS)
+3. Verify Blender is accessible by running `blender --version` in your terminal
 
-If the install script fails with `Deno.writeAll is not a function`, this is a Deno 2.x compatibility issue. The browser may still work - try running the render script anyway. If it still fails, you may need to:
-1. Use an older Deno version (1.x), or
-2. Wait for a Puppeteer update that supports Deno 2.x, or
-3. Manually download and place the Chrome binary in `~/.deno/puppeteer/`
+### Rendering is slow
+The script launches Blender separately for each model, which can be slow but ensures clean renders. Each render typically takes 10-20 seconds due to Blender startup time. This is expected behavior.
 
-### Script doesn't terminate properly
-The render script has been updated to properly shut down the server after rendering. If you still see the script hanging:
-1. Check that all browser processes are closed
-2. Check that the server on port 8000 is not still running
-3. The script should now cleanly exit after each render completes
+### Model file not found errors
+If you see "Model file not found" errors:
+1. Verify the GLB file exists at the path specified in the manifest
+2. Check that the path in `item.model` matches the actual file location
+3. Ensure paths use forward slashes and start with `/` (e.g., `/assets/goldens/model.glb`)
+
+### Blender Python script errors
+If Blender runs but fails to render:
+1. Check that the GLB files are valid and can be opened in Blender manually
+2. Verify the Python script `render_blender.py` exists in the project root
+3. Check Blender's output for specific error messages
 
 ### USDZ conversion fails
 - Ensure `usdcat` and `usdzip` are installed and in your PATH
