@@ -235,8 +235,11 @@ def arrange_models_grid(model_groups, grid_cols=5, spacing=2.5):
         col = idx % grid_cols
         
         # Calculate grid position for this model's center
+        # X: left to right (columns)
+        # Y: forward to back (rows) - this is the depth dimension in Blender
+        # Z: keep at 0 for all objects to maintain same vertical elevation
         x_offset = (col - (grid_cols - 1) / 2) * spacing
-        z_offset = (rows - 1) / 2 - row * spacing
+        y_offset = (rows - 1) / 2 - row * spacing
         
         # Calculate the center of this model group
         min_coords = [float('inf')] * 3
@@ -263,7 +266,8 @@ def arrange_models_grid(model_groups, grid_cols=5, spacing=2.5):
             model_center = Vector([(min_coords[i] + max_coords[i]) / 2 for i in range(3)])
         
         # Calculate offset to move model center to grid position
-        offset = Vector((x_offset - model_center.x, 0, z_offset - model_center.z))
+        # Set Z to 0 to ensure all models are on the same horizontal plane
+        offset = Vector((x_offset - model_center.x, y_offset - model_center.y, -model_center.z))
         
         # Apply offset to all objects in this model group
         for obj in model_objects:
