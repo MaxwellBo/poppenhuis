@@ -79,8 +79,15 @@ def load_glb(filepath):
     imported_objects = [obj for obj in bpy.context.selected_objects]
     return imported_objects
 
-def center_and_frame_objects(objects, camera, padding=1.0):
-    """Center objects in the scene and frame the camera to fit them."""
+def center_and_frame_objects(objects, camera, padding=1.0, center_objects=True):
+    """Center objects in the scene and frame the camera to fit them.
+    
+    Args:
+        objects: List of objects to frame
+        camera: Camera object
+        padding: Padding around objects
+        center_objects: If True, center objects at origin. If False, keep their positions.
+    """
     from mathutils import Vector
     
     if not objects:
@@ -119,12 +126,16 @@ def center_and_frame_objects(objects, camera, padding=1.0):
     # Calculate center
     center = [(min_coords[i] + max_coords[i]) / 2 for i in range(3)]
     
-    # Move all objects to center at origin
-    offset = Vector((-center[0], -center[1], -center[2]))
-    for obj in objects:
-        obj.location += offset
+    # Move all objects to center at origin (only if center_objects is True)
+    if center_objects:
+        offset = Vector((-center[0], -center[1], -center[2]))
+        for obj in objects:
+            obj.location += offset
+        # Recalculate bounding box after centering
+        min_coords = [min_coords[i] - center[i] for i in range(3)]
+        max_coords = [max_coords[i] - center[i] for i in range(3)]
     
-    # Calculate size
+    # Calculate size (use the full extent of the bounding box)
     size = max(max_coords[i] - min_coords[i] for i in range(3))
     
     # Position camera to frame the objects
@@ -162,13 +173,13 @@ def center_and_frame_objects(objects, camera, padding=1.0):
             camera.location = (iso_distance, -iso_distance, iso_distance)
             camera.rotation_euler = (1.047, 0, 0.785)  # Isometric angle
 
-def arrange_models_grid(model_groups, grid_cols=5, spacing=0.8):
+def arrange_models_grid(model_groups, grid_cols=5, spacing=2.5):
     """Arrange multiple model groups in a grid layout.
     
     Args:
         model_groups: List of lists, where each inner list contains objects from one model
         grid_cols: Number of columns in the grid
-        spacing: Distance between model centers
+        spacing: Distance between model centers (increased for better distribution)
     """
     if not model_groups:
         return
@@ -256,8 +267,8 @@ def render_multiple_models(model_paths, output_path, output_width=1200, output_h
     # Arrange model groups in grid (each model stays together)
     arrange_models_grid(model_groups, grid_cols=grid_cols)
     
-    # Center and frame all objects
-    center_and_frame_objects(all_objects, camera, padding=0.5)
+    # Frame all objects without centering them (preserve grid layout)
+    center_and_frame_objects(all_objects, camera, padding=1.0, center_objects=False)
     
     # Render
     scene.render.filepath = str(output_path)

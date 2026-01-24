@@ -1,26 +1,19 @@
 import { Size } from '../components/Size';
 import { ItemCards } from '../components/ItemCards';
-import { useLoaderData, useSearchParams } from "react-router";
+import { useLoaderData } from "react-router";
 import { loadCollection } from "../manifest";
 import { metaForCollection } from "../meta";
 import Markdown from "react-markdown";
 import { HelmetMeta } from '../components/HelmetMeta';
 import { QueryPreservingLink } from '../components/QueryPreservingLink';
 import { PageHeader } from '../components/PageHeader';
-import { RenderPage } from '../components/RenderPage';
 import * as yaml from 'js-yaml';
 
 export const loader = loadCollection;
 
 export default function CollectionPage() {
   const { collection, user } = useLoaderData() as Awaited<ReturnType<typeof loader>>;
-  const [searchParams] = useSearchParams();
-  const renderMode = searchParams.get("render") === "true";
   const collectionYaml = yaml.dump(collection);
-
-  if (renderMode) {
-    return <RenderPage items={collection.items} />;
-  }
 
   return <article>
     <HelmetMeta meta={metaForCollection(collection, user)} />

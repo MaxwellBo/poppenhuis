@@ -14,7 +14,6 @@ import { QrCode } from "../components/QrCode";
 import { AFrameScene } from "../components/AFrameScene";
 import { Receipt } from "../components/Receipt";
 import { DescriptionList } from "../components/DescriptionList";
-import { RenderPage } from "../components/RenderPage";
 import * as yaml from 'js-yaml';
 
 export const loader = loadItem
@@ -54,7 +53,6 @@ export default function ItemPage() {
   const nextItemIsFirst = currentIndex === allItems.length - 1;
 
   const [searchParams, setSearchParams] = useSearchParams();
-  const renderMode = searchParams.get("render") === "true";
   const vrMode = searchParams.get("vr") || "";
   const renderAFrameScene = vrMode === "auto" || vrMode === "dsstore";
   const positioningMode = vrMode === "dsstore" ? "dsstore" : "auto";
@@ -74,10 +72,6 @@ export default function ItemPage() {
     newSearchParams.set("vr", e.target.value);
     setSearchParams(newSearchParams);
   };
-
-  if (renderMode) {
-    return <RenderPage items={[item]} />;
-  }
 
   return (
     <article className='item-page'>
