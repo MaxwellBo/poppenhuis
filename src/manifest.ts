@@ -632,6 +632,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             id: "jetspeed",
             name: "Jetspeed",
             model: "/assets/goldens/mbo_badminton-racquets_jetspeed.glb",
+            og: "/assets/derived/mbo_badminton-racquets_jetspeed.jpeg",
             usdzModel: "/assets/derived/mbo_badminton-racquets_jetspeed.usdz",
             manufacturer: "Victor",
             formalName: "Victor Jetspeed S T1 Badminton Racquet 4U(83g)G5",

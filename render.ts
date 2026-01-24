@@ -55,6 +55,46 @@ function modelPathToFsPath(modelPath: string): string {
   return path.join(__dirname, 'public', cleanPath);
 }
 
+function calculateOptimalGridCols(numModels: number, width: number, height: number): number {
+  // For landscape images, prefer more columns to fill horizontal space
+  const aspectRatio = width / height;
+  
+  // Calculate optimal grid dimensions that match the image aspect ratio
+  // We want: cols/rows ≈ aspectRatio
+  // And: cols * rows ≥ numModels
+  // Solving: cols ≈ sqrt(numModels * aspectRatio)
+  
+  // Calculate ideal columns based on aspect ratio
+  const idealCols = Math.sqrt(numModels * aspectRatio);
+  
+  // For landscape images, bias toward more columns to fill horizontal space
+  // Round up more aggressively for landscape images
+  let cols: number;
+  if (aspectRatio > 1.3) {
+    // Landscape: prefer more columns
+    cols = Math.ceil(idealCols * 1.1); // Add 10% bias toward more columns
+  } else {
+    // Square or portrait: round normally
+    cols = Math.round(idealCols);
+  }
+  
+  // Ensure reasonable bounds
+  const minCols = 2;
+  const maxCols = numModels; // Can't have more columns than models
+  
+  // Verify the resulting grid makes sense
+  const calculatedRows = Math.ceil(numModels / cols);
+  
+  // For landscape images, if we're getting too many rows relative to columns,
+  // increase columns to better match the aspect ratio
+  if (aspectRatio > 1.3 && calculatedRows > cols * 0.8) {
+    // Recalculate to better match aspect ratio
+    cols = Math.ceil(Math.sqrt(numModels * aspectRatio) * 1.2);
+  }
+  
+  return Math.max(minCols, Math.min(cols, maxCols));
+}
+
 async function renderWithBlender(task: ModelRenderTask): Promise<void> {
   const { modelPaths, outputPath, isSingle } = task;
 
@@ -87,7 +127,7 @@ async function renderWithBlender(task: ModelRenderTask): Promise<void> {
     'C:\\Program Files\\Blender Foundation\\Blender\\blender.exe', // Windows
   ];
 
-  let blenderPath = null;
+  let blenderPath: string | null = null;
 
   // First, try if 'blender' is in PATH
   try {
@@ -112,15 +152,19 @@ async function renderWithBlender(task: ModelRenderTask): Promise<void> {
 
   // Build Blender command
   const mode = isSingle ? 'single' : 'multi';
+  const outputWidth = 1200;
+  const outputHeight = 630;
+  const gridCols = isSingle ? undefined : calculateOptimalGridCols(modelPaths.length, outputWidth, outputHeight);
+  
   const args = [
     '--background', // Run in background (no UI)
     '--python', scriptPath,
     '--',
     '--mode', mode,
     '--output', outputPath,
-    '--width', '1200',
-    '--height', '630',
-    ...(isSingle ? [] : ['--grid-cols', '5']),
+    '--width', outputWidth.toString(),
+    '--height', outputHeight.toString(),
+    ...(isSingle ? [] : ['--grid-cols', gridCols!.toString()]),
     ...fsModelPaths,
   ];
 
