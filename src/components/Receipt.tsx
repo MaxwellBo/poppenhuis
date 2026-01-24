@@ -44,13 +44,25 @@ export function Receipt({ item, collection, user, modelViewerRef }: ReceiptProps
   const [isPrinting, setIsPrinting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [qrCodeLoaded, setQrCodeLoaded] = useState(false);
-  const { snapshotImageUrl, snapshotModel } = useModelSnapshot();
-  const imageUrl = snapshotImageUrl ?? item.og ?? null;
+  const { snapshotModel } = useModelSnapshot();
+  // Only set imageUrl when user explicitly clicks a button
+  const [selectedImageUrl, setSelectedImageUrl] = useState<string | null>(null);
+  const imageUrl = selectedImageUrl;
 
-  // Snapshot: capture image from model viewer (or use OG, overwriting if needed)
-  const snapshotReceipt = async () => {
+  // Snapshot: capture image from model viewer
+  const snapshotCurrentModel = async () => {
     if (modelViewerRef) {
-      await snapshotModel(modelViewerRef);
+      const url = await snapshotModel(modelViewerRef);
+      if (url) {
+        setSelectedImageUrl(url);
+      }
+    }
+  };
+
+  // Use the Open Graph image
+  const useOpenGraphImage = () => {
+    if (item.og) {
+      setSelectedImageUrl(item.og);
     }
   };
 
@@ -224,11 +236,19 @@ export function Receipt({ item, collection, user, modelViewerRef }: ReceiptProps
           <summary>print receipt</summary>
           <div style={{ marginTop: '10px', marginBottom: '10px' }}>
             <button
-              onClick={snapshotReceipt}
+              onClick={snapshotCurrentModel}
               style={{ marginRight: '10px' }}
             >
-              snapshot receipt
+              snapshot current model
             </button>
+            {item.og && (
+              <button
+                onClick={useOpenGraphImage}
+                style={{ marginRight: '10px' }}
+              >
+                use Open Graph image
+              </button>
+            )}
             <button
               onClick={printReceipt}
               disabled={!imageUrl || isPrinting}

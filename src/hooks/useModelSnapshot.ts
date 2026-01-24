@@ -23,7 +23,7 @@ export function useModelSnapshot() {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
 
-  const snapshotModel = useCallback(async (modelViewerRef: React.RefObject<HTMLElement>) => {
+  const snapshotModel = useCallback(async (modelViewerRef: React.RefObject<HTMLElement>): Promise<string | null> => {
     if (modelViewerRef?.current) {
       // Use model-viewer's built-in toDataURL method which handles WebGL buffer properly
       const modelViewer = modelViewerRef.current as any;
@@ -31,6 +31,7 @@ export function useModelSnapshot() {
         const dataUrl = await modelViewer.toDataURL('image/png');
         console.log("Snapshot captured from model viewer");
         setSnapshotImageUrl(dataUrl);
+        return dataUrl;
       } else {
         // Fallback: try to get canvas directly (may have issues with WebGL buffer)
         const modelViewerCanvas = modelViewerRef.current.shadowRoot?.querySelector('canvas');
@@ -38,6 +39,7 @@ export function useModelSnapshot() {
           const dataUrl = (modelViewerCanvas as HTMLCanvasElement).toDataURL('image/png');
           console.log("Snapshot captured from canvas fallback");
           setSnapshotImageUrl(dataUrl);
+          return dataUrl;
         } else {
           console.warn("Model viewer canvas not found");
         }
@@ -45,6 +47,7 @@ export function useModelSnapshot() {
     } else {
       console.warn("Model viewer ref not available");
     }
+    return null;
   }, []);
 
   const uploadSnapshot = useCallback(async (
