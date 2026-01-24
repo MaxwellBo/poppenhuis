@@ -332,13 +332,15 @@ def render_single_model(model_path, output_path, output_width=1200, output_heigh
         bpy.context.view_layer.update()
         
         # Position in 2x2 grid
-        # X: left (-0.5) to right (+0.5)
-        # Z: top (-0.5) to bottom (+0.5) - note: Z is vertical in Blender, but we use it for depth in isometric view
+        # X: left to right (columns)
+        # Y: forward to back (rows) - this is the depth dimension in Blender
+        # Z: keep at 0 for all objects to maintain same vertical elevation
         x_offset = (col - 0.5) * spacing  # 0 -> -0.5, 1 -> +0.5
-        z_offset = (row - 0.5) * spacing   # 0 -> -0.5, 1 -> +0.5
+        y_offset = (row - 0.5) * spacing   # 0 -> -0.5, 1 -> +0.5
         for obj in model_objects:
             obj.location.x = x_offset
-            obj.location.z = z_offset
+            obj.location.y = y_offset
+            obj.location.z = 0  # Keep all objects at same vertical elevation
     
     # Frame all objects without centering (preserve layout)
     center_and_frame_objects(all_objects, camera, padding=1.0, center_objects=False)
