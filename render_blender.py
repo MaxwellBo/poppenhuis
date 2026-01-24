@@ -173,6 +173,44 @@ def center_and_frame_objects(objects, camera, padding=1.0, center_objects=True):
             camera.location = (iso_distance, -iso_distance, iso_distance)
             camera.rotation_euler = (1.047, 0, 0.785)  # Isometric angle
 
+def calculate_model_bounding_box_size(model_objects):
+    """Calculate the maximum dimension (size) of a model's bounding box.
+    
+    Args:
+        model_objects: List of objects belonging to one model
+        
+    Returns:
+        float: Maximum dimension of the bounding box, or 0.0 if no valid bounding box
+    """
+    from mathutils import Vector
+    
+    if not model_objects:
+        return 0.0
+    
+    min_coords = [float('inf')] * 3
+    max_coords = [float('-inf')] * 3
+    
+    for obj in model_objects:
+        if obj.type == 'MESH' and len(obj.bound_box) > 0:
+            matrix_world = obj.matrix_world
+            for corner in obj.bound_box:
+                world_corner = matrix_world @ Vector(corner)
+                for i in range(3):
+                    min_coords[i] = min(min_coords[i], world_corner[i])
+                    max_coords[i] = max(max_coords[i], world_corner[i])
+        else:
+            loc = obj.location
+            for i in range(3):
+                min_coords[i] = min(min_coords[i], loc[i])
+                max_coords[i] = max(max_coords[i], loc[i])
+    
+    if min_coords[0] == float('inf'):
+        return 0.0
+    
+    # Calculate size (use the full extent of the bounding box)
+    size = max(max_coords[i] - min_coords[i] for i in range(3))
+    return size
+
 def arrange_models_grid(model_groups, grid_cols=5, spacing=2.5):
     """Arrange multiple model groups in a grid layout.
     
@@ -368,8 +406,24 @@ def render_multiple_models(model_paths, output_path, output_width=1200, output_h
     if not all_objects:
         raise ValueError("No objects loaded from models")
     
+    # Calculate bounding box size for each model
+    model_sizes = []
+    for model_objects in model_groups:
+        size = calculate_model_bounding_box_size(model_objects)
+        if size > 0:
+            model_sizes.append(size)
+    
+    # Calculate average bounding box size
+    if model_sizes:
+        avg_size = sum(model_sizes) / len(model_sizes)
+        # Use average size with 1.2x multiplier for spacing (20% padding between models)
+        spacing = avg_size * 1.2
+    else:
+        # Fallback to default spacing if no valid bounding boxes found
+        spacing = 2.5
+    
     # Arrange model groups in grid (each model stays together)
-    arrange_models_grid(model_groups, grid_cols=grid_cols)
+    arrange_models_grid(model_groups, grid_cols=grid_cols, spacing=spacing)
     
     # Frame all objects without centering them (preserve grid layout)
     center_and_frame_objects(all_objects, camera, padding=1.0, center_objects=False)
