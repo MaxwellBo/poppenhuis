@@ -43,10 +43,12 @@ def setup_scene(output_width=1200, output_height=630, background_color=(0.992, 0
     bg.inputs['Color'].default_value = (*background_color, 1.0)
     bg.inputs['Strength'].default_value = 1.0
     
-    # Add camera
-    bpy.ops.object.camera_add(location=(0, -5, 3))
+    # Add camera with isometric orientation
+    bpy.ops.object.camera_add(location=(5, -5, 5))
     camera = bpy.context.object
-    camera.rotation_euler = (1.1, 0, 0)  # Look down at the scene
+    # Isometric view: 54.736 degrees elevation (atan(sqrt(2))) and 45 degrees rotation
+    camera.rotation_euler = (1.047, 0, 0.785)  # Isometric angle
+    camera.data.type = 'ORTHO'  # Use orthographic projection for isometric view
     scene.camera = camera
     
     # Add lighting
@@ -132,8 +134,12 @@ def center_and_frame_objects(objects, camera, padding=1.0):
     else:
         distance = 5.0  # Default distance if size calculation fails
     
-    camera.location = (0, -distance, distance * 0.6)
-    camera.rotation_euler = (1.1, 0, 0)
+    # Position camera for isometric view
+    # Isometric: equal distance from all axes
+    iso_distance = distance * 1.2
+    camera.location = (iso_distance, -iso_distance, iso_distance)
+    camera.rotation_euler = (1.047, 0, 0.785)  # Isometric angle (54.736° elevation, 45° rotation)
+    camera.data.type = 'ORTHO'  # Ensure orthographic projection
     
     # Set camera to frame all objects (works in background mode)
     bpy.context.view_layer.objects.active = camera
@@ -148,10 +154,13 @@ def center_and_frame_objects(objects, camera, padding=1.0):
         # Fallback: manually adjust camera based on bounding box
         if size > 0:
             # Set camera distance to fit all objects
-            camera.data.ortho_scale = size * 2.5 if camera.data.type == 'ORTHO' else None
-            if camera.data.type == 'PERSP':
-                # For perspective, adjust FOV or distance
-                camera.location = (0, -distance, distance * 0.6)
+            # Set orthographic scale for isometric view
+            camera.data.type = 'ORTHO'
+            camera.data.ortho_scale = size * 2.5
+            # Ensure isometric positioning
+            iso_distance = distance * 1.2
+            camera.location = (iso_distance, -iso_distance, iso_distance)
+            camera.rotation_euler = (1.047, 0, 0.785)  # Isometric angle
 
 def arrange_models_grid(objects, grid_cols=5, spacing=2.0):
     """Arrange multiple models in a grid layout."""
