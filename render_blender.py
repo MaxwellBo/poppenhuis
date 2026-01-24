@@ -283,11 +283,20 @@ def render_single_model(model_path, output_path, output_width=1200, output_heigh
     spacing = model_size * 1.2  # 20% padding between models
     
     # Cardinal directions: North (0°), East (90°), South (180°), West (270°)
+    # Arranged in 2x2 grid: top-left, top-right, bottom-left, bottom-right
     directions = [
-        (0, "north"),      # 0° = North
-        (math.pi / 2, "east"),  # 90° = East
-        (math.pi, "south"), # 180° = South
-        (3 * math.pi / 2, "west")  # 270° = West
+        (0, "north"),      # 0° = North (top-left)
+        (math.pi / 2, "east"),  # 90° = East (top-right)
+        (math.pi, "south"), # 180° = South (bottom-left)
+        (3 * math.pi / 2, "west")  # 270° = West (bottom-right)
+    ]
+    
+    # 2x2 grid positions: (row, col) where row 0 is top, row 1 is bottom
+    grid_positions = [
+        (0, 0),  # top-left (North)
+        (0, 1),  # top-right (East)
+        (1, 0),  # bottom-left (South)
+        (1, 1),  # bottom-right (West)
     ]
     
     # Store references to all model groups (one per direction)
@@ -302,21 +311,34 @@ def render_single_model(model_path, output_path, output_width=1200, output_heigh
         duplicated_objects = [obj for obj in bpy.context.selected_objects]
         model_groups.append(duplicated_objects)
     
-    # Now rotate and position each of the 4 model groups
+    # Now rotate and position each of the 4 model groups in 2x2 grid
     all_objects = []
-    for idx, (rotation_z, _) in enumerate(directions):
+    for idx, ((rotation_z, _), (row, col)) in enumerate(zip(directions, grid_positions)):
         model_objects = model_groups[idx]
         all_objects.extend(model_objects)
         
-        # Rotate each object around Z-axis
+        # Rotate around Z-axis (vertical) to show different cardinal directions
+        # In Blender, Z is the vertical axis (up/down), rotating around Z rotates the model horizontally
         for obj in model_objects:
-            obj.rotation_euler.z = rotation_z
+            # Ensure we're using Euler XYZ rotation mode
+            obj.rotation_mode = 'XYZ'
+            # Clear any existing rotation from import, then apply Z rotation
+            # Use positive rotation_z (Blender's Z rotation is counter-clockwise when viewed from above)
+            obj.rotation_euler = (0, 0, rotation_z)
+            # Update the object to apply the transformation
+            obj.update_tag()
         
-        # Position this copy horizontally
-        # 4 models centered: positions at -1.5, -0.5, 0.5, 1.5 * spacing
-        x_offset = (idx - 1.5) * spacing
+        # Update the dependency graph to ensure rotations are applied
+        bpy.context.view_layer.update()
+        
+        # Position in 2x2 grid
+        # X: left (-0.5) to right (+0.5)
+        # Z: top (-0.5) to bottom (+0.5) - note: Z is vertical in Blender, but we use it for depth in isometric view
+        x_offset = (col - 0.5) * spacing  # 0 -> -0.5, 1 -> +0.5
+        z_offset = (row - 0.5) * spacing   # 0 -> -0.5, 1 -> +0.5
         for obj in model_objects:
             obj.location.x = x_offset
+            obj.location.z = z_offset
     
     # Frame all objects without centering (preserve layout)
     center_and_frame_objects(all_objects, camera, padding=1.0, center_objects=False)
