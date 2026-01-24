@@ -162,25 +162,63 @@ def center_and_frame_objects(objects, camera, padding=1.0):
             camera.location = (iso_distance, -iso_distance, iso_distance)
             camera.rotation_euler = (1.047, 0, 0.785)  # Isometric angle
 
-def arrange_models_grid(objects, grid_cols=5, spacing=2.0):
-    """Arrange multiple models in a grid layout."""
-    if not objects:
+def arrange_models_grid(model_groups, grid_cols=5, spacing=0.8):
+    """Arrange multiple model groups in a grid layout.
+    
+    Args:
+        model_groups: List of lists, where each inner list contains objects from one model
+        grid_cols: Number of columns in the grid
+        spacing: Distance between model centers
+    """
+    if not model_groups:
         return
     
-    # Group objects by model (assuming objects from same import are grouped)
-    # For simplicity, we'll arrange them in a grid
-    rows = (len(objects) + grid_cols - 1) // grid_cols
+    from mathutils import Vector
     
-    for idx, obj in enumerate(objects):
+    num_models = len(model_groups)
+    rows = (num_models + grid_cols - 1) // grid_cols
+    
+    for idx, model_objects in enumerate(model_groups):
+        if not model_objects:
+            continue
+            
         row = idx // grid_cols
         col = idx % grid_cols
         
-        # Calculate position in grid
+        # Calculate grid position for this model's center
         x_offset = (col - (grid_cols - 1) / 2) * spacing
         z_offset = (rows - 1) / 2 - row * spacing
         
-        obj.location.x += x_offset
-        obj.location.z += z_offset
+        # Calculate the center of this model group
+        min_coords = [float('inf')] * 3
+        max_coords = [float('-inf')] * 3
+        
+        for obj in model_objects:
+            if obj.type == 'MESH' and len(obj.bound_box) > 0:
+                matrix_world = obj.matrix_world
+                for corner in obj.bound_box:
+                    world_corner = matrix_world @ Vector(corner)
+                    for i in range(3):
+                        min_coords[i] = min(min_coords[i], world_corner[i])
+                        max_coords[i] = max(max_coords[i], world_corner[i])
+            else:
+                loc = obj.location
+                for i in range(3):
+                    min_coords[i] = min(min_coords[i], loc[i])
+                    max_coords[i] = max(max_coords[i], loc[i])
+        
+        if min_coords[0] == float('inf'):
+            # Fallback: use first object location
+            model_center = Vector(model_objects[0].location)
+        else:
+            model_center = Vector([(min_coords[i] + max_coords[i]) / 2 for i in range(3)])
+        
+        # Calculate offset to move model center to grid position
+        offset = Vector((x_offset - model_center.x, 0, z_offset - model_center.z))
+        
+        # Apply offset to all objects in this model group
+        for obj in model_objects:
+            obj.location += offset
 
 def render_single_model(model_path, output_path, output_width=1200, output_height=630):
     """Render a single GLB model."""
@@ -202,21 +240,24 @@ def render_multiple_models(model_paths, output_path, output_width=1200, output_h
     """Render multiple GLB models in a grid layout."""
     scene, camera = setup_scene(output_width, output_height)
     
+    model_groups = []
     all_objects = []
     
-    # Load all models
+    # Load all models, keeping track of which objects belong to which model
     for model_path in model_paths:
         objects = load_glb(model_path)
-        all_objects.extend(objects)
+        if objects:
+            model_groups.append(objects)
+            all_objects.extend(objects)
     
     if not all_objects:
         raise ValueError("No objects loaded from models")
     
-    # Arrange in grid
-    arrange_models_grid(all_objects, grid_cols=grid_cols)
+    # Arrange model groups in grid (each model stays together)
+    arrange_models_grid(model_groups, grid_cols=grid_cols)
     
     # Center and frame all objects
-    center_and_frame_objects(all_objects, camera, padding=2.0)
+    center_and_frame_objects(all_objects, camera, padding=0.5)
     
     # Render
     scene.render.filepath = str(output_path)
