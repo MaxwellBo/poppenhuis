@@ -14,9 +14,10 @@ export const loader = loadCollection;
 export default function CollectionPage() {
   const { collection, user } = useLoaderData() as Awaited<ReturnType<typeof loader>>;
   const collectionYaml = yaml.dump(collection);
+  const meta = metaForCollection(collection, user);
 
   return <article>
-    <HelmetMeta meta={metaForCollection(collection, user)} />
+    <HelmetMeta meta={meta} />
     <PageHeader>
       <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / {collection.name} / <Size ts={collection.items} t="item" />
     </PageHeader>
@@ -24,10 +25,12 @@ export default function CollectionPage() {
     {user.source === undefined && <div className="short">
       <a href={`https://github.com/MaxwellBo/poppenhuis/issues/new?template=put-item.yml&user-id=${user.id}&collection-id=${collection.id}`}>+ add item</a>
       , <a href={`https://github.com/MaxwellBo/poppenhuis/issues/new?template=put-collection.yml&user-id=${user.id}&yaml-template=${encodeURIComponent(collectionYaml)}`}>edit</a>
+      , <a href={meta.image}>og image</a>
     </div>}
     {user.source === 'firebase' && <div className="short">
       <QueryPreservingLink to={`/${user.id}/${collection.id}/new`}>+ new item</QueryPreservingLink>
       , <QueryPreservingLink to={`/${user.id}/${collection.id}/edit`}>edit?</QueryPreservingLink>
+      , <a href={meta.image}>og image</a>
     </div>}
     <ItemCards collection={collection} user={user} />
   </article>

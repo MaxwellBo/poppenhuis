@@ -16,10 +16,11 @@ export default function UserPage() {
   const { user } = useLoaderData() as Awaited<ReturnType<typeof loader>>;
 
   const userYaml = yaml.dump(user);
+  const meta = metaForUser(user);
 
   return (
     <article>
-      <HelmetMeta meta={metaForUser(user)} />
+      <HelmetMeta meta={meta} />
       <PageHeader>
         {user.name} / <Size ts={user.collections} t="collection" />
       </PageHeader>
@@ -27,10 +28,12 @@ export default function UserPage() {
       {user.source === undefined && <div className="short">
         <a href={`https://github.com/MaxwellBo/poppenhuis/issues/new?template=put-collection.yml&user-id=${user.id}`}>+ add collection</a>
         , <a href={`https://github.com/MaxwellBo/poppenhuis/issues/new?template=put-user.yml&yaml-template=${encodeURIComponent(userYaml)}`}>edit?</a>
+        , <a href={meta.image}>og image</a>
       </div>}
       {user.source === 'firebase' && <div className="short">
         <QueryPreservingLink to={`/${user.id}/new`}>+ new collection</QueryPreservingLink>
         , <QueryPreservingLink to={`/${user.id}/edit`}>edit?</QueryPreservingLink>
+        , <a href={meta.image}>og image</a>
       </div>}
       <div id="collection-rows">
         {user.collections.map((collection) =>
