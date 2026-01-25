@@ -10,6 +10,7 @@
     "preview": "vite preview",
     "test": "vitest",
     "render": "tsx render.ts",
+    "render:root": "npm run render -- root",
     "render:all": "npm run render -- all",
     "render:users": "npm run render -- users",
     "render:collections": "npm run render -- collections",

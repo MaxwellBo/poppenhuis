@@ -40,6 +40,10 @@ function getUserOGPath(userId: string): string {
   return `/assets/derived/${userId}_og.png`;
 }
 
+function getRootOGPath(): string {
+  return `/og.png`;
+}
+
 function getAllUserItems(user: User): Item[] {
   const items: Item[] = [];
   for (const collection of user.collections) {
@@ -296,6 +300,24 @@ async function renderAll(): Promise<void> {
     await renderBatch([task]);
   }
 
+  // Render root OG image with all items
+  console.log(`\n🎨 Processing root OG image...\n`);
+  const allItems: Item[] = [];
+  for (const user of FIRST_PARTY_MANIFEST) {
+    const userItems = getAllUserItems(user);
+    allItems.push(...userItems);
+  }
+
+  if (allItems.length > 0) {
+    const rootOgPath = getRootOGPath();
+    const outputFsPath = webPathToFsOutput(rootOgPath);
+    console.log(`📸 Rendering root OG image: ${allItems.length} item(s) -> ${rootOgPath}`);
+    await renderBatch([{
+      items: allItems,
+      outputPath: outputFsPath
+    }]);
+  }
+
   console.log('\n✅ All renders complete!');
 }
 
@@ -370,17 +392,49 @@ async function renderCollections(): Promise<void> {
   console.log('\n✅ All collection renders complete!');
 }
 
+async function renderRoot(): Promise<void> {
+  console.log('🎨 Starting render-root process...\n');
+
+  // Collect ALL items from ALL users
+  const allItems: Item[] = [];
+  for (const user of FIRST_PARTY_MANIFEST) {
+    const userItems = getAllUserItems(user);
+    allItems.push(...userItems);
+  }
+
+  if (allItems.length === 0) {
+    console.log('⚠️  No items found in manifest');
+    return;
+  }
+
+  console.log(`📸 Collecting ${allItems.length} item(s) from all users...`);
+
+  // Render root OG image with all items
+  const rootOgPath = getRootOGPath();
+  const outputFsPath = webPathToFsOutput(rootOgPath);
+  
+  console.log(`📸 Rendering root OG image: ${allItems.length} item(s) -> ${rootOgPath}`);
+  await renderBatch([{
+    items: allItems,
+    outputPath: outputFsPath
+  }]);
+
+  console.log('\n✅ Root render complete!');
+}
+
 // Parse command line arguments and execute
 async function main() {
   const args = process.argv.slice(2);
   if (args.length === 0) {
     console.error('Usage:');
+    console.error('  Root OG image (all items): npm run render root');
     console.error('  All posters (from manifest): npm run render all');
     console.error('  User OG images: npm run render users');
     console.error('  Collection OG images: npm run render collections');
     console.error('  Test mode: npm run render test [output.png]');
     console.error('');
     console.error('Examples:');
+    console.error('  npm run render root');
     console.error('  npm run render all');
     console.error('  npm run render users');
     console.error('  npm run render collections');
@@ -426,8 +480,11 @@ async function main() {
     } else if (mode === 'collections') {
       // Render only collection OG images
       await renderCollections();
+    } else if (mode === 'root') {
+      // Render root OG image with all items
+      await renderRoot();
     } else {
-      console.error('Error: First argument must be "test", "all", "users", or "collections"');
+      console.error('Error: First argument must be "test", "root", "all", "users", or "collections"');
       process.exit(1);
     }
   } catch (error) {

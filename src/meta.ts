@@ -3,7 +3,7 @@ import type { Collection, Item, User } from "./manifest";
 const BASE_URL = "https://poppenhu.is";
 
 function resolveOgUrl(og: string | undefined): string {
-  if (!og) return `${BASE_URL}/og.jpeg`;
+  if (!og) return `${BASE_URL}/og.png`;
   // If it's already an absolute URL, use it directly
   if (og.startsWith('http://') || og.startsWith('https://')) {
     return og;
@@ -22,7 +22,7 @@ export interface Meta {
 export const DEFAULT_META = {
   title: "poppenhuis",
   description: "a digital dollhouse",
-  image: `${BASE_URL}/og.jpeg`,
+  image: `${BASE_URL}/og.png`,
   url: BASE_URL,
 };
 
