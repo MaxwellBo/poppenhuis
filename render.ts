@@ -301,22 +301,23 @@ async function renderAll(): Promise<void> {
   }
 
   // Render root OG image with all items
-  console.log(`\n🎨 Processing root OG image...\n`);
-  const allItems: Item[] = [];
-  for (const user of FIRST_PARTY_MANIFEST) {
-    const userItems = getAllUserItems(user);
-    allItems.push(...userItems);
-  }
+  // Temporarily disabled
+  // console.log(`\n🎨 Processing root OG image...\n`);
+  // const allItems: Item[] = [];
+  // for (const user of FIRST_PARTY_MANIFEST) {
+  //   const userItems = getAllUserItems(user);
+  //   allItems.push(...userItems);
+  // }
 
-  if (allItems.length > 0) {
-    const rootOgPath = getRootOGPath();
-    const outputFsPath = webPathToFsOutput(rootOgPath);
-    console.log(`📸 Rendering root OG image: ${allItems.length} item(s) -> ${rootOgPath}`);
-    await renderBatch([{
-      items: allItems,
-      outputPath: outputFsPath
-    }]);
-  }
+  // if (allItems.length > 0) {
+  //   const rootOgPath = getRootOGPath();
+  //   const outputFsPath = webPathToFsOutput(rootOgPath);
+  //   console.log(`📸 Rendering root OG image: ${allItems.length} item(s) -> ${rootOgPath}`);
+  //   await renderBatch([{
+  //     items: allItems,
+  //     outputPath: outputFsPath
+  //   }]);
+  // }
 
   console.log('\n✅ All renders complete!');
 }
