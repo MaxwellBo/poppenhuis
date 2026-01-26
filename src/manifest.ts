@@ -1276,7 +1276,23 @@ async function loadManifest(manifestUrl: string): Promise<Manifest> {
   return response.json();
 }
 
+// Cache for Firebase users to avoid repeated fetches
+let FIREBASE_USERS_CACHE: User[] | null = null;
+
+/**
+ * Invalidates the Firebase users cache.
+ * Call this after any edit to Firebase data to ensure fresh data on next load.
+ */
+export function invalidateFirebaseUsersCache(): void {
+  FIREBASE_USERS_CACHE = null;
+}
+
 async function loadFirebaseUsers(): Promise<User[]> {
+  // Return cached data if available
+  if (FIREBASE_USERS_CACHE !== null) {
+    return FIREBASE_USERS_CACHE;
+  }
+
   const response = await fetch(`${FIREBASE_DATABASE_URL}/.json`);
   
   if (!response.ok) {
@@ -1286,10 +1302,11 @@ async function loadFirebaseUsers(): Promise<User[]> {
   const users: FirebaseManifest | null = await response.json();
 
   if (!users) {
+    FIREBASE_USERS_CACHE = [];
     return [];
   }
   
-  return Object.values(users).map(firebaseUser => {
+  const result = Object.values(users).map(firebaseUser => {
     // Convert collections from Record to Array format
     const collections: Collection[] = Object.values(firebaseUser.collections ?? {}).map(collection => {
       const items: Item[] = Object.values(collection.items ?? {});
@@ -1307,44 +1324,22 @@ async function loadFirebaseUsers(): Promise<User[]> {
       source: 'firebase'
     };
   });
+
+  // Cache the result
+  FIREBASE_USERS_CACHE = result;
+  return result;
 }
 
 export async function loadFirebaseUser({ userId }: { userId: string }): Promise<User> {
-  const response = await fetch(`${FIREBASE_DATABASE_URL}/.json`);
-  
-  if (!response.ok) {
-    throw new Error(`Failed to fetch Firebase data: ${response.status} ${response.statusText}`);
-  }
-  
-  const users: FirebaseManifest | null = await response.json();
-
-  if (!users) {
-    throw new Error("Firebase database is empty");
-  }
-
-  const firebaseUser: FirebaseUser = users[userId];
+  // Use cached users if available, otherwise load them (which will cache them)
+  const users = await loadFirebaseUsers();
+  const firebaseUser = users.find(user => user.id === userId);
 
   if (!firebaseUser) {
     throw new Error(`User with id "${userId}" not found in Firebase`);
   }
 
-  // Convert collections from Record to Array format
-  const collections: Collection[] = Object.values(firebaseUser.collections ?? {}).map(collection => {
-    const items: Item[] = Object.values(collection.items ?? {});
-
-    return {
-      ...collection,
-      items
-    };
-  });
-
-  const result: User = {
-    ...firebaseUser,
-    source: 'firebase',
-    collections
-  };
-
-  return result;
+  return firebaseUser;
 }
 
 export async function loadUser({ params, request }: { params: { userId: User['id']; }; request: Request; }): Promise<{

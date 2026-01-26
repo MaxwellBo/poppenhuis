@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router';
 import { rtdb, storage, auth } from '../firebase';
 import { ref, get, runTransaction } from 'firebase/database';
 import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { FirebaseUser } from '../manifest';
+import { FirebaseUser, invalidateFirebaseUsersCache } from '../manifest';
 import JSZip from 'jszip';
 
 interface UseFirebaseSubmitOptions {
@@ -95,6 +95,9 @@ export function useFirebaseSubmit(options: UseFirebaseSubmitOptions = {}) {
         return updatedUser;
       });
 
+      // Invalidate cache after successful save
+      invalidateFirebaseUsersCache();
+
       navigate(`/${userId}`);
     } catch (err: any) {
       console.error('Failed to save user:', err);
@@ -155,6 +158,9 @@ export function useFirebaseSubmit(options: UseFirebaseSubmitOptions = {}) {
 
         return updatedCollection;
       });
+
+      // Invalidate cache after successful save
+      invalidateFirebaseUsersCache();
 
       navigate(`/${userId}/${collectionId}`);
     } catch (err: any) {
@@ -289,6 +295,9 @@ export function useFirebaseSubmit(options: UseFirebaseSubmitOptions = {}) {
           return { ...currentData, og: ogUrl };
         });
       }
+
+      // Invalidate cache after successful save
+      invalidateFirebaseUsersCache();
 
       navigate(`/${userId}/${collectionId}/${itemId}`);
     } catch (err: any) {
