@@ -21,7 +21,11 @@ export default function UsersPage() {
     <article>
       <HelmetMeta meta={DEFAULT_META} />
       <PageHeader>
-        poppenhuis / <span>⌂</span>
+        poppenhuis / <React.Suspense fallback={<Size ts={syncUsers} t="user" />}>
+          <Await resolve={asyncUsersPromise}>
+            {(asyncUsers) => <Size ts={[...syncUsers, ...asyncUsers]} t="user" />}
+          </Await>
+        </React.Suspense>
       </PageHeader>
       <div id="homepage-columns">
         <section>
