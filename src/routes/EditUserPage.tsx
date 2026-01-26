@@ -37,7 +37,7 @@ export default function EditUserPage() {
     <article>
       <Helmet><title>edit {user.id} - poppenhuis</title></Helmet>
       <PageHeader>
-        <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / edit
+        <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / edit
       </PageHeader>
       <FirebaseForm
         formData={formData}

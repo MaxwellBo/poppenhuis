@@ -33,7 +33,7 @@ export default function NewCollectionPage() {
     <article>
       <Helmet><title>create collection - poppenhuis</title></Helmet>
       <PageHeader>
-        <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / create a new collection
+        <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / create a new collection
       </PageHeader>
       <FirebaseForm
         formData={formData}

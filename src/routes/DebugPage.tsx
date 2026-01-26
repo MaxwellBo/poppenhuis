@@ -60,7 +60,9 @@ export default function DebugPage() {
 
   return (
     <article>
-      <PageHeader>debug</PageHeader>
+      <PageHeader>
+        <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / debug
+      </PageHeader>
 
       <section style={{ marginTop: '2rem' }}>
         <h2>GLB Files Map</h2>

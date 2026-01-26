@@ -21,7 +21,7 @@ export default function UsersPage() {
     <article>
       <HelmetMeta meta={DEFAULT_META} />
       <PageHeader>
-        <span>⌂</span>
+        poppenhuis / <span>⌂</span>
       </PageHeader>
       <div id="homepage-columns">
         <section>

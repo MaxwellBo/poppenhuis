@@ -167,7 +167,9 @@ export default function AuthPage() {
     return (
       <div>
         <Helmet><title>auth - poppenhuis</title></Helmet>
-        <PageHeader>loading...</PageHeader>
+        <PageHeader>
+          <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / loading...
+        </PageHeader>
       </div>
     );
   }
@@ -177,7 +179,9 @@ export default function AuthPage() {
     return (
       <div>
         <Helmet><title>account - poppenhuis</title></Helmet>
-        <PageHeader>account</PageHeader>
+        <PageHeader>
+          <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> ÷ account
+        </PageHeader>
         {message && <span style={{ padding: '1ch', margin: '1ch', border: "1px dotted black"}}>{message}</span>}
         {error && <span style={{ padding: '1ch', margin: '1ch', border: "1px dotted black"}}>{error}</span>}
         <dl>
@@ -231,7 +235,9 @@ export default function AuthPage() {
   return (
     <div>
       <Helmet><title>auth - poppenhuis</title></Helmet>
-      <PageHeader>auth</PageHeader>
+      <PageHeader>
+        <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / auth
+      </PageHeader>
 
       <form onSubmit={handleSubmit} className="table-form">
         <div className="table-form-row">

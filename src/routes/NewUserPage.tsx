@@ -30,7 +30,9 @@ export default function NewUserPage() {
   return (
     <article>
       <Helmet><title>create user - poppenhuis</title></Helmet>
-      <PageHeader>create a new user</PageHeader>
+      <PageHeader>
+        <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / create a new user
+      </PageHeader>
       {loading && <p>Loading authentication status...</p>}
       {!loading && !isAuthenticated && (
         <p className="short" style={{paddingBottom: "1ch"}}>You must be authenticated to create a user. Go to <QueryPreservingLink to="/auth">/auth</QueryPreservingLink>, create an account, and then attempt to make a user. A single account can manage many users.</p>

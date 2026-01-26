@@ -70,7 +70,9 @@ export default function MapPage() {
 
   return (
     <article>
-      <PageHeader>map</PageHeader>
+      <PageHeader>
+        <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / map
+      </PageHeader>
 
       <section style={{ marginTop: '2rem' }}>
         <p>

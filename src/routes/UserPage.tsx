@@ -22,7 +22,7 @@ export default function UserPage() {
     <article>
       <HelmetMeta meta={meta} />
       <PageHeader>
-        {user.name} / <Size ts={user.collections} t="collection" />
+        <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / {user.name} / <Size ts={user.collections} t="collection" />
       </PageHeader>
       {user.bio && <div className="short description ugc"><Markdown>{user.bio}</Markdown><br /></div>}
       {user.source === undefined && <div className="short">

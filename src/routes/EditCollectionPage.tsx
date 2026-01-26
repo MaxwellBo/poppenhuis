@@ -37,7 +37,7 @@ export default function EditCollectionPage() {
     <article>
       <Helmet><title>edit {collection.id} - poppenhuis</title></Helmet>
       <PageHeader>
-        <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}/${collection.id}`}>{collection.name}</QueryPreservingLink> / edit
+        <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}/${collection.id}`}>{collection.name}</QueryPreservingLink> / edit
       </PageHeader>
       <FirebaseForm
         formData={formData}

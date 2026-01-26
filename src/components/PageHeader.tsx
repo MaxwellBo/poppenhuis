@@ -122,9 +122,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ children }) => {
           </span>
         )}
       </div>
-      <h1>
-        <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / {children}
-      </h1>
+      <h1>{children}</h1>
     </header>
   );
 };
