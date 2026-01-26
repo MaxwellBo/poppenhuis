@@ -154,7 +154,7 @@ export const AFrameScene: React.FC<AFrameSceneProps> = ({ users, startingItem, p
 
   if (positioningMode === 'dsstore' && isLoadingDSStore) {
     return (
-      <div className='a-scene-wrapper' style={{ ...getStyleForModelSize('responsive-big'), display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#fdf5e6' }}>
+      <div className='a-scene-wrapper' style={{ ...getStyleForModelSize('responsive-big'), display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#fdf5e6' }}>
         <p>Loading .DS_Store positions...</p>
       </div>
     );
@@ -169,6 +169,7 @@ export const AFrameScene: React.FC<AFrameSceneProps> = ({ users, startingItem, p
         embedded 
         style={getStyleForModelSize('responsive-big')}
         xr-mode-ui="XRMode: xr"
+        loading-screen="backgroundColor: #fdf5e6"
         >
         <a-entity id="rig"
           movement-controls>
