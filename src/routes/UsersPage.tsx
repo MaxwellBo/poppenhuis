@@ -65,10 +65,11 @@ export default function UsersPage() {
               Some of the dolls are culturally sensitive and shouldn't be displayed on a public forum, so she hosts her collection privately with a 3rd party manifest.
             </div> */}
             <div className="explanation">
-              I believe it can be difficult to show others their collections.
+              I believe it can be difficult for collectors to show others their collections.
               Photos do not do them justice, and the most important part - the "metadata", the <i>why</i> of its membership in the collection - is hard to convey. 
               <br />
-              poppenhuis aims to make this sharing process easier.
+              <br />
+              poppenhuis aims to make this sharing process easier. I hope some collections find a home here.
             </div>
           </details>
           <details>
