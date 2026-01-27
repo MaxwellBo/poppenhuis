@@ -3,6 +3,7 @@ import { useLoaderData } from 'react-router';
 import { loadUsers } from '../manifest';
 import type { Item } from '../manifest';
 import { PageHeader } from '../components/PageHeader';
+import { QueryPreservingLink } from '../components/QueryPreservingLink';
 import { ModelViewerWrapper } from '../components/ModelViewerWrapper';
 import { DSStoreParser, DSStoreRecord } from '../utils/dsstore-parser';
 import { extractFilePositions, filterGlbPositions, calculateBounds, FilePosition } from '../utils/dsstore-helpers';

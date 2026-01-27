@@ -11,6 +11,7 @@ declare global {
 }
 
 import { PageHeader } from '../components/PageHeader';
+import { QueryPreservingLink } from '../components/QueryPreservingLink';
 import { useEffect, useState } from 'react';
 import { DSStoreParser, DSStoreRecord, formatDSStoreValue, getFieldName } from '../utils/dsstore-parser';
 import { extractFilePositions, filterGlbPositions, calculateBounds, FilePosition } from '../utils/dsstore-helpers';
