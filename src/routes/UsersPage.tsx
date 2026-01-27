@@ -68,6 +68,7 @@ export default function UsersPage() {
               I believe it can be difficult for collectors to show others their collections.
               Photos do not do them justice, and the most important part - the "metadata", the <i>why</i> of its membership in the collection - is difficult to convey.
               <br />
+              <br />
               poppenhuis aims to make this sharing process easier. I hope some collections find a home here.
             </div>
           </details>
