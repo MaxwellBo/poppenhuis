@@ -48,14 +48,14 @@ export interface FieldSchema {
 
 // User field schemas as object mapping
 export const USER_FIELD_SCHEMAS: Record<string, FieldSchema> = {
-  name: { name: 'name', label: 'name', required: true, placeholder: 'John Doe' },
-  bio: { name: 'bio', label: 'bio', type: 'textarea' },
+  name: { name: 'name', label: 'name', required: true, placeholder: 'Jane Doe' },
+  bio: { name: 'bio', label: 'bio', type: 'textarea', placeholder: 'Supports markdown formatting: **bold**, _italic_, [link](https://example.com)' },
 };
 
 // Collection field schemas as object mapping
 export const COLLECTION_FIELD_SCHEMAS: Record<string, FieldSchema> = {
-  name: { name: 'name', label: 'name', required: true, placeholder: 'my collection' },
-  description: { name: 'description', label: 'description', type: 'textarea' },
+  name: { name: 'name', label: 'name', required: true },
+  description: { name: 'description', label: 'description', type: 'textarea', placeholder: 'Supports markdown formatting: **bold**, _italic_, [link](https://example.com)' },
 };
 
 // Item field schemas as object mapping
@@ -67,7 +67,7 @@ export const ITEM_FIELD_SCHEMAS: Record<string, FieldSchema> = {
     placeholder: 'A ceramic vase with textured sides',
     description: "Custom text that will be used to describe the model to viewers who use a screen reader or otherwise depend on additional semantic context to understand what they are viewing."
   },
-  description: { name: 'description', label: 'description', type: 'textarea' },
+  description: { name: 'description', label: 'description', type: 'textarea', placeholder: 'Supports markdown formatting: **bold**, _italic_, [link](https://example.com)' },
   formalName: { 
     name: 'formalName', 
     label: 'formal name', 

@@ -242,6 +242,7 @@ export function FirebaseForm({
                 value={formData[name] || ''}
                 onChange={(e) => onInputChange(name, e.target.value)}
                 rows={4}
+                placeholder={placeholder}
                 disabled={isSubmitting}
                 required={required}
               />
