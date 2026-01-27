@@ -154,13 +154,17 @@ hr {
   margin-top: 3ch;
 }
 
-
 details[open] > summary {
   margin-bottom: 0.5ch;
 }
 
 details[open] {
   margin-bottom: 3ch;
+}
+
+/* Use the native details disclosure arrow across browsers, including WebKit. */
+summary {
+  list-style: revert;
 }
 
 .explanation {
@@ -678,6 +682,8 @@ input, button, textarea, select {
 #root, #__next {
   isolation: isolate;
 }
+
+/* END CUSTOM CSS RESET */
 
 button {
   box-shadow: 2px 2px #bbb;

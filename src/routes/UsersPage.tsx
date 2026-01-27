@@ -33,7 +33,7 @@ export default function UsersPage() {
               Have a collection you care about? of pottery? of sculptures? of guitars? of cars? of cakes? of plants? of dolls?
             </p>
             <p className="p-spacing">
-              They're welcome to live here too. 
+              They're welcome to live here too.
             </p>
           </div>
           <p>
@@ -65,30 +65,36 @@ export default function UsersPage() {
               Some of the dolls are culturally sensitive and shouldn't be displayed on a public forum, so she hosts her collection privately with a 3rd party manifest.
             </div> */}
             <div className="explanation">
-              I believe it can be difficult for collectors to show others their collections.
-              Photos do not do them justice, and the most important part - the "metadata", the <i>why</i> of its membership in the collection - is difficult to convey.
-              <br />
-              <br />
-              poppenhuis aims to make this sharing process easier. I hope some collections find a home here.
+              <p className="p-spacing">
+                I believe it can be difficult for collectors to show others their collections.
+                Photos do not do them justice, and the most important part - the "metadata", the <i>why</i> of its membership in the collection - is difficult to convey.
+              </p>
+              <p className="p-spacing">
+                poppenhuis aims to make this sharing process easier. I hope some collections find a home here.
+              </p>
             </div>
           </details>
           <details>
             <summary>What file formats can poppenhuis render?</summary>
             <div className="explanation">
-              poppenhuis uses <a href="https://modelviewer.dev/">model-viewer</a> for rendering 3D models,
-              which only renders <code>.gltf/.glb</code> files.
-              <br />
-              <br />
-              Ideally poppenhuis would also support <code>.ply</code>-based <a href="https://en.wikipedia.org/wiki/Gaussian_splatting">Gaussian splats</a>, perhaps with <a href="https://sparkjs.dev/">Spark</a>. PRs welcome.
+              <p className="p-spacing">
+                poppenhuis uses <a href="https://modelviewer.dev/">model-viewer</a> for rendering 3D models,
+                which only renders <code>.gltf/.glb</code> files.
+              </p>
+              <p className="p-spacing">
+                Ideally poppenhuis would also support <code>.ply</code>-based <a href="https://en.wikipedia.org/wiki/Gaussian_splatting">Gaussian splats</a>, perhaps with <a href="https://sparkjs.dev/">Spark</a>. PRs welcome.
+              </p>
             </div>
           </details>
           <details>
             <summary>What app should I use to scan to <code>.gltf/.glb</code> files?</summary>
             <div className="explanation">
-              I personally use <a href="https://poly.cam/">Polycam</a> in LiDAR mode. The produced models, while jank and low poly, are small, compressed, easy to edit, and dimensionally accurate.
-              <br />
-              <br />
-              I also like <a href="https://scaniverse.com/">Scaniverse</a>, but I exclusively use it for <a href="https://en.wikipedia.org/wiki/Gaussian_splatting">Gaussian splatting</a>, and have not used its LiDAR mode.
+              <p className="p-spacing">
+                I personally use <a href="https://poly.cam/">Polycam</a> in LiDAR mode. The produced models, while jank and low poly, are small, compressed, easy to edit, and dimensionally accurate.
+              </p>
+              <p className="p-spacing">
+                I also like <a href="https://scaniverse.com/">Scaniverse</a>, but I exclusively use it for <a href="https://en.wikipedia.org/wiki/Gaussian_splatting">Gaussian splatting</a>, and have not used its LiDAR mode.
+              </p>
             </div>
           </details>
           <details>
@@ -147,7 +153,7 @@ function UserListEntry(props: { user: User }) {
             <li key={collection.id}>
               <QueryPreservingLink to={user.id + "/" + collection.id}>{collection.name}</QueryPreservingLink> <Size ts={collection.items} t="item" />
               <div>
-              {collection.items[0] && <ModelViewerWrapper item={collection.items[0]} size="small"/>}
+                {collection.items[0] && <ModelViewerWrapper item={collection.items[0]} size="small" />}
               </div>
             </li>
           )
@@ -180,25 +186,34 @@ function ThirdPartyManfiestLoader() {
 
   return (
     <>
-      Your 3rd party manifest will be merged with poppenhuis's 1st party manifest, and the manifest URL will be stored in <code>?manifest=</code> query param so you can share your collections with others.
-      <br />
-      <br />
-      <details>
+      <p className="p-spacing">
+        Your 3rd party manifest will be merged with poppenhuis's 1st party manifest, and the manifest URL will be stored in <code>?manifest=</code> query param so you can share your collections with others.
+      </p>
+      <details className="p-spacing">
         <summary>Manifest schema</summary>
         <pre>{MANIFEST_SCHEMA}</pre>
       </details>
-      <input style={{ width: "80%", fontSize: 13 }} placeholder={EXAMPLE_MANIFEST_URL} value={manifestUrl} onChange={e => setManifestUrl(e.target.value)} />
-      <br />
-      <button disabled={!manifestUrl} onClick={() => loadManifest(manifestUrl)}>Load custom manifest</button>
-      <br />
-      <button onClick={() => {
-        setManifestUrl(EXAMPLE_MANIFEST_URL)
-        loadManifest(EXAMPLE_MANIFEST_URL)
-      }}>Load placeholder manifest</button>
-
-      <br />
-      <br />
-      {fetchStatus}
+      <p className="p-spacing">
+        <input
+          style={{ width: "80%", fontSize: 13 }}
+          placeholder={EXAMPLE_MANIFEST_URL}
+          value={manifestUrl}
+          onChange={e => setManifestUrl(e.target.value)}
+        />
+        <button disabled={!manifestUrl} onClick={() => loadManifest(manifestUrl)}>
+          Load custom manifest
+        </button>
+        &nbsp;
+        <button
+          onClick={() => {
+            setManifestUrl(EXAMPLE_MANIFEST_URL);
+            loadManifest(EXAMPLE_MANIFEST_URL);
+          }}
+        >
+          Load placeholder manifest
+        </button>
+      </p>
+      <p className="p-spacing">{fetchStatus}</p>
       <pre className='truncate border'>{fetchResult}</pre>
     </>
   )
@@ -211,31 +226,33 @@ function ArenaUserLoader() {
 
   return (
     <>
-      Enter an Are.na profile slug:
-      <br />
-      <br />
-      <label>
-        <span>https://www.are.na/</span>
-        <input style={{ fontSize: 13 }} placeholder={EXAMPLE_USER_SLUG} value={userSlug} onChange={e => setUserSlug(e.target.value)} />
-      </label>
-      <br />
-      <button onClick={() => {
-        setUserSlug(EXAMPLE_USER_SLUG)
-      }}>Load placeholder user</button>
-      <br />
-      <br />
-      The following (shareable!) link will only display channels that contain blocks uploaded as <code>.glb</code> files:
-      <br />
-      <QueryPreservingLink to={`/${ARENA_PREFIX}${userSlug}`}>
-        {window.location.origin}/{ARENA_PREFIX}{userSlug}
-      </QueryPreservingLink>
-      <br />
-      <br />
-      You can add structured metadata to your Are.na blocks by including YAML in the description.
-      Everything after a <code>---</code> divider will be parsed as YAML and used
-      to set item metadata fields, for example:
-      <br />
-      <br />
+      <p className="p-spacing">
+        Enter an Are.na profile slug:
+      </p>
+      <p className="p-spacing">
+        <label>
+          <span>https://www.are.na/</span>
+          <input style={{ fontSize: 13 }} placeholder={EXAMPLE_USER_SLUG} value={userSlug} onChange={e => setUserSlug(e.target.value)} />
+        </label>
+        <button onClick={() => {
+          setUserSlug(EXAMPLE_USER_SLUG)
+        }}>Load placeholder user</button>
+      </p>
+      <p className="p-spacing">
+        The following (shareable!) link will only display channels that contain blocks uploaded as <code>.glb</code> files:
+      </p>
+      <p className="p-spacing">
+        <QueryPreservingLink to={`/${ARENA_PREFIX}${userSlug}`}>
+          {window.location.origin}/{ARENA_PREFIX}{userSlug}
+        </QueryPreservingLink>
+      </p>
+      <p className="p-spacing">
+        You can add structured metadata to your Are.na blocks by including YAML in the description.
+      </p>
+      <p className="p-spacing">
+        Everything after a <code>---</code> divider will be parsed as YAML and used
+        to set item metadata fields, for example:
+      </p>
       <pre style={{ padding: '8px' }}>
         {`My beautiful ceramic vase, hand-thrown on the wheel.
 ---
