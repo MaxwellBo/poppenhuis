@@ -366,6 +366,16 @@ function InspirationGallery() {
           <a href="https://usgraphics.com/">U.S. Graphics Company</a>
         </div>
       </div>
+      <div className="inspiration-item">
+        <div className="inspiration-image">
+          <a href="https://commitmono.com/">
+            <img loading="lazy" src="/inspo/commitmono.webp" alt="Commit Mono" />
+          </a>
+        </div>
+        <div className="inspiration-label">
+          <a href="https://commitmono.com/">Commit Mono</a>
+        </div>
+      </div>
       {/* <div className="inspiration-item">
         <div className="inspiration-image">
           <a href="https://beepybella.world/collections/rings">
