@@ -124,7 +124,7 @@ export default function UsersPage() {
             <summary>Credits and inspiration</summary>
             <div className="explanation">
               <p className="p-spacing">
-                poppenhuis is a collage of presentational motifs and design elements, sometimes copied entirely unchanged from other projects. They include, but are not limited to:
+                poppenhuis is a collage of presentational motifs and design elements, sometimes copied entirely unchanged from other projects, including, but not limited to:
               </p>
               <InspirationGallery />
             </div>
@@ -257,133 +257,133 @@ function InspirationGallery() {
   return (
     <div className="inspiration-gallery">
       <div className="inspiration-item">
-        <div className="inspiration-label">
-          <a href="https://www.dayroselane.com/hydrants"><cite>The Hydrant Directory</cite></a>
-        </div>
         <div className="inspiration-image">
           <a href="https://www.dayroselane.com/hydrants">
             <img src="/inspo/hydrant_directory.webp" alt="The Hydrant Directory" />
           </a>
         </div>
+        <div className="inspiration-label">
+          <a href="https://www.dayroselane.com/hydrants"><cite>The Hydrant Directory</cite></a>
+        </div>
       </div>
       <div className="inspiration-item">
-        <div className="inspiration-label">
-          <a href="https://www.are.na/">Are.na</a>
-        </div>
         <div className="inspiration-image">
           <a href="https://www.are.na/">
             <img src="/inspo/arena.webp" alt="Are.na" />
           </a>
         </div>
+        <div className="inspiration-label">
+          <a href="https://www.are.na/">Are.na</a>
+        </div>
       </div>
       <div className="inspiration-item">
-        <div className="inspiration-label">
-          <a href="https://kevin.garden/">kevin.garden</a>
-        </div>
         <div className="inspiration-image">
           <a href="https://kevin.garden/">
             <img src="/inspo/kevingarden.webp" alt="kevin.garden" />
           </a>
         </div>
+        <div className="inspiration-label">
+          <a href="https://kevin.garden/">kevin.garden</a>
+        </div>
       </div>
       <div className="inspiration-item">
-        <div className="inspiration-label">
-          <a href="https://en.wikipedia.org/wiki/Tony_Hawk%27s_Pro_Skater_4"><cite>Tony Hawk's Pro Skater 4</cite> character selection screen</a>
-        </div>
         <div className="inspiration-image">
           <a href="https://en.wikipedia.org/wiki/Tony_Hawk%27s_Pro_Skater_4">
             <img src="/inspo/thps4.webp" alt="Tony Hawk's Pro Skater 4" />
           </a>
         </div>
+        <div className="inspiration-label">
+          <a href="https://en.wikipedia.org/wiki/Tony_Hawk%27s_Pro_Skater_4"><cite>Tony Hawk's Pro Skater 4</cite> character selection screen</a>
+        </div>
       </div>
       {/* <div className="inspiration-item">
-        <div className="inspiration-label">
-          <a href="https://x.com/samdape/status/1777986265993875950">this Sam Peitz tweet</a>
-        </div>
         <div className="inspiration-image">
           <a href="https://x.com/samdape/status/1777986265993875950">
             <img src="/inspo/sampietz.webp" alt="this Sam Peitz tweet" />
           </a>
         </div>
+        <div className="inspiration-label">
+          <a href="https://x.com/samdape/status/1777986265993875950">this Sam Peitz tweet</a>
+        </div>
       </div> */}
       <div className="inspiration-item">
-        <div className="inspiration-label">
-          <a href="https://nathannhan.art/">nathannhan.art</a>
-        </div>
         <div className="inspiration-image">
           <a href="https://nathannhan.art/">
             <img src="/inspo/nathanart.webp" alt="nathannhan.art" />
           </a>
         </div>
+        <div className="inspiration-label">
+          <a href="https://nathannhan.art/">nathannhan.art</a>
+        </div>
       </div>
       <div className="inspiration-item">
-        <div className="inspiration-label">
-          <a href="https://jisu.world/bag/"><cite>What's in Jisu's bag?</cite></a>
-        </div>
         <div className="inspiration-image">
           <a href="https://jisu.world/bag/">
             <img src="/inspo/jisusbag.webp" alt="What's in Jisu's bag?" />
           </a>
         </div>
+        <div className="inspiration-label">
+          <a href="https://jisu.world/bag/"><cite>What's in Jisu's bag?</cite></a>
+        </div>
       </div>
       <div className="inspiration-item">
-        <div className="inspiration-label">
-          <a href="https://rotatingsandwiches.com/"><cite>rotating sandwiches</cite></a>
-        </div>
         <div className="inspiration-image">
           <a href="https://rotatingsandwiches.com/">
             <img src="/inspo/rotatingsandwiches.webp" alt="rotating sandwiches" />
           </a>
         </div>
+        <div className="inspiration-label">
+          <a href="https://rotatingsandwiches.com/"><cite>rotating sandwiches</cite></a>
+        </div>
       </div>
       <div className="inspiration-item">
-        <div className="inspiration-label">
-          <a href="https://youtu.be/AIcuALGM1TI?t=40">the PS2 memory card screen</a>
-        </div>
         <div className="inspiration-image">
           <a href="https://youtu.be/AIcuALGM1TI?t=40">
             <img src="/inspo/ps2memorycard.webp" alt="the PS2 memory card screen" />
           </a>
         </div>
+        <div className="inspiration-label">
+          <a href="https://youtu.be/AIcuALGM1TI?t=40">the PS2 memory card screen</a>
+        </div>
       </div>
       <div className="inspiration-item">
-        <div className="inspiration-label">
-          <a href="https://rateyourmusic.com/release/album/sweet-trip/velocity-design-comfort/">the <cite>velocity : design : comfort.</cite> album art</a>
-        </div>
         <div className="inspiration-image">
           <a href="https://rateyourmusic.com/release/album/sweet-trip/velocity-design-comfort/">
             <img src="/inspo/sweet-trip-velocity-design-comfort-Cover-Art.webp" alt="velocity : design : comfort" />
           </a>
         </div>
+        <div className="inspiration-label">
+          <a href="https://rateyourmusic.com/release/album/sweet-trip/velocity-design-comfort/">the <cite>velocity : design : comfort.</cite> album art</a>
+        </div>
       </div>
       <div className="inspiration-item">
-        <div className="inspiration-label">
-          <a href="https://usgraphics.com/">U.S. Graphics Company</a>
-        </div>
         <div className="inspiration-image">
           <a href="https://usgraphics.com/">
             <img src="/inspo/usgraphics.webp" alt="U.S. Graphics Company" />
           </a>
         </div>
+        <div className="inspiration-label">
+          <a href="https://usgraphics.com/">U.S. Graphics Company</a>
+        </div>
       </div>
       {/* <div className="inspiration-item">
-        <div className="inspiration-label">
-          <a href="https://beepybella.world/collections/rings">Beepy Bella</a>
-        </div>
         <div className="inspiration-image">
           <a href="https://beepybella.world/collections/rings">
             <img src="/inspo/beepybella.webp" alt="Beepy Bella" />
           </a>
         </div>
+        <div className="inspiration-label">
+          <a href="https://beepybella.world/collections/rings">Beepy Bella</a>
+        </div>
       </div> */}
       {/* <div className="inspiration-item">
-        <div className="inspiration-label">
-          <a href="https://hardwarearchive.org/Overview">Hardware Archive</a>
-        </div>
         <div className="inspiration-image">
           <a href="https://hardwarearchive.org/Overview">
             <img src="/inspo/hardwarearchive.webp" alt="Hardware Archive" />
           </a>
+        </div>
+        <div className="inspiration-label">
+          <a href="https://hardwarearchive.org/Overview">Hardware Archive</a>
         </div>
       </div> */}
     </div>
