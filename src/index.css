@@ -169,6 +169,28 @@ details[open] {
   padding-left: 2ch;
 }
 
+.inspiration-gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 2ch;
+}
+
+.inspiration-item {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2ch;
+}
+
+.inspiration-image img {
+  max-width: 100%;
+  border: 1px dotted black;
+  height: auto;
+}
+
+a:hover img {
+  border: 1px solid black;
+}
+
 pre {
   font-family: 'Fira Code', monospace;
   text-transform: none;
