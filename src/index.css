@@ -546,7 +546,7 @@ form.table-form label {
   z-index: 100;
 }
 
-@media (hover: none) and (pointer: coarse) {
+@media (hover: none) and (pointer: coarse), (max-width: 768px) {
   .qrcode.web {
     transform-origin: bottom left;
   }
