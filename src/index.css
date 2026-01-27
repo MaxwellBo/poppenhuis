@@ -340,6 +340,8 @@ pre {
 
 form.table-form {
   display: table;
+  border-collapse: separate;
+  border-spacing: 0 0.5rem;
 }
 
 div.table-form-row {
