@@ -66,8 +66,12 @@ export default function UsersPage() {
             </div> */}
             <div className="explanation">
               <p className="p-spacing">
-                I believe it can be difficult for collectors to show others their collections.
-                Photos do not do them justice, and the most important part - the "metadata", the <i>why</i> of its membership in the collection - is difficult to convey.
+                When I was a kid, I used to watch an Australian TV show called Collectors.
+                Each week a hobbyist collector would get 15 minutes to show off. Sadly, the show ended in 2011.
+              </p>
+              <p className="p-spacing">
+                I believe it can be difficult for collectors to showcase their collections.
+                Photos do not do them justice, only long form video. And the most important part - the "metadata", the <i>why</i> of its membership in the collection - is time consuming to convey.
               </p>
               <p className="p-spacing">
                 poppenhuis aims to make this sharing process easier. I hope some collections find a home here.
