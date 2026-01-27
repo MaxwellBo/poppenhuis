@@ -349,11 +349,10 @@ div.table-form-row {
 form.table-form label,
 form.table-form input {
   display: table-cell;
-  margin-bottom: 10px;
 }
 
 form.table-form label {
-  padding-right: 10px;
+  padding-right: 1ch;
 }
 
 #homepage-columns {

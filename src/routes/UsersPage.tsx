@@ -203,7 +203,6 @@ function ThirdPartyManfiestLoader() {
         <button disabled={!manifestUrl} onClick={() => loadManifest(manifestUrl)}>
           Load custom manifest
         </button>
-        &nbsp;
         <button
           onClick={() => {
             setManifestUrl(EXAMPLE_MANIFEST_URL);
