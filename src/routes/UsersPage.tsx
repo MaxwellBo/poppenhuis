@@ -259,7 +259,7 @@ function InspirationGallery() {
       <div className="inspiration-item">
         <div className="inspiration-image">
           <a href="https://www.dayroselane.com/hydrants">
-            <img src="/inspo/hydrant_directory.webp" alt="The Hydrant Directory" />
+            <img loading="lazy" src="/inspo/hydrant_directory.webp" alt="The Hydrant Directory" />
           </a>
         </div>
         <div className="inspiration-label">
@@ -269,7 +269,7 @@ function InspirationGallery() {
       <div className="inspiration-item">
         <div className="inspiration-image">
           <a href="https://www.are.na/">
-            <img src="/inspo/arena.webp" alt="Are.na" />
+            <img loading="lazy" src="/inspo/arena.webp" alt="Are.na" />
           </a>
         </div>
         <div className="inspiration-label">
@@ -279,7 +279,7 @@ function InspirationGallery() {
       <div className="inspiration-item">
         <div className="inspiration-image">
           <a href="https://youtu.be/AIcuALGM1TI?t=40">
-            <img src="/inspo/ps2memorycard.webp" alt="the PS2 memory card screen" />
+            <img loading="lazy" src="/inspo/ps2memorycard.webp" alt="the PS2 memory card screen" />
           </a>
         </div>
         <div className="inspiration-label">
@@ -289,7 +289,7 @@ function InspirationGallery() {
       <div className="inspiration-item">
         <div className="inspiration-image">
           <a href="https://kevin.garden/">
-            <img src="/inspo/kevingarden.webp" alt="kevin.garden" />
+            <img loading="lazy" src="/inspo/kevingarden.webp" alt="kevin.garden" />
           </a>
         </div>
         <div className="inspiration-label">
@@ -299,7 +299,7 @@ function InspirationGallery() {
       <div className="inspiration-item">
         <div className="inspiration-image">
           <a href="https://en.wikipedia.org/wiki/Tony_Hawk%27s_Pro_Skater_4">
-            <img src="/inspo/thps4.webp" alt="Tony Hawk's Pro Skater 4" />
+            <img loading="lazy" src="/inspo/thps4.webp" alt="Tony Hawk's Pro Skater 4" />
           </a>
         </div>
         <div className="inspiration-label">
@@ -309,7 +309,7 @@ function InspirationGallery() {
       {/* <div className="inspiration-item">
         <div className="inspiration-image">
           <a href="https://x.com/samdape/status/1777986265993875950">
-            <img src="/inspo/sampietz.webp" alt="this Sam Peitz tweet" />
+            <img loading="lazy" src="/inspo/sampietz.webp" alt="this Sam Peitz tweet" />
           </a>
         </div>
         <div className="inspiration-label">
@@ -319,7 +319,7 @@ function InspirationGallery() {
       <div className="inspiration-item">
         <div className="inspiration-image">
           <a href="https://nathannhan.art/">
-            <img src="/inspo/nathanart.webp" alt="nathannhan.art" />
+            <img loading="lazy" src="/inspo/nathanart.webp" alt="nathannhan.art" />
           </a>
         </div>
         <div className="inspiration-label">
@@ -329,7 +329,7 @@ function InspirationGallery() {
       <div className="inspiration-item">
         <div className="inspiration-image">
           <a href="https://jisu.world/bag/">
-            <img src="/inspo/jisusbag.webp" alt="What's in Jisu's bag?" />
+            <img loading="lazy" src="/inspo/jisusbag.webp" alt="What's in Jisu's bag?" />
           </a>
         </div>
         <div className="inspiration-label">
@@ -339,7 +339,7 @@ function InspirationGallery() {
       <div className="inspiration-item">
         <div className="inspiration-image">
           <a href="https://rotatingsandwiches.com/">
-            <img src="/inspo/rotatingsandwiches.webp" alt="rotating sandwiches" />
+            <img loading="lazy" src="/inspo/rotatingsandwiches.webp" alt="rotating sandwiches" />
           </a>
         </div>
         <div className="inspiration-label">
@@ -349,7 +349,7 @@ function InspirationGallery() {
       <div className="inspiration-item">
         <div className="inspiration-image">
           <a href="https://rateyourmusic.com/release/album/sweet-trip/velocity-design-comfort/">
-            <img src="/inspo/sweet-trip-velocity-design-comfort-Cover-Art.webp" alt="velocity : design : comfort" />
+            <img loading="lazy" src="/inspo/sweet-trip-velocity-design-comfort-Cover-Art.webp" alt="velocity : design : comfort" />
           </a>
         </div>
         <div className="inspiration-label">
@@ -359,7 +359,7 @@ function InspirationGallery() {
       <div className="inspiration-item">
         <div className="inspiration-image">
           <a href="https://usgraphics.com/">
-            <img src="/inspo/usgraphics.webp" alt="U.S. Graphics Company" />
+            <img loading="lazy" src="/inspo/usgraphics.webp" alt="U.S. Graphics Company" />
           </a>
         </div>
         <div className="inspiration-label">
@@ -369,7 +369,7 @@ function InspirationGallery() {
       {/* <div className="inspiration-item">
         <div className="inspiration-image">
           <a href="https://beepybella.world/collections/rings">
-            <img src="/inspo/beepybella.webp" alt="Beepy Bella" />
+            <img loading="lazy" src="/inspo/beepybella.webp" alt="Beepy Bella" />
           </a>
         </div>
         <div className="inspiration-label">
@@ -379,7 +379,7 @@ function InspirationGallery() {
       {/* <div className="inspiration-item">
         <div className="inspiration-image">
           <a href="https://hardwarearchive.org/Overview">
-            <img src="/inspo/hardwarearchive.webp" alt="Hardware Archive" />
+            <img loading="lazy" src="/inspo/hardwarearchive.webp" alt="Hardware Archive" />
           </a>
         </div>
         <div className="inspiration-label">
