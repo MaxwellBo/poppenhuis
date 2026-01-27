@@ -278,6 +278,16 @@ function InspirationGallery() {
       </div>
       <div className="inspiration-item">
         <div className="inspiration-image">
+          <a href="https://youtu.be/AIcuALGM1TI?t=40">
+            <img src="/inspo/ps2memorycard.webp" alt="the PS2 memory card screen" />
+          </a>
+        </div>
+        <div className="inspiration-label">
+          <a href="https://youtu.be/AIcuALGM1TI?t=40">the PS2 memory card screen</a>
+        </div>
+      </div>
+      <div className="inspiration-item">
+        <div className="inspiration-image">
           <a href="https://kevin.garden/">
             <img src="/inspo/kevingarden.webp" alt="kevin.garden" />
           </a>
@@ -334,16 +344,6 @@ function InspirationGallery() {
         </div>
         <div className="inspiration-label">
           <a href="https://rotatingsandwiches.com/"><cite>rotating sandwiches</cite></a>
-        </div>
-      </div>
-      <div className="inspiration-item">
-        <div className="inspiration-image">
-          <a href="https://youtu.be/AIcuALGM1TI?t=40">
-            <img src="/inspo/ps2memorycard.webp" alt="the PS2 memory card screen" />
-          </a>
-        </div>
-        <div className="inspiration-label">
-          <a href="https://youtu.be/AIcuALGM1TI?t=40">the PS2 memory card screen</a>
         </div>
       </div>
       <div className="inspiration-item">
