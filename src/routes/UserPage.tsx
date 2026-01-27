@@ -24,17 +24,27 @@ export default function UserPage() {
       <PageHeader>
         <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / {user.name} / <Size ts={user.collections} t="collection" />
       </PageHeader>
-      {user.bio && <div className="short description ugc"><Markdown>{user.bio}</Markdown><br /></div>}
-      {user.source === undefined && <div className="short">
-        <a href={`https://github.com/MaxwellBo/poppenhuis/issues/new?template=put-collection.yml&user-id=${user.id}`}>+ add collection</a>
-        , <a href={`https://github.com/MaxwellBo/poppenhuis/issues/new?template=put-user.yml&yaml-template=${encodeURIComponent(userYaml)}`}>edit?</a>
-        , <a href={meta.image}>og image</a>
-      </div>}
-      {user.source === 'firebase' && <div className="short">
-        <QueryPreservingLink to={`/${user.id}/new`}>+ new collection</QueryPreservingLink>
-        , <QueryPreservingLink to={`/${user.id}/edit`}>edit?</QueryPreservingLink>
-        , <a href={meta.image}>og image</a>
-      </div>}
+      <div className="header-content">
+        {(user.source === undefined || user.source === 'firebase') && (
+          <div className="header-actions">
+            {user.source === undefined && (
+              <>
+                <a href={`https://github.com/MaxwellBo/poppenhuis/issues/new?template=put-collection.yml&user-id=${user.id}`}>+ add collection</a>
+                <a href={`https://github.com/MaxwellBo/poppenhuis/issues/new?template=put-user.yml&yaml-template=${encodeURIComponent(userYaml)}`}>edit?</a>
+                <a href={meta.image}>og image</a>
+              </>
+            )}
+            {user.source === 'firebase' && (
+              <>
+                <QueryPreservingLink to={`/${user.id}/new`}>+ new collection</QueryPreservingLink>
+                <QueryPreservingLink to={`/${user.id}/edit`}>edit?</QueryPreservingLink>
+                <a href={meta.image}>og image</a>
+              </>
+            )}
+          </div>
+        )}
+        {user.bio && <div className="short description ugc"><Markdown>{user.bio}</Markdown><br /></div>}
+      </div>
       <div id="collection-rows">
         {user.collections.map((collection) =>
           <CollectionRow key={collection.id} collection={collection} user={user} />)}

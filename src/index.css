@@ -225,6 +225,58 @@ pre {
   max-width: 40ch;
 }
 
+.header-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.header-content > .description {
+  order: 1;
+}
+
+.header-actions {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  order: 2;
+}
+
+.header-actions > * {
+  display: block;
+}
+
+@media (min-width: 768px) {
+  .header-content {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 2rem;
+  }
+
+  .header-content > .description {
+    width: 50ch;
+    min-width: 0;
+    flex-shrink: 1;
+    flex-basis: 50ch;
+    order: 2;
+  }
+
+  .header-actions {
+    min-width: 0;
+    flex-shrink: 0;
+    order: 1;
+  }
+
+  /* When there's a description, use column layout with border */
+  .header-content:has(.description) .header-actions {
+    flex-direction: column;
+    padding-right: 2rem;
+    border-right: 1px dotted #ccc;
+  }
+}
+
 .yelling {
   text-transform: uppercase;
   font-weight: bold;
