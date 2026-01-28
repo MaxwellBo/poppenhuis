@@ -315,7 +315,7 @@ pre {
 
 #content-container {
   max-width: min(92vw, 160ch);
-  margin: 1em auto;
+  margin: 0.5rem auto;
   min-height: calc(100vh - 2em);
   display: flex;
   flex-direction: column;
@@ -953,6 +953,12 @@ input:focus + .shake_down {
   display: flex;
   flex-direction: column;
   gap: 0.5em;
+  min-height: 5rem;
+}
+
+.page-header h1 {
+  order: 1;
+  padding-bottom: 0;
 }
 
 .page-header-auth {
@@ -965,15 +971,9 @@ input:focus + .shake_down {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 2ch;
   }
   
   .page-header-auth {
     order: 2;
-  }
-  
-  .page-header h1 {
-    order: 1;
-    padding-bottom: 0;
   }
 }

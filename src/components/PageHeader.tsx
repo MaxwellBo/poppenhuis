@@ -101,13 +101,13 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ children }) => {
                   <abbr title="more than one user"><s>+ new collection</s></abbr>
                 )}
                 {accountUsers.length > 0 && (
-                  <span style={{ display: 'flex', gap: '0.5ch' }}>
+                  <>
                     {accountUsers.map((user) => (
                       <QueryPreservingLink key={user.id} to={`/${user.id}`}>
                         /{user.id}
                       </QueryPreservingLink>
                     ))}
-                  </span>
+                  </>
                 )}
                 <QueryPreservingLink to="/auth">account?</QueryPreservingLink>
               </>
