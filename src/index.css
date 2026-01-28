@@ -314,7 +314,7 @@ pre {
 }
 
 #content-container {
-  max-width: min(92vw, 130ch);
+  max-width: min(92vw, 160ch);
   margin: 1em auto;
   min-height: calc(100vh - 2em);
   display: flex;
@@ -495,17 +495,25 @@ form.table-form label {
 
 .bento #description {
   grid-area: description;
+  width: 100%;
   align-self: start;
   max-width: 60ch;
 }
 
 .bento #description:not(:empty) {
-  width: 100%;
-  grid-area: description;
   padding: 1ch;
+}
+
+.bento #description:not(:empty) {
   border-left: 1px dotted #ccc;
   border-right: 1px dotted #ccc;
   border-bottom: 1px dotted #ccc;
+}
+
+@media (min-width: 1600px) {
+  .bento #description:not(:empty) {
+    border-top: 1px dotted #ccc;
+  }
 }
 
 .bento #meta {
@@ -521,14 +529,28 @@ form.table-form label {
 .bento {
   display: grid;
   column-gap: 1ch;
-  grid-template-columns: min-content 1fr 1fr min-content;
+  grid-template-columns: min-content 1fr 1fr 1fr min-content;
   grid-template-areas: 
-    "previous model meta next"
-    ". description meta ."
-    ". . meta ."
-    "cards cards cards cards";
+    "previous description model meta next"
+    ". . . meta ."
+    "cards cards cards cards cards";
   align-items: start;
   justify-items: center;
+}
+
+@media (max-width: 1600px) {
+  .bento {
+    display: grid;
+    column-gap: 1ch;
+    grid-template-columns: min-content 1fr 1fr min-content;
+    grid-template-areas: 
+      "previous model meta next"
+      ". description meta ."
+      ". . meta ."
+      "cards cards cards cards";
+    align-items: start;
+    justify-items: center;
+  }
 }
 
 @media (max-width: 1150px) {
@@ -581,12 +603,16 @@ form.table-form label {
 .qrcode.print {
   height: 96px;
   width: 96px;
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
 }
 
 .qrcode.web {
   display: inline-block;
   height: 48px;
   width: 48px;
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
   vertical-align: top;
   margin-right: 8px;
   border: 1px dotted #ccc;
