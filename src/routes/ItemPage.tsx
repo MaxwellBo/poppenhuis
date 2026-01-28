@@ -114,6 +114,7 @@ export default function ItemPage() {
             altName={previousItemIsLast ? "↻ go to end" : "← previous"}
             size='small' />
         </div>
+        <div id="model-and-description">
         <div id="model">
           {renderAFrameScene
             ? <AFrameScene users={allUsers} startingItem={item} positioningMode={positioningMode} />
@@ -156,6 +157,7 @@ export default function ItemPage() {
           </div>
         </div>
         <div id="description" className="description ugc"><Markdown>{item.description}</Markdown></div>
+        </div>
         <div id="meta">
           <DescriptionList item={item} collection={collection} user={user} />
           <br />

@@ -489,23 +489,32 @@ form.table-form label {
   align-self: center;
 }
 
+.bento #model-and-description {
+  grid-area: model-and-description;
+  position: relative;
+}
+
 .bento #model {
-  grid-area: model;
+  margin-top: 5ch;
+  position: relative;
+  z-index: 2;
 }
 
 .bento #description {
-  grid-area: description;
-  align-self: start;
+  position: absolute;
+  top: 0;
   max-width: 60ch;
+  z-index: 1;
+  padding: 1ch;
 }
 
-.bento #description:not(:empty) {
-  width: 100%;
-  grid-area: description;
-  padding: 1ch;
-  border-left: 1px dotted #ccc;
-  border-right: 1px dotted #ccc;
-  border-bottom: 1px dotted #ccc;
+.bento #description:hover {
+  z-index: 3;
+  opacity: 0.85;
+  background-color: #f7f5f0;
+  outline: 1px solid rgba(0, 0, 0, 0.15);
+  outline-offset: 2px;
+  border: none;
 }
 
 .bento #meta {
@@ -523,8 +532,7 @@ form.table-form label {
   column-gap: 1ch;
   grid-template-columns: min-content 1fr 1fr min-content;
   grid-template-areas: 
-    "previous model meta next"
-    ". description meta ."
+    "previous model-and-description meta next"
     ". . meta ."
     "cards cards cards cards";
   align-items: start;
@@ -538,8 +546,8 @@ form.table-form label {
     column-gap: 1ch;
     /* grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); */
     grid-template-areas: 
-      "model model meta meta"
-      "description description previous next"
+      "model-and-description model-and-description meta meta"
+      ". previous next ."
       "cards cards cards cards";
     align-items: start;
     justify-items: center;
@@ -552,9 +560,8 @@ form.table-form label {
     grid-template-rows: auto;
     grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
     grid-template-areas: 
-      "model model"
+      "model-and-description model-and-description"
       "previous next"
-      "description description"
       "meta meta"
       "cards cards";
     align-items: start;
