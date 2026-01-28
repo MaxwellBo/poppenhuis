@@ -66,15 +66,16 @@ export default function UsersPage() {
             </div> */}
             <div className="explanation">
               <p className="p-spacing">
-                When I was a kid, I used to watch an Australian TV show called Collectors.
-                Each week a hobbyist collector would get 15 minutes to show off. Sadly, the show ended in 2011.
+                When I was a kid, I used to watch an Australian TV show called <i>Collectors</i>. Each week a hobbyist collector would get 15 minutes to show off. Sadly, the show ended in 2011.
               </p>
               <p className="p-spacing">
-                I believe it can be difficult for collectors to showcase their collections.
-                Photos do not do them justice, only long form video. And the most important part - the "metadata", the <i>why</i> of its membership in the collection - is time consuming to convey.
+                I think we are deprived of a good medium to share the stories of our cherished possessions clearly and easily. Photos alone are insufficient, and long form video is hard to make and maintain.
               </p>
               <p className="p-spacing">
-                poppenhuis aims to make this sharing process easier. I hope some collections find a home here.
+                I believe that recent developments in photogrammetry and VR offer us a better medium, and I have sought to bring them to poppenhuis.
+              </p>
+              <p className="p-spacing">
+                I hope some collections find a home here.
               </p>
             </div>
           </details>
