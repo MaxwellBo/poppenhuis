@@ -525,6 +525,7 @@ form.table-form label {
   grid-template-areas: 
     "previous model meta next"
     ". description meta ."
+    ". . meta ."
     "cards cards cards cards";
   align-items: start;
   justify-items: center;
