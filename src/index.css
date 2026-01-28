@@ -702,6 +702,15 @@ input[type="checkbox"] {
   grid-area: links;
 }
 
+.qrcode-and-links-and-buttons #links > *:not(:last-child) {
+  margin-right: 0.7ch;
+  line-height: 1.2;
+}
+
+.qrcode-and-links-and-buttons #buttons > *:not(:last-child) {
+  margin-right: 0.7ch;
+}
+
 .qrcode-and-links-and-buttons #buttons {
   grid-area: buttons;
   display: flex;
