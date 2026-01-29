@@ -5,6 +5,7 @@ import {
   createUserWithEmailAndPassword,
   signOut,
   sendSignInLinkToEmail,
+  sendPasswordResetEmail,
   isSignInWithEmailLink,
   signInWithEmailLink,
   onAuthStateChanged,
@@ -18,11 +19,25 @@ import { Size } from '../components/Size';
 import { ModelViewerWrapper } from '../components/ModelViewerWrapper';
 import type { FirebaseUser, FirebaseManifest } from '../manifest';
 
-type AuthMode = 'password' | 'emaillink';
+type AuthMode = 'signin' | 'signup' | 'emaillink' | 'forgot';
+
+function formatError(err: unknown): string {
+  if (err && typeof err === 'object') {
+    const obj = err as Record<string, unknown>;
+    const parts: string[] = [];
+    if (obj.code != null) parts.push(`code: ${obj.code}`);
+    if (obj.message != null) parts.push(`message: ${obj.message}`);
+    if (obj.stack != null) parts.push(`stack: ${obj.stack}`);
+    if (parts.length) return parts.join('\n');
+    return JSON.stringify(err, null, 2);
+  }
+  if (err instanceof Error) return [err.message, err.stack].filter(Boolean).join('\n');
+  return String(err);
+}
 
 export default function AuthPage() {
   const navigate = useNavigate();
-  const [mode, setMode] = useState<AuthMode>('password');
+  const [mode, setMode] = useState<AuthMode>('signin');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -92,9 +107,13 @@ export default function AuthPage() {
         await sendEmailLink(email);
         setMessage('check your email for a sign in link!');
         setEmail('');
+      } else if (mode === 'forgot') {
+        await sendPasswordResetEmail(auth, email);
+        setMessage('check your email for a link to reset your password.');
+        setEmail('');
       }
-    } catch (err: any) {
-      setError(err.message || 'an error occurred');
+    } catch (err: unknown) {
+      setError('Error sending email:\n\n' + formatError(err));
     } finally {
       setLoading(false);
     }
@@ -108,8 +127,8 @@ export default function AuthPage() {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       navigate('/auth');
-    } catch (err: any) {
-      setError(err.message || 'an error occurred');
+    } catch (err: unknown) {
+      setError('Sign in failed:\n\n' + formatError(err));
     } finally {
       setLoading(false);
     }
@@ -124,8 +143,8 @@ export default function AuthPage() {
       await createUserWithEmailAndPassword(auth, email, password);
       setMessage('account created successfully!');
       navigate('/auth');
-    } catch (err: any) {
-      setError(err.message || 'an error occurred');
+    } catch (err: unknown) {
+      setError('Sign up failed:\n\n' + formatError(err));
     } finally {
       setLoading(false);
     }
@@ -147,9 +166,9 @@ export default function AuthPage() {
       window.localStorage.removeItem('emailForSignIn');
       window.history.replaceState(null, '', '/auth');
       navigate('/auth');
-    } catch (error) {
-      console.error('Error completing email link sign in:', error);
-      setError('Failed to complete sign in');
+    } catch (err: unknown) {
+      console.error('Error completing email link sign in:', err);
+      setError('Failed to complete sign in:\n\n' + formatError(err));
     }
   };
 
@@ -157,9 +176,9 @@ export default function AuthPage() {
     try {
       await signOut(auth);
       setMessage('signed out successfully');
-    } catch (error) {
-      console.error('Logout failed:', error);
-      setError('Failed to sign out');
+    } catch (err: unknown) {
+      console.error('Logout failed:', err);
+      setError('Failed to sign out:\n\n' + formatError(err));
     }
   };
 
@@ -180,10 +199,10 @@ export default function AuthPage() {
       <div>
         <Helmet><title>account - poppenhuis</title></Helmet>
         <PageHeader>
-          <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> ÷ account
+          <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / account
         </PageHeader>
         {message && <span style={{ padding: '1ch', margin: '1ch', border: "1px dotted black"}}>{message}</span>}
-        {error && <span style={{ padding: '1ch', margin: '1ch', border: "1px dotted black"}}>{error}</span>}
+        {error && <pre style={{ padding: '1ch', margin: '1ch', border: "1px dotted black"}}>{error}</pre>}
         <dl>
           <dt>email</dt>
           <dd>{currentUser.email}</dd>
@@ -239,16 +258,25 @@ export default function AuthPage() {
         <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / auth
       </PageHeader>
 
-      <form onSubmit={handleSubmit} className="table-form">
-        <div className="table-form-row">
+      <form onSubmit={handleSubmit}>
+        <div>
           <label>
             <input
               type="radio"
               name="authMode"
-              checked={mode === 'password'}
-              onChange={() => setMode('password')}
+              checked={mode === 'signin'}
+              onChange={() => setMode('signin')}
             />
-            email / password
+            sign in
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="authMode"
+              checked={mode === 'signup'}
+              onChange={() => setMode('signup')}
+            />
+            sign up
           </label>
           <label>
             <input
@@ -259,12 +287,22 @@ export default function AuthPage() {
             />
             email link
           </label>
+          <label>
+            <input
+              type="radio"
+              name="authMode"
+              checked={mode === 'forgot'}
+              onChange={() => setMode('forgot')}
+            />
+            forgot password
+          </label>
         </div>
-        <div className="table-form-row">
+        <div>
           <label htmlFor="email">email</label>
           <input
             id="email"
             type="email"
+            autoComplete="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -272,12 +310,13 @@ export default function AuthPage() {
           />
         </div>
 
-        {mode === 'password' && (
-          <div className="table-form-row">
+        {(mode === 'signin' || mode === 'signup') && (
+          <div>
             <label htmlFor="password">password</label>
             <input
               id="password"
               type="password"
+              autoComplete={mode === 'signin' ? 'current-password' : 'new-password'}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -286,20 +325,29 @@ export default function AuthPage() {
           </div>
         )}
 
-        {error && <div>{error}</div>}
+        {error && <pre>{error}</pre>}
         {message && <div>{message}</div>}
 
-        {mode === 'password' ? (
-          <div className="table-form-row">
+        {mode === 'signin' ? (
+          <div>
             <button type="button" onClick={handleSignIn} disabled={loading}>
               sign in
             </button>
+          </div>
+        ) : mode === 'signup' ? (
+          <div>
             <button type="button" onClick={handleSignUp} disabled={loading}>
               sign up
             </button>
           </div>
+        ) : mode === 'forgot' ? (
+          <div>
+            <button type="submit" disabled={loading}>
+              {loading ? 'loading...' : 'send reset link'}
+            </button>
+          </div>
         ) : (
-          <div className="table-form-row">
+          <div>
             <button type="submit" disabled={loading}>
               {loading ? 'loading...' : 'send email link'}
             </button>
@@ -310,6 +358,12 @@ export default function AuthPage() {
       {mode === 'emaillink' && (
         <p style={{ marginTop: "0.5ch" }}>
           you'll receive an email with a link to sign in.
+        </p>
+      )}
+
+      {mode === 'forgot' && (
+        <p style={{ marginTop: "0.5ch" }}>
+          enter your email and we'll send you a link to reset your password.
         </p>
       )}
     </div>
