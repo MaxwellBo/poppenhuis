@@ -375,6 +375,14 @@ pre {
   color: saddlebrown;
 }
 
+
+@media (max-width: 768px) {
+  #page-header .index, 
+  #page-header .size {
+    display: none;
+  }
+}
+
 .highlight-model-viewer model-viewer { 
   animation: throb 2s infinite; 
   z-index: 5;
@@ -516,7 +524,10 @@ form.table-form label {
 
 @media (min-width: 1600px) {
   .bento #description:not(:empty) {
-    border-top: 1px dotted #ccc;
+    border-top: none;
+    border-right: 1px dotted #ccc;
+    border-bottom: none;
+    border-left: none;
   }
 }
 
@@ -752,32 +763,6 @@ input[type="checkbox"] {
 
 
 
-/*
-  Josh's Custom CSS Reset
-  https://www.joshwcomeau.com/css/custom-css-reset/
-*/
-*, *::before, *::after {
-  box-sizing: border-box;
-}
-* {
-  margin: 0;
-}
-body {
-  -webkit-font-smoothing: antialiased;
-}
-img, picture, video, canvas, svg {
-  display: block;
-  max-width: 100%;
-}
-input, button, textarea, select {
-  font: inherit;
-}
-#root, #__next {
-  isolation: isolate;
-}
-
-/* END CUSTOM CSS RESET */
-
 button {
   box-shadow: 2px 2px #bbb;
 }
@@ -953,7 +938,7 @@ input:focus + .shake_down {
   color: #666;
 }
 
-.page-header {
+#page-header {
   display: flex;
   flex-direction: column;
   gap: 0.5em;
@@ -961,24 +946,57 @@ input:focus + .shake_down {
   margin-bottom: 1em;
 }
 
-.page-header h1 {
+#page-header h1 {
   order: 1;
   padding-bottom: 0;
 }
 
-.page-header-auth {
+#page-header-auth {
   display: flex;
   justify-content: flex-end;
 }
 
-@media (min-width: 768px) {
-  .page-header {
+#page-header-links {
+  display: flex;
+  gap: 1ch;
+  align-items: center;
+}
+
+@media (min-width: 1150px) {
+  #page-header {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
   }
   
-  .page-header-auth {
+  #page-header-auth {
     order: 2;
   }
 }
+
+
+/*
+  Josh's Custom CSS Reset
+  https://www.joshwcomeau.com/css/custom-css-reset/
+*/
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+* {
+  margin: 0;
+}
+body {
+  -webkit-font-smoothing: antialiased;
+}
+img, picture, video, canvas, svg {
+  display: block;
+  max-width: 100%;
+}
+input, button, textarea, select {
+  font: inherit;
+}
+#root, #__next {
+  isolation: isolate;
+}
+
+/* END CUSTOM CSS RESET */

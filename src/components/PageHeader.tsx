@@ -80,12 +80,12 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ children }) => {
   }, [currentUser]);
 
   return (
-    <header className="page-header">
-      <div className="page-header-auth">
+    <header id="page-header">
+      <div id="page-header-auth">
         {loading ? (
           <span>loading</span>
         ) : (
-          <span style={{ display: 'flex', gap: '1ch', alignItems: 'center' }}>
+          <span id="page-header-links">
             {currentUser ? (
               <>
                 {getNewItemLink() ? (
