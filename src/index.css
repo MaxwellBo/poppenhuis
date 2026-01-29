@@ -371,15 +371,23 @@ pre {
 }
 
 .index,
+.count,
 .size {
   color: saddlebrown;
 }
 
 
-@media (max-width: 768px) {
+/* @media (max-width: 767px) {
   #page-header .index, 
   #page-header .size {
     display: none;
+  }
+} */
+
+@media (max-width: 767px) {
+  .size, .index {
+    font-size: 0.7em;
+    vertical-align: middle;
   }
 }
 
