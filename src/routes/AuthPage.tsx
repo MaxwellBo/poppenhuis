@@ -258,46 +258,49 @@ export default function AuthPage() {
         <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / auth
       </PageHeader>
 
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>
-            <input
-              type="radio"
-              name="authMode"
-              checked={mode === 'signin'}
-              onChange={() => setMode('signin')}
-            />
-            sign in
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="authMode"
-              checked={mode === 'signup'}
-              onChange={() => setMode('signup')}
-            />
-            sign up
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="authMode"
-              checked={mode === 'emaillink'}
-              onChange={() => setMode('emaillink')}
-            />
-            email link
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="authMode"
-              checked={mode === 'forgot'}
-              onChange={() => setMode('forgot')}
-            />
-            forgot password
-          </label>
+      <form onSubmit={handleSubmit} className="table-form">
+        <div className="table-form-row">
+          <label>mode</label>
+          <div style={{ display: 'table-cell' }}>
+            <label>
+              <input
+                type="radio"
+                name="authMode"
+                checked={mode === 'signin'}
+                onChange={() => setMode('signin')}
+              />
+              sign in
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="authMode"
+                checked={mode === 'signup'}
+                onChange={() => setMode('signup')}
+              />
+              sign up
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="authMode"
+                checked={mode === 'emaillink'}
+                onChange={() => setMode('emaillink')}
+              />
+              email link
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="authMode"
+                checked={mode === 'forgot'}
+                onChange={() => setMode('forgot')}
+              />
+              forgot password
+            </label>
+          </div>
         </div>
-        <div>
+        <div className="table-form-row">
           <label htmlFor="email">email</label>
           <input
             id="email"
@@ -311,7 +314,7 @@ export default function AuthPage() {
         </div>
 
         {(mode === 'signin' || mode === 'signup') && (
-          <div>
+          <div className="table-form-row">
             <label htmlFor="password">password</label>
             <input
               id="password"
@@ -325,29 +328,43 @@ export default function AuthPage() {
           </div>
         )}
 
-        {error && <pre>{error}</pre>}
-        {message && <div>{message}</div>}
+        {error && (
+          <div className="table-form-row">
+            <label />
+            <pre style={{ display: 'table-cell' }}>{error}</pre>
+          </div>
+        )}
+        {message && (
+          <div className="table-form-row">
+            <label />
+            <div style={{ display: 'table-cell' }}>{message}</div>
+          </div>
+        )}
 
         {mode === 'signin' ? (
-          <div>
+          <div className="table-form-row">
+            <label />
             <button type="button" onClick={handleSignIn} disabled={loading}>
               sign in
             </button>
           </div>
         ) : mode === 'signup' ? (
-          <div>
+          <div className="table-form-row">
+            <label />
             <button type="button" onClick={handleSignUp} disabled={loading}>
               sign up
             </button>
           </div>
         ) : mode === 'forgot' ? (
-          <div>
+          <div className="table-form-row">
+            <label />
             <button type="submit" disabled={loading}>
               {loading ? 'loading...' : 'send reset link'}
             </button>
           </div>
         ) : (
-          <div>
+          <div className="table-form-row">
+            <label />
             <button type="submit" disabled={loading}>
               {loading ? 'loading...' : 'send email link'}
             </button>

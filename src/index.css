@@ -417,7 +417,8 @@ div.table-form-row {
 }
 
 form.table-form label,
-form.table-form input {
+form.table-form input,
+form.table-form button {
   display: table-cell;
 }
 
