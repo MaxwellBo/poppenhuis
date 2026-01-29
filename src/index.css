@@ -953,7 +953,8 @@ input:focus + .shake_down {
   display: flex;
   flex-direction: column;
   gap: 0.5em;
-  min-height: 5rem;
+  min-height: 3rem;
+  margin-bottom: 1em;
 }
 
 .page-header h1 {
