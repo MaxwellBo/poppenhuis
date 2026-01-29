@@ -468,13 +468,16 @@ form.table-form label {
 }
 
 #collection-rows {
-  padding-left: 0.5ch;
+  padding-left: 1ch;
   margin-top: 1ch;
 }
 
 .collection-row {
   margin-bottom: 3ch;
-  paddint-left: 0.5ch;
+}
+
+.collection-row #item-cards-wrapper {
+  margin-top: 0.5ch;
   border-left: 1px dotted #ccc;
 }
 

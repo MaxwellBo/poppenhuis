@@ -61,7 +61,9 @@ function CollectionRow(props: { collection: Collection, user: User }) {
         <QueryPreservingLink to={`/${user.id}/${collection.id}`}>{collection.name}</QueryPreservingLink> <Size ts={collection.items} t="item" />
       </h3>
       {collection.description && <div className='short description ugc'><Markdown>{collection.description}</Markdown></div>}
-      <ItemCards {...props} limit={6} />
+      <div id="item-cards-wrapper">
+        <ItemCards collection={collection} user={user} limit={6} />
+      </div>
     </article>
   );
 }
