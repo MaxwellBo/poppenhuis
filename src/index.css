@@ -470,11 +470,11 @@ form.table-form label {
 #collection-rows {
   padding-left: 1ch;
   margin-top: 1ch;
-  border-left: 1px dotted #ccc;
 }
 
 .collection-row {
   padding-bottom: 3ch;
+  border-left: 2px dotted #ccc;
 }
 
 .bento #previous {
