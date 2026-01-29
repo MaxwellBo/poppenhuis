@@ -384,13 +384,6 @@ pre {
   }
 } */
 
-@media (max-width: 767px) {
-  .size, .index {
-    font-size: 0.7em;
-    vertical-align: middle;
-  }
-}
-
 .highlight-model-viewer model-viewer { 
   animation: throb 2s infinite; 
   z-index: 5;
