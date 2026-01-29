@@ -468,13 +468,14 @@ form.table-form label {
 }
 
 #collection-rows {
-  padding-left: 1ch;
+  padding-left: 0.5ch;
   margin-top: 1ch;
 }
 
 .collection-row {
-  padding-bottom: 3ch;
-  border-left: 2px dotted #ccc;
+  margin-bottom: 3ch;
+  paddint-left: 0.5ch;
+  border-left: 1px dotted #ccc;
 }
 
 .bento #previous {
