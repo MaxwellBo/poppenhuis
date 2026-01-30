@@ -104,6 +104,14 @@ export default function UsersPage() {
           </details>
           <br />
           <details>
+            <summary>Want to upload your collections to poppenhuis?</summary>
+            <div className="explanation">
+              <p className="p-spacing">
+                Go to <QueryPreservingLink to="/auth">/auth</QueryPreservingLink> and create an account. Then you can create a user profile, and your first collection.
+              </p>
+            </div>
+          </details>
+          <details>
             <summary>Want to load your collections from an <a href="https://www.are.na/">Are.na</a> user profile?</summary>
             <div className="explanation">
               <ArenaUserLoader />
