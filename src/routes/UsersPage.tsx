@@ -102,20 +102,21 @@ export default function UsersPage() {
               </p>
             </div>
           </details>
+          <br />
           <details>
-            <summary>Want to load models from an <a href="https://www.are.na/">Are.na</a> user profile?</summary>
+            <summary>Want to load your collections from an <a href="https://www.are.na/">Are.na</a> user profile?</summary>
             <div className="explanation">
               <ArenaUserLoader />
             </div>
           </details>
           <details>
-            <summary>Want to mount a 3rd party manifest?</summary>
+            <summary>Want to load your collections from a 3rd party manifest?</summary>
             <div className="explanation">
               <ThirdPartyManifestLoader />
             </div>
           </details>
           <details>
-            <summary>Why would I want to use GitHub to add my collection rather than Firebase?</summary>
+            <summary>Want to bake your collections into the bundle?</summary>
             <div className="explanation">
               <p>
                 GitHub has everything we need for authenticated bulk uploading of models and metadata.
@@ -131,6 +132,7 @@ export default function UsersPage() {
               </ol>
             </div>
           </details>
+          <br />
           <details>
             <summary>Credits and inspiration</summary>
             <div className="explanation">
