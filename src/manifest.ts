@@ -450,7 +450,7 @@ baker & baby cook
             captureDate: "2025 October 2 8:21PM",
             acquisitionDate: "2025 October 1",
             acquisitionLocation: "Rudy's Music Soho, New York City",
-            captureMethod: "Guided Object Mode",
+            captureMethod: "LiDAR",
             captureDevice: "Apple iPhone 13 Pro",
             captureLatLon: "40.75 N, 74.00 W",
             captureLocation: "New York City",
