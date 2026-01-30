@@ -1530,9 +1530,38 @@ async function fetchAllChannelBlocks(channelId: number): Promise<ArenaV3Block[]>
 
 function channelDescriptionToStr(channel: ArenaV3Channel): string {
   const raw = channel.metadata?.description ?? channel.description;
+  // Prefer markdown if present
+  if (
+    raw &&
+    typeof raw === 'object' &&
+    'markdown' in raw &&
+    typeof (raw as { markdown?: string }).markdown === 'string'
+  ) {
+    return (raw as { markdown: string }).markdown;
+  }
+  // Fallback to plain
+  if (
+    raw &&
+    typeof raw === 'object' &&
+    'plain' in raw &&
+    typeof (raw as { plain?: string }).plain === 'string'
+  ) {
+    return (raw as { plain: string }).plain;
+  }
+  // Fallback to string
   if (typeof raw === 'string') return raw;
-  if (raw && typeof raw === 'object' && 'plain' in raw && typeof (raw as { plain?: string }).plain === 'string') return (raw as { plain: string }).plain;
-  if (raw && typeof raw === 'object' && 'markdown' in raw && typeof (raw as { markdown?: string }).markdown === 'string') return (raw as { markdown: string }).markdown;
+  return '';
+}
+
+function blockDescriptionToStr(block: ArenaV3Block): string {
+  const raw = block.description;
+  if (raw && typeof raw === 'object' && 'markdown' in raw && typeof (raw as { markdown?: string }).markdown === 'string') {
+    return (raw as { markdown: string }).markdown;
+  }
+  if (raw && typeof raw === 'object' && 'plain' in raw && typeof (raw as { plain?: string }).plain === 'string') {
+    return (raw as { plain: string }).plain;
+  }
+  if (typeof raw === 'string') return raw;
   return '';
 }
 
@@ -1560,7 +1589,7 @@ export async function loadArenaUser({ userSlug }: { userSlug: string }): Promise
       const url = content.source?.url;
       if (!url?.endsWith('.glb')) continue;
 
-      const { description, yamlFields } = parseDescriptionWithYaml(descriptionToStr(content.description));
+      const { description, yamlFields } = parseDescriptionWithYaml(blockDescriptionToStr(content));
 
       items.push({
         id: String(content.id),
@@ -1598,18 +1627,6 @@ export async function loadArenaUser({ userSlug }: { userSlug: string }): Promise
   return result;
 }
 
-/**
- * Coerces are.na v3 block description (string or MarkdownContent object) to a string.
- * Required: v3 API often returns description as { plain, markdown, html } rather than a string.
- */
-function descriptionToStr(raw: string | { plain?: string; markdown?: string } | null | undefined): string {
-  if (typeof raw === 'string') return raw;
-  if (raw && typeof raw === 'object') {
-    if (typeof (raw as { plain?: string }).plain === 'string') return (raw as { plain: string }).plain;
-    if (typeof (raw as { markdown?: string }).markdown === 'string') return (raw as { markdown: string }).markdown;
-  }
-  return '';
-}
 
 /**
  * Parses a description that may contain YAML frontmatter.

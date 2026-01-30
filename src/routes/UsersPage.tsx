@@ -140,6 +140,29 @@ export default function UsersPage() {
               <InspirationGallery />
             </div>
           </details>
+          <details>
+            <summary>Technical challenges</summary>
+            <div className="explanation">
+              <p className="p-spacing">
+                A lot of this app was actually really annoying to build. Particularly frustrating components were:
+                <ul>
+                  <li>Loading and interleaving data from 4 different backends (local manifest, remote manifest, Firebase, and Are.na)</li>
+                  <li>
+                    Layout stability when changing between screens
+                  </li>
+                  <li>
+                    Laying out the VR scene
+                  </li>
+                  <li>
+                    Laying out the <a href="og.png">Open Graph preview images</a>
+                  </li>
+                  <li>
+                    The Kitty printer integration
+                  </li>
+                </ul>
+              </p>
+            </div>
+          </details>
         </section>
       </div>
     </article>
@@ -230,7 +253,7 @@ function ArenaUserLoader() {
   return (
     <>
       <p className="p-spacing">
-        Enter an Are.na profile slug. Only channels whose description includes <code>poppenhu.is</code> will be loaded, and only blocks uploaded as <code>.glb</code> files within those channels will be displayed. 
+        Enter an Are.na profile slug. Only channels whose description includes <code>poppenhu.is</code> will be loaded, and only blocks uploaded as <code>.glb</code> files within those channels will be displayed.
       </p>
       <p className="p-spacing">
         <label>
