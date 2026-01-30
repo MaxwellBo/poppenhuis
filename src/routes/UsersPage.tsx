@@ -111,7 +111,7 @@ export default function UsersPage() {
           <details>
             <summary>Want to mount a 3rd party manifest?</summary>
             <div className="explanation">
-              <ThirdPartyManfiestLoader />
+              <ThirdPartyManifestLoader />
             </div>
           </details>
           <details>
@@ -167,7 +167,7 @@ function UserListEntry(props: { user: User }) {
   )
 }
 
-function ThirdPartyManfiestLoader() {
+function ThirdPartyManifestLoader() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [manifestUrl, setManifestUrl] = React.useState<string>(searchParams.get(MANIFEST_URL_QUERY_PARAM) ?? '');
   const [fetchResult, setFetchResult] = React.useState<string | undefined>(undefined);
