@@ -1353,36 +1353,31 @@ export async function loadUser({ params, request }: { params: { userId: User['id
   const manifestUrl = searchParams.get(MANIFEST_URL_QUERY_PARAM);
   const arenaSlug = searchParams.get(ARENA_USER_QUERY_PARAM);
 
-  let asyncUsersPromise: Promise<User[]>;
+  const promises: Promise<User[]>[] = [loadFirebaseUsers()];
   if (manifestUrl) {
-    asyncUsersPromise = Promise.all([loadManifest(manifestUrl), loadFirebaseUsers()]).then(list => list.flat());
-  } else {
-    asyncUsersPromise = loadFirebaseUsers();
+    promises.push(loadManifest(manifestUrl));
   }
   if (arenaSlug) {
-    asyncUsersPromise = Promise.all([asyncUsersPromise, loadArenaUser({ userSlug: arenaSlug }).then(u => [u])]).then(list => list.flat());
+    promises.push(loadArenaUser({ userSlug: arenaSlug }).then(u => [u]));
+  }
+  const asyncUsersPromise = Promise.all(promises).then(list => list.flat());
+
+  const firstPartyUser = FIRST_PARTY_MANIFEST.find((user: User) => user.id === params.userId);
+  if (firstPartyUser) {
+    return { user: firstPartyUser, users: FIRST_PARTY_MANIFEST, asyncUsersPromise };
   }
 
   if (arenaSlug && params.userId === arenaSlug) {
     const arenaUser = await loadArenaUser({ userSlug: arenaSlug });
-    const usersWithArena = [...FIRST_PARTY_MANIFEST, arenaUser];
-    return { user: arenaUser, users: usersWithArena, asyncUsersPromise };
+    return { user: arenaUser, users: [...FIRST_PARTY_MANIFEST, arenaUser], asyncUsersPromise };
   }
-
-  const arenaUserFromParam = arenaSlug ? await loadArenaUser({ userSlug: arenaSlug }) : null;
-  const usersWithArena = [...FIRST_PARTY_MANIFEST, ...(arenaUserFromParam ? [arenaUserFromParam] : [])];
 
   if (manifestUrl) {
     const manifest = await loadManifest(manifestUrl);
     const manifestUser = manifest.find((user: User) => user.id === params.userId);
     if (manifestUser) {
-      return { user: { ...manifestUser, source: 'manifest' }, users: [...usersWithArena, manifestUser], asyncUsersPromise };
+      return { user: { ...manifestUser, source: 'manifest' }, users: [...FIRST_PARTY_MANIFEST, manifestUser], asyncUsersPromise };
     }
-  }
-
-  const firstPartyUser = FIRST_PARTY_MANIFEST.find((user: User) => user.id === params.userId);
-  if (firstPartyUser) {
-    return { user: { ...firstPartyUser }, users: usersWithArena, asyncUsersPromise };
   }
 
   const firebaseUsers = await loadFirebaseUsers();
@@ -1390,7 +1385,7 @@ export async function loadUser({ params, request }: { params: { userId: User['id
   if (!firebaseUser) {
     throw new Error(`User with id "${params.userId}" not found`);
   }
-  return { user: firebaseUser, users: [...usersWithArena, ...firebaseUsers], asyncUsersPromise };
+  return { user: firebaseUser, users: [...FIRST_PARTY_MANIFEST, ...firebaseUsers], asyncUsersPromise };
 }
 
 export async function loadCollection({ params, request }: { params: { userId: User['id']; collectionId: Collection['id']; }; request: Request; }) {
@@ -1487,7 +1482,7 @@ async function fetchAllUserChannels(userSlug: string): Promise<ArenaV3Channel[]>
     const json: ArenaV3UserContentsResponse = await res.json();
     for (const item of json.data) {
       if (item.type === 'Channel') {
-        channels.push(item);
+        channels.push(item as ArenaV3Channel);
       }
     }
     hasMore = json.meta.has_more_pages ?? false;
@@ -1552,7 +1547,7 @@ export async function loadArenaUser({ userSlug }: { userSlug: string }): Promise
       const url = content.source?.url;
       if (!url?.endsWith('.glb')) continue;
 
-      const { description, yamlFields } = parseDescriptionWithYaml(content.description);
+      const { description, yamlFields } = parseDescriptionWithYaml(descriptionToStr(content.description));
 
       items.push({
         id: String(content.id),
@@ -1591,7 +1586,8 @@ export async function loadArenaUser({ userSlug }: { userSlug: string }): Promise
 }
 
 /**
- * Coerces are.na v3 description (string or MarkdownContent object) to a string.
+ * Coerces are.na v3 block description (string or MarkdownContent object) to a string.
+ * Required: v3 API often returns description as { plain, markdown, html } rather than a string.
  */
 function descriptionToStr(raw: string | { plain?: string; markdown?: string } | null | undefined): string {
   if (typeof raw === 'string') return raw;
@@ -1607,26 +1603,25 @@ function descriptionToStr(raw: string | { plain?: string; markdown?: string } | 
  * If the description contains "---" as a divider, everything after it is treated as YAML
  * that can override Item fields. The part before "---" becomes the description.
  */
-function parseDescriptionWithYaml(rawDescription: string | { plain?: string; markdown?: string } | null | undefined): {
+function parseDescriptionWithYaml(rawDescription: string | null | undefined): {
   description?: string;
   yamlFields: Partial<Item>;
 } {
-  const rawDescriptionStr = descriptionToStr(rawDescription);
-  if (!rawDescriptionStr) {
+  if (!rawDescription) {
     return { description: undefined, yamlFields: {} };
   }
 
-  const dividerIndex = rawDescriptionStr.indexOf('---');
+  const dividerIndex = rawDescription.indexOf('---');
 
   if (dividerIndex === -1) {
     return {
-      description: rawDescriptionStr.trim(),
+      description: rawDescription.trim(),
       yamlFields: {}
     };
   }
 
-  const description = rawDescriptionStr.substring(0, dividerIndex).trim();
-  const yamlContent = rawDescriptionStr.substring(dividerIndex + 3).trim();
+  const description = rawDescription.substring(0, dividerIndex).trim();
+  const yamlContent = rawDescription.substring(dividerIndex + 3).trim();
 
   let yamlFields: Partial<Item> = {};
 
@@ -1639,7 +1634,7 @@ function parseDescriptionWithYaml(rawDescription: string | { plain?: string; mar
     console.warn('Failed to parse YAML in description:', error);
     // If YAML parsing fails, treat the whole thing as description
     return {
-      description: rawDescriptionStr.trim(),
+      description: rawDescription.trim(),
       yamlFields: {}
     };
   }
@@ -1648,159 +1643,4 @@ function parseDescriptionWithYaml(rawDescription: string | { plain?: string; mar
     description: description || undefined,
     yamlFields
   };
-}
-
-/**
- * https://dev.are.na/documentation/channels#Block43472
- */
-interface ArenaChannel {
-  id: number;
-  title: string;
-  created_at: string;
-  updated_at: string;
-  added_to_at: string;
-  published: boolean;
-  open: boolean;
-  collaboration: boolean;
-  collaborator_count: number;
-  slug: string;
-  length: number;
-  kind: string;
-  status: string;
-  user_id: number;
-  manifest: ArenaManifest;
-  contents: ArenaContent[];
-  base_class: string;
-  page: number;
-  per: number;
-  collaborators: any[];
-  follower_count: number;
-  share_link: string | null;
-  metadata: ArenaMetadata;
-  class_name: string;
-  can_index: boolean;
-  nsfw: boolean;
-  owner: ArenaUser;
-  user: ArenaUser;
-}
-
-interface ArenaMetadata {
-  description: string;
-}
-
-interface ArenaManifest {
-  key: string;
-  AWSAccessKeyId: string;
-  bucket: string;
-  success_action_status: string;
-  policy: string;
-  acl: string;
-  signature: string;
-  expires: string;
-}
-
-interface Provider {
-  name: string;
-  url: string;
-}
-
-interface Source {
-  url: string;
-  title: string;
-  provider: Provider;
-}
-
-interface ImageVariant {
-  url: string;
-}
-
-interface ArenaImage {
-  filename: string;
-  content_type: string;
-  updated_at: string;
-  thumb: ImageVariant;
-  square: ImageVariant;
-  display: ImageVariant;
-  large: ImageVariant;
-  original: {
-    url: string;
-    file_size: number;
-    file_size_display: string;
-  };
-}
-
-interface ArenaUser {
-  created_at: string;
-  slug: string;
-  username: string;
-  first_name: string;
-  last_name: string;
-  full_name: string;
-  avatar: string;
-  avatar_image: {
-    thumb: string;
-    display: string;
-  };
-  channel_count: number;
-  following_count: number;
-  profile_id: number;
-  follower_count: number;
-  initials: string;
-  can_index: boolean;
-  metadata: {
-    description: string | null;
-  };
-  is_premium: boolean;
-  is_lifetime_premium: boolean;
-  is_supporter: boolean;
-  is_exceeding_connections_limit: boolean;
-  is_confirmed: boolean;
-  is_pending_reconfirmation: boolean;
-  is_pending_confirmation: boolean;
-  badge: string;
-  id: number;
-  base_class: string;
-  class: string;
-}
-
-interface ArenaContent {
-  title: string;
-  updated_at: string;
-  created_at: string;
-  state: string;
-  comment_count: number;
-  generated_title: string;
-  content_html: string;
-  description_html: string;
-  visibility: string;
-  content: string;
-  description: string;
-  source: Source | null;
-  image: ArenaImage;
-  embed: any;
-  attachment: any;
-  metadata: any;
-  id: number;
-  base_class: string;
-  class: string;
-  user: ArenaUser;
-  position: number;
-  selected: boolean;
-  connection_id: number;
-  connected_at: string;
-  connected_by_user_id: number;
-  connected_by_username: string;
-  connected_by_user_slug: string;
-}
-
-interface ArenaSearchResult {
-  term: string;
-  per: number;
-  current_page: number;
-  total_pages: number;
-  length: number;
-  authenticated: boolean;
-  channels: ArenaChannel[];
-  blocks: ArenaContent[];
-  users: any[];
 }

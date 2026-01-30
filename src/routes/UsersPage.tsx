@@ -230,7 +230,7 @@ function ArenaUserLoader() {
   return (
     <>
       <p className="p-spacing">
-        Enter an Are.na profile slug. Only channels whose description includes <code>poppenhu.is</code> will be loaded; add <code>poppenhu.is</code> to a channel&apos;s description on Are.na to include it here.
+        Enter an Are.na profile slug. Only channels whose description includes <code>poppenhu.is</code> will be loaded, and only blocks uploaded as <code>.glb</code> files within those channels will be displayed. 
       </p>
       <p className="p-spacing">
         <label>
@@ -242,15 +242,12 @@ function ArenaUserLoader() {
         }}>Load placeholder user</button>
       </p>
       <p className="p-spacing">
-        The following (shareable!) link will only display channels whose description contains <code>poppenhu.is</code>, and only blocks that are <code>.glb</code> files within those channels:
-      </p>
-      <p className="p-spacing">
         {userSlug ? (
           <NavLink to={{ pathname: `/${userSlug}`, search: `${ARENA_USER_QUERY_PARAM}=${userSlug}` }}>
             {window.location.origin}/{userSlug}?{ARENA_USER_QUERY_PARAM}={userSlug}
           </NavLink>
         ) : (
-          <span>{window.location.origin}</span>
+          <i>NO SLUG</i>
         )}
       </p>
       <p className="p-spacing">
