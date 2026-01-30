@@ -19,7 +19,7 @@ export default function CollectionPage() {
   return <article>
     <HelmetMeta meta={meta} />
     <PageHeader>
-      <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / {collection.name} / <Size ts={collection.items} t="item" />
+        <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / {collection.name} / <Size ts={collection.items} t="item" />
     </PageHeader>
     <div className="header-content">
       {(user.source === undefined || user.source === 'firebase') && (

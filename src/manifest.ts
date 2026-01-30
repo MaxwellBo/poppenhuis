@@ -156,7 +156,7 @@ export interface Item {
 }
 
 export const MANIFEST_URL_QUERY_PARAM = 'manifest';
-export const ARENA_PREFIX = 'arena:';
+export const ARENA_USER_QUERY_PARAM = 'arena';
 
 // KEEP THIS IN SYNC WITH THE TYPES ABOVE PLEASE
 export const MANIFEST_SCHEMA = `
@@ -1252,20 +1252,22 @@ My abject failure to use them properly convinced me to stick to the classical gu
 ];
 
 export function loadUsers({ request }: { request: Request; }) {
-  const manifestUrl = new URL(request.url).searchParams.get(MANIFEST_URL_QUERY_PARAM);
+  const searchParams = new URL(request.url).searchParams;
+  const manifestUrl = searchParams.get(MANIFEST_URL_QUERY_PARAM);
+  const arenaSlug = searchParams.get(ARENA_USER_QUERY_PARAM);
 
-  let promises;
-
+  const promises: Promise<User[]>[] = [loadFirebaseUsers()];
   if (manifestUrl) {
-    promises = [loadManifest(manifestUrl), loadFirebaseUsers()];
-  } else {
-    promises = [loadFirebaseUsers()];
+    promises.push(loadManifest(manifestUrl));
+  }
+  if (arenaSlug) {
+    promises.push(loadArenaUser({ userSlug: arenaSlug }).then(u => [u]));
   }
 
   return {
     syncUsers: FIRST_PARTY_MANIFEST,
     asyncUsersPromise: Promise.all(promises).then(list => list.flat())
-  }
+  };
 }
 
 async function loadManifest(manifestUrl: string): Promise<Manifest> {
@@ -1347,44 +1349,48 @@ export async function loadUser({ params, request }: { params: { userId: User['id
   users: User[],
   asyncUsersPromise: Promise<User[]>
 }> {
-  const hasArenaPrefix = params.userId.startsWith(ARENA_PREFIX);
-  const manifestUrl = new URL(request.url).searchParams.get(MANIFEST_URL_QUERY_PARAM);
+  const searchParams = new URL(request.url).searchParams;
+  const manifestUrl = searchParams.get(MANIFEST_URL_QUERY_PARAM);
+  const arenaSlug = searchParams.get(ARENA_USER_QUERY_PARAM);
 
   let asyncUsersPromise: Promise<User[]>;
-
   if (manifestUrl) {
     asyncUsersPromise = Promise.all([loadManifest(manifestUrl), loadFirebaseUsers()]).then(list => list.flat());
   } else {
     asyncUsersPromise = loadFirebaseUsers();
   }
-
-  if (hasArenaPrefix) {
-    const slug = params.userId.slice(ARENA_PREFIX.length);
-    const arenaUser = await loadArenaUser({ userSlug: slug })
-    return { user: arenaUser, users: [...FIRST_PARTY_MANIFEST, arenaUser,], asyncUsersPromise }
+  if (arenaSlug) {
+    asyncUsersPromise = Promise.all([asyncUsersPromise, loadArenaUser({ userSlug: arenaSlug }).then(u => [u])]).then(list => list.flat());
   }
+
+  if (arenaSlug && params.userId === arenaSlug) {
+    const arenaUser = await loadArenaUser({ userSlug: arenaSlug });
+    const usersWithArena = [...FIRST_PARTY_MANIFEST, arenaUser];
+    return { user: arenaUser, users: usersWithArena, asyncUsersPromise };
+  }
+
+  const arenaUserFromParam = arenaSlug ? await loadArenaUser({ userSlug: arenaSlug }) : null;
+  const usersWithArena = [...FIRST_PARTY_MANIFEST, ...(arenaUserFromParam ? [arenaUserFromParam] : [])];
 
   if (manifestUrl) {
     const manifest = await loadManifest(manifestUrl);
     const manifestUser = manifest.find((user: User) => user.id === params.userId);
     if (manifestUser) {
-      return { user: { ...manifestUser, source: 'manifest' }, users: [...FIRST_PARTY_MANIFEST, manifestUser], asyncUsersPromise }
+      return { user: { ...manifestUser, source: 'manifest' }, users: [...usersWithArena, manifestUser], asyncUsersPromise };
     }
   }
 
-  // Check FIRST_PARTY_MANIFEST first
   const firstPartyUser = FIRST_PARTY_MANIFEST.find((user: User) => user.id === params.userId);
   if (firstPartyUser) {
-    return { user: { ...firstPartyUser }, users: FIRST_PARTY_MANIFEST, asyncUsersPromise }
+    return { user: { ...firstPartyUser }, users: usersWithArena, asyncUsersPromise };
   }
 
-  // Load all firebase users and find the one we need
   const firebaseUsers = await loadFirebaseUsers();
   const firebaseUser = firebaseUsers.find(user => user.id === params.userId);
   if (!firebaseUser) {
     throw new Error(`User with id "${params.userId}" not found`);
   }
-  return { user: firebaseUser, users: [...FIRST_PARTY_MANIFEST, ...firebaseUsers], asyncUsersPromise }
+  return { user: firebaseUser, users: [...usersWithArena, ...firebaseUsers], asyncUsersPromise };
 }
 
 export async function loadCollection({ params, request }: { params: { userId: User['id']; collectionId: Collection['id']; }; request: Request; }) {
@@ -1403,78 +1409,197 @@ export async function loadItem({ params, request }: { params: { userId: User['id
 
 const ARENA_USER_CACHE = new Map<string, User>();
 
+// are.na v3 API types (https://www.are.na/developers/explore)
+interface ArenaV3User {
+  id: number;
+  type: string;
+  name: string;
+  slug: string;
+  avatar: string | null;
+  initials: string;
+  created_at: string;
+  updated_at: string;
+  bio?: { markdown?: string; html?: string; plain?: string };
+  counts?: { channels: number; followers: number; following: number };
+  _links?: { self?: { href: string } };
+}
+
+interface ArenaV3Channel {
+  id: number;
+  type: 'Channel';
+  title?: string;
+  slug: string;
+  description?: string;
+  metadata?: { description?: string };
+}
+
+interface ArenaV3PaginationMeta {
+  current_page: number;
+  next_page: number | null;
+  prev_page: number | null;
+  per_page: number;
+  total_pages: number;
+  total_count: number;
+  has_more_pages: boolean;
+}
+
+interface ArenaV3UserContentsResponse {
+  data: Array<ArenaV3Channel | ArenaV3Block>;
+  meta: ArenaV3PaginationMeta;
+}
+
+interface ArenaV3ChannelContentsResponse {
+  data: Array<ArenaV3Channel | ArenaV3Block>;
+  meta: ArenaV3PaginationMeta;
+}
+
+interface ArenaV3Block {
+  id: number;
+  type: string;
+  title?: string;
+  generated_title?: string;
+  description?: string;
+  source?: { url?: string; title?: string };
+  image?: { display?: { url?: string }; thumb?: { url?: string } };
+}
+
+const ARENA_V3_BASE = 'https://api.are.na/v3';
+const ARENA_PER_PAGE = 100;
+const POPPENHUIS_CHANNEL_MARKER = 'poppenhu.is';
+
+async function fetchArenaV3User(slug: string): Promise<ArenaV3User> {
+  const res = await fetch(`${ARENA_V3_BASE}/users/${slug}`);
+  if (!res.ok) throw new Error(`are.na user ${slug}: ${res.status} ${res.statusText}`);
+  return res.json();
+}
+
+async function fetchAllUserChannels(userSlug: string): Promise<ArenaV3Channel[]> {
+  const channels: ArenaV3Channel[] = [];
+  let page = 1;
+  let hasMore = true;
+  while (hasMore) {
+    const url = new URL(`${ARENA_V3_BASE}/users/${userSlug}/contents`);
+    url.searchParams.set('page', String(page));
+    url.searchParams.set('per_page', String(ARENA_PER_PAGE));
+    url.searchParams.set('type', 'Channel');
+    const res = await fetch(url.toString());
+    if (!res.ok) throw new Error(`are.na user contents: ${res.status} ${res.statusText}`);
+    const json: ArenaV3UserContentsResponse = await res.json();
+    for (const item of json.data) {
+      if (item.type === 'Channel') {
+        channels.push(item);
+      }
+    }
+    hasMore = json.meta.has_more_pages ?? false;
+    page = json.meta.next_page ?? page + 1;
+  }
+  return channels;
+}
+
+async function fetchAllChannelBlocks(channelId: number): Promise<ArenaV3Block[]> {
+  const blocks: ArenaV3Block[] = [];
+  let page = 1;
+  let hasMore = true;
+  while (hasMore) {
+    const url = new URL(`${ARENA_V3_BASE}/channels/${channelId}/contents`);
+    url.searchParams.set('page', String(page));
+    url.searchParams.set('per_page', String(ARENA_PER_PAGE));
+    const res = await fetch(url.toString());
+    if (!res.ok) throw new Error(`are.na channel ${channelId} contents: ${res.status} ${res.statusText}`);
+    const json: ArenaV3ChannelContentsResponse = await res.json();
+    for (const item of json.data) {
+      if (item.type === 'Channel') continue;
+      const block = item as ArenaV3Block;
+      if (block.source?.url?.toLowerCase().endsWith('.glb')) {
+        blocks.push(block);
+      }
+    }
+    hasMore = json.meta.has_more_pages ?? false;
+    page = json.meta.next_page ?? page + 1;
+  }
+  return blocks;
+}
+
+function channelDescriptionToStr(channel: ArenaV3Channel): string {
+  const raw = channel.metadata?.description ?? channel.description;
+  if (typeof raw === 'string') return raw;
+  if (raw && typeof raw === 'object' && 'plain' in raw && typeof (raw as { plain?: string }).plain === 'string') return (raw as { plain: string }).plain;
+  if (raw && typeof raw === 'object' && 'markdown' in raw && typeof (raw as { markdown?: string }).markdown === 'string') return (raw as { markdown: string }).markdown;
+  return '';
+}
+
+function channelDescriptionContainsPoppenhuis(channel: ArenaV3Channel): boolean {
+  const desc = channelDescriptionToStr(channel);
+  return desc.toLowerCase().includes(POPPENHUIS_CHANNEL_MARKER.toLowerCase());
+}
+
 export async function loadArenaUser({ userSlug }: { userSlug: string }): Promise<User> {
   const cached = ARENA_USER_CACHE.get(userSlug);
   if (cached) {
     return cached;
   }
 
-  const user: ArenaUser = await fetch(`https://api.are.na/v2/users/${userSlug}`).then((res) => res.json());
-
-  const resultChannels: ArenaChannel[] = []
-
-  let page = 1;
-  do {
-    const searchResult: ArenaSearchResult = await fetch(`https://api.are.na/v2/search/users/${userSlug}?page=${page}&per=100`).then((res) => res.json());
-    resultChannels.push(...searchResult.channels);
-
-    if (searchResult.current_page === searchResult.total_pages) {
-      break;
-    }
-  } while (page++ < 100);
-
-  const channels: ArenaChannel[] = await Promise.all(resultChannels.map(channel => fetch(`https://api.are.na/v2/channels/${channel.id}`).then((res) => res.json())));
+  const user = await fetchArenaV3User(userSlug);
+  const allChannels = await fetchAllUserChannels(userSlug);
+  const poppenhuisChannels = allChannels.filter(channelDescriptionContainsPoppenhuis);
 
   const collections: Collection[] = [];
-  for (const channel of channels) {
-    const items: Item[] = []
+  for (const channel of poppenhuisChannels) {
+    const blocks = await fetchAllChannelBlocks(channel.id);
+    const items: Item[] = [];
 
-    for (const content of channel.contents) {
-      if (!content.source?.url?.endsWith('.glb')) {
-        continue
-      }
+    for (const content of blocks) {
+      const url = content.source?.url;
+      if (!url?.endsWith('.glb')) continue;
 
       const { description, yamlFields } = parseDescriptionWithYaml(content.description);
 
       items.push({
-        id: content.id.toString(),
-        name: content.title,
-        model: content.source.url,
+        id: String(content.id),
+        name: content.title ?? content.generated_title ?? String(content.id),
+        model: url,
         description,
         customFields: {
           "are.na block": `[https://www.are.na/block/${content.id}](https://www.are.na/block/${content.id})`
         },
         og: content.image?.display?.url,
-        // Merge in any YAML fields, allowing them to override defaults
         ...yamlFields,
-      })
+      });
     }
 
-    if (items.length === 0) {
-      continue
-    }
+    if (items.length === 0) continue;
 
+    const channelDesc = channelDescriptionToStr(channel);
     collections.push({
-      id: channel.slug.toString(),
-      name: channel.title,
-      description: `${channel.metadata.description} 
-
-[Are.na channel](https://www.are.na/${userSlug}/${channel.slug})`,
+      id: String(channel.slug),
+      name: channel.title ?? channel.slug ?? String(channel.id),
+      description: `${channelDesc}\n\n[Are.na channel](https://www.are.na/${userSlug}/${channel.slug})`,
       items,
-    })
+    });
   }
 
   const result: User = {
-    id: ARENA_PREFIX + user.slug,
-    name: user.full_name,
+    id: user.slug,
+    name: user.name,
     bio: `[Are.na user](https://www.are.na/${user.slug})`,
     collections,
     source: 'arena'
   };
 
   ARENA_USER_CACHE.set(userSlug, result);
-
   return result;
+}
+
+/**
+ * Coerces are.na v3 description (string or MarkdownContent object) to a string.
+ */
+function descriptionToStr(raw: string | { plain?: string; markdown?: string } | null | undefined): string {
+  if (typeof raw === 'string') return raw;
+  if (raw && typeof raw === 'object') {
+    if (typeof (raw as { plain?: string }).plain === 'string') return (raw as { plain: string }).plain;
+    if (typeof (raw as { markdown?: string }).markdown === 'string') return (raw as { markdown: string }).markdown;
+  }
+  return '';
 }
 
 /**
@@ -1482,25 +1607,26 @@ export async function loadArenaUser({ userSlug }: { userSlug: string }): Promise
  * If the description contains "---" as a divider, everything after it is treated as YAML
  * that can override Item fields. The part before "---" becomes the description.
  */
-function parseDescriptionWithYaml(rawDescription: string | null | undefined): {
+function parseDescriptionWithYaml(rawDescription: string | { plain?: string; markdown?: string } | null | undefined): {
   description?: string;
   yamlFields: Partial<Item>;
 } {
-  if (!rawDescription) {
+  const rawDescriptionStr = descriptionToStr(rawDescription);
+  if (!rawDescriptionStr) {
     return { description: undefined, yamlFields: {} };
   }
 
-  const dividerIndex = rawDescription.indexOf('---');
+  const dividerIndex = rawDescriptionStr.indexOf('---');
 
   if (dividerIndex === -1) {
     return {
-      description: rawDescription.trim(),
+      description: rawDescriptionStr.trim(),
       yamlFields: {}
     };
   }
 
-  const description = rawDescription.substring(0, dividerIndex).trim();
-  const yamlContent = rawDescription.substring(dividerIndex + 3).trim();
+  const description = rawDescriptionStr.substring(0, dividerIndex).trim();
+  const yamlContent = rawDescriptionStr.substring(dividerIndex + 3).trim();
 
   let yamlFields: Partial<Item> = {};
 
@@ -1513,7 +1639,7 @@ function parseDescriptionWithYaml(rawDescription: string | null | undefined): {
     console.warn('Failed to parse YAML in description:', error);
     // If YAML parsing fails, treat the whole thing as description
     return {
-      description: rawDescription.trim(),
+      description: rawDescriptionStr.trim(),
       yamlFields: {}
     };
   }

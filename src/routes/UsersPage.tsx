@@ -1,8 +1,8 @@
 import React from "react";
-import { Await, useLoaderData, useSearchParams } from "react-router";
+import { Await, useLoaderData, useSearchParams, NavLink } from "react-router";
 import { loadUsers } from "../manifest";
 import type { User } from "../manifest";
-import { MANIFEST_URL_QUERY_PARAM, MANIFEST_SCHEMA, ARENA_PREFIX } from "../manifest";
+import { MANIFEST_URL_QUERY_PARAM, MANIFEST_SCHEMA, ARENA_USER_QUERY_PARAM } from "../manifest";
 import { Size } from '../components/Size';
 import { DEFAULT_META } from "../meta";
 import { HelmetMeta } from "../components/HelmetMeta";
@@ -148,7 +148,6 @@ export default function UsersPage() {
 
 function UserListEntry(props: { user: User }) {
   const { user } = props;
-
   return (
     <li key={user.id}>
       <QueryPreservingLink to={user.id}>{user.name}</QueryPreservingLink> <Size ts={user.collections} t="collection" />
@@ -156,7 +155,7 @@ function UserListEntry(props: { user: User }) {
         {
           user.collections.map((collection) =>
             <li key={collection.id}>
-              <QueryPreservingLink to={user.id + "/" + collection.id}>{collection.name}</QueryPreservingLink> <Size ts={collection.items} t="item" />
+              <QueryPreservingLink to={`${user.id}/${collection.id}`}>{collection.name}</QueryPreservingLink> <Size ts={collection.items} t="item" />
               <div>
                 {collection.items[0] && <ModelViewerWrapper item={collection.items[0]} size="small" />}
               </div>
@@ -231,7 +230,7 @@ function ArenaUserLoader() {
   return (
     <>
       <p className="p-spacing">
-        Enter an Are.na profile slug:
+        Enter an Are.na profile slug. Only channels whose description includes <code>poppenhu.is</code> will be loaded; add <code>poppenhu.is</code> to a channel&apos;s description on Are.na to include it here.
       </p>
       <p className="p-spacing">
         <label>
@@ -243,12 +242,16 @@ function ArenaUserLoader() {
         }}>Load placeholder user</button>
       </p>
       <p className="p-spacing">
-        The following (shareable!) link will only display channels that contain blocks uploaded as <code>.glb</code> files:
+        The following (shareable!) link will only display channels whose description contains <code>poppenhu.is</code>, and only blocks that are <code>.glb</code> files within those channels:
       </p>
       <p className="p-spacing">
-        <QueryPreservingLink to={`/${ARENA_PREFIX}${userSlug}`}>
-          {window.location.origin}/{ARENA_PREFIX}{userSlug}
-        </QueryPreservingLink>
+        {userSlug ? (
+          <NavLink to={{ pathname: `/${userSlug}`, search: `${ARENA_USER_QUERY_PARAM}=${userSlug}` }}>
+            {window.location.origin}/{userSlug}?{ARENA_USER_QUERY_PARAM}={userSlug}
+          </NavLink>
+        ) : (
+          <span>{window.location.origin}</span>
+        )}
       </p>
       <p className="p-spacing">
         You can add structured metadata to your Are.na blocks by including YAML in the description.
