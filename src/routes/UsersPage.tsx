@@ -157,7 +157,7 @@ export default function UsersPage() {
                     Laying out the <a href="og.png">Open Graph preview images</a>
                   </li>
                   <li>
-                    The Kitty printer integration
+                    The Kitty printer integration and its various printing bugs
                   </li>
                 </ul>
               </p>
