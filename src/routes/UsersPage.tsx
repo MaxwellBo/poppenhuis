@@ -156,7 +156,7 @@ export default function UsersPage() {
               <p className="p-spacing">
                 A lot of this app was actually really annoying to build. Particularly frustrating components were:
                 <ul>
-                  <li>Loading and interleaving data from 4 different backends (local manifest, remote manifest, Firebase, and Are.na)</li>
+                  <li>Loading and interleaving data from 4 different backends (Firebase, 3rd party manifest, Are.na, and bundle)</li>
                   <li>
                     Layout stability when changing between screens
                   </li>
