@@ -334,12 +334,12 @@ function InspirationGallery() {
       </div>
       <div className="inspiration-item">
         <div className="inspiration-image">
-          <a href="https://kevin.garden/">
-            <img loading="lazy" src="/inspo/kevingarden.webp" alt="kevin.garden" />
+          <a href="https://usgraphics.com/">
+            <img loading="lazy" src="/inspo/usgraphics.webp" alt="U.S. Graphics Company" />
           </a>
         </div>
         <div className="inspiration-label">
-          <a href="https://kevin.garden/">kevin.garden</a>
+          <a href="https://usgraphics.com/">U.S. Graphics Company</a>
         </div>
       </div>
       <div className="inspiration-item">
@@ -349,7 +349,7 @@ function InspirationGallery() {
           </a>
         </div>
         <div className="inspiration-label">
-          <a href="https://en.wikipedia.org/wiki/Tony_Hawk%27s_Pro_Skater_4"><cite>Tony Hawk's Pro Skater 4</cite> character selection screen</a>
+          <a href="https://en.wikipedia.org/wiki/Tony_Hawk%27s_Pro_Skater_4">the <cite>Tony Hawk's Pro Skater 4</cite> character selection screen</a>
         </div>
       </div>
       {/* <div className="inspiration-item">
@@ -404,22 +404,22 @@ function InspirationGallery() {
       </div>
       <div className="inspiration-item">
         <div className="inspiration-image">
-          <a href="https://usgraphics.com/">
-            <img loading="lazy" src="/inspo/usgraphics.webp" alt="U.S. Graphics Company" />
-          </a>
-        </div>
-        <div className="inspiration-label">
-          <a href="https://usgraphics.com/">U.S. Graphics Company</a>
-        </div>
-      </div>
-      <div className="inspiration-item">
-        <div className="inspiration-image">
           <a href="https://commitmono.com/">
             <img loading="lazy" src="/inspo/commitmono.webp" alt="Commit Mono" />
           </a>
         </div>
         <div className="inspiration-label">
           <a href="https://commitmono.com/">Commit Mono</a>
+        </div>
+      </div>
+      <div className="inspiration-item">
+        <div className="inspiration-image">
+          <a href="https://kevin.garden/">
+            <img loading="lazy" src="/inspo/kevingarden.webp" alt="kevin.garden" />
+          </a>
+        </div>
+        <div className="inspiration-label">
+          <a href="https://kevin.garden/">kevin.garden</a>
         </div>
       </div>
       {/* <div className="inspiration-item">
