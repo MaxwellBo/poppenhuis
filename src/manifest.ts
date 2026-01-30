@@ -1,3 +1,4 @@
+import firebase from 'firebase/compat/app';
 import * as yaml from 'js-yaml';
 
 // Firebase REST API configuration
@@ -1353,13 +1354,23 @@ export async function loadUser({ params, request }: { params: { userId: User['id
   const manifestUrl = searchParams.get(MANIFEST_URL_QUERY_PARAM);
   const arenaSlug = searchParams.get(ARENA_USER_QUERY_PARAM);
 
-  const promises: Promise<User[]>[] = [loadFirebaseUsers()];
+  let manifestPromise: Promise<User[]> | null = null;
+  let arenaPromise: Promise<User> | null = null;
+  const firebasePromise = loadFirebaseUsers();
+
+  const promises: Promise<User[]>[] = [];
+
   if (manifestUrl) {
-    promises.push(loadManifest(manifestUrl));
+    manifestPromise = loadManifest(manifestUrl);
+    promises.push(manifestPromise);
   }
   if (arenaSlug) {
-    promises.push(loadArenaUser({ userSlug: arenaSlug }).then(u => [u]));
+    arenaPromise = loadArenaUser({ userSlug: arenaSlug });
+    promises.push(arenaPromise.then(u => [u]));
   }
+
+  promises.push(firebasePromise);
+
   const asyncUsersPromise = Promise.all(promises).then(list => list.flat());
 
   const firstPartyUser = FIRST_PARTY_MANIFEST.find((user: User) => user.id === params.userId);
@@ -1368,19 +1379,21 @@ export async function loadUser({ params, request }: { params: { userId: User['id
   }
 
   if (arenaSlug && params.userId === arenaSlug) {
-    const arenaUser = await loadArenaUser({ userSlug: arenaSlug });
-    return { user: arenaUser, users: [...FIRST_PARTY_MANIFEST, arenaUser], asyncUsersPromise };
+    const arenaUser = await arenaPromise;
+    if (arenaUser) {
+      return { user: arenaUser, users: [...FIRST_PARTY_MANIFEST, arenaUser], asyncUsersPromise };
+    }
   }
 
   if (manifestUrl) {
-    const manifest = await loadManifest(manifestUrl);
+    const manifest = await manifestPromise!!;
     const manifestUser = manifest.find((user: User) => user.id === params.userId);
     if (manifestUser) {
       return { user: { ...manifestUser, source: 'manifest' }, users: [...FIRST_PARTY_MANIFEST, manifestUser], asyncUsersPromise };
     }
   }
 
-  const firebaseUsers = await loadFirebaseUsers();
+  const firebaseUsers = await firebasePromise;
   const firebaseUser = firebaseUsers.find(user => user.id === params.userId);
   if (!firebaseUser) {
     throw new Error(`User with id "${params.userId}" not found`);

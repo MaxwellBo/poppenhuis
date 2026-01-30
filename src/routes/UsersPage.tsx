@@ -247,7 +247,7 @@ function ArenaUserLoader() {
             {window.location.origin}/{userSlug}?{ARENA_USER_QUERY_PARAM}={userSlug}
           </NavLink>
         ) : (
-          <i>NO SLUG</i>
+          <i>ENTER SLUG ABOVE</i>
         )}
       </p>
       <p className="p-spacing">
