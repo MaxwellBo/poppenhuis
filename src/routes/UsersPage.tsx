@@ -1,6 +1,6 @@
 import React from "react";
 import { Await, useLoaderData, useSearchParams, NavLink } from "react-router";
-import { loadUsers } from "../manifest";
+import { loadUsers, sortUsers } from "../manifest";
 import type { User } from "../manifest";
 import { MANIFEST_URL_QUERY_PARAM, MANIFEST_SCHEMA, ARENA_USER_QUERY_PARAM } from "../manifest";
 import { Size } from '../components/Size';
@@ -49,7 +49,7 @@ export default function UsersPage() {
             ))}
             <React.Suspense fallback={<div>Loading more users...</div>}>
               <Await resolve={asyncUsersPromise}>
-                {(asyncUsers) => <>{asyncUsers.map((user) => (
+                {(asyncUsers) => <>{sortUsers(asyncUsers).map((user) => (
                   <UserListEntry key={user.id} user={user} />
                 ))}</>}
               </Await>

@@ -1,4 +1,4 @@
-import { Collection, Item, User } from "../manifest";
+import { Collection, Item, sortUsers, User } from "../manifest";
 import { loadItem } from "../manifest";
 import React, { useRef, useState, useEffect } from "react";
 import { useLoaderData, useSearchParams } from "react-router";
@@ -28,28 +28,20 @@ export default function ItemPage() {
       // Silently fail if promise rejects
       setAsyncUsers([]);
     });
-  }, [asyncUsersPromise]);
+  }, [users, asyncUsersPromise]);
 
   // Flatten all items across all users and collections
   type FlatItem = { item: Item; collection: Collection; user: User };
-  
-  const baseAllItems: FlatItem[] = users.flatMap(u => 
+
+  const allUsers = asyncUsers ? [...users, ...asyncUsers] : users;
+  const dedupedAllUsers = dedupeUsers(allUsers);
+  const sortedDedupedAllUsers = sortUsers(dedupedAllUsers);
+
+  const allItems: FlatItem[] = sortedDedupedAllUsers.flatMap(u => 
     u.collections.flatMap(c => 
       c.items.map(i => ({ item: i, collection: c, user: u }))
     )
   );
-
-  // If user source is Firebase, async users are already loaded in users array
-  // Otherwise, add async users to allItems
-  const asyncAllItems: FlatItem[] = (asyncUsers && user.source !== 'firebase')
-    ? asyncUsers.flatMap(u => 
-        u.collections.flatMap(c => 
-          c.items.map(i => ({ item: i, collection: c, user: u }))
-        )
-      )
-    : [];
-
-  const allItems: FlatItem[] = [...baseAllItems, ...asyncAllItems];
 
   const currentIndex = allItems.findIndex(
     fi => fi.item.id === item.id && fi.collection.id === collection.id && fi.user.id === user.id
@@ -93,9 +85,6 @@ export default function ItemPage() {
     newSearchParams.set("vr", e.target.value);
     setSearchParams(newSearchParams);
   };
-
-  // Merge async users into users for AFrameScene (only if not Firebase user)
-  const allUsers = (asyncUsers && user.source !== 'firebase') ? [...users, ...asyncUsers] : users;
 
   return (
     <article className='item-page'>
@@ -257,4 +246,13 @@ function QuicklookLink(props: { item: Item; }) {
       <span style={{ whiteSpace: 'nowrap' }}>Apple AR Quick Look</span>
     </a>
   );
+}
+
+function dedupeUsers(users: User[]): User[] {
+  const seen = new Set<string>();
+  return users.filter(user => {
+    if (seen.has(user.id)) return false;
+    seen.add(user.id);
+    return true;
+  });
 }

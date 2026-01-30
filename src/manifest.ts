@@ -1,4 +1,3 @@
-import firebase from 'firebase/compat/app';
 import * as yaml from 'js-yaml';
 
 // Firebase REST API configuration
@@ -13,7 +12,7 @@ export interface User {
   og?: string;
   bio?: string;
   collections: Collection[];
-  source?: string;
+  source?: 'arena' | 'manifest' | 'firebase';
 }
 
 export interface Collection {
@@ -1259,7 +1258,7 @@ export function loadUsers({ request }: { request: Request; }) {
 
   const promises: Promise<User[]>[] = [loadFirebaseUsers()];
   if (manifestUrl) {
-    promises.push(loadManifest(manifestUrl));
+    promises.push(loadManifestUsers(manifestUrl));
   }
   if (arenaSlug) {
     promises.push(loadArenaUser({ userSlug: arenaSlug }).then(u => [u]));
@@ -1271,12 +1270,16 @@ export function loadUsers({ request }: { request: Request; }) {
   };
 }
 
-async function loadManifest(manifestUrl: string): Promise<Manifest> {
+async function loadManifestUsers(manifestUrl: string): Promise<User[]> {
   const response = await fetch(manifestUrl);
   if (!response.ok) {
     throw new Error(`Failed to load manifest from ${manifestUrl}: ${response.status} ${response.statusText}`);
   }
-  return response.json();
+  const users = await response.json();
+  return users.map((user: User) => ({
+    ...user,
+    source: 'manifest'
+  }));
 }
 
 // Cache for Firebase users to avoid repeated fetches
@@ -1325,7 +1328,7 @@ async function loadFirebaseUsers(): Promise<User[]> {
       id: firebaseUser.id,
       collections,
       source: 'firebase'
-    };
+    } satisfies User;
   });
 
   // Cache the result
@@ -1345,6 +1348,12 @@ export async function loadFirebaseUser({ userId }: { userId: string }): Promise<
   return firebaseUser;
 }
 
+/**
+ * loadUser returns { user, users, asyncUsersPromise } with no duplication:
+ * - users: sync data we already have (first-party manifest + the backend we used to find the user).
+ * - asyncUsersPromise: resolves to users from the other backends only (Firebase, Arena, Manifest
+ *   as requested by query params). So [...users, ...asyncUsers] is the full list with no dupes.
+ */
 export async function loadUser({ params, request }: { params: { userId: User['id']; }; request: Request; }): Promise<{
   user: User,
   users: User[],
@@ -1354,51 +1363,65 @@ export async function loadUser({ params, request }: { params: { userId: User['id
   const manifestUrl = searchParams.get(MANIFEST_URL_QUERY_PARAM);
   const arenaSlug = searchParams.get(ARENA_USER_QUERY_PARAM);
 
-  let manifestPromise: Promise<User[]> | null = null;
-  let arenaPromise: Promise<User> | null = null;
   const firebasePromise = loadFirebaseUsers();
+  const manifestPromise = manifestUrl ? loadManifestUsers(manifestUrl) : null;
+  const arenaPromise = arenaSlug ? loadArenaUser({ userSlug: arenaSlug }) : null;
 
-  const promises: Promise<User[]>[] = [];
-
-  if (manifestUrl) {
-    manifestPromise = loadManifest(manifestUrl);
-    promises.push(manifestPromise);
-  }
-  if (arenaSlug) {
-    arenaPromise = loadArenaUser({ userSlug: arenaSlug });
-    promises.push(arenaPromise.then(u => [u]));
-  }
-
-  promises.push(firebasePromise);
-
-  const asyncUsersPromise = Promise.all(promises).then(list => list.flat());
-
-  const firstPartyUser = FIRST_PARTY_MANIFEST.find((user: User) => user.id === params.userId);
+  // Resolve which backend has the requested user (order: first-party → arena → manifest → firebase)
+  const firstPartyUser = FIRST_PARTY_MANIFEST.find((u) => u.id === params.userId);
   if (firstPartyUser) {
-    return { user: firstPartyUser, users: FIRST_PARTY_MANIFEST, asyncUsersPromise };
+    const asyncPromises = [firebasePromise];
+    if (manifestPromise) asyncPromises.push(manifestPromise);
+    if (arenaPromise) asyncPromises.push(arenaPromise.then((u) => [u]));
+    return {
+      user: firstPartyUser,
+      users: FIRST_PARTY_MANIFEST,
+      asyncUsersPromise: Promise.all(asyncPromises).then((list) => list.flat()),
+    };
   }
 
   if (arenaSlug && params.userId === arenaSlug) {
-    const arenaUser = await arenaPromise;
+    const arenaUser = await arenaPromise!;
     if (arenaUser) {
-      return { user: arenaUser, users: [...FIRST_PARTY_MANIFEST, arenaUser], asyncUsersPromise };
+      const asyncPromises = [firebasePromise];
+      if (manifestPromise) asyncPromises.push(manifestPromise);
+      return {
+        user: arenaUser,
+        users: [...FIRST_PARTY_MANIFEST, arenaUser],
+        asyncUsersPromise: Promise.all(asyncPromises).then((list) => list.flat()),
+      };
     }
   }
 
-  if (manifestUrl) {
-    const manifest = await manifestPromise!!;
-    const manifestUser = manifest.find((user: User) => user.id === params.userId);
+  if (manifestPromise) {
+    const manifest = await manifestPromise;
+    const manifestUser = manifest.find((u) => u.id === params.userId);
     if (manifestUser) {
-      return { user: { ...manifestUser, source: 'manifest' }, users: [...FIRST_PARTY_MANIFEST, manifestUser], asyncUsersPromise };
+      const asyncPromises = [firebasePromise];
+      if (arenaPromise) asyncPromises.push(arenaPromise.then((u) => [u]));
+      return {
+        user: manifestUser,
+        users: [...FIRST_PARTY_MANIFEST, ...manifest],
+        asyncUsersPromise: Promise.all(asyncPromises).then((list) => list.flat()),
+      };
     }
   }
 
   const firebaseUsers = await firebasePromise;
-  const firebaseUser = firebaseUsers.find(user => user.id === params.userId);
+  const firebaseUser = firebaseUsers.find((u) => u.id === params.userId);
   if (!firebaseUser) {
     throw new Error(`User with id "${params.userId}" not found`);
   }
-  return { user: firebaseUser, users: [...FIRST_PARTY_MANIFEST, ...firebaseUsers], asyncUsersPromise };
+  const asyncPromises: Promise<User[]>[] = [];
+  if (manifestPromise) asyncPromises.push(manifestPromise);
+  if (arenaPromise) asyncPromises.push(arenaPromise.then((u) => [u]));
+  return {
+    user: firebaseUser,
+    users: [...FIRST_PARTY_MANIFEST, ...firebaseUsers],
+    asyncUsersPromise: asyncPromises.length > 0
+      ? Promise.all(asyncPromises).then((list) => list.flat())
+      : Promise.resolve([]),
+  };
 }
 
 export async function loadCollection({ params, request }: { params: { userId: User['id']; collectionId: Collection['id']; }; request: Request; }) {
@@ -1673,4 +1696,12 @@ function parseDescriptionWithYaml(rawDescription: string | null | undefined): {
     description: description || undefined,
     yamlFields
   };
+}
+
+export function sortUsers(users: User[]): User[] {
+  return users.sort((a, b) => {
+    const aSource = a.source ?? 'A';
+    const bSource = b.source ?? 'A';
+    return aSource.localeCompare(bSource);
+  });
 }
