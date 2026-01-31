@@ -868,6 +868,26 @@ My abject failure to use them properly convinced me to stick to the classical gu
             releaseDate: "2001",
           },
           {
+            id: "queenie",
+            name: "Queenie",
+            model: "/assets/goldens/mbo_friends_queenie.glb",
+            captureApp: "Polycam",
+            captureDate: "2026 January 30",
+            captureLocation: "Soho, New York",
+            captureMethod: "LiDAR",
+            captureDevice: "Apple iPhone 13 Pro",
+            manufacturer: "Wendy",
+            manufactureDate: "December 1998",
+            manufactureLocation: "Sydney",
+            releaseDate: "1999 September",
+            acquisitionLocation: "Soho, New York",
+            storageLocation: "East Village, New York",
+            acquisitionDate: "2026 January 30",
+            customFields: {
+              version: "1"
+            }
+          },
+          {
             id: "claudia",
             name: "Claudia",
             manufacturer: "Leona",
