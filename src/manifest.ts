@@ -851,6 +851,23 @@ My abject failure to use them properly convinced me to stick to the classical gu
             acquisitionLocation: "The Burrow, West End, Brisbane"
           },
           {
+            id: "joline",
+            name: "Joline",
+            model: "/assets/goldens/mbo_friends_joline.glb",
+            captureApp: "Polycam",
+            captureDate: "2026 January 30",
+            captureLocation: "Soho, New York",
+            captureMethod: "LiDAR",
+            captureDevice: "Apple iPhone 13 Pro",
+            acquisitionDate: "2025 October 31",
+            acquisitionLocation: "Williamsburg, Brooklyn",
+            storageLocation: "Brooklyn",
+            manufacturer: "EL",
+            manufactureLocation: "Brooklyn",
+            manufactureDate: "2001",
+            releaseDate: "2001",
+          },
+          {
             id: "claudia",
             name: "Claudia",
             manufacturer: "Leona",
