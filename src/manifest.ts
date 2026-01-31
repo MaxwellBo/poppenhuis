@@ -997,6 +997,24 @@ My abject failure to use them properly convinced me to stick to the classical gu
             captureDate: "2023 Apr 22 at 10:40PM"
           },
           {
+            id: "ling",
+            name: "Ling",
+            model: "/assets/goldens/mbo_friends_ling.glb",
+            og: "/assets/derived/mbo_friends_ling.png",
+            manufacturer: "Eyining",
+            manufactureDate: "1997",
+            manufactureLocation: "Shanghai",
+            releaseDate: "1998 March",
+            acquisitionDate: "2025 September",
+            acquisitionLocation: "Lincoln Park, New York",
+            storageLocation: "Long Island City",
+            captureDate: "2026 January 30",
+            captureLocation: "Soho, New York",
+            captureDevice: "Apple iPhone 13 Pro",
+            captureApp: "Polycam",
+            captureMethod: "LiDAR"
+          },
+          {
             id: "lou-nathan",
             name: "Lou & Nathan",
             description: "We were at the park",
