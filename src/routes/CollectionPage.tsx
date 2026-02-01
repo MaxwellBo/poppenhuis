@@ -107,10 +107,24 @@ export default function CollectionPage() {
         )}
       {collection.description && <div className='short description ugc'><Markdown>{collection.description}</Markdown></div>}
     </div>
-    <CollectionPagination basePath={basePath} searchParams={searchParams} searchWithPage={searchWithPage} currentPage={currentPage} totalPages={totalPages} />
+    <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+      <CollectionPagination
+        basePath={basePath}
+        searchParams={searchParams}
+        searchWithPage={searchWithPage}
+        currentPage={currentPage}
+        totalPages={totalPages}
+      />
+    </div>
     <ItemCards collection={paginatedCollection} user={user} />
-    <div style={{ marginTop: '3ch' }}>
-      <CollectionPagination basePath={basePath} searchParams={searchParams} searchWithPage={searchWithPage} currentPage={currentPage} totalPages={totalPages} />
+    <div style={{ marginTop: '3ch', display: 'flex', justifyContent: 'center', width: '100%' }}>
+      <CollectionPagination
+        basePath={basePath}
+        searchParams={searchParams}
+        searchWithPage={searchWithPage}
+        currentPage={currentPage}
+        totalPages={totalPages}
+      />
     </div>
   </article>
 }
