@@ -217,6 +217,13 @@ pre {
   display: block;
 }
 
+.pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 0.25em;
+}
+
 .short {
   max-width: 50ch;
 }

@@ -9,7 +9,6 @@ export function QueryPreservingLink(props: {
   className?: string,
   children: React.ReactNode, 
   triggerKey?: string,
-  kbdClassName?: string,
   pushParam?: Map<string, string>,
   popParam?: Set<string> }) {
   const [searchParams] = useSearchParams();
@@ -62,6 +61,6 @@ export function QueryPreservingLink(props: {
       to={{ pathname: props.to, search: preserved.toString() }}>
         {props.children}
       </NavLink>
-      {props.triggerKey && <kbd className={props.kbdClassName ?? 'block'} onClick={() => linkRef.current?.click()}>{props.triggerKey}</kbd>}
+      {props.triggerKey && <kbd className='block' onClick={() => linkRef.current?.click()}>{props.triggerKey}</kbd>}
   </>
 }

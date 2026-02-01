@@ -39,7 +39,6 @@ function CollectionPagination(props: {
         to={basePath}
         pushParam={prevPage > 0 ? new Map([['page', String(prevPage)]]) : undefined}
         triggerKey="h"
-        kbdClassName=""
       >
         {prevIsWrap ? '↻ go to end' : '← prev'}
       </QueryPreservingLink>
@@ -60,7 +59,6 @@ function CollectionPagination(props: {
         to={basePath}
         pushParam={nextPage > 0 ? new Map([['page', String(nextPage)]]) : undefined}
         triggerKey="l"
-        kbdClassName=""
       >
         {nextIsWrap ? 'back to start ↺' : 'next →'}
       </QueryPreservingLink>
@@ -111,6 +109,8 @@ export default function CollectionPage() {
     </div>
     <CollectionPagination basePath={basePath} searchParams={searchParams} searchWithPage={searchWithPage} currentPage={currentPage} totalPages={totalPages} />
     <ItemCards collection={paginatedCollection} user={user} />
-    <CollectionPagination basePath={basePath} searchParams={searchParams} searchWithPage={searchWithPage} currentPage={currentPage} totalPages={totalPages} />
+    <div style={{ marginTop: '3ch' }}>
+      <CollectionPagination basePath={basePath} searchParams={searchParams} searchWithPage={searchWithPage} currentPage={currentPage} totalPages={totalPages} />
+    </div>
   </article>
 }
