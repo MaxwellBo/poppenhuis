@@ -48,6 +48,8 @@ export function Receipt({ item, collection, user, modelViewerRef }: ReceiptProps
   // Only set imageUrl when user explicitly clicks a button
   const [selectedImageUrl, setSelectedImageUrl] = useState<string | null>(null);
   const imageUrl = selectedImageUrl;
+  // Preview as image (data URL from rendered + dithered canvas)
+  const [previewImageUrl, setPreviewImageUrl] = useState<string | null>(null);
 
   // Snapshot: capture image from model viewer
   const snapshotCurrentModel = async () => {
@@ -68,7 +70,10 @@ export function Receipt({ item, collection, user, modelViewerRef }: ReceiptProps
 
   // Render preview whenever imageUrl or qrCodeLoaded changes
   useEffect(() => {
-    if (!imageUrl || !receiptRef.current || !canvasRef.current) return;
+    if (!imageUrl || !receiptRef.current || !canvasRef.current) {
+      setPreviewImageUrl(null);
+      return;
+    }
 
     const renderReceipt = async () => {
       const canvas = canvasRef.current;
@@ -112,6 +117,8 @@ export function Receipt({ item, collection, user, modelViewerRef }: ReceiptProps
         ditheredImageData.data.set(ditheredData);
         ctx.putImageData(ditheredImageData, 0, 0);
         console.log("Dithered content written back to canvas");
+
+        setPreviewImageUrl(canvas.toDataURL('image/png'));
       }
     };
 
@@ -269,7 +276,17 @@ export function Receipt({ item, collection, user, modelViewerRef }: ReceiptProps
           {!imageUrl ? (
             <div style={{ padding: '10px' }}><i>need snapshot</i></div>
           ) : (
-            <canvas ref={canvasRef} />
+            <>
+              {/* Hidden canvas used for rendering + printing */}
+              <canvas ref={canvasRef} style={{ display: 'none' }} aria-hidden="true" />
+              {previewImageUrl && (
+                <img
+                  src={previewImageUrl}
+                  alt="Receipt preview"
+                  style={{ display: 'block', maxWidth: '100%', height: 'auto' }}
+                />
+              )}
+            </>
           )}
         </details>
       </div>

@@ -13,12 +13,15 @@ export function ItemCards(props: {
   user: User; 
   highlighted?: Item['id']; 
   limit?: number;
+  /** 0-based start index for displayed items (e.g. currentPage * ITEMS_PER_PAGE); makes indexes page-aware */
+  startIndex?: number;
 }) {
-  const { highlighted, limit, collection, user } = props;
+  const { highlighted, limit, collection, user, startIndex } = props;
   const { items } = collection;
   const showSeeMore = limit && items.length > limit;
 
   let truncatedItems: Item[] = [];
+  let offset = 0;
   // if there's a both a highlight AND a limit, we use a more complex heuristic to choose which items to show
   // Assume limit=5, highlighted=4, items.length=10
   // We want to show elements 0, 1, 2, 3, 4
@@ -29,19 +32,21 @@ export function ItemCards(props: {
     const start = Math.floor(highlightedIndex / limit) * limit;
     const end = start + limit;
     truncatedItems = items.slice(start, end);
+    offset = start;
   } else if (limit) {
     // otherwise we just want to truncate to the limit
     truncatedItems = items.slice(0, limit);
   } else {
     truncatedItems = items;
+    offset = startIndex ?? 0;
   }
 
   return (
     <>
       <ul className='item-cards'>
-        {truncatedItems.map((item) => (
+        {truncatedItems.map((item, i) => (
           <li key={item.id} className={item.id === highlighted ? 'yelling highlight-model-viewer' : undefined}>
-            <ItemCard item={item} collection={collection} user={user} showIndex={true} selected={item.id === highlighted} />
+            <ItemCard item={item} collection={collection} user={user} showIndex={true} index={offset + i + 1} selected={item.id === highlighted} />
           </li>
         ))}
       </ul>

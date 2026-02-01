@@ -116,7 +116,7 @@ export default function CollectionPage() {
         totalPages={totalPages}
       />
     </div>
-    <ItemCards collection={paginatedCollection} user={user} />
+    <ItemCards collection={paginatedCollection} user={user} startIndex={start} />
     <div style={{ marginTop: '3ch', display: 'flex', justifyContent: 'center', width: '100%' }}>
       <CollectionPagination
         basePath={basePath}

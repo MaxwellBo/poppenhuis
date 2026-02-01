@@ -9,13 +9,16 @@ export function ItemCard(props: {
   collection: Collection; 
   user: User; 
   showIndex?: boolean;
+  /** 1-based index when pagination is used; otherwise derived from collection.items */
+  index?: number;
   altName?: string; 
   size?: ModelSize; 
   triggerKey?: string;
   selected?: boolean;
 }) {
-  const { item, collection, user, altName, size, triggerKey, showIndex, selected } = props;
+  const { item, collection, user, altName, size, triggerKey, showIndex, index, selected } = props;
   const name = altName ?? item.name;
+  const displayIndex = index ?? collection.items.indexOf(item) + 1;
   return (
     <div className="card">
       <div className='center'>
@@ -27,7 +30,7 @@ export function ItemCard(props: {
             {name}
           </QueryPreservingLink>
         )}
-        {showIndex && <div className='index'>({collection.items.indexOf(item) + 1})</div>}
+        {showIndex && <div className='index'>({displayIndex})</div>}
       </div>
     </div>
   );
