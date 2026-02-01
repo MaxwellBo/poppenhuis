@@ -9,6 +9,7 @@ export function QueryPreservingLink(props: {
   className?: string,
   children: React.ReactNode, 
   triggerKey?: string,
+  kbdClassName?: string,
   pushParam?: Map<string, string>,
   popParam?: Set<string> }) {
   const [searchParams] = useSearchParams();
@@ -38,6 +39,14 @@ export function QueryPreservingLink(props: {
   }, []);
 
 
+  // Preserve all query params except 'page' (pagination is route-specific, not carried across links)
+  const preserved = new URLSearchParams();
+  searchParams.forEach((value, key) => {
+    if (key !== 'page') preserved.set(key, value);
+  });
+  props.popParam?.forEach((key) => preserved.delete(key));
+  props.pushParam?.forEach((value, key) => preserved.set(key, value));
+
   return <>
     <NavLink 
       ref={linkRef} 
@@ -50,9 +59,9 @@ export function QueryPreservingLink(props: {
               : props.className
         }
       }
-      to={{ pathname: props.to, search: searchParams.toString() }}>
+      to={{ pathname: props.to, search: preserved.toString() }}>
         {props.children}
       </NavLink>
-      {props.triggerKey && <kbd className='block' onClick={() => linkRef.current?.click()}>{props.triggerKey}</kbd>}
+      {props.triggerKey && <kbd className={props.kbdClassName ?? 'block'} onClick={() => linkRef.current?.click()}>{props.triggerKey}</kbd>}
   </>
 }
