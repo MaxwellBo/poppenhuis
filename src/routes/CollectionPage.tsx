@@ -48,7 +48,7 @@ function CollectionPagination(props: {
         <span key={i}>
           {i > 0 && ' '}
           {i === currentPage ? (
-            i
+            <b>{i}</b>
           ) : (
             <Link to={{ pathname: basePath, search: searchWithPage(searchParams, i) }}>{i}</Link>
           )}
