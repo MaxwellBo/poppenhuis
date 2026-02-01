@@ -11,16 +11,22 @@ export function ItemCard(props: {
   showIndex?: boolean;
   altName?: string; 
   size?: ModelSize; 
-  triggerKey?: string; 
+  triggerKey?: string;
+  selected?: boolean;
 }) {
-  const { item, collection, user, altName, size, triggerKey, showIndex } = props;
+  const { item, collection, user, altName, size, triggerKey, showIndex, selected } = props;
+  const name = altName ?? item.name;
   return (
     <div className="card">
       <div className='center'>
         <ModelViewerWrapper item={item} size={size ?? 'normal'} />
-        <QueryPreservingLink to={`/${user.id}/${collection.id}/${item.id}`} triggerKey={triggerKey}>
-          {altName ?? item.name}
-        </QueryPreservingLink> 
+        {selected ? (
+          <span>{name}</span>
+        ) : (
+          <QueryPreservingLink to={`/${user.id}/${collection.id}/${item.id}`} triggerKey={triggerKey}>
+            {name}
+          </QueryPreservingLink>
+        )}
         {showIndex && <div className='index'>({collection.items.indexOf(item) + 1})</div>}
       </div>
     </div>

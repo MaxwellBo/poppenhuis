@@ -41,7 +41,7 @@ export function ItemCards(props: {
       <ul className='item-cards'>
         {truncatedItems.map((item) => (
           <li key={item.id} className={item.id === highlighted ? 'yelling highlight-model-viewer' : undefined}>
-            <ItemCard item={item} collection={collection} user={user} showIndex={true} />
+            <ItemCard item={item} collection={collection} user={user} showIndex={true} selected={item.id === highlighted} />
           </li>
         ))}
       </ul>
@@ -87,7 +87,7 @@ export function GlobalItemCards(props: {
             className={isHighlighted ? 'yelling highlight-model-viewer' : undefined}
             style={needsDivider ? { borderLeft: '1px dotted #ccc' } : undefined}
           >
-            <ItemCard item={item} collection={itemCollection} user={itemUser} showIndex={true} />
+            <ItemCard item={item} collection={itemCollection} user={itemUser} showIndex={true} selected={isHighlighted} />
           </li>
         );
       })}
