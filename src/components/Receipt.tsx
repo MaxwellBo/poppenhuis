@@ -50,6 +50,7 @@ export function Receipt({ item, collection, user, modelViewerRef }: ReceiptProps
   const imageUrl = selectedImageUrl;
   // Preview as image (data URL from rendered + dithered canvas)
   const [previewImageUrl, setPreviewImageUrl] = useState<string | null>(null);
+  const [dithering, setDithering] = useState(true);
 
   // Snapshot: capture image from model viewer
   const snapshotCurrentModel = async () => {
@@ -99,11 +100,13 @@ export function Receipt({ item, collection, user, modelViewerRef }: ReceiptProps
         ctx.drawImage(generatedCanvas, 0, 0);
         console.log("Drew generated canvas onto main canvas");
 
-        // Apply dithering
+        // Apply dithering or simple threshold
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
         const data = new Uint32Array(imageData.data.buffer);
         const mono = rgbaToGray(data);
-        ditherSteinberg(mono, canvas.width, canvas.height);
+        if (dithering) {
+          ditherSteinberg(mono, canvas.width, canvas.height);
+        } 
         const bwData = grayToRgba(mono);
         
         // Wipe the canvas
@@ -123,7 +126,7 @@ export function Receipt({ item, collection, user, modelViewerRef }: ReceiptProps
     };
 
     renderReceipt();
-  }, [imageUrl, item, collection, user, qrCodeLoaded]);
+  }, [imageUrl, item, collection, user, qrCodeLoaded, dithering]);
 
   const printReceipt = async () => {
     if (!imageUrl) {
@@ -242,6 +245,14 @@ export function Receipt({ item, collection, user, modelViewerRef }: ReceiptProps
         <details>
           <summary>print receipt</summary>
           <div style={{ marginTop: '10px', marginBottom: '10px' }}>
+            <label style={{ display: 'inline-flex', alignItems: 'center', marginRight: '10px' }}>
+              <input
+                type="checkbox"
+                checked={dithering}
+                onChange={(e) => setDithering(e.target.checked)}
+              />
+              <span style={{ marginLeft: '4px' }}>dithering</span>
+            </label>
             <button
               onClick={snapshotCurrentModel}
               style={{ marginRight: '10px' }}
@@ -268,7 +279,7 @@ export function Receipt({ item, collection, user, modelViewerRef }: ReceiptProps
             </button>
             {error && <div style={{ color: 'red', marginTop: '10px' }}>{error}</div>}
           </div>
-          <p>
+          <p style={{ marginBottom: '1ch' }}>
             This implements the protocol for the very cheap range of "cat printers" available on <a href="https://www.aliexpress.com/w/wholesale-cat-printer.html">
               AliExpress
             </a>. The protocol is lifted from <a href="https://github.com/NaitLee/kitty-printer">NaitLee/kitty-printer</a>.
