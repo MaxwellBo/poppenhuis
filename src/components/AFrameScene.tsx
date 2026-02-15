@@ -23,6 +23,12 @@ declare global {
   }
 }
 
+// Filter out exempt collections (e.g. Ryan/mii-friends) whose assets
+// are incompatible with the A-Frame 3D scene.
+const EXEMPT_COLLECTIONS: { userId: string; collectionId: string }[] = [
+  { userId: 'Ryan', collectionId: 'mii-friends' },
+];
+
 interface AFrameSceneProps {
   users: User[];
   startingItem: Item;
@@ -65,6 +71,17 @@ export const AFrameScene: React.FC<AFrameSceneProps> = ({ users, startingItem, p
     isDirect?: boolean;
   }[] = [];
 
+  const filteredUsers = users.map(user => {
+    const dominated = EXEMPT_COLLECTIONS.filter(e => e.userId === user.id);
+    if (dominated.length === 0) return user;
+    return {
+      ...user,
+      collections: user.collections.filter(
+        c => !dominated.some(e => e.collectionId === c.id)
+      ),
+    };
+  }).filter(user => user.collections.length > 0);
+
   let collectionCount = 0;
   
   // When using .DS_Store positioning, we need a different layout
@@ -95,7 +112,7 @@ export const AFrameScene: React.FC<AFrameSceneProps> = ({ users, startingItem, p
     }
   } else {
     // Auto positioning mode - original layout logic
-  for (const user of users) {
+  for (const user of filteredUsers) {
     layout.push({
       position: { col: collectionCount, level: 3, depth: 0 },
       user: user,
