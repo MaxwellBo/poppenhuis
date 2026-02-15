@@ -1052,6 +1052,23 @@ My abject failure to use them properly convinced me to stick to the classical gu
             captureMethod: "LiDAR"
           },
           {
+            id: "erica",
+            name: "Erica",
+            model: "/assets/goldens/mbo_friends_Erica.glb",
+            captureApp: "Polycam",
+            captureMethod: "LiDAR",
+            captureDevice: "Apple iPhone 13 Pro",
+            captureDate: "2026 February 15",
+            acquisitionDate: "2023 September 26",
+            captureLocation: "Zetland, Sydney",
+            acquisitionLocation: "Newtown, Sydney",
+            manufacturer: "Linnajati",
+            manufactureDate: "1999 February 14",
+            releaseDate: "1999 November",
+            manufactureLocation: "Indonesia",
+            storageLocation: "Auburn, Sydney",
+          },
+          {
             id: "lou-nathan",
             name: "Lou & Nathan",
             description: "We were at the park",
