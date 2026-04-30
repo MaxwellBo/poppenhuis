@@ -1229,6 +1229,22 @@ My abject failure to use them properly convinced me to stick to the classical gu
             storageLocation: "Williamsburg, Brooklyn",
           },
           {
+            id: "zoe",
+            name: "zoe",
+            model: "/assets/goldens/max2_friends_zoe.glb",
+            acquisitionDate: "2026 February 26",
+            acquisitionLocation: "San Francisco",
+            captureApp: "Polycam",
+            captureDate: "2026 February 2026",
+            captureDevice: "Apple iPhone 13 Pro",
+            captureLocation: "San Francisco",
+            captureMethod: "LiDAR",
+            manufactureLocation: "Guangzhou",
+            manufacturer: "Chang",
+            releaseDate: "2001 April",
+            storageLocation: "San Francisco",
+          },
+          {
             id: "penguin",
             name: "penguin plush",
             model: "/assets/goldens/mbo_friends_penguin.glb",
@@ -1248,7 +1264,8 @@ My abject failure to use them properly convinced me to stick to the classical gu
         ]
       }
     ]
-  }, {
+  },
+  {
     id: "leaonie",
     name: "Leaonie",
     og: "/assets/derived/leaonie_og.png",
