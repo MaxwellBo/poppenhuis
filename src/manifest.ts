@@ -1232,6 +1232,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             id: "zoe",
             name: "zoe",
             model: "/assets/goldens/max2_friends_zoe.glb",
+            usdzModel: "/assets/derived/max2_friends_zoe.usdz",
             acquisitionDate: "2026 February 26",
             acquisitionLocation: "San Francisco",
             captureApp: "Polycam",
