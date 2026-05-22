@@ -667,6 +667,12 @@ My abject failure to use them properly convinced me to stick to the classical gu
             og: "/assets/derived/mbo_friends_Cory.png",
             captureDevice: "Apple iPhone 13 Pro",
             captureLocation: "Darlinghurst, Sydney",
+            storageLocation: "East Melbourne",
+            acquisitionLocation: "UQ, Brisbane",
+            manufacturer: "Margaret",
+            manufactureDate: "1994",
+            manufactureLocation: "Cambridge, UK",
+            releaseDate: "1995",
             captureLatLon: "33.88 S, 151.21 E",
             captureDate: "2024 July 13 12:45PM"
           },
