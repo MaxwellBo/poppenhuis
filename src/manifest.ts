@@ -1004,7 +1004,11 @@ My abject failure to use them properly convinced me to stick to the classical gu
             captureLocation: "West End",
             captureLatLon: "27.48 S, 153.01 E",
             captureDate: "2023 April 26 9:00PM",
-            acquisitionDate: "2012?"
+            releaseDate: "1998 October",
+            manufactureDate: "1998 February",
+            manufactureLocation: "Cardiff, United Kingdom",
+            acquisitionDate: "2012",
+            acquisitionLocation: "Cineplex South Bank, Brisbane, Australia",
           },
           {
             id: "fran",
