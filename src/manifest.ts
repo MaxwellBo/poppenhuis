@@ -1006,7 +1006,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             captureDate: "2023 April 26 9:00PM",
             releaseDate: "1998 October",
             manufactureDate: "1998 February",
-            manufactureLocation: "Cardiff, United Kingdom",
+            manufactureLocation: "Saint Dogmaels, Wales",
             acquisitionDate: "2012",
             acquisitionLocation: "Cineplex South Bank, Brisbane, Australia",
           },
