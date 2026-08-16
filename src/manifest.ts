@@ -818,6 +818,7 @@ My abject failure to use them properly convinced me to stick to the classical gu
             name: "Emma",
             releaseDate: "1997 August",
             manufacturer: "Rita",
+            manufactureDate: "1996 December",
             manufactureLocation: "The Gap, Brisbane, Australia",
             acquisitionDate: "2014 July",
             acquisitionLocation: "Norman Park, Brisbane, Australia",
