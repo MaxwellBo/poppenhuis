@@ -9,6 +9,7 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "test": "vitest",
+    "ps2-icon": "tsx scripts/ps2-icon-to-glb.ts",
     "render": "tsx render.ts",
     "render:root": "npm run render -- root",
     "render:all": "npm run render -- all",

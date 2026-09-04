@@ -240,6 +240,8 @@ export interface Item {
 }
 `;
 
+import { PS2_SAVE_ICONS_COLLECTION } from './ps2-archive';
+
 export const FIRST_PARTY_MANIFEST: Manifest = [
   // {
   //   id: "joey",
@@ -1269,7 +1271,8 @@ My abject failure to use them properly convinced me to stick to the classical gu
             storageLocation: "Darlinghurst, Sydney"
           }
         ]
-      }
+      },
+      PS2_SAVE_ICONS_COLLECTION,
     ]
   },
   {

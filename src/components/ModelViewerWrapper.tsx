@@ -23,6 +23,7 @@ export function ModelViewerWrapper(props: { item: Item; size?: ModelSize; modelV
         rotation-per-second="20deg"
         camera-controls
         auto-rotate
+        autoplay
         touch-action="pan-y" />
     </div>
   );
