@@ -10,6 +10,12 @@ interface UseFirebaseSubmitOptions {
   onError?: (error: string) => void;
 }
 
+function rejectNumericId(id: string, label: string): void {
+  if (/^\d+$/.test(id.trim())) {
+    throw new Error(`${label} cannot be entirely numeric`);
+  }
+}
+
 /**
  * Extracts a .glb file from a zip archive.
  * Returns the .glb file if found, throws an error if not found or multiple .glb files exist.
@@ -55,6 +61,7 @@ export function useFirebaseSubmit(options: UseFirebaseSubmitOptions = {}) {
       if (!userId.trim() || !formData.name?.trim()) {
         throw new Error('User ID and Name are required and cannot be empty or contain only whitespace');
       }
+      rejectNumericId(userId, 'User ID');
 
       const dataToSave = cleanFormData ? cleanFormData() : formData;
       const userRef = ref(rtdb, `/${userId}`);
@@ -124,6 +131,7 @@ export function useFirebaseSubmit(options: UseFirebaseSubmitOptions = {}) {
       if (!collectionId.trim() || !formData.name?.trim()) {
         throw new Error('Collection ID and Name are required and cannot be empty or contain only whitespace');
       }
+      rejectNumericId(collectionId, 'Collection ID');
 
       // Check if user exists
       const userRef = ref(rtdb, `/${userId}`);
@@ -192,6 +200,7 @@ export function useFirebaseSubmit(options: UseFirebaseSubmitOptions = {}) {
       if (!itemId.trim() || !formData.name?.trim()) {
         throw new Error('Item ID and Name are required and cannot be empty or contain only whitespace');
       }
+      rejectNumericId(itemId, 'Item ID');
 
       // Check if user and collection exist
       const userRef = ref(rtdb, `/${userId}`);
