@@ -20,19 +20,18 @@
   "dependencies": {
     "@google/model-viewer": "^4.3.1",
     "@types/html2canvas": "^0.5.35",
-    "@types/js-yaml": "^4.0.9",
     "aframe": "^1.7.1",
     "aframe-extras": "^7.6.0",
     "firebase": "^12.6.0",
     "html2canvas": "^1.4.1",
-    "js-yaml": "^4.1.0",
     "jszip": "^3.10.1",
     "qrcode": "^1.5.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-helmet": "^6.1.0",
     "react-markdown": "^9.0.1",
-    "react-router": "^7.1.0"
+    "react-router": "^7.1.0",
+    "yaml": "^2.8.1"
   },
   "devDependencies": {
     "@netlify/edge-functions": "^2.11.1",

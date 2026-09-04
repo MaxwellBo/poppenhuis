@@ -14,7 +14,7 @@ import { QrCode } from "../components/QrCode";
 import { AFrameScene } from "../components/AFrameScene";
 import { Receipt } from "../components/Receipt";
 import { DescriptionList } from "../components/DescriptionList";
-import * as yaml from 'js-yaml';
+import * as yaml from '../yaml.ts';
 
 export const loader = loadItem
 

@@ -7,7 +7,7 @@ import Markdown from "react-markdown";
 import { HelmetMeta } from '../components/HelmetMeta';
 import { QueryPreservingLink } from '../components/QueryPreservingLink';
 import { PageHeader } from '../components/PageHeader';
-import * as yaml from 'js-yaml';
+import * as yaml from '../yaml.ts';
 
 const ITEMS_PER_PAGE = 30;
 

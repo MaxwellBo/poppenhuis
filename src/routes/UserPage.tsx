@@ -8,7 +8,7 @@ import Markdown from "react-markdown";
 import { QueryPreservingLink } from "../components/QueryPreservingLink";
 import { HelmetMeta } from "../components/HelmetMeta";
 import { PageHeader } from "../components/PageHeader";
-import * as yaml from 'js-yaml';
+import * as yaml from '../yaml.ts';
 
 export const loader = loadUser;
 
