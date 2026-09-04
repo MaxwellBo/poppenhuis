@@ -204,6 +204,8 @@ function emitManifest(items: ConvertedItem[]): string {
       `        id: ${tsString(item.id)},`,
       `        name: ${tsString(item.name)},`,
       `        model: ${tsString(item.model)},`,
+      `        usdzModel: ${tsString(item.model.replace('/assets/goldens/', '/assets/derived/').replace(/\.glb$/, '.usdz'))},`,
+      `        og: ${tsString(item.model.replace('/assets/goldens/', '/assets/derived/').replace(/\.glb$/, '.png'))},`,
       `        alt: ${tsString(item.alt)},`,
       `        description: ${tsString(item.description)},`,
       item.formalName ? `        formalName: ${tsString(item.formalName)},` : '',
@@ -221,6 +223,7 @@ function emitManifest(items: ConvertedItem[]): string {
 export const PS2_SAVE_ICONS_COLLECTION = {
   id: ${tsString(COLLECTION_ID)},
   name: "PS2 save icons",
+  og: ${tsString(`/assets/derived/mbo_${COLLECTION_ID}_og.png`)},
   description: ${tsString(COLLECTION_DESCRIPTION)},
   items: [
 ${itemSrc}
