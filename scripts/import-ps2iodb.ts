@@ -3,7 +3,6 @@
  * Import notable PS2 save icons from PS2IODB's exported OBJ + PNG meshes.
  *
  *   npx tsx scripts/import-ps2iodb.ts
- *   npx tsx scripts/import-ps2iodb.ts --attribution-only
  */
 
 import { execFileSync } from 'child_process';
@@ -330,59 +329,56 @@ function ensureSparseCheckout(slugs: string[]) {
 }
 
 function main() {
-  const attributionOnly = process.argv.includes('--attribution-only');
   console.log('Loading PS2IODB contributor credits...');
   const bySlug = loadPs2iodbContributorsBySlug();
 
+  const existingIds = new Set(PS2_SAVE_ICONS_COLLECTION.items.map((i) => i.id));
+  const wanted = PS2IODB_IMPORTS.filter((t) => !existingIds.has(t.id));
+  console.log(`Importing ${wanted.length} PS2IODB icons (${existingIds.size} already in archive)`);
+  ensureSparseCheckout(wanted.map((t) => t.slug));
+
+  mkdirSync(GOLDENS, { recursive: true });
   const added: ArchiveItem[] = [];
-  if (!attributionOnly) {
-    const existingIds = new Set(PS2_SAVE_ICONS_COLLECTION.items.map((i) => i.id));
-    const wanted = PS2IODB_IMPORTS.filter((t) => !existingIds.has(t.id));
-    console.log(`Importing ${wanted.length} PS2IODB icons (${existingIds.size} already in archive)`);
-    ensureSparseCheckout(wanted.map((t) => t.slug));
 
-    mkdirSync(GOLDENS, { recursive: true });
-
-    for (const title of wanted) {
-      const dir = join(SPARSE, 'website/public/icons', title.slug);
-      if (!existsSync(dir)) {
-        console.warn(`missing ${title.slug}`);
-        continue;
-      }
-      const picked = pickObj(dir);
-      if (!picked) {
-        console.warn(`no OBJ in ${title.slug}`);
-        continue;
-      }
-      const objText = readFileSync(picked.obj, 'utf8');
-      const png = picked.png ? new Uint8Array(readFileSync(picked.png)) : null;
-      const filename = `${ASSET_PREFIX}_${title.id}.glb`;
-      const outPath = join(GOLDENS, filename);
-      try {
-        writeFileSync(outPath, objToGlb(objText, png, picked.formalName));
-      } catch (err) {
-        console.warn(`convert failed ${title.slug}: ${(err as Error).message}`);
-        continue;
-      }
-      const game = GAME_META[title.id];
-      added.push({
-        id: title.id,
-        name: title.name,
-        model: `/assets/goldens/${filename}`,
-        usdzModel: `/assets/derived/${ASSET_PREFIX}_${title.id}.usdz`,
-        og: `/assets/derived/${ASSET_PREFIX}_${title.id}.png`,
-        alt: `PlayStation 2 memory card icon for ${title.name}`,
-        formalName: picked.formalName,
-        manufacturer: game?.manufacturer ?? 'various PlayStation 2 developers',
-        manufactureLocation: game?.manufactureLocation,
-        releaseDate: game?.releaseDate,
-        acquisitionDate: '2026 September 5',
-        storageLocation: `https://ps2iodb.com/icon/${title.slug}`,
-        captureMethod: 'Converted from PS2IODB-exported icon mesh',
-        material: ['PS2 icon mesh', '128×128 texture'],
-      });
-      console.log(`ok   ${title.id.padEnd(36)} ${basename(picked.obj)}`);
+  for (const title of wanted) {
+    const dir = join(SPARSE, 'website/public/icons', title.slug);
+    if (!existsSync(dir)) {
+      console.warn(`missing ${title.slug}`);
+      continue;
     }
+    const picked = pickObj(dir);
+    if (!picked) {
+      console.warn(`no OBJ in ${title.slug}`);
+      continue;
+    }
+    const objText = readFileSync(picked.obj, 'utf8');
+    const png = picked.png ? new Uint8Array(readFileSync(picked.png)) : null;
+    const filename = `${ASSET_PREFIX}_${title.id}.glb`;
+    const outPath = join(GOLDENS, filename);
+    try {
+      writeFileSync(outPath, objToGlb(objText, png, picked.formalName));
+    } catch (err) {
+      console.warn(`convert failed ${title.slug}: ${(err as Error).message}`);
+      continue;
+    }
+    const game = GAME_META[title.id];
+    added.push({
+      id: title.id,
+      name: title.name,
+      model: `/assets/goldens/${filename}`,
+      usdzModel: `/assets/derived/${ASSET_PREFIX}_${title.id}.usdz`,
+      og: `/assets/derived/${ASSET_PREFIX}_${title.id}.png`,
+      alt: `PlayStation 2 memory card icon for ${title.name}`,
+      formalName: picked.formalName,
+      manufacturer: game?.manufacturer ?? 'various PlayStation 2 developers',
+      manufactureLocation: game?.manufactureLocation,
+      releaseDate: game?.releaseDate,
+      acquisitionDate: '2026 September 5',
+      storageLocation: `https://ps2iodb.com/icon/${title.slug}`,
+      captureMethod: 'Converted from PS2IODB-exported icon mesh',
+      material: ['PS2 icon mesh', '128×128 texture'],
+    });
+    console.log(`ok   ${title.id.padEnd(36)} ${basename(picked.obj)}`);
   }
 
   const items: ArchiveItem[] = [
@@ -401,11 +397,7 @@ function main() {
   });
   writeFileSync('src/ps2-archive.ts', emitArchive(items));
   const credited = items.filter((item) => item.description).length;
-  if (attributionOnly) {
-    console.log(`Wrote contributor descriptions for ${credited} of ${items.length} archive items`);
-  } else {
-    console.log(`\nWrote ${added.length} new GLBs; archive now has ${items.length} items (${credited} with PS2IODB credits)`);
-  }
+  console.log(`\nWrote ${added.length} new GLBs; archive now has ${items.length} items (${credited} with PS2IODB credits)`);
 }
 
 main();
