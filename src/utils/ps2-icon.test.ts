@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'fs';
 import { join } from 'path';
-import { parsePs2Icon, parsePsu, parseIconSys, ps2IconToGlb, ps2VertexColor, ps2VertexColorScale, ps2IconXform, ps2iodbObjUvToGltf } from './ps2-icon';
+import { parsePs2Icon, parsePsu, parseIconSys, ps2IconToGlb, ps2VertexColor, ps2VertexColorScale, ps2IconXform, ps2iodbObjUvToGltf, ps2iodbBlendMorphWeights, ps2iodbAnimClip, PS2IODB_V1_SECONDS_PER_FRAME } from './ps2-icon';
 
 const fixture = (...parts: string[]) =>
   join(process.cwd(), 'src/utils/testdata/ps2-icon', ...parts);
@@ -159,5 +159,48 @@ describe('ps2iodbObjUvToGltf', () => {
     expect(ps2iodbObjUvToGltf(0.25, 0.75)).toEqual([0.25, 0.25]);
     expect(ps2iodbObjUvToGltf(0, 0)).toEqual([0, 1]);
     expect(ps2iodbObjUvToGltf(1, 1)).toEqual([1, 0]);
+  });
+});
+
+describe('ps2iodbBlendMorphWeights', () => {
+  const bgdaKeys = [
+    { keys: [{ time: 0, value: 1 }, { time: 60, value: 0 }, { time: 120, value: 0 }, { time: 239, value: 1 }] },
+    { keys: [{ time: 0, value: 0 }, { time: 60, value: 1 }, { time: 120, value: 0 }] },
+    { keys: [{ time: 60, value: 0 }, { time: 120, value: 1 }, { time: 180, value: 0 }] },
+    { keys: [{ time: 120, value: 0 }, { time: 180, value: 1 }, { time: 240, value: 0 }] },
+  ];
+
+  it('is rest pose at t=0 (shape 0 remainder)', () => {
+    expect(ps2iodbBlendMorphWeights(bgdaKeys, 0)).toEqual([0, 0, 0]);
+  });
+
+  it('isolates each later shape at its peak key', () => {
+    expect(ps2iodbBlendMorphWeights(bgdaKeys, 60)).toEqual([1, 0, 0]);
+    expect(ps2iodbBlendMorphWeights(bgdaKeys, 120)).toEqual([0, 1, 0]);
+    const at180 = ps2iodbBlendMorphWeights(bgdaKeys, 180);
+    expect(at180[2]).toBeGreaterThan(at180[0]);
+    expect(at180[2]).toBeGreaterThan(at180[1]);
+  });
+});
+
+describe('ps2iodbAnimClip', () => {
+  it('writes v1 sequential shape times at 0.15s', () => {
+    const clip = ps2iodbAnimClip({
+      frameLength: 0,
+      animSpeed: 1,
+      frames: [
+        { keys: [], vertexData: [0, 0, 0] },
+        { keys: [], vertexData: [1, 0, 0] },
+        { keys: [], vertexData: [2, 0, 0] },
+      ],
+    });
+    expect(clip).not.toBeNull();
+    expect(clip!.times).toEqual([
+      0,
+      PS2IODB_V1_SECONDS_PER_FRAME,
+      2 * PS2IODB_V1_SECONDS_PER_FRAME,
+      3 * PS2IODB_V1_SECONDS_PER_FRAME,
+    ]);
+    expect(clip!.weights).toEqual([0, 0, 1, 0, 0, 1, 0, 0]);
   });
 });

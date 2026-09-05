@@ -300,7 +300,7 @@ export function ps2iodbObjUvToGltf(u: number, v: number): [number, number] {
   return [u, 1 - v];
 }
 
-function evalKeys(keys: FrameKey[], t: number): number {
+export function evalPs2AnimKeys(keys: FrameKey[], t: number): number {
   if (keys.length === 0) return 0;
   if (t <= keys[0].time) return keys[0].value;
   const last = keys[keys.length - 1];
@@ -318,12 +318,126 @@ function evalKeys(keys: FrameKey[], t: number): number {
   return last.value;
 }
 
+/** Blend-shape morph weights (shape 1..) matching PS2IODB ModelViewRenderer.animateV2. */
+export function ps2iodbBlendMorphWeights(
+  frames: Array<{ keys: FrameKey[] }>,
+  frameTime: number,
+): number[] {
+  const n = frames.length;
+  const shapeW = new Array<number>(n).fill(0);
+  for (let i = 0; i < n; i++) {
+    shapeW[i] += evalPs2AnimKeys(frames[i].keys, frameTime);
+  }
+  const sum = shapeW.reduce((a, b) => a + b, 0);
+  if (sum > 0) {
+    for (let i = 0; i < n; i++) shapeW[i] /= sum;
+  } else if (n > 0) {
+    shapeW[0] = 1;
+  }
+  return shapeW.slice(1);
+}
+
+/** Sequential-shape duration used by ModelViewRenderer.animateV1. */
+export const PS2IODB_V1_SECONDS_PER_FRAME = 0.15;
+
+export interface Ps2iodbAnimFrame {
+  shapeId?: number;
+  keys: FrameKey[];
+  vertexData: number[];
+}
+
+export interface Ps2iodbAnim {
+  version?: number;
+  frameLength: number;
+  animSpeed: number;
+  frames: Ps2iodbAnimFrame[];
+}
+
+export function parsePs2iodbAnim(text: string): Ps2iodbAnim {
+  let data: Ps2iodbAnim;
+  try {
+    data = JSON.parse(text) as Ps2iodbAnim;
+  } catch {
+    throw new Ps2IconError('PS2IODB .anim is not JSON');
+  }
+  if (!data || !Array.isArray(data.frames) || data.frames.length === 0) {
+    throw new Ps2IconError('PS2IODB .anim has no frames');
+  }
+  return data;
+}
+
+export function ps2iodbShapesDiffer(frames: Array<{ vertexData: number[] }>): boolean {
+  if (frames.length < 2) return false;
+  const a = frames[0].vertexData;
+  for (let i = 1; i < frames.length; i++) {
+    const b = frames[i].vertexData;
+    if (b.length !== a.length) return true;
+    for (let j = 0; j < a.length; j++) {
+      if (Math.abs(a[j] - b[j]) > 1e-6) return true;
+    }
+  }
+  return false;
+}
+
+/** Apply the three.js `(-x, -y, z)` transform to a flat PS2IODB vertex array. */
+export function ps2iodbTransformedShape(vertexData: number[]): number[] {
+  const out = new Array<number>(vertexData.length);
+  for (let i = 0; i < vertexData.length; i += 3) {
+    const [x, y, z] = ps2IconXform(vertexData[i], vertexData[i + 1], vertexData[i + 2]);
+    out[i] = x;
+    out[i + 1] = y;
+    out[i + 2] = z;
+  }
+  return out;
+}
+
+/** glTF morph-weight clip matching PS2IODB animateV1 / animateV2. */
+export function ps2iodbAnimClip(anim: Ps2iodbAnim): { times: number[]; weights: number[] } | null {
+  if (anim.frames.length < 2 || !ps2iodbShapesDiffer(anim.frames)) return null;
+  const nMorph = anim.frames.length - 1;
+  const isV1 = anim.version === undefined;
+  if (isV1) {
+    const times: number[] = [];
+    const weights: number[] = [];
+    for (let i = 0; i <= anim.frames.length; i++) {
+      times.push(i * PS2IODB_V1_SECONDS_PER_FRAME);
+      const w = new Array<number>(nMorph).fill(0);
+      if (i > 0 && i < anim.frames.length) w[i - 1] = 1;
+      weights.push(...w);
+    }
+    return { times, weights };
+  }
+  const speed = anim.animSpeed > 0.001 ? anim.animSpeed : 1;
+  const frameLength = anim.frameLength > 0 ? anim.frameLength : 1;
+  const uniq = new Set<number>([0, frameLength]);
+  for (const frame of anim.frames) {
+    for (const key of frame.keys ?? []) uniq.add(key.time);
+  }
+  const frameTimes = [...uniq].filter((t) => t >= 0 && t <= frameLength).sort((a, b) => a - b);
+  const times: number[] = [];
+  const weights: number[] = [];
+  for (const ft of frameTimes) {
+    times.push(ft / (60 * speed));
+    weights.push(...ps2iodbBlendMorphWeights(anim.frames, ft));
+  }
+  if (times.length >= 2) {
+    const firstW = weights.slice(0, nMorph);
+    const lastW = weights.slice(-nMorph);
+    const same = firstW.every((v, i) => Math.abs(v - lastW[i]) < 1e-5);
+    if (!same) {
+      times.push(frameLength / (60 * speed));
+      weights.push(...firstW);
+    }
+  }
+  return { times, weights };
+}
+
 function morphWeightsAt(icon: Ps2Icon, frameTime: number): number[] {
   const n = icon.animationShapes;
   const shapeW = new Array<number>(n).fill(0);
   for (const frame of icon.frames) {
     const id = Math.min(Math.max(frame.shapeId, 0), n - 1);
-    shapeW[id] += evalKeys(frame.keys, frameTime);
+    shapeW[id] += evalPs2AnimKeys(frame.keys, frameTime);
   }
   const sum = shapeW.reduce((a, b) => a + b, 0);
   if (sum > 0) {
