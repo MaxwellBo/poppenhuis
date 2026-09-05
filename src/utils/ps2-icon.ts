@@ -140,12 +140,19 @@ export function parsePs2Icon(data: Uint8Array): Ps2Icon {
   }
 
   let texture: Uint8Array | null = null;
-  const textured = (textureType & 0b0100) !== 0;
+  const flagged = (textureType & 0b0100) !== 0;
   const compressed = (textureType & 0b1000) !== 0;
-  if (textured) {
-    texture = compressed
+  const remaining = data.length - o;
+  // Bit 2 is "has texture" in the common docs, but several retail icons
+  // (Ace Combat 5, ICO, …) leave it clear and still append a 128×128 TIM.
+  // If a full uncompressed payload is sitting at the end, take it.
+  if (flagged || remaining >= TEX_BYTES) {
+    texture = (compressed && flagged)
       ? decompressTexture(view, o, data.length)
       : readUncompressedTexture(data, o);
+    if (!flagged && textureIsEmpty(texture)) {
+      texture = null;
+    }
   }
 
   return {
@@ -161,6 +168,15 @@ export function parsePs2Icon(data: Uint8Array): Ps2Icon {
     frames,
     texture,
   };
+}
+
+function textureIsEmpty(texture: Uint8Array): boolean {
+  let nonempty = 0;
+  for (let i = 0; i < texture.length; i += 2) {
+    if ((texture[i] | (texture[i + 1] << 8)) !== 0) nonempty++;
+    if (nonempty > 8) return false;
+  }
+  return true;
 }
 
 function readUncompressedTexture(data: Uint8Array, offset: number): Uint8Array {
@@ -233,6 +249,39 @@ function fp(v: number): number {
   return v / FIXED;
 }
 
+/**
+ * PS2 vertex colours are 8-bit channels used as a GS modulate.
+ * 0x80 is 1.0 (the hardware effectively does `texture * color * 2`).
+ * Authors who filled the full 0–255 range meant 255 = 1.0, not 2.0.
+ *
+ * A flat dim grey on a textured icon is almost always leftover lighting
+ * (THPS, GTA, …). Multiplying the TIM by ~0.25 makes the model look
+ * untextured / crushed; skip the modulate in that case.
+ */
+export function ps2VertexColorScale(icon: Pick<Ps2Icon, 'colorData' | 'vertexCount' | 'texture'>): number {
+  let minC = 255;
+  let maxC = 0;
+  let maxChroma = 0;
+  for (let i = 0; i < icon.vertexCount; i++) {
+    const r = icon.colorData[i * 4];
+    const g = icon.colorData[i * 4 + 1];
+    const b = icon.colorData[i * 4 + 2];
+    minC = Math.min(minC, r, g, b);
+    maxC = Math.max(maxC, r, g, b);
+    maxChroma = Math.max(maxChroma, Math.max(r, g, b) - Math.min(r, g, b));
+  }
+  const flat = maxC - minC <= 8;
+  if (icon.texture && flat && maxChroma <= 8 && maxC <= 136) {
+    return 0; // signal: emit white
+  }
+  return maxC > 160 ? 255 : 128;
+}
+
+export function ps2VertexColor(r: number, g: number, b: number, scale: number): [number, number, number] {
+  if (scale === 0) return [1, 1, 1];
+  return [r / scale, g / scale, b / scale];
+}
+
 /** 180° around X so PS2 Y-down becomes glTF Y-up. */
 function xform(x: number, y: number, z: number): [number, number, number] {
   return [x, -y, -z];
@@ -278,6 +327,8 @@ export function ps2IconToGlb(icon: Ps2Icon, name = 'Icon'): Uint8Array {
   const nMorph = Math.max(0, icon.animationShapes - 1);
   const animated = nMorph > 0 && icon.frames.length > 0 && icon.frameLength > 0;
 
+  const colorScale = ps2VertexColorScale(icon);
+
   const positions: number[] = [];
   const morphs: number[][] = Array.from({ length: nMorph }, () => []);
   const normals: number[] = [];
@@ -316,11 +367,13 @@ export function ps2IconToGlb(icon: Ps2Icon, name = 'Icon'): Uint8Array {
     // 1-u mirrored logos (GRAN TURISMO read back-to-front); 1-v flipped them.
     uvs.push(fp(icon.uvData[i * 2]), fp(icon.uvData[i * 2 + 1]));
 
-    // glTF COLOR_0 is linear; PS2 vertex colours are stored in sRGB-ish 8-bit.
-    const r = icon.colorData[i * 4] / 255;
-    const g = icon.colorData[i * 4 + 1] / 255;
-    const bcol = icon.colorData[i * 4 + 2] / 255;
-    colors.push(Math.pow(r, 2.2), Math.pow(g, 2.2), Math.pow(bcol, 2.2));
+    const [cr, cg, cb] = ps2VertexColor(
+      icon.colorData[i * 4],
+      icon.colorData[i * 4 + 1],
+      icon.colorData[i * 4 + 2],
+      colorScale,
+    );
+    colors.push(cr, cg, cb);
   }
 
   let animTimes: number[] = [];

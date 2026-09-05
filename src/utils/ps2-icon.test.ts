@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'fs';
 import { join } from 'path';
-import { parsePs2Icon, parsePsu, parseIconSys, ps2IconToGlb } from './ps2-icon';
+import { parsePs2Icon, parsePsu, parseIconSys, ps2IconToGlb, ps2VertexColor, ps2VertexColorScale } from './ps2-icon';
 
 const fixture = (...parts: string[]) =>
   join(process.cwd(), 'src/utils/testdata/ps2-icon', ...parts);
@@ -21,6 +21,41 @@ describe('parsePs2Icon', () => {
     expect(icon.vertexCount).toBe(564);
     expect(icon.texture).not.toBeNull();
     expect(icon.texture!.length).toBe(128 * 128 * 2);
+  });
+});
+
+describe('ps2VertexColorScale', () => {
+  const colors = (rgb: number[], n: number, texture: Uint8Array | null = new Uint8Array(1)) => ({
+    colorData: Uint8Array.from({ length: n * 4 }, (_, i) => rgb[i % 4]),
+    vertexCount: n,
+    texture,
+  });
+
+  it('treats 0x80 as 1.0 (PS2 GS modulate)', () => {
+    expect(ps2VertexColor(128, 64, 0, 128)).toEqual([1, 0.5, 0]);
+  });
+
+  it('uses 0–255 when authors filled the full range', () => {
+    const scale = ps2VertexColorScale(colors([255, 200, 10, 255], 3));
+    expect(scale).toBe(255);
+    expect(ps2VertexColor(255, 200, 10, scale)[0]).toBe(1);
+  });
+
+  it('does not dim a textured icon that only has flat lighting-grey vertices', () => {
+    // THPS / GTA-style: every vertex is ~80 and the TIM has the real art.
+    expect(ps2VertexColorScale(colors([80, 80, 80, 255], 12))).toBe(0);
+    expect(ps2VertexColor(80, 80, 80, 0)).toEqual([1, 1, 1]);
+  });
+
+  it('keeps per-vertex variation on the 128-scale (Medal of Honor grenade)', () => {
+    const colorData = new Uint8Array(8 * 4);
+    for (let i = 0; i < 8; i++) {
+      colorData[i * 4] = i * 16;
+      colorData[i * 4 + 1] = 40;
+      colorData[i * 4 + 2] = 80;
+      colorData[i * 4 + 3] = 255;
+    }
+    expect(ps2VertexColorScale({ colorData, vertexCount: 8, texture: new Uint8Array(1) })).toBe(128);
   });
 });
 
@@ -66,6 +101,20 @@ describe('ps2IconToGlb', () => {
     expect(json.images).toHaveLength(1);
     expect(json.images[0].mimeType).toBe('image/png');
     expect(glb.byteLength).toBeGreaterThan(1000);
+  });
+
+  it('writes Rez vertex colours at full brightness (not gamma-crushed)', () => {
+    const icon = parsePs2Icon(readFileSync(fixture('rez.ico')));
+    const glb = ps2IconToGlb(icon, 'rez');
+    const view = new DataView(glb.buffer, glb.byteOffset, glb.byteLength);
+    const jsonLen = view.getUint32(12, true);
+    const json = JSON.parse(new TextDecoder().decode(glb.subarray(20, 20 + jsonLen)));
+    const jsonPad = (4 - (jsonLen % 4)) % 4;
+    const binOffset = 20 + jsonLen + jsonPad + 8;
+    const colAcc = json.accessors.find((a: { name?: string }) => a.name === 'COLOR_0');
+    const bv = json.bufferViews[colAcc.bufferView];
+    const r0 = view.getFloat32(binOffset + bv.byteOffset, true);
+    expect(r0).toBeCloseTo(1, 5);
   });
 
   it('writes UVs as authored (glTF top-left matches the PNG)', () => {
