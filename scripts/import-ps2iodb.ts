@@ -3,13 +3,21 @@
  * Import notable PS2 save icons from PS2IODB's exported OBJ + PNG meshes.
  *
  *   npx tsx scripts/import-ps2iodb.ts
+ *   npx tsx scripts/import-ps2iodb.ts --ids baldurs-gate-dark-alliance
  */
 
 import { execFileSync } from 'child_process';
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'fs';
 import { basename, join } from 'path';
 import { GAME_META, PS2IODB_IMPORTS } from './ps2-icon-meta.ts';
-import { ps2VertexColor, ps2VertexColorScale } from '../src/utils/ps2-icon.ts';
+import {
+  parsePs2iodbAnim,
+  ps2iodbAnimClip,
+  ps2iodbObjUvToGltf,
+  ps2iodbTransformedShape,
+  ps2VertexColor,
+  ps2VertexColorScale,
+} from '../src/utils/ps2-icon.ts';
 import { PS2_SAVE_ICONS_COLLECTION } from '../src/ps2-archive.ts';
 import {
   descriptionForPs2iodbSlug,
@@ -68,7 +76,7 @@ function packGlb(json: object, binary: Uint8Array): Uint8Array {
   return out;
 }
 
-function parseObj(text: string): {
+export function parseObj(text: string): {
   positions: number[];
   normals: number[];
   uvs: number[];
@@ -91,7 +99,8 @@ function parseObj(text: string): {
     outPos.push(p[0], p[1], p[2]);
     const nlen = Math.hypot(n[0], n[1], n[2]) || 1;
     outNrm.push(n[0] / nlen, n[1] / nlen, n[2] / nlen);
-    outUv.push(t[0], t[1]);
+    const [u, v] = ps2iodbObjUvToGltf(t[0], t[1]);
+    outUv.push(u, v);
     outCol.push(c[0], c[1], c[2]);
   };
 
@@ -138,7 +147,12 @@ function parseObj(text: string): {
   return { positions: outPos, normals: outNrm, uvs: outUv, colors: outCol };
 }
 
-function objToGlb(objText: string, png: Uint8Array | null, name: string): Uint8Array {
+export function objToGlb(
+  objText: string,
+  png: Uint8Array | null,
+  name: string,
+  animText?: string | null,
+): Uint8Array {
   const mesh = parseObj(objText);
   const vCount = mesh.positions.length / 3;
   if (vCount < 3) throw new Error('OBJ has no triangles');
@@ -165,6 +179,38 @@ function objToGlb(objText: string, png: Uint8Array | null, name: string): Uint8A
     posMax[0] = Math.max(posMax[0], x); posMax[1] = Math.max(posMax[1], y); posMax[2] = Math.max(posMax[2], z);
   }
 
+  const anim = animText ? parsePs2iodbAnim(animText) : null;
+  const clip = anim ? ps2iodbAnimClip(anim) : null;
+  const canMorph = clip !== null
+    && anim !== null
+    && anim.frames[0].vertexData.length === mesh.positions.length;
+  const nMorph = canMorph && anim ? anim.frames.length - 1 : 0;
+  const morphs: number[][] = [];
+  const morphMin: number[][] = [];
+  const morphMax: number[][] = [];
+  if (canMorph && anim) {
+    const base = ps2iodbTransformedShape(anim.frames[0].vertexData);
+    for (let s = 1; s < anim.frames.length; s++) {
+      const shape = ps2iodbTransformedShape(anim.frames[s].vertexData);
+      const delta = new Array<number>(shape.length);
+      const mn = [Infinity, Infinity, Infinity];
+      const mx = [-Infinity, -Infinity, -Infinity];
+      for (let i = 0; i < vCount; i++) {
+        const dx = shape[i * 3] - base[i * 3];
+        const dy = shape[i * 3 + 1] - base[i * 3 + 1];
+        const dz = shape[i * 3 + 2] - base[i * 3 + 2];
+        delta[i * 3] = dx;
+        delta[i * 3 + 1] = dy;
+        delta[i * 3 + 2] = dz;
+        mn[0] = Math.min(mn[0], dx); mn[1] = Math.min(mn[1], dy); mn[2] = Math.min(mn[2], dz);
+        mx[0] = Math.max(mx[0], dx); mx[1] = Math.max(mx[1], dy); mx[2] = Math.max(mx[2], dz);
+      }
+      morphs.push(delta);
+      morphMin.push(mn);
+      morphMax.push(mx);
+    }
+  }
+
   const binParts: Uint8Array[] = [];
   const views: Array<{ offset: number; length: number; stride?: number; target?: number }> = [];
   let binOffset = 0;
@@ -177,9 +223,18 @@ function objToGlb(objText: string, png: Uint8Array | null, name: string): Uint8A
   };
 
   const posView = addView(new Uint8Array(new Float32Array(mesh.positions).buffer), 12, 34962);
+  const morphViews = morphs.map((m) =>
+    addView(new Uint8Array(new Float32Array(m).buffer), 12, 34962)
+  );
   const nrmView = addView(new Uint8Array(new Float32Array(mesh.normals).buffer), 12, 34962);
   const uvView = addView(new Uint8Array(new Float32Array(mesh.uvs).buffer), 8, 34962);
   const colView = addView(new Uint8Array(new Float32Array(colors).buffer), 12, 34962);
+  let timeView = -1;
+  let weightView = -1;
+  if (canMorph && clip) {
+    timeView = addView(new Uint8Array(new Float32Array(clip.times).buffer));
+    weightView = addView(new Uint8Array(new Float32Array(clip.weights).buffer));
+  }
   let imgView = -1;
   if (png) imgView = addView(png);
 
@@ -194,6 +249,62 @@ function objToGlb(objText: string, png: Uint8Array | null, name: string): Uint8A
   };
   if (png) (material.pbrMetallicRoughness as Record<string, unknown>).baseColorTexture = { index: 0 };
 
+  const accessors: object[] = [
+    { name: 'POSITION', bufferView: posView, componentType: 5126, count: vCount, type: 'VEC3', min: posMin, max: posMax },
+  ];
+  for (let i = 0; i < nMorph; i++) {
+    accessors.push({
+      name: `MORPH_${i}`,
+      bufferView: morphViews[i],
+      componentType: 5126,
+      count: vCount,
+      type: 'VEC3',
+      min: morphMin[i],
+      max: morphMax[i],
+    });
+  }
+  const nrmAcc = accessors.length;
+  accessors.push({ name: 'NORMAL', bufferView: nrmView, componentType: 5126, count: vCount, type: 'VEC3' });
+  const uvAcc = accessors.length;
+  accessors.push({ name: 'TEXCOORD_0', bufferView: uvView, componentType: 5126, count: vCount, type: 'VEC2' });
+  const colAcc = accessors.length;
+  accessors.push({ name: 'COLOR_0', bufferView: colView, componentType: 5126, count: vCount, type: 'VEC3' });
+  let timeAcc = -1;
+  let weightAcc = -1;
+  if (canMorph && clip) {
+    timeAcc = accessors.length;
+    accessors.push({
+      name: 'animTime',
+      bufferView: timeView,
+      componentType: 5126,
+      count: clip.times.length,
+      type: 'SCALAR',
+      min: [clip.times[0]],
+      max: [clip.times[clip.times.length - 1]],
+    });
+    weightAcc = accessors.length;
+    accessors.push({
+      name: 'animWeights',
+      bufferView: weightView,
+      componentType: 5126,
+      count: clip.weights.length,
+      type: 'SCALAR',
+    });
+  }
+
+  const primitive: Record<string, unknown> = {
+    attributes: {
+      POSITION: 0,
+      NORMAL: nrmAcc,
+      TEXCOORD_0: uvAcc,
+      COLOR_0: colAcc,
+    },
+    material: 0,
+  };
+  if (nMorph > 0) {
+    primitive.targets = morphViews.map((_, i) => ({ POSITION: 1 + i }));
+  }
+
   const gltf: Record<string, unknown> = {
     asset: { version: '2.0', generator: 'poppenhuis ps2-icon-to-glb' },
     extensionsUsed: ['KHR_materials_unlit'],
@@ -202,18 +313,11 @@ function objToGlb(objText: string, png: Uint8Array | null, name: string): Uint8A
     nodes: [{ mesh: 0, name }],
     meshes: [{
       name,
-      primitives: [{
-        attributes: { POSITION: 0, NORMAL: 1, TEXCOORD_0: 2, COLOR_0: 3 },
-        material: 0,
-      }],
+      primitives: [primitive],
+      weights: nMorph > 0 ? new Array(nMorph).fill(0) : undefined,
     }],
     materials: [material],
-    accessors: [
-      { name: 'POSITION', bufferView: posView, componentType: 5126, count: vCount, type: 'VEC3', min: posMin, max: posMax },
-      { name: 'NORMAL', bufferView: nrmView, componentType: 5126, count: vCount, type: 'VEC3' },
-      { name: 'TEXCOORD_0', bufferView: uvView, componentType: 5126, count: vCount, type: 'VEC2' },
-      { name: 'COLOR_0', bufferView: colView, componentType: 5126, count: vCount, type: 'VEC3' },
-    ],
+    accessors,
     bufferViews: views.map((v) => ({
       buffer: 0,
       byteOffset: v.offset,
@@ -228,10 +332,17 @@ function objToGlb(objText: string, png: Uint8Array | null, name: string): Uint8A
     gltf.samplers = [{ magFilter: 9728, minFilter: 9728, wrapS: 33071, wrapT: 33071 }];
     gltf.textures = [{ source: 0, sampler: 0 }];
   }
+  if (canMorph && timeAcc >= 0) {
+    gltf.animations = [{
+      name: 'idle',
+      samplers: [{ input: timeAcc, output: weightAcc, interpolation: 'LINEAR' }],
+      channels: [{ sampler: 0, target: { node: 0, path: 'weights' } }],
+    }];
+  }
   return packGlb(gltf, bin);
 }
 
-function pickObj(dir: string): { obj: string; png: string | null; formalName: string } | null {
+function pickObj(dir: string): { obj: string; png: string | null; anim: string | null; formalName: string } | null {
   const files = readdirSync(dir);
   const objs = files.filter((f) => f.endsWith('.obj'));
   if (objs.length === 0) return null;
@@ -246,9 +357,11 @@ function pickObj(dir: string): { obj: string; png: string | null; formalName: st
   const objName = objs.includes(preferred) ? preferred : objs.sort()[0];
   const stem = objName.replace(/\.obj$/, '');
   const pngName = files.includes(`${stem}.png`) ? `${stem}.png` : files.find((f) => f.endsWith('.png')) ?? null;
+  const animName = files.includes(`${stem}.anim`) ? `${stem}.anim` : files.find((f) => f.endsWith('.anim')) ?? null;
   return {
     obj: join(dir, objName),
     png: pngName ? join(dir, pngName) : null,
+    anim: animName ? join(dir, animName) : null,
     formalName: stem,
   };
 }
@@ -327,17 +440,37 @@ function ensureSparseCheckout(slugs: string[]) {
   execFileSync('git', ['-C', SPARSE, 'sparse-checkout', 'set', ...paths], { stdio: 'inherit' });
 }
 
+function parseArgs(argv: string[]): { refreshIds: Set<string> | null } {
+  const idIdx = argv.indexOf('--ids');
+  const refreshIds = idIdx >= 0
+    ? new Set(argv[idIdx + 1]?.split(',').filter(Boolean) ?? [])
+    : null;
+  return { refreshIds };
+}
+
 function main() {
+  const { refreshIds } = parseArgs(process.argv.slice(2));
   console.log('Loading PS2IODB contributor credits...');
   const bySlug = loadPs2iodbContributorsBySlug();
 
   const existingIds = new Set(PS2_SAVE_ICONS_COLLECTION.items.map((i) => i.id));
-  const wanted = PS2IODB_IMPORTS.filter((t) => !existingIds.has(t.id));
+  const wanted = PS2IODB_IMPORTS.filter((t) => {
+    if (refreshIds) return refreshIds.has(t.id);
+    return !existingIds.has(t.id);
+  });
+  if (refreshIds) {
+    for (const id of refreshIds) {
+      if (!PS2IODB_IMPORTS.some((t) => t.id === id)) {
+        console.warn(`unknown id ${id}`);
+      }
+    }
+  }
   console.log(`Importing ${wanted.length} PS2IODB icons (${existingIds.size} already in archive)`);
   ensureSparseCheckout(wanted.map((t) => t.slug));
 
   mkdirSync(GOLDENS, { recursive: true });
   const added: ArchiveItem[] = [];
+  const refreshed = new Map<string, Partial<ArchiveItem>>();
 
   for (const title of wanted) {
     const dir = join(SPARSE, 'website/public/icons', title.slug);
@@ -352,12 +485,38 @@ function main() {
     }
     const objText = readFileSync(picked.obj, 'utf8');
     const png = picked.png ? new Uint8Array(readFileSync(picked.png)) : null;
+    const animText = picked.anim ? readFileSync(picked.anim, 'utf8') : null;
     const filename = `${ASSET_PREFIX}_${title.id}.glb`;
     const outPath = join(GOLDENS, filename);
+    let animated = false;
+    let animShapes = 0;
+    let animVerts = 0;
     try {
-      writeFileSync(outPath, objToGlb(objText, png, picked.formalName));
+      writeFileSync(outPath, objToGlb(objText, png, picked.formalName, animText));
+      if (animText) {
+        const anim = parsePs2iodbAnim(animText);
+        const mesh = parseObj(objText);
+        animated = ps2iodbAnimClip(anim) !== null
+          && anim.frames[0].vertexData.length === mesh.positions.length;
+        animShapes = anim.frames.length;
+        animVerts = mesh.positions.length / 3;
+      }
     } catch (err) {
       console.warn(`convert failed ${title.slug}: ${(err as Error).message}`);
+      continue;
+    }
+    const material = animated
+      ? ['PS2 icon mesh', '128×128 texture', 'vertex morph animation']
+      : ['PS2 icon mesh', '128×128 texture'];
+    const captureMethod = animated
+      ? 'Converted from PS2IODB-exported icon mesh with vertex animation'
+      : 'Converted from PS2IODB-exported icon mesh';
+    const customFields = animated
+      ? { shapes: String(animShapes), vertices: String(animVerts), frames: String(animShapes) }
+      : undefined;
+    if (existingIds.has(title.id)) {
+      refreshed.set(title.id, { captureMethod, material, customFields });
+      console.log(`${animated ? 'anim' : 'upd '} ${title.id.padEnd(36)} ${basename(picked.obj)}`);
       continue;
     }
     const game = GAME_META[title.id];
@@ -374,14 +533,18 @@ function main() {
       releaseDate: game?.releaseDate,
       acquisitionDate: '2026 September 5',
       storageLocation: `https://ps2iodb.com/icon/${title.slug}`,
-      captureMethod: 'Converted from PS2IODB-exported icon mesh',
-      material: ['PS2 icon mesh', '128×128 texture'],
+      captureMethod,
+      material,
+      customFields,
     });
-    console.log(`ok   ${title.id.padEnd(36)} ${basename(picked.obj)}`);
+    console.log(`${animated ? 'anim' : 'ok  '} ${title.id.padEnd(36)} ${basename(picked.obj)}`);
   }
 
   const items: ArchiveItem[] = [
-    ...PS2_SAVE_ICONS_COLLECTION.items.map((item) => ({ ...item })),
+    ...PS2_SAVE_ICONS_COLLECTION.items.map((item) => {
+      const patch = refreshed.get(item.id);
+      return patch ? { ...item, ...patch } : { ...item };
+    }),
     ...added,
   ].map((item) => withPs2iodbDescription(item, bySlug));
   items.sort((a, b) => a.name.localeCompare(b.name));
@@ -390,4 +553,10 @@ function main() {
   console.log(`\nWrote ${added.length} new GLBs; archive now has ${items.length} items (${credited} with PS2IODB credits)`);
 }
 
-main();
+const isDirectRun = process.argv[1] && (
+  process.argv[1].endsWith('import-ps2iodb.ts') ||
+  process.argv[1].endsWith('import-ps2iodb.js')
+);
+if (isDirectRun) {
+  main();
+}
