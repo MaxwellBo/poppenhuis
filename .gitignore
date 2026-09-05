@@ -3,3 +3,13 @@
 node_modules
 dist/
 .DS_Store
+
+# Bazel
+/bazel-*
+user.bazelrc
+.ijwb
+
+# Python
+__pycache__/
+*.py[cod]
+

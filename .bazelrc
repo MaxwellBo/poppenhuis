@@ -1,0 +1,11 @@
+common --enable_bzlmod
+common --registry=https://bcr.bazel.build
+
+# Host tools (Blender, usdcat, usdzip, npm) live on PATH.
+build --incompatible_strict_action_env=false
+
+test --test_output=errors
+test --test_summary=short
+
+# USDZ / Blender actions are tagged `manual` so they are omitted from
+# `bazel build //...` unless requested by name (they need host tools).

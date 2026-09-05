@@ -7,6 +7,7 @@ Can handle single model or multi-model grid layouts.
 import bpy
 import sys
 import os
+import math
 import argparse
 from pathlib import Path
 
@@ -393,6 +394,24 @@ def render_single_model(model_path, output_path, output_width=1200, output_heigh
     
     print(f"✅ Rendered: {output_path}")
 
+def calculate_optimal_grid_cols(num_models, width, height):
+    """Match render.ts: landscape grids prefer more columns."""
+    if num_models <= 1:
+        return 1
+    aspect_ratio = width / height
+    ideal_cols = math.sqrt(num_models * aspect_ratio)
+    if aspect_ratio > 1.3:
+        cols = math.ceil(ideal_cols * 1.1)
+    else:
+        cols = round(ideal_cols)
+    min_cols = 2
+    max_cols = num_models
+    calculated_rows = math.ceil(num_models / max(cols, 1))
+    if aspect_ratio > 1.3 and calculated_rows > cols * 0.8:
+        cols = math.ceil(math.sqrt(num_models * aspect_ratio) * 1.2)
+    return max(min_cols, min(int(cols), max_cols))
+
+
 def render_multiple_models(model_paths, output_path, output_width=1200, output_height=630, grid_cols=5):
     """Render multiple GLB models in a grid layout."""
     scene, camera = setup_scene(output_width, output_height)
@@ -448,8 +467,8 @@ def main():
                        help='Output width (default: 1200)')
     parser.add_argument('--height', type=int, default=630,
                        help='Output height (default: 630)')
-    parser.add_argument('--grid-cols', type=int, default=5,
-                       help='Number of columns for multi-model grid (default: 5)')
+    parser.add_argument('--grid-cols', type=int, default=None,
+                       help='Number of columns for multi-model grid (default: aspect-aware)')
     parser.add_argument('models', nargs='+',
                        help='GLB model file paths')
     
@@ -472,7 +491,10 @@ def main():
         else:
             if len(args.models) < 1:
                 raise ValueError("Multi mode requires at least one model")
-            render_multiple_models(args.models, output_path, args.width, args.height, args.grid_cols)
+            grid_cols = args.grid_cols
+            if grid_cols is None:
+                grid_cols = calculate_optimal_grid_cols(len(args.models), args.width, args.height)
+            render_multiple_models(args.models, output_path, args.width, args.height, grid_cols)
     except Exception as e:
         print(f"❌ Error: {e}", file=sys.stderr)
         sys.exit(1)

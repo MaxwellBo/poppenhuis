@@ -1,0 +1,57 @@
+exports_files([
+    "render_blender.py",
+    "render.ts",
+    "package.json",
+    "package-lock.json",
+    "index.html",
+    "vite.config.ts",
+    "tsconfig.json",
+])
+
+alias(
+    name = "derived",
+    actual = "//public/assets:install_derived",
+    tags = ["manual"],
+)
+
+alias(
+    name = "usdz",
+    actual = "//public/assets:install_usdz",
+    tags = ["manual"],
+)
+
+alias(
+    name = "posters",
+    actual = "//public/assets:install_posters",
+    tags = ["manual"],
+)
+
+alias(
+    name = "ds_store",
+    actual = "//public/assets:install_ds_store",
+)
+
+alias(
+    name = "render",
+    actual = "//tools:render",
+)
+
+alias(
+    name = "ps2_icon",
+    actual = "//tools:ps2_icon_to_glb",
+)
+
+alias(
+    name = "dev",
+    actual = "//tools:dev",
+)
+
+alias(
+    name = "site",
+    actual = "//tools:site",
+)
+
+alias(
+    name = "lint",
+    actual = "//tools:lint",
+)

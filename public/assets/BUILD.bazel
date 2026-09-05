@@ -1,0 +1,65 @@
+load("//tools:assets.bzl", "derive_assets")
+load("//tools:sync.bzl", "sync_to_source")
+
+package(default_visibility = ["//visibility:public"])
+
+filegroup(
+    name = "goldens",
+    srcs = glob(["goldens/*.glb"]),
+)
+
+filegroup(
+    name = "hidden_ds_store",
+    srcs = ["goldens/.DS_Store"],  # explicit path: globs skip dotfiles
+)
+
+genrule(
+    name = "ds_store",
+    srcs = [":hidden_ds_store"],
+    outs = ["DS_Store.generated"],
+    cmd = "cp $< $@",
+)
+
+sync_to_source(
+    name = "install_ds_store",
+    srcs = [":ds_store"],
+    dest = "public/assets/goldens",
+    filename = "DS_Store",
+)
+
+derive_assets()
+
+sync_to_source(
+    name = "install_usdz",
+    srcs = [":usdz"],
+    dest = "public/assets/derived",
+    tags = ["manual", "local", "no-remote"],
+)
+
+sync_to_source(
+    name = "install_posters",
+    srcs = [":posters"],
+    dest = "public/assets/derived",
+    tags = ["manual", "local", "no-remote"],
+)
+
+sync_to_source(
+    name = "install_user_ogs",
+    srcs = [":user_ogs"],
+    dest = "public/assets/derived",
+    tags = ["manual", "local", "no-remote"],
+)
+
+sync_to_source(
+    name = "install_collection_ogs",
+    srcs = [":collection_ogs"],
+    dest = "public/assets/derived",
+    tags = ["manual", "local", "no-remote"],
+)
+
+sync_to_source(
+    name = "install_derived",
+    srcs = [":derived"],
+    dest = "public/assets/derived",
+    tags = ["manual", "local", "no-remote"],
+)

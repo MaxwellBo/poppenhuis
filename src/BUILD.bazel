@@ -1,0 +1,4 @@
+exports_files([
+    "manifest.ts",
+    "ps2-archive.ts",
+])

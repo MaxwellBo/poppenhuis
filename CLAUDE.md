@@ -15,6 +15,12 @@ Poppenhuis is a "digital dollhouse" web application that displays 3D models in c
 - `npm run lint` - Runs ESLint to check for code quality issues
 - `npm run preview` - Previews the production build locally
 
+Derived assets (USDZ, posters, OG images) are a Bazel graph. See `MAINTENANCE.md`.
+
+- `bazel test //tools/...` - Pipeline unit tests
+- `bazel run //:derived` - Generate USDZ + posters + OG images into `public/assets/derived/`
+- `bazel run //:ds_store` - Copy `goldens/.DS_Store` to a Netlify-servable `DS_Store`
+
 ### Testing
 
 - `npm test` - Run tests using Vitest

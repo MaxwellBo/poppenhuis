@@ -1,4 +1,8 @@
 #!/bin/bash
+# Prefer Bazel (incremental, one action per GLB):
+#   bazel run //public/assets:install_usdz
+#
+# This script remains as a no-Bazel fallback.
 
 # Convert all GLB files in public/assets/goldens to USDZ format in public/assets/derived
 # Example: public/assets/goldens/jackie_cakes_brat.glb -> public/assets/derived/jackie_cakes_brat.usdz

@@ -1,4 +1,6 @@
 #!/bin/bash
+# Prefer Bazel: bazel run //:ds_store
+# This script remains as a no-Bazel fallback.
 
 # Copy the hidden .DS_Store file to the visible DS_Store file
 # so that Netlify can serve it (since Netlify doesn't serve hidden files)

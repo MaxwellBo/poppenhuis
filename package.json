@@ -15,7 +15,11 @@
     "render:all": "npm run render -- all",
     "render:users": "npm run render -- users",
     "render:collections": "npm run render -- collections",
-    "render:test": "npm run render -- test"
+    "render:test": "npm run render -- test",
+    "derived": "bazel run //:derived",
+    "derived:usdz": "bazel run //:usdz",
+    "derived:posters": "bazel run //:posters",
+    "derived:ds-store": "bazel run //:ds_store"
   },
   "dependencies": {
     "@google/model-viewer": "^4.3.1",

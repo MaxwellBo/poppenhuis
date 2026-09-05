@@ -14,11 +14,13 @@ from __future__ import annotations
 
 import json
 import math
+import os
 import struct
 import sys
 from pathlib import Path
 
-GOLDENS = Path('public/assets/goldens')
+ROOT = Path(os.environ.get("BUILD_WORKSPACE_DIRECTORY", "."))
+GOLDENS = ROOT / 'public' / 'assets' / 'goldens'
 
 
 def load_glb(path: Path):

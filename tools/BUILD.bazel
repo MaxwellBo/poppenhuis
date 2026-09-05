@@ -1,0 +1,103 @@
+load("@rules_python//python:defs.bzl", "py_binary", "py_test")
+load("@rules_shell//shell:sh_binary.bzl", "sh_binary")
+
+exports_files([
+    "usdconvert.sh",
+    "blender_render.sh",
+    "og_groups.bzl",
+])
+
+sh_binary(
+    name = "usdconvert",
+    srcs = ["usdconvert.sh"],
+    visibility = ["//visibility:public"],
+)
+
+sh_binary(
+    name = "blender_render",
+    srcs = ["blender_render.sh"],
+    visibility = ["//visibility:public"],
+)
+
+py_binary(
+    name = "emit_og_groups",
+    srcs = ["emit_og_groups.py"],
+    imports = ["."],
+    data = [
+        "//src:manifest.ts",
+        "//src:ps2-archive.ts",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+py_test(
+    name = "emit_og_groups_test",
+    srcs = [
+        "emit_og_groups.py",
+        "emit_og_groups_test.py",
+    ],
+    imports = ["."],
+    main = "emit_og_groups_test.py",
+    size = "small",
+    data = [
+        "og_groups.bzl",
+        "//src:manifest.ts",
+        "//src:ps2-archive.ts",
+    ],
+)
+
+py_test(
+    name = "host_scripts_test",
+    srcs = ["host_scripts_test.py"],
+    size = "small",
+    data = [
+        "blender_render.sh",
+        "usdconvert.sh",
+    ],
+)
+
+sh_binary(
+    name = "ps2_icon_to_glb",
+    srcs = ["run_ps2_icon_to_glb.sh"],
+    visibility = ["//visibility:public"],
+)
+
+sh_binary(
+    name = "render",
+    srcs = ["run_render.sh"],
+    visibility = ["//visibility:public"],
+)
+
+sh_binary(
+    name = "repair_ps2_icons",
+    srcs = ["run_repair_ps2_icons.sh"],
+    visibility = ["//visibility:public"],
+)
+
+sh_binary(
+    name = "dev",
+    srcs = ["run_npm.sh"],
+    args = ["run", "dev"],
+    visibility = ["//visibility:public"],
+)
+
+sh_binary(
+    name = "site",
+    srcs = ["run_npm.sh"],
+    args = ["run", "build"],
+    visibility = ["//visibility:public"],
+)
+
+sh_binary(
+    name = "lint",
+    srcs = ["run_npm.sh"],
+    args = ["run", "lint"],
+    visibility = ["//visibility:public"],
+)
+
+sh_binary(
+    name = "vitest",
+    srcs = ["run_npm.sh"],
+    args = ["test", "--", "--run"],
+    visibility = ["//visibility:public"],
+)

@@ -1,0 +1,22 @@
+name: Bazel
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: bazelbuild/setup-bazelisk@v3
+      - name: Test pipeline
+        run: bazel test //tools/...
+      - name: Build non-host-tool targets
+        run: bazel build //public/assets:goldens //public/assets:ds_store
+      - name: Asset graph exists
+        run: |
+          count=$(bazel query 'kind("glb_to_usdz rule", //public/assets:*)' | wc -l)
+          echo "usd targets: $count"
+          test "$count" -ge 200
