@@ -3,6 +3,7 @@
  * Import notable PS2 save icons from PS2IODB's exported OBJ + PNG meshes.
  *
  *   npx tsx scripts/import-ps2iodb.ts
+ *   npx tsx scripts/import-ps2iodb.ts --attribution-only
  */
 
 import { execFileSync } from 'child_process';
@@ -11,6 +12,13 @@ import { basename, join } from 'path';
 import { GAME_META, PS2IODB_IMPORTS } from './ps2-icon-meta.ts';
 import { ps2VertexColor, ps2VertexColorScale } from '../src/utils/ps2-icon.ts';
 import { PS2_SAVE_ICONS_COLLECTION } from '../src/ps2-archive.ts';
+import {
+  descriptionForPs2iodbSlug,
+  parsePs2iodbContributors,
+  parsePs2iodbTitleContributors,
+  ps2iodbSlugFromStorage,
+  type Ps2iodbContributor,
+} from '../src/utils/ps2iodb-attribution.ts';
 
 const REPO = 'https://github.com/Issung/PS2IODB.git';
 const SPARSE = '/tmp/ps2iodb';
@@ -26,6 +34,7 @@ interface ArchiveItem {
   usdzModel?: string;
   og?: string;
   alt?: string;
+  description?: string;
   formalName?: string;
   manufacturer?: string;
   manufactureLocation?: string;
@@ -258,6 +267,7 @@ function emitItem(item: ArchiveItem): string {
     item.usdzModel ? `        usdzModel: ${tsString(item.usdzModel)},` : '',
     item.og ? `        og: ${tsString(item.og)},` : '',
     item.alt ? `        alt: ${tsString(item.alt)},` : '',
+    item.description ? `        description: ${tsString(item.description)},` : '',
     item.formalName ? `        formalName: ${tsString(item.formalName)},` : '',
     item.manufacturer ? `        manufacturer: ${tsString(item.manufacturer)},` : '',
     item.manufactureLocation ? `        manufactureLocation: ${tsString(item.manufactureLocation)},` : '',
@@ -287,6 +297,29 @@ ${items.map(emitItem).join(',\n')}
 `;
 }
 
+const TITLES_URL = 'https://raw.githubusercontent.com/Issung/PS2IODB/main/website/src/model/Titles.ts';
+const CONTRIBUTORS_URL = 'https://raw.githubusercontent.com/Issung/PS2IODB/main/website/src/model/Contributors.ts';
+
+function loadPs2iodbContributorsBySlug(): Map<string, Ps2iodbContributor[]> {
+  const titles = execFileSync('curl', ['-fsSL', TITLES_URL], { encoding: 'utf8' });
+  const contributorsSrc = execFileSync('curl', ['-fsSL', CONTRIBUTORS_URL], { encoding: 'utf8' });
+  return parsePs2iodbTitleContributors(titles, parsePs2iodbContributors(contributorsSrc));
+}
+
+function withPs2iodbDescription(
+  item: ArchiveItem,
+  bySlug: Map<string, Ps2iodbContributor[]>,
+): ArchiveItem {
+  const slug = ps2iodbSlugFromStorage(item.storageLocation);
+  if (!slug) return item;
+  const description = descriptionForPs2iodbSlug(slug, bySlug);
+  if (!description) {
+    console.warn(`no PS2IODB contributors for ${slug} (${item.id})`);
+    return item;
+  }
+  return { ...item, description };
+}
+
 function ensureSparseCheckout(slugs: string[]) {
   if (!existsSync(join(SPARSE, '.git'))) {
     console.log('Cloning PS2IODB (sparse)...');
@@ -297,59 +330,65 @@ function ensureSparseCheckout(slugs: string[]) {
 }
 
 function main() {
-  const existingIds = new Set(PS2_SAVE_ICONS_COLLECTION.items.map((i) => i.id));
-  const wanted = PS2IODB_IMPORTS.filter((t) => !existingIds.has(t.id));
-  console.log(`Importing ${wanted.length} PS2IODB icons (${existingIds.size} already in archive)`);
-  ensureSparseCheckout(wanted.map((t) => t.slug));
+  const attributionOnly = process.argv.includes('--attribution-only');
+  console.log('Loading PS2IODB contributor credits...');
+  const bySlug = loadPs2iodbContributorsBySlug();
 
-  mkdirSync(GOLDENS, { recursive: true });
   const added: ArchiveItem[] = [];
+  if (!attributionOnly) {
+    const existingIds = new Set(PS2_SAVE_ICONS_COLLECTION.items.map((i) => i.id));
+    const wanted = PS2IODB_IMPORTS.filter((t) => !existingIds.has(t.id));
+    console.log(`Importing ${wanted.length} PS2IODB icons (${existingIds.size} already in archive)`);
+    ensureSparseCheckout(wanted.map((t) => t.slug));
 
-  for (const title of wanted) {
-    const dir = join(SPARSE, 'website/public/icons', title.slug);
-    if (!existsSync(dir)) {
-      console.warn(`missing ${title.slug}`);
-      continue;
+    mkdirSync(GOLDENS, { recursive: true });
+
+    for (const title of wanted) {
+      const dir = join(SPARSE, 'website/public/icons', title.slug);
+      if (!existsSync(dir)) {
+        console.warn(`missing ${title.slug}`);
+        continue;
+      }
+      const picked = pickObj(dir);
+      if (!picked) {
+        console.warn(`no OBJ in ${title.slug}`);
+        continue;
+      }
+      const objText = readFileSync(picked.obj, 'utf8');
+      const png = picked.png ? new Uint8Array(readFileSync(picked.png)) : null;
+      const filename = `${ASSET_PREFIX}_${title.id}.glb`;
+      const outPath = join(GOLDENS, filename);
+      try {
+        writeFileSync(outPath, objToGlb(objText, png, picked.formalName));
+      } catch (err) {
+        console.warn(`convert failed ${title.slug}: ${(err as Error).message}`);
+        continue;
+      }
+      const game = GAME_META[title.id];
+      added.push({
+        id: title.id,
+        name: title.name,
+        model: `/assets/goldens/${filename}`,
+        usdzModel: `/assets/derived/${ASSET_PREFIX}_${title.id}.usdz`,
+        og: `/assets/derived/${ASSET_PREFIX}_${title.id}.png`,
+        alt: `PlayStation 2 memory card icon for ${title.name}`,
+        formalName: picked.formalName,
+        manufacturer: game?.manufacturer ?? 'various PlayStation 2 developers',
+        manufactureLocation: game?.manufactureLocation,
+        releaseDate: game?.releaseDate,
+        acquisitionDate: '2026 September 5',
+        storageLocation: `https://ps2iodb.com/icon/${title.slug}`,
+        captureMethod: 'Converted from PS2IODB-exported icon mesh',
+        material: ['PS2 icon mesh', '128×128 texture'],
+      });
+      console.log(`ok   ${title.id.padEnd(36)} ${basename(picked.obj)}`);
     }
-    const picked = pickObj(dir);
-    if (!picked) {
-      console.warn(`no OBJ in ${title.slug}`);
-      continue;
-    }
-    const objText = readFileSync(picked.obj, 'utf8');
-    const png = picked.png ? new Uint8Array(readFileSync(picked.png)) : null;
-    const filename = `${ASSET_PREFIX}_${title.id}.glb`;
-    const outPath = join(GOLDENS, filename);
-    try {
-      writeFileSync(outPath, objToGlb(objText, png, picked.formalName));
-    } catch (err) {
-      console.warn(`convert failed ${title.slug}: ${(err as Error).message}`);
-      continue;
-    }
-    const game = GAME_META[title.id];
-    added.push({
-      id: title.id,
-      name: title.name,
-      model: `/assets/goldens/${filename}`,
-      usdzModel: `/assets/derived/${ASSET_PREFIX}_${title.id}.usdz`,
-      og: `/assets/derived/${ASSET_PREFIX}_${title.id}.png`,
-      alt: `PlayStation 2 memory card icon for ${title.name}`,
-      formalName: picked.formalName,
-      manufacturer: game?.manufacturer ?? 'various PlayStation 2 developers',
-      manufactureLocation: game?.manufactureLocation,
-      releaseDate: game?.releaseDate,
-      acquisitionDate: '2026 September 5',
-      storageLocation: `https://ps2iodb.com/icon/${title.slug}`,
-      captureMethod: 'Converted from PS2IODB-exported icon mesh',
-      material: ['PS2 icon mesh', '128×128 texture'],
-    });
-    console.log(`ok   ${title.id.padEnd(36)} ${basename(picked.obj)}`);
   }
 
   const items: ArchiveItem[] = [
     ...PS2_SAVE_ICONS_COLLECTION.items.map((item) => ({ ...item })),
     ...added,
-  ];
+  ].map((item) => withPs2iodbDescription(item, bySlug));
   items.sort((a, b) => {
     const ai = PINNED_IDS.indexOf(a.id);
     const bi = PINNED_IDS.indexOf(b.id);
@@ -361,7 +400,12 @@ function main() {
     return a.name.localeCompare(b.name);
   });
   writeFileSync('src/ps2-archive.ts', emitArchive(items));
-  console.log(`\nWrote ${added.length} new GLBs; archive now has ${items.length} items`);
+  const credited = items.filter((item) => item.description).length;
+  if (attributionOnly) {
+    console.log(`Wrote contributor descriptions for ${credited} of ${items.length} archive items`);
+  } else {
+    console.log(`\nWrote ${added.length} new GLBs; archive now has ${items.length} items (${credited} with PS2IODB credits)`);
+  }
 }
 
 main();
