@@ -473,17 +473,7 @@ function batch(root: string) {
     }
   }
 
-  const PINNED_IDS = ['jak-and-daxter', 'jak-ii', 'jak-3'];
-  items.sort((a, b) => {
-    const ai = PINNED_IDS.indexOf(a.id);
-    const bi = PINNED_IDS.indexOf(b.id);
-    if (ai !== -1 || bi !== -1) {
-      if (ai === -1) return 1;
-      if (bi === -1) return -1;
-      return ai - bi;
-    }
-    return a.name.localeCompare(b.name);
-  });
+  items.sort((a, b) => a.name.localeCompare(b.name));
   writeFileSync('src/ps2-archive.ts', emitManifest(items));
   console.log(`\nWrote ${items.length} GLBs and src/ps2-archive.ts`);
 }

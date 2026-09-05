@@ -3,7 +3,7 @@
  * Import notable PS2 save icons from PS2IODB's exported OBJ + PNG meshes.
  *
  *   npx tsx scripts/import-ps2iodb.ts
- *   npx tsx scripts/import-ps2iodb.ts --attribution-only
+ *   npx tsx scripts/import-ps2iodb.ts --ids baldurs-gate-dark-alliance
  */
 
 import { execFileSync } from 'child_process';
@@ -32,7 +32,6 @@ const SPARSE = '/tmp/ps2iodb';
 const GOLDENS = 'public/assets/goldens';
 const ASSET_PREFIX = 'ps2_save-icons';
 const COLLECTION_ID = 'ps2-save-icons';
-const PINNED_IDS = ['jak-and-daxter', 'jak-ii', 'jak-3'];
 
 interface ArchiveItem {
   id: string;
@@ -441,107 +440,104 @@ function ensureSparseCheckout(slugs: string[]) {
   execFileSync('git', ['-C', SPARSE, 'sparse-checkout', 'set', ...paths], { stdio: 'inherit' });
 }
 
-function parseArgs(argv: string[]): { attributionOnly: boolean; refreshIds: Set<string> | null } {
-  const attributionOnly = argv.includes('--attribution-only');
+function parseArgs(argv: string[]): { refreshIds: Set<string> | null } {
   const idIdx = argv.indexOf('--ids');
   const refreshIds = idIdx >= 0
     ? new Set(argv[idIdx + 1]?.split(',').filter(Boolean) ?? [])
     : null;
-  return { attributionOnly, refreshIds };
+  return { refreshIds };
 }
 
 function main() {
-  const { attributionOnly, refreshIds } = parseArgs(process.argv.slice(2));
+  const { refreshIds } = parseArgs(process.argv.slice(2));
   console.log('Loading PS2IODB contributor credits...');
   const bySlug = loadPs2iodbContributorsBySlug();
 
+  const existingIds = new Set(PS2_SAVE_ICONS_COLLECTION.items.map((i) => i.id));
+  const wanted = PS2IODB_IMPORTS.filter((t) => {
+    if (refreshIds) return refreshIds.has(t.id);
+    return !existingIds.has(t.id);
+  });
+  if (refreshIds) {
+    for (const id of refreshIds) {
+      if (!PS2IODB_IMPORTS.some((t) => t.id === id)) {
+        console.warn(`unknown id ${id}`);
+      }
+    }
+  }
+  console.log(`Importing ${wanted.length} PS2IODB icons (${existingIds.size} already in archive)`);
+  ensureSparseCheckout(wanted.map((t) => t.slug));
+
+  mkdirSync(GOLDENS, { recursive: true });
   const added: ArchiveItem[] = [];
   const refreshed = new Map<string, Partial<ArchiveItem>>();
-  if (!attributionOnly) {
-    const existingIds = new Set(PS2_SAVE_ICONS_COLLECTION.items.map((i) => i.id));
-    const wanted = PS2IODB_IMPORTS.filter((t) => {
-      if (refreshIds) return refreshIds.has(t.id);
-      return !existingIds.has(t.id);
+
+  for (const title of wanted) {
+    const dir = join(SPARSE, 'website/public/icons', title.slug);
+    if (!existsSync(dir)) {
+      console.warn(`missing ${title.slug}`);
+      continue;
+    }
+    const picked = pickObj(dir);
+    if (!picked) {
+      console.warn(`no OBJ in ${title.slug}`);
+      continue;
+    }
+    const objText = readFileSync(picked.obj, 'utf8');
+    const png = picked.png ? new Uint8Array(readFileSync(picked.png)) : null;
+    const animText = picked.anim ? readFileSync(picked.anim, 'utf8') : null;
+    const filename = `${ASSET_PREFIX}_${title.id}.glb`;
+    const outPath = join(GOLDENS, filename);
+    let animated = false;
+    let animShapes = 0;
+    let animVerts = 0;
+    try {
+      writeFileSync(outPath, objToGlb(objText, png, picked.formalName, animText));
+      if (animText) {
+        const anim = parsePs2iodbAnim(animText);
+        const mesh = parseObj(objText);
+        animated = ps2iodbAnimClip(anim) !== null
+          && anim.frames[0].vertexData.length === mesh.positions.length;
+        animShapes = anim.frames.length;
+        animVerts = mesh.positions.length / 3;
+      }
+    } catch (err) {
+      console.warn(`convert failed ${title.slug}: ${(err as Error).message}`);
+      continue;
+    }
+    const material = animated
+      ? ['PS2 icon mesh', '128×128 texture', 'vertex morph animation']
+      : ['PS2 icon mesh', '128×128 texture'];
+    const captureMethod = animated
+      ? 'Converted from PS2IODB-exported icon mesh with vertex animation'
+      : 'Converted from PS2IODB-exported icon mesh';
+    const customFields = animated
+      ? { shapes: String(animShapes), vertices: String(animVerts), frames: String(animShapes) }
+      : undefined;
+    if (existingIds.has(title.id)) {
+      refreshed.set(title.id, { captureMethod, material, customFields });
+      console.log(`${animated ? 'anim' : 'upd '} ${title.id.padEnd(36)} ${basename(picked.obj)}`);
+      continue;
+    }
+    const game = GAME_META[title.id];
+    added.push({
+      id: title.id,
+      name: title.name,
+      model: `/assets/goldens/${filename}`,
+      usdzModel: `/assets/derived/${ASSET_PREFIX}_${title.id}.usdz`,
+      og: `/assets/derived/${ASSET_PREFIX}_${title.id}.png`,
+      alt: `PlayStation 2 memory card icon for ${title.name}`,
+      formalName: picked.formalName,
+      manufacturer: game?.manufacturer ?? 'various PlayStation 2 developers',
+      manufactureLocation: game?.manufactureLocation,
+      releaseDate: game?.releaseDate,
+      acquisitionDate: '2026 September 5',
+      storageLocation: `https://ps2iodb.com/icon/${title.slug}`,
+      captureMethod,
+      material,
+      customFields,
     });
-    if (refreshIds) {
-      for (const id of refreshIds) {
-        if (!PS2IODB_IMPORTS.some((t) => t.id === id)) {
-          console.warn(`unknown id ${id}`);
-        }
-      }
-    }
-    console.log(`Importing ${wanted.length} PS2IODB icons (${existingIds.size} already in archive)`);
-    ensureSparseCheckout(wanted.map((t) => t.slug));
-
-    mkdirSync(GOLDENS, { recursive: true });
-
-    for (const title of wanted) {
-      const dir = join(SPARSE, 'website/public/icons', title.slug);
-      if (!existsSync(dir)) {
-        console.warn(`missing ${title.slug}`);
-        continue;
-      }
-      const picked = pickObj(dir);
-      if (!picked) {
-        console.warn(`no OBJ in ${title.slug}`);
-        continue;
-      }
-      const objText = readFileSync(picked.obj, 'utf8');
-      const png = picked.png ? new Uint8Array(readFileSync(picked.png)) : null;
-      const animText = picked.anim ? readFileSync(picked.anim, 'utf8') : null;
-      const filename = `${ASSET_PREFIX}_${title.id}.glb`;
-      const outPath = join(GOLDENS, filename);
-      let animated = false;
-      let animShapes = 0;
-      let animVerts = 0;
-      try {
-        writeFileSync(outPath, objToGlb(objText, png, picked.formalName, animText));
-        if (animText) {
-          const anim = parsePs2iodbAnim(animText);
-          const mesh = parseObj(objText);
-          animated = ps2iodbAnimClip(anim) !== null
-            && anim.frames[0].vertexData.length === mesh.positions.length;
-          animShapes = anim.frames.length;
-          animVerts = mesh.positions.length / 3;
-        }
-      } catch (err) {
-        console.warn(`convert failed ${title.slug}: ${(err as Error).message}`);
-        continue;
-      }
-      const material = animated
-        ? ['PS2 icon mesh', '128×128 texture', 'vertex morph animation']
-        : ['PS2 icon mesh', '128×128 texture'];
-      const captureMethod = animated
-        ? 'Converted from PS2IODB-exported icon mesh with vertex animation'
-        : 'Converted from PS2IODB-exported icon mesh';
-      const customFields = animated
-        ? { shapes: String(animShapes), vertices: String(animVerts), frames: String(animShapes) }
-        : undefined;
-      if (existingIds.has(title.id)) {
-        refreshed.set(title.id, { captureMethod, material, customFields });
-        console.log(`${animated ? 'anim' : 'upd '} ${title.id.padEnd(36)} ${basename(picked.obj)}`);
-        continue;
-      }
-      const game = GAME_META[title.id];
-      added.push({
-        id: title.id,
-        name: title.name,
-        model: `/assets/goldens/${filename}`,
-        usdzModel: `/assets/derived/${ASSET_PREFIX}_${title.id}.usdz`,
-        og: `/assets/derived/${ASSET_PREFIX}_${title.id}.png`,
-        alt: `PlayStation 2 memory card icon for ${title.name}`,
-        formalName: picked.formalName,
-        manufacturer: game?.manufacturer ?? 'various PlayStation 2 developers',
-        manufactureLocation: game?.manufactureLocation,
-        releaseDate: game?.releaseDate,
-        acquisitionDate: '2026 September 5',
-        storageLocation: `https://ps2iodb.com/icon/${title.slug}`,
-        captureMethod,
-        material,
-        customFields,
-      });
-      console.log(`${animated ? 'anim' : 'ok  '} ${title.id.padEnd(36)} ${basename(picked.obj)}`);
-    }
+    console.log(`${animated ? 'anim' : 'ok  '} ${title.id.padEnd(36)} ${basename(picked.obj)}`);
   }
 
   const items: ArchiveItem[] = [
@@ -551,23 +547,10 @@ function main() {
     }),
     ...added,
   ].map((item) => withPs2iodbDescription(item, bySlug));
-  items.sort((a, b) => {
-    const ai = PINNED_IDS.indexOf(a.id);
-    const bi = PINNED_IDS.indexOf(b.id);
-    if (ai !== -1 || bi !== -1) {
-      if (ai === -1) return 1;
-      if (bi === -1) return -1;
-      return ai - bi;
-    }
-    return a.name.localeCompare(b.name);
-  });
+  items.sort((a, b) => a.name.localeCompare(b.name));
   writeFileSync('src/ps2-archive.ts', emitArchive(items));
   const credited = items.filter((item) => item.description).length;
-  if (attributionOnly) {
-    console.log(`Wrote contributor descriptions for ${credited} of ${items.length} archive items`);
-  } else {
-    console.log(`\nWrote ${added.length} new GLBs; archive now has ${items.length} items (${credited} with PS2IODB credits)`);
-  }
+  console.log(`\nWrote ${added.length} new GLBs; archive now has ${items.length} items (${credited} with PS2IODB credits)`);
 }
 
 const isDirectRun = process.argv[1] && (
