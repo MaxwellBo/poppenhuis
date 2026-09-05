@@ -1,4 +1,4 @@
-import * as yaml from 'js-yaml';
+import * as yaml from './yaml.ts';
 
 // Firebase REST API configuration
 const FIREBASE_PROJECT_ID = 'poppenhu-is';
@@ -240,7 +240,7 @@ export interface Item {
 }
 `;
 
-import { PS2_SAVE_ICONS_COLLECTION } from './ps2-archive';
+import { PS2_SAVE_ICONS_COLLECTION } from './ps2-archive.ts';
 
 export const FIRST_PARTY_MANIFEST: Manifest = [
   // {
