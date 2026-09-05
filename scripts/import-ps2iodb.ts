@@ -24,7 +24,6 @@ const SPARSE = '/tmp/ps2iodb';
 const GOLDENS = 'public/assets/goldens';
 const ASSET_PREFIX = 'ps2_save-icons';
 const COLLECTION_ID = 'ps2-save-icons';
-const PINNED_IDS = ['jak-and-daxter', 'jak-ii', 'jak-3'];
 
 interface ArchiveItem {
   id: string;
@@ -385,16 +384,7 @@ function main() {
     ...PS2_SAVE_ICONS_COLLECTION.items.map((item) => ({ ...item })),
     ...added,
   ].map((item) => withPs2iodbDescription(item, bySlug));
-  items.sort((a, b) => {
-    const ai = PINNED_IDS.indexOf(a.id);
-    const bi = PINNED_IDS.indexOf(b.id);
-    if (ai !== -1 || bi !== -1) {
-      if (ai === -1) return 1;
-      if (bi === -1) return -1;
-      return ai - bi;
-    }
-    return a.name.localeCompare(b.name);
-  });
+  items.sort((a, b) => a.name.localeCompare(b.name));
   writeFileSync('src/ps2-archive.ts', emitArchive(items));
   const credited = items.filter((item) => item.description).length;
   console.log(`\nWrote ${added.length} new GLBs; archive now has ${items.length} items (${credited} with PS2IODB credits)`);

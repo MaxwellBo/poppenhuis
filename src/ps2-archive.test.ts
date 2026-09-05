@@ -3,6 +3,11 @@ import { PS2_SAVE_ICONS_COLLECTION } from './ps2-archive';
 import { ps2iodbSlugFromStorage } from './utils/ps2iodb-attribution';
 
 describe('PS2 save-icon archive', () => {
+  it('lists items alphabetically by name', () => {
+    const names = PS2_SAVE_ICONS_COLLECTION.items.map((item) => item.name);
+    expect(names).toEqual([...names].sort((a, b) => a.localeCompare(b)));
+  });
+
   it('puts PS2IODB contributor attribution in the description field', () => {
     const fromPs2iodb = PS2_SAVE_ICONS_COLLECTION.items.filter((item) =>
       ps2iodbSlugFromStorage(item.storageLocation),
