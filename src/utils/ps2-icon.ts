@@ -282,9 +282,22 @@ export function ps2VertexColor(r: number, g: number, b: number, scale: number): 
   return [r / scale, g / scale, b / scale];
 }
 
-/** 180° around X so PS2 Y-down becomes glTF Y-up. */
-function xform(x: number, y: number, z: number): [number, number, number] {
-  return [x, -y, -z];
+/**
+ * Vertex transform used by PS2IODB's three.js ModelViewRenderer (animateV1/V2)
+ * and OBJ exporter: `(-x, -y, z)`. That is Y-up with the same facing as
+ * https://ps2iodb.com — 180° around Y relative to a pure Y-down→Y-up flip.
+ */
+export function ps2IconXform(x: number, y: number, z: number): [number, number, number] {
+  return [-x, -y, z];
+}
+
+/**
+ * PS2IODB's OBJ exporter writes a vertically flipped PNG (OpenGL, `y = 127 - row`).
+ * Three.js undoes that with Texture.flipY when loading OBJ/MTL. glTF samples
+ * images from the top-left with flipY disabled, so invert V to match.
+ */
+export function ps2iodbObjUvToGltf(u: number, v: number): [number, number] {
+  return [u, 1 - v];
 }
 
 function evalKeys(keys: FrameKey[], t: number): number {
@@ -341,14 +354,14 @@ export function ps2IconToGlb(icon: Ps2Icon, name = 'Icon'): Uint8Array {
 
   for (let i = 0; i < vCount; i++) {
     const b = (0 * vCount + i) * 3;
-    const [x, y, z] = xform(fp(icon.vertexData[b]), fp(icon.vertexData[b + 1]), fp(icon.vertexData[b + 2]));
+    const [x, y, z] = ps2IconXform(fp(icon.vertexData[b]), fp(icon.vertexData[b + 1]), fp(icon.vertexData[b + 2]));
     positions.push(x, y, z);
     posMin[0] = Math.min(posMin[0], x); posMin[1] = Math.min(posMin[1], y); posMin[2] = Math.min(posMin[2], z);
     posMax[0] = Math.max(posMax[0], x); posMax[1] = Math.max(posMax[1], y); posMax[2] = Math.max(posMax[2], z);
 
     for (let s = 1; s <= nMorph; s++) {
       const so = (s * vCount + i) * 3;
-      const [sx, sy, sz] = xform(fp(icon.vertexData[so]), fp(icon.vertexData[so + 1]), fp(icon.vertexData[so + 2]));
+      const [sx, sy, sz] = ps2IconXform(fp(icon.vertexData[so]), fp(icon.vertexData[so + 1]), fp(icon.vertexData[so + 2]));
       const dx = sx - x;
       const dy = sy - y;
       const dz = sz - z;
@@ -359,7 +372,7 @@ export function ps2IconToGlb(icon: Ps2Icon, name = 'Icon'): Uint8Array {
       mx[0] = Math.max(mx[0], dx); mx[1] = Math.max(mx[1], dy); mx[2] = Math.max(mx[2], dz);
     }
 
-    const [nx, ny, nz] = xform(fp(icon.normalData[i * 3]), fp(icon.normalData[i * 3 + 1]), fp(icon.normalData[i * 3 + 2]));
+    const [nx, ny, nz] = ps2IconXform(fp(icon.normalData[i * 3]), fp(icon.normalData[i * 3 + 1]), fp(icon.normalData[i * 3 + 2]));
     const nlen = Math.hypot(nx, ny, nz) || 1;
     normals.push(nx / nlen, ny / nlen, nz / nlen);
 

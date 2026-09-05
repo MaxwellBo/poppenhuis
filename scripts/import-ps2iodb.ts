@@ -10,7 +10,7 @@ import { execFileSync } from 'child_process';
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'fs';
 import { basename, join } from 'path';
 import { GAME_META, PS2IODB_IMPORTS } from './ps2-icon-meta.ts';
-import { ps2VertexColor, ps2VertexColorScale } from '../src/utils/ps2-icon.ts';
+import { ps2iodbObjUvToGltf, ps2VertexColor, ps2VertexColorScale } from '../src/utils/ps2-icon.ts';
 import { PS2_SAVE_ICONS_COLLECTION } from '../src/ps2-archive.ts';
 import {
   descriptionForPs2iodbSlug,
@@ -70,7 +70,7 @@ function packGlb(json: object, binary: Uint8Array): Uint8Array {
   return out;
 }
 
-function parseObj(text: string): {
+export function parseObj(text: string): {
   positions: number[];
   normals: number[];
   uvs: number[];
@@ -93,7 +93,8 @@ function parseObj(text: string): {
     outPos.push(p[0], p[1], p[2]);
     const nlen = Math.hypot(n[0], n[1], n[2]) || 1;
     outNrm.push(n[0] / nlen, n[1] / nlen, n[2] / nlen);
-    outUv.push(t[0], t[1]);
+    const [u, v] = ps2iodbObjUvToGltf(t[0], t[1]);
+    outUv.push(u, v);
     outCol.push(c[0], c[1], c[2]);
   };
 
@@ -140,7 +141,7 @@ function parseObj(text: string): {
   return { positions: outPos, normals: outNrm, uvs: outUv, colors: outCol };
 }
 
-function objToGlb(objText: string, png: Uint8Array | null, name: string): Uint8Array {
+export function objToGlb(objText: string, png: Uint8Array | null, name: string): Uint8Array {
   const mesh = parseObj(objText);
   const vCount = mesh.positions.length / 3;
   if (vCount < 3) throw new Error('OBJ has no triangles');
@@ -329,15 +330,34 @@ function ensureSparseCheckout(slugs: string[]) {
   execFileSync('git', ['-C', SPARSE, 'sparse-checkout', 'set', ...paths], { stdio: 'inherit' });
 }
 
+function parseArgs(argv: string[]): { attributionOnly: boolean; refreshIds: Set<string> | null } {
+  const attributionOnly = argv.includes('--attribution-only');
+  const idIdx = argv.indexOf('--ids');
+  const refreshIds = idIdx >= 0
+    ? new Set(argv[idIdx + 1]?.split(',').filter(Boolean) ?? [])
+    : null;
+  return { attributionOnly, refreshIds };
+}
+
 function main() {
-  const attributionOnly = process.argv.includes('--attribution-only');
+  const { attributionOnly, refreshIds } = parseArgs(process.argv.slice(2));
   console.log('Loading PS2IODB contributor credits...');
   const bySlug = loadPs2iodbContributorsBySlug();
 
   const added: ArchiveItem[] = [];
   if (!attributionOnly) {
     const existingIds = new Set(PS2_SAVE_ICONS_COLLECTION.items.map((i) => i.id));
-    const wanted = PS2IODB_IMPORTS.filter((t) => !existingIds.has(t.id));
+    const wanted = PS2IODB_IMPORTS.filter((t) => {
+      if (refreshIds) return refreshIds.has(t.id);
+      return !existingIds.has(t.id);
+    });
+    if (refreshIds) {
+      for (const id of refreshIds) {
+        if (!PS2IODB_IMPORTS.some((t) => t.id === id)) {
+          console.warn(`unknown id ${id}`);
+        }
+      }
+    }
     console.log(`Importing ${wanted.length} PS2IODB icons (${existingIds.size} already in archive)`);
     ensureSparseCheckout(wanted.map((t) => t.slug));
 
@@ -362,6 +382,10 @@ function main() {
         writeFileSync(outPath, objToGlb(objText, png, picked.formalName));
       } catch (err) {
         console.warn(`convert failed ${title.slug}: ${(err as Error).message}`);
+        continue;
+      }
+      if (existingIds.has(title.id)) {
+        console.log(`upd  ${title.id.padEnd(36)} ${basename(picked.obj)}`);
         continue;
       }
       const game = GAME_META[title.id];
@@ -408,4 +432,10 @@ function main() {
   }
 }
 
-main();
+const isDirectRun = process.argv[1] && (
+  process.argv[1].endsWith('import-ps2iodb.ts') ||
+  process.argv[1].endsWith('import-ps2iodb.js')
+);
+if (isDirectRun) {
+  main();
+}

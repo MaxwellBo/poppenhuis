@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'fs';
 import { join } from 'path';
-import { parsePs2Icon, parsePsu, parseIconSys, ps2IconToGlb, ps2VertexColor, ps2VertexColorScale } from './ps2-icon';
+import { parsePs2Icon, parsePsu, parseIconSys, ps2IconToGlb, ps2VertexColor, ps2VertexColorScale, ps2IconXform, ps2iodbObjUvToGltf } from './ps2-icon';
 
 const fixture = (...parts: string[]) =>
   join(process.cwd(), 'src/utils/testdata/ps2-icon', ...parts);
@@ -131,5 +131,33 @@ describe('ps2IconToGlb', () => {
     const v0 = view.getFloat32(binOffset + bv.byteOffset + 4, true);
     expect(u0).toBeCloseTo(icon.uvData[0] / 4096, 5);
     expect(v0).toBeCloseTo(icon.uvData[1] / 4096, 5);
+  });
+
+  it('applies the PS2IODB three.js vertex transform (-x, -y, z)', () => {
+    const icon = parsePs2Icon(readFileSync(fixture('rez.ico')));
+    const glb = ps2IconToGlb(icon, 'rez');
+    const view = new DataView(glb.buffer, glb.byteOffset, glb.byteLength);
+    const jsonLen = view.getUint32(12, true);
+    const json = JSON.parse(new TextDecoder().decode(glb.subarray(20, 20 + jsonLen)));
+    const jsonPad = (4 - (jsonLen % 4)) % 4;
+    const binOffset = 20 + jsonLen + jsonPad + 8;
+    const posAcc = json.accessors.find((a: { name?: string }) => a.name === 'POSITION');
+    const bv = json.bufferViews[posAcc.bufferView];
+    const x = view.getFloat32(binOffset + bv.byteOffset, true);
+    const y = view.getFloat32(binOffset + bv.byteOffset + 4, true);
+    const z = view.getFloat32(binOffset + bv.byteOffset + 8, true);
+    const [ex, ey, ez] = ps2IconXform(icon.vertexData[0] / 4096, icon.vertexData[1] / 4096, icon.vertexData[2] / 4096);
+    expect(x).toBeCloseTo(ex, 5);
+    expect(y).toBeCloseTo(ey, 5);
+    expect(z).toBeCloseTo(ez, 5);
+    expect(ps2IconXform(1, 2, 3)).toEqual([-1, -2, 3]);
+  });
+});
+
+describe('ps2iodbObjUvToGltf', () => {
+  it('inverts V so OpenGL-flipped PS2IODB PNGs sample correctly in glTF', () => {
+    expect(ps2iodbObjUvToGltf(0.25, 0.75)).toEqual([0.25, 0.25]);
+    expect(ps2iodbObjUvToGltf(0, 0)).toEqual([0, 1]);
+    expect(ps2iodbObjUvToGltf(1, 1)).toEqual([1, 0]);
   });
 });
