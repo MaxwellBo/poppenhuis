@@ -1,8 +1,7 @@
 /** Per-game studio, city, and first PlayStation 2 release. */
 
 export const COLLECTION_DESCRIPTION =
-  "Every PlayStation 2 save wrote a tiny 3D model to the memory card. Open the browser and they sat in a grid under a spotlight — skateboards, raccoon heads, brake discs — each with its own vertex animation. Converted from the original `.ico` format; vertex animations are morph-target weight tracks so they play in the model viewer.\n\n" +
-  "Most icons were extracted from completed save files in [Savegames Completed for PS2](https://archive.org/details/100-completed) on the Internet Archive. The Rez icon comes from [mymcplus](https://github.com/int-0/mymcplus) test data.";
+  "[https://www.youtube.com/watch?v=AIcuALGM1TI&t=40s](https://www.youtube.com/watch?v=AIcuALGM1TI&t=40s)\n\n[https://vt.tiktok.com/ZSqNJo4Nn/](https://vt.tiktok.com/ZSqNJo4Nn/)";
 
 export interface GameMeta {
   manufacturer: string;

@@ -100,7 +100,6 @@ interface ConvertedItem {
   name: string;
   model: string;
   alt: string;
-  description: string;
   formalName?: string;
   manufacturer: string;
   manufactureLocation?: string;
@@ -207,11 +206,12 @@ function emitManifest(items: ConvertedItem[]): string {
       `        usdzModel: ${tsString(item.model.replace('/assets/goldens/', '/assets/derived/').replace(/\.glb$/, '.usdz'))},`,
       `        og: ${tsString(item.model.replace('/assets/goldens/', '/assets/derived/').replace(/\.glb$/, '.png'))},`,
       `        alt: ${tsString(item.alt)},`,
-      `        description: ${tsString(item.description)},`,
       item.formalName ? `        formalName: ${tsString(item.formalName)},` : '',
       `        manufacturer: ${tsString(item.manufacturer)},`,
       item.manufactureLocation ? `        manufactureLocation: ${tsString(item.manufactureLocation)},` : '',
       item.releaseDate ? `        releaseDate: ${tsString(item.releaseDate)},` : '',
+      `        acquisitionDate: "2026 September 4",`,
+      `        storageLocation: ${tsString(item.id === 'rez' ? 'https://github.com/int-0/mymcplus' : 'https://archive.org/details/100-completed')},`,
       `        captureMethod: ${tsString(item.captureMethod)},`,
       `        material: ${JSON.stringify(item.material)},`,
       `        customFields: { shapes: ${tsString(item.customFields.shapes)}, vertices: ${tsString(item.customFields.vertices)}, frames: ${tsString(item.customFields.frames)} },`,
@@ -297,9 +297,6 @@ function batch(root: string) {
         name,
         model: `/assets/goldens/${filename}`,
         alt: `PlayStation 2 memory card icon for ${name}`,
-        description: animated
-          ? `The 3D icon the PlayStation 2 browser showed for this save. ${entry.icon.animationShapes} vertex shapes, blended across ${entry.icon.frames.length} animation frames.`
-          : `The 3D icon the PlayStation 2 browser showed for this save.`,
         formalName: entry.filename,
         manufacturer: game?.manufacturer ?? 'various PlayStation 2 developers',
         manufactureLocation: game?.manufactureLocation,
@@ -318,7 +315,17 @@ function batch(root: string) {
     }
   }
 
-  items.sort((a, b) => a.name.localeCompare(b.name));
+  const PINNED_IDS = ['jak-and-daxter', 'jak-ii', 'jak-3'];
+  items.sort((a, b) => {
+    const ai = PINNED_IDS.indexOf(a.id);
+    const bi = PINNED_IDS.indexOf(b.id);
+    if (ai !== -1 || bi !== -1) {
+      if (ai === -1) return 1;
+      if (bi === -1) return -1;
+      return ai - bi;
+    }
+    return a.name.localeCompare(b.name);
+  });
   writeFileSync('src/ps2-archive.ts', emitManifest(items));
   console.log(`\nWrote ${items.length} GLBs and src/ps2-archive.ts`);
 }

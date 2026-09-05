@@ -59,7 +59,7 @@ export function DescriptionList(props: DescriptionListProps) {
       <hr className="break" />
       <hr className="break" />
       <dt>{ITEM_FIELD_SCHEMAS.storageLocation.label}</dt>
-      <dd>{item.storageLocation}</dd>
+      <dd className='ellipsis'>{item.storageLocation?.startsWith('http') ? <a href={item.storageLocation}>{item.storageLocation}</a> : item.storageLocation}</dd>
       <hr className="break" />
       <hr className="break" />
       <dt>{ITEM_FIELD_SCHEMAS.captureDate.label}</dt>
