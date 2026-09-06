@@ -513,8 +513,9 @@ export const PS2_SAVE_ICONS_COLLECTION = {
         releaseDate: "2001 May 17",
         acquisitionDate: "2026 September 5",
         storageLocation: "https://ps2iodb.com/icon/crazytaxi",
-        captureMethod: "Converted from PS2IODB-exported icon mesh",
-        material: ["PS2 icon mesh","128×128 texture"],
+        captureMethod: "Converted from PS2IODB-exported icon mesh with vertex animation",
+        material: ["PS2 icon mesh","128×128 texture","vertex morph animation"],
+        customFields: { shapes: "6", vertices: "1326", frames: "6" },
       },
       {
         id: "dark-chronicle",
