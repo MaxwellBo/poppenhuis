@@ -4,6 +4,7 @@
  *
  *   npx tsx scripts/import-ps2iodb.ts
  *   npx tsx scripts/import-ps2iodb.ts --ids baldurs-gate-dark-alliance
+ *   npx tsx scripts/import-ps2iodb.ts --refresh
  */
 
 import { execFileSync } from 'child_process';
@@ -440,22 +441,24 @@ function ensureSparseCheckout(slugs: string[]) {
   execFileSync('git', ['-C', SPARSE, 'sparse-checkout', 'set', ...paths], { stdio: 'inherit' });
 }
 
-function parseArgs(argv: string[]): { refreshIds: Set<string> | null } {
+function parseArgs(argv: string[]): { refreshIds: Set<string> | null; refreshAll: boolean } {
+  const refreshAll = argv.includes('--refresh');
   const idIdx = argv.indexOf('--ids');
   const refreshIds = idIdx >= 0
     ? new Set(argv[idIdx + 1]?.split(',').filter(Boolean) ?? [])
     : null;
-  return { refreshIds };
+  return { refreshIds, refreshAll };
 }
 
 function main() {
-  const { refreshIds } = parseArgs(process.argv.slice(2));
+  const { refreshIds, refreshAll } = parseArgs(process.argv.slice(2));
   console.log('Loading PS2IODB contributor credits...');
   const bySlug = loadPs2iodbContributorsBySlug();
 
   const existingIds = new Set(PS2_SAVE_ICONS_COLLECTION.items.map((i) => i.id));
   const wanted = PS2IODB_IMPORTS.filter((t) => {
     if (refreshIds) return refreshIds.has(t.id);
+    if (refreshAll) return existingIds.has(t.id);
     return !existingIds.has(t.id);
   });
   if (refreshIds) {
@@ -515,7 +518,9 @@ function main() {
       ? { shapes: String(animShapes), vertices: String(animVerts), frames: String(animShapes) }
       : undefined;
     if (existingIds.has(title.id)) {
-      refreshed.set(title.id, { captureMethod, material, customFields });
+      const patch: Partial<ArchiveItem> = { captureMethod, material };
+      if (customFields) patch.customFields = customFields;
+      refreshed.set(title.id, patch);
       console.log(`${animated ? 'anim' : 'upd '} ${title.id.padEnd(36)} ${basename(picked.obj)}`);
       continue;
     }
@@ -543,7 +548,12 @@ function main() {
   const items: ArchiveItem[] = [
     ...PS2_SAVE_ICONS_COLLECTION.items.map((item) => {
       const patch = refreshed.get(item.id);
-      return patch ? { ...item, ...patch } : { ...item };
+      if (!patch) return { ...item };
+      const next = { ...item, ...patch };
+      if (!patch.customFields && !next.material?.includes('vertex morph animation')) {
+        delete next.customFields;
+      }
+      return next;
     }),
     ...added,
   ].map((item) => withPs2iodbDescription(item, bySlug));

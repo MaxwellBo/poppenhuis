@@ -260,7 +260,7 @@ export const GAME_META: Record<string, GameMeta> = {
   'zone-of-the-enders': { manufacturer: 'Konami Computer Entertainment Japan', manufactureLocation: 'Tokyo, Japan', releaseDate: '2001 March 1' },
 };
 
-/** Notable PS2IODB slugs to import as static meshes (one icon per title). */
+/** Notable PS2IODB slugs to import (one icon per title). */
 export const PS2IODB_IMPORTS: Array<{ id: string; slug: string; name: string }> = [
   { id: 'ace-combat-zero', slug: 'acecombatzero', name: 'Ace Combat Zero' },
   { id: 'armored-core-3', slug: 'armoredcore3', name: 'Armored Core 3' },
