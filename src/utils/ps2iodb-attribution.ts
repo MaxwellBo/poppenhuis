@@ -39,7 +39,7 @@ export function parsePs2iodbTitleContributors(
   contributorsByKey: Record<string, Ps2iodbContributor>,
 ): Map<string, Ps2iodbContributor[]> {
   const bySlug = new Map<string, Ps2iodbContributor[]>();
-  const re = /[`']([A-Za-z0-9_-]+)[`']\s*,\s*[123]\s*,\s*(\[[^\]]*Contributors\.[^\]]*\]|Contributors\.\w+)/g;
+  const re = /[`']([A-Za-z0-9_.+-]+)[`']\s*,\s*[123]\s*,\s*(\[[^\]]*Contributors\.[^\]]*\]|Contributors\.\w+)/g;
   for (const match of titlesSource.matchAll(re)) {
     const slug = match[1];
     const keys = [...match[2].matchAll(/Contributors\.(\w+)/g)].map((m) => m[1]);
@@ -59,4 +59,44 @@ export function descriptionForPs2iodbSlug(
   const contributors = bySlug.get(slug);
   if (!contributors?.length) return undefined;
   return formatPs2iodbContributorDescription(contributors);
+}
+
+/** One contributed PS2IODB icon: folder slug plus the game/icon names from Titles.ts. */
+export interface Ps2iodbTitle {
+  slug: string;
+  gameName: string;
+  iconName: string;
+}
+
+export function displayNameForPs2iodbTitle(title: Ps2iodbTitle): string {
+  return title.iconName === title.gameName
+    ? title.gameName
+    : `${title.gameName} (${title.iconName})`;
+}
+
+/**
+ * Map PS2IODB icon slug (the `/icon/:code` path) to game and icon names.
+ * Covers `new Game(\`Name\`, \`slug\`, …)` and nested `new Icon(g, \`Name\`, \`slug\`, …)`.
+ */
+export function parsePs2iodbTitles(source: string): Map<string, Ps2iodbTitle> {
+  const bySlug = new Map<string, Ps2iodbTitle>();
+  const chunks = source.split(/new Game\(/);
+  for (const chunk of chunks.slice(1)) {
+    const nameMatch = chunk.match(/^\s*`([^`]+)`/);
+    if (!nameMatch) continue;
+    const gameName = nameMatch[1];
+    const rest = chunk.slice(nameMatch[0].length);
+    const slugMatch = rest.match(/^\s*,\s*(?:`([^`]+)`|'([^']+)')/);
+    if (slugMatch) {
+      const slug = slugMatch[1] ?? slugMatch[2];
+      bySlug.set(slug, { slug, gameName, iconName: gameName });
+      continue;
+    }
+    const iconRe = /new Icon\(\s*g\s*,\s*`([^`]+)`\s*,\s*(?:`([^`]+)`|'([^']+)')/g;
+    for (const iconMatch of chunk.matchAll(iconRe)) {
+      const slug = iconMatch[2] ?? iconMatch[3];
+      bySlug.set(slug, { slug, gameName, iconName: iconMatch[1] });
+    }
+  }
+  return bySlug;
 }
