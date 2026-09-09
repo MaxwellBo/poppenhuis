@@ -1425,6 +1425,49 @@ My abject failure to use them properly convinced me to stick to the classical gu
         ]
       }
     ]
+  },
+  {
+    id: "hamish",
+    name: "Hamish",
+    collections: [
+      {
+        id: "3ds-home-menu",
+        name: "3DS Home Menu",
+        description: "Nintendo 3DS HOME menu banners, converted from Hamish's 3DS save / banner files with `3ds-banner-cli`.",
+        items: [
+          {
+            id: "oot-3d",
+            name: "Ocarina of Time 3D",
+            formalName: "The Legend of Zelda: Ocarina of Time 3D",
+            alt: "Nintendo 3DS HOME menu 3D banner for The Legend of Zelda: Ocarina of Time 3D",
+            manufacturer: "Nintendo",
+            releaseDate: "2011 June 19",
+            model: "/assets/goldens/hamish_3ds-home-menu_oot-3d.glb",
+            captureMethod: "Converted from 3DS HOME menu banner",
+            captureApp: "3ds-banner-cli",
+            material: ["CGFX banner mesh", "PICA vertex colours"],
+            customFields: {
+              animation: "HOME Menu",
+              resource: "USA_EN",
+            },
+          },
+          {
+            id: "super-mario-3d-land",
+            name: "Super Mario 3D Land",
+            alt: "Nintendo 3DS HOME menu 3D banner for Super Mario 3D Land",
+            manufacturer: "Nintendo",
+            releaseDate: "2011 November 13",
+            model: "/assets/goldens/hamish_3ds-home-menu_super-mario-3d-land.glb",
+            captureMethod: "Converted from 3DS HOME menu banner",
+            captureApp: "3ds-banner-cli",
+            material: ["CGFX banner mesh", "PICA vertex colours"],
+            customFields: {
+              animation: "HOME Menu",
+            },
+          },
+        ]
+      }
+    ]
   }
 ];
 
@@ -1489,24 +1532,27 @@ async function loadFirebaseUsers(): Promise<User[]> {
     return [];
   }
   
-  const result = Object.values(users).map(firebaseUser => {
-    // Convert collections from Record to Array format
-    const collections: Collection[] = Object.values(firebaseUser.collections ?? {}).map(collection => {
-      const items: Item[] = Object.values(collection.items ?? {});
+  const firstPartyIds = new Set(FIRST_PARTY_MANIFEST.map((user) => user.id));
+  const result = Object.values(users)
+    .filter((firebaseUser) => !firstPartyIds.has(firebaseUser.id))
+    .map((firebaseUser) => {
+      // Convert collections from Record to Array format
+      const collections: Collection[] = Object.values(firebaseUser.collections ?? {}).map(collection => {
+        const items: Item[] = Object.values(collection.items ?? {});
+
+        return {
+          ...collection,
+          items
+        };
+      });
 
       return {
-        ...collection,
-        items
-      };
+        ...firebaseUser,
+        id: firebaseUser.id,
+        collections,
+        source: 'firebase'
+      } satisfies User;
     });
-
-    return {
-      ...firebaseUser,
-      id: firebaseUser.id,
-      collections,
-      source: 'firebase'
-    } satisfies User;
-  });
 
   // Cache the result
   FIREBASE_USERS_CACHE = result;
