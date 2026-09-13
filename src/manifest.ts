@@ -1532,27 +1532,24 @@ async function loadFirebaseUsers(): Promise<User[]> {
     return [];
   }
   
-  const firstPartyIds = new Set(FIRST_PARTY_MANIFEST.map((user) => user.id));
-  const result = Object.values(users)
-    .filter((firebaseUser) => !firstPartyIds.has(firebaseUser.id))
-    .map((firebaseUser) => {
-      // Convert collections from Record to Array format
-      const collections: Collection[] = Object.values(firebaseUser.collections ?? {}).map(collection => {
-        const items: Item[] = Object.values(collection.items ?? {});
-
-        return {
-          ...collection,
-          items
-        };
-      });
+  const result = Object.values(users).map(firebaseUser => {
+    // Convert collections from Record to Array format
+    const collections: Collection[] = Object.values(firebaseUser.collections ?? {}).map(collection => {
+      const items: Item[] = Object.values(collection.items ?? {});
 
       return {
-        ...firebaseUser,
-        id: firebaseUser.id,
-        collections,
-        source: 'firebase'
-      } satisfies User;
+        ...collection,
+        items
+      };
     });
+
+    return {
+      ...firebaseUser,
+      id: firebaseUser.id,
+      collections,
+      source: 'firebase'
+    } satisfies User;
+  });
 
   // Cache the result
   FIREBASE_USERS_CACHE = result;
