@@ -44,7 +44,6 @@ function CollectionPagination(props: {
         {prevIsWrap ? '↻ go to end' : '← prev'}
       </QueryPreservingLink>
       {' · '}
-      Page:{' '}
       {visiblePageTokens(currentPage, totalPages).map((token, index) => (
         <span key={token === 'ellipsis' ? `ellipsis-${index}` : token}>
           {index > 0 && ' '}
