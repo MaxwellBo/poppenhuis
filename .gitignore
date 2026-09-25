@@ -3,3 +3,4 @@
 node_modules
 dist/
 .DS_Store
+scripts/.ps2-wikidata-cache.json
