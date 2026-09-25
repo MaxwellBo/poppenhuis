@@ -8,6 +8,7 @@ import { HelmetMeta } from '../components/HelmetMeta';
 import { QueryPreservingLink } from '../components/QueryPreservingLink';
 import { PageHeader } from '../components/PageHeader';
 import * as yaml from '../yaml.ts';
+import { visiblePageTokens } from '../pagination';
 
 const ITEMS_PER_PAGE = 30;
 
@@ -44,13 +45,15 @@ function CollectionPagination(props: {
       </QueryPreservingLink>
       {' · '}
       Page:{' '}
-      {Array.from({ length: totalPages }, (_, i) => (
-        <span key={i}>
-          {i > 0 && ' '}
-          {i === currentPage ? (
-            <b>{i}</b>
+      {visiblePageTokens(currentPage, totalPages).map((token, index) => (
+        <span key={token === 'ellipsis' ? `ellipsis-${index}` : token}>
+          {index > 0 && ' '}
+          {token === 'ellipsis' ? (
+            '...'
+          ) : token === currentPage ? (
+            <b>{token}</b>
           ) : (
-            <Link to={{ pathname: basePath, search: searchWithPage(searchParams, i) }}>{i}</Link>
+            <Link to={{ pathname: basePath, search: searchWithPage(searchParams, token) }}>{token}</Link>
           )}
         </span>
       ))}
