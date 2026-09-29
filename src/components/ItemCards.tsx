@@ -1,5 +1,6 @@
 import { Collection, User, Item } from '../manifest';
 import { ItemCard } from './ItemCard';
+import { ModelCamera } from './ModelViewerWrapper';
 import { QueryPreservingLink } from './QueryPreservingLink';
 
 export type FlatItem = { item: Item; collection: Collection; user: User };
@@ -15,8 +16,9 @@ export function ItemCards(props: {
   limit?: number;
   /** 0-based start index for displayed items (e.g. currentPage * ITEMS_PER_PAGE); makes indexes page-aware */
   startIndex?: number;
+  camera?: ModelCamera;
 }) {
-  const { highlighted, limit, collection, user, startIndex } = props;
+  const { highlighted, limit, collection, user, startIndex, camera } = props;
   const { items } = collection;
   const showSeeMore = limit && items.length > limit;
 
@@ -46,7 +48,7 @@ export function ItemCards(props: {
       <ul className='item-cards'>
         {truncatedItems.map((item, i) => (
           <li key={item.id} className={item.id === highlighted ? 'yelling highlight-model-viewer' : undefined}>
-            <ItemCard item={item} collection={collection} user={user} showIndex={true} index={offset + i + 1} selected={item.id === highlighted} />
+            <ItemCard item={item} collection={collection} user={user} showIndex={true} index={offset + i + 1} selected={item.id === highlighted} camera={camera} />
           </li>
         ))}
       </ul>
