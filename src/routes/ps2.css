@@ -263,8 +263,8 @@ html[data-ps2] .a-scene-wrapper:focus-within::after {
   background: radial-gradient(
     circle closest-side at 50% 50%,
     #ffffff 0%,
-    rgba(255, 255, 255, 0.92) 22%,
-    rgba(255, 255, 255, 0.45) 50%,
+    rgba(255, 255, 255, 0.96) 26%,
+    rgba(255, 255, 255, 0.62) 52%,
     rgba(255, 255, 255, 0) 78%
   );
 }
@@ -282,7 +282,6 @@ html[data-ps2] .model-viewer-wrapper:focus-within::after,
 html[data-ps2] .a-scene-wrapper:focus-within::after {
   z-index: 2;
   mix-blend-mode: screen;
-  opacity: 0.55;
 }
 
 html[data-ps2] model-viewer {
