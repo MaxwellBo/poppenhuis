@@ -87,17 +87,11 @@ html[data-ps2] .yelling {
   text-shadow: var(--ps2-edge);
 }
 
-html[data-ps2] h1 {
-  font-size: 1.7rem;
-}
-
 html[data-ps2] #page-header h1 a,
 html[data-ps2] h1 .index,
 html[data-ps2] h1 .size,
 html[data-ps2] h1 .count {
   color: var(--ps2-body);
-  font-size: 0.78em;
-  letter-spacing: 0.01em;
   text-shadow: var(--ps2-edge);
 }
 
