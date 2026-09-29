@@ -12,6 +12,9 @@ import * as yaml from '../yaml.ts';
 
 export const loader = loadUser;
 
+/** Items shown in each collection row. Later items are behind "see all". */
+export const USER_PAGE_PREVIEW_LIMIT = 6;
+
 export default function UserPage() {
   const { user } = useLoaderData() as Awaited<ReturnType<typeof loader>>;
 
@@ -62,7 +65,7 @@ function CollectionRow(props: { collection: Collection, user: User }) {
       </h3>
       {collection.description && <div className='short description ugc'><Markdown>{collection.description}</Markdown></div>}
       <div id="item-cards-wrapper">
-        <ItemCards collection={collection} user={user} limit={6} />
+        <ItemCards collection={collection} user={user} limit={USER_PAGE_PREVIEW_LIMIT} modelTransition />
       </div>
     </article>
   );

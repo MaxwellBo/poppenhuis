@@ -175,7 +175,8 @@ export function modelViewTransitionName(userId: string, collectionId: string, it
  * `home` — homepage preview of a collection's first item, and that same item
  * on the collection page (transitions between `/` and the collection).
  * `item` — this item's URL is either side of the navigation. That covers a
- * collection card and the item page, and previous/next on the item page.
+ * collection card, a user-page preview card, and the item page, plus
+ * previous/next on the item page.
  */
 export function useModelViewTransitionName(
   ids: { userId: string; collectionId: string; itemId: string },

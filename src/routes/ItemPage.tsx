@@ -17,6 +17,7 @@ import { DescriptionList } from "../components/DescriptionList";
 import * as yaml from '../yaml.ts';
 import { useModelViewTransitionName } from "../modelViewTransition";
 import { ITEMS_PER_PAGE } from "../pagination";
+import { USER_PAGE_PREVIEW_LIMIT } from "./UserPage";
 
 export const loader = loadItem
 
@@ -85,6 +86,7 @@ export default function ItemPage() {
   const nextCanTransition = !renderAFrameScene && nextKey !== heroKey && !sideCardsShareAnItem;
   const itemIndex = collection.items.indexOf(item);
   const collectionPage = itemIndex > 0 ? Math.floor(itemIndex / ITEMS_PER_PAGE) : 0;
+  const userPageShowsItem = itemIndex >= 0 && itemIndex < USER_PAGE_PREVIEW_LIMIT;
 
   const handleVRToggle = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newSearchParams = new URLSearchParams(searchParams);
@@ -106,7 +108,7 @@ export default function ItemPage() {
     <article className='item-page'>
       <HelmetMeta meta={metaForItem(item, collection, user)} />
       <PageHeader>
-        <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}/${collection.id}`} viewTransition pushParam={collectionPage > 0 ? new Map([["page", String(collectionPage)]]) : undefined}>{collection.name}</QueryPreservingLink> / {item.name} <span className='index'>({itemIndex + 1})</span>
+        <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`} viewTransition={userPageShowsItem}>{user.name}</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}/${collection.id}`} viewTransition pushParam={collectionPage > 0 ? new Map([["page", String(collectionPage)]]) : undefined}>{collection.name}</QueryPreservingLink> / {item.name} <span className='index'>({itemIndex + 1})</span>
       </PageHeader>
       <div className='bento'>
         <div id="previous">
