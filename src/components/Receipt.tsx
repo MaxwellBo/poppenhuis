@@ -243,7 +243,7 @@ export function Receipt({ item, collection, user, modelViewerRef }: ReceiptProps
     <>
       <div>
         <details>
-          <summary>print receipt</summary>
+          <summary className="ui">Print receipt</summary>
           <div style={{ marginTop: '10px', marginBottom: '10px' }}>
             <label style={{ display: 'inline-flex', alignItems: 'center', marginRight: '10px' }}>
               <input

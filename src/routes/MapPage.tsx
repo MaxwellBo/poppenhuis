@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useLoaderData } from 'react-router';
 import { loadUsers } from '../manifest';
 import type { Item } from '../manifest';
-import { PageHeader } from '../components/PageHeader';
+import { CrumbSep, PageHeader } from '../components/PageHeader';
 import { QueryPreservingLink } from '../components/QueryPreservingLink';
 import { ModelViewerWrapper } from '../components/ModelViewerWrapper';
 import { DSStoreParser, DSStoreRecord } from '../utils/dsstore-parser';
@@ -72,7 +72,7 @@ export default function MapPage() {
   return (
     <article>
       <PageHeader>
-        <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / map
+        <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink><CrumbSep />map
       </PageHeader>
 
       <section style={{ marginTop: '2rem' }}>

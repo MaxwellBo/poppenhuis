@@ -6,16 +6,16 @@ import { GlobalItemCards } from '../components/ItemCards';
 import { ItemCard } from '../components/ItemCard';
 import { metaForItem } from "../meta";
 import Markdown from "react-markdown";
-import { ModelViewerWrapper } from "../components/ModelViewerWrapper";
+import { ModelViewerWrapper, PS2_ITEM_CAMERA } from "../components/ModelViewerWrapper";
 import { QueryPreservingLink } from "../components/QueryPreservingLink";
 import { HelmetMeta } from "../components/HelmetMeta";
-import { PageHeader } from "../components/PageHeader";
+import { CrumbSep, PageHeader } from "../components/PageHeader";
 import { QrCode } from "../components/QrCode";
 import { AFrameScene } from "../components/AFrameScene";
 import { Receipt } from "../components/Receipt";
 import { DescriptionList } from "../components/DescriptionList";
 import * as yaml from '../yaml.ts';
-import { usePs2Theme } from './ps2-theme';
+import { PS2_COLLECTION_ID, usePs2Theme } from './ps2-theme';
 
 export const loader = loadItem
 
@@ -92,7 +92,7 @@ export default function ItemPage() {
     <article className='item-page'>
       <HelmetMeta meta={metaForItem(item, collection, user)} />
       <PageHeader>
-        <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}/${collection.id}`}>{collection.name}</QueryPreservingLink> / {item.name} <span className='index'>({collection.items.indexOf(item) + 1})</span>
+        <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink><CrumbSep /><QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink><CrumbSep /><QueryPreservingLink to={`/${user.id}/${collection.id}`}>{collection.name}</QueryPreservingLink><CrumbSep />{item.name} <span className='index'>({collection.items.indexOf(item) + 1})</span>
       </PageHeader>
       <div className='bento'>
         <div id="previous">
@@ -102,13 +102,14 @@ export default function ItemPage() {
             showIndex={true}
             user={previousUser}
             triggerKey="h"
-            altName={previousItemIsLast ? "↻ go to end" : "← previous"}
+            altName={previousItemIsLast ? "↻ Go to end" : "← Previous"}
+            camera={collection.id === PS2_COLLECTION_ID ? PS2_ITEM_CAMERA : undefined}
             size='small' />
         </div>
         <div id="model">
           {renderAFrameScene
             ? <AFrameScene users={allUsers} startingItem={item} positioningMode={positioningMode} />
-            : <ModelViewerWrapper modelViewerRef={modelViewerRef} item={item} size='responsive-big' />
+            : <ModelViewerWrapper modelViewerRef={modelViewerRef} item={item} size='responsive-big' camera={collection.id === PS2_COLLECTION_ID ? PS2_ITEM_CAMERA : undefined} />
           }
           <div className="vr-controls" style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
             <label className="vr-toggle">
@@ -158,7 +159,8 @@ export default function ItemPage() {
             collection={nextCollection}
             showIndex={true}
             user={nextUser} triggerKey="l"
-            altName={nextItemIsFirst ? "back to start ↺" : "next →"}
+            altName={nextItemIsFirst ? "Back to start ↺" : "Next →"}
+            camera={collection.id === PS2_COLLECTION_ID ? PS2_ITEM_CAMERA : undefined}
             size='small' />
         </div>
         <div id="cards">
@@ -166,6 +168,7 @@ export default function ItemPage() {
             allItems={allItems}
             highlighted={currentIndex}
             limit={6}
+            camera={collection.id === PS2_COLLECTION_ID ? PS2_ITEM_CAMERA : undefined}
           />
         </div>
       </div>
@@ -188,22 +191,22 @@ function QrCodeAndLinksAndButtons(props: { item: Item; collection: Collection; u
         <QrCode item={item} user={user} collection={collection} context="web" />
       </div>
       <div id="links">
-        <QueryPreservingLink className="action-link" to={`/${user.id}/${collection.id}/${item.id}/label`}>print label</QueryPreservingLink>
-        <QueryPreservingLink className="action-link" to={`/${user.id}/${collection.id}/${item.id}/embed`}>embed</QueryPreservingLink>
+        <QueryPreservingLink className="action-link ui" to={`/${user.id}/${collection.id}/${item.id}/label`}>Print label</QueryPreservingLink>
+        <QueryPreservingLink className="action-link ui" to={`/${user.id}/${collection.id}/${item.id}/embed`}>Embed</QueryPreservingLink>
         <QuicklookLink item={item} />
-        <a href={githubManifestCodeSearchUrl}>source</a>
-        {user.source === undefined && <><a href={editYamlUrl}>edit?</a></>}
-        {user.source === 'firebase' && <><QueryPreservingLink to={`/${user.id}/${collection.id}/${item.id}/edit`}>edit?</QueryPreservingLink></>}
+        <a className="ui" href={githubManifestCodeSearchUrl}>Source</a>
+        {user.source === undefined && <><a className="ui" href={editYamlUrl}>Edit?</a></>}
+        {user.source === 'firebase' && <><QueryPreservingLink className="ui" to={`/${user.id}/${collection.id}/${item.id}/edit`}>Edit?</QueryPreservingLink></>}
       </div>
       <div id="buttons">
         {navigator.share &&
-          <button onClick={() =>
+          <button className="ui" onClick={() =>
             navigator.share({
               title: item.name,
               text: item.description ?? 'a digital dollhouse',
               url: window.location.href
             })}>
-            share?
+            Share?
           </button>}
         <Receipt
           key={`${user.id}/${collection.id}/${item.id}`}
