@@ -25,7 +25,7 @@ export type PackedIconBackground = [
   number, number, number,
 ];
 
-const BACKGROUNDS = backgrounds as Record<string, PackedIconBackground>;
+const BACKGROUNDS = backgrounds as unknown as Record<string, PackedIconBackground>;
 
 export interface IconBackground {
   opacity: number;

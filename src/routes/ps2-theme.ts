@@ -33,6 +33,8 @@ export function usePs2Theme(
     if (!active || surface !== 'item') return;
     const background = iconBackgroundForSlug(ps2iodbSlugFromStorage(storageLocation));
     if (background) root.style.setProperty('--ps2-icon-bg', iconSysBackgroundImage(background));
-    return () => root.style.removeProperty('--ps2-icon-bg');
+    return () => {
+      root.style.removeProperty('--ps2-icon-bg');
+    };
   }, [active, surface, storageLocation]);
 }

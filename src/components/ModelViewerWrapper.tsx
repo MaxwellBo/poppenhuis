@@ -23,7 +23,7 @@ type ModelViewerElement = HTMLElement & {
   loaded: boolean;
 };
 
-export function ModelViewerWrapper(props: { item: Item; size?: ModelSize; modelViewerRef?: React.RefObject<HTMLElement | null>; camera?: ModelCamera; }) {
+export function ModelViewerWrapper(props: { item: Item; size?: ModelSize; modelViewerRef?: { current: HTMLElement | null }; camera?: ModelCamera; }) {
   const spin = props.camera?.autoRotate !== false;
   const viewerRef = React.useRef<ModelViewerElement | null>(null);
 
