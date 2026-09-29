@@ -9,6 +9,8 @@ import { QueryPreservingLink } from '../components/QueryPreservingLink';
 import { PageHeader } from '../components/PageHeader';
 import * as yaml from '../yaml.ts';
 import { visiblePageTokens } from '../pagination';
+import { PS2_COLLECTION_ID, usePs2Theme } from './ps2-theme';
+import { PS2_BROWSER_CAMERA } from '../components/ModelViewerWrapper';
 
 const ITEMS_PER_PAGE = 30;
 
@@ -70,6 +72,7 @@ function CollectionPagination(props: {
 
 export default function CollectionPage() {
   const { collection, user } = useLoaderData() as Awaited<ReturnType<typeof loader>>;
+  usePs2Theme(collection.id, 'collection');
   const [searchParams] = useSearchParams();
   const pageParam = searchParams.get('page');
   const page = Math.max(0, parseInt(pageParam ?? '0', 10) || 0);
@@ -118,7 +121,12 @@ export default function CollectionPage() {
         totalPages={totalPages}
       />
     </div>
-    <ItemCards collection={paginatedCollection} user={user} startIndex={start} />
+    <ItemCards
+      collection={paginatedCollection}
+      user={user}
+      startIndex={start}
+      camera={collection.id === PS2_COLLECTION_ID ? PS2_BROWSER_CAMERA : undefined}
+    />
     <div style={{ marginTop: '3ch', display: 'flex', justifyContent: 'center', width: '100%' }}>
       <CollectionPagination
         basePath={basePath}

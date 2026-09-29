@@ -1,0 +1,298 @@
+/*
+ * Memory-card browser theme for the PS2 save-icon collection.
+ *
+ * OSDSYS does not embed an outline font. The browser (including the save
+ * screen) rasterizes rom0:FONTM for titles and menu rows and rom0:FONTS for
+ * the smaller lines. Those bitmaps follow Sony Computer Entertainment's house
+ * gothic, Fontworks Rodin — the Latin later shipped as "SCE Rodin LATIN".
+ * The Latin reads as a bold neo-grotesque in the Helvetica / Arial family,
+ * which is how the browser is usually identified, and the face open OSDSYS
+ * replacements substitute (Roboto, in the BIOS font contest).
+ *
+ * Arimo is the OFL metric-compatible Arial, so this route can set that Latin
+ * without embedding Rodin. The theme hook loads Arimo at 700; Helvetica Neue
+ * and Arial stay in the stack where the system already has them.
+ *
+ * Color roles follow the save screen:
+ *   primary    yellow title          (RESIDENT EVIL, Indigo Prophecy)
+ *   secondary  smaller yellow        (Jill 00/Mansion)
+ *   body       white                 (Memory Card path, date, size)
+ *   selected   cyan, glowing         (Copy)
+ *   deselected charcoal              (Delete)
+ *
+ * The collection page uses the memory-card browser field. Sampled across
+ * that screen, lightness falls mostly left-to-right and also top-to-bottom,
+ * so the top-left stays light gray and the bottom-right is near-black olive.
+ * A vertical fade, or a corner-to-corner diagonal, paints the bottom-left
+ * as dark as the top-right. The photo does not: the left edge is still
+ * medium gray at the bottom. Two axis-aligned gradients blended with
+ * difference reproduce that field at any viewport shape.
+ * An open save paints that save's icon.sys background: four corner colors
+ * on a full-screen quad, with 0x80 as full intensity and the file's opacity
+ * over black. Opacity 0 leaves the page black.
+ */
+
+html[data-ps2] {
+  --ps2-font: Arimo, "Helvetica Neue", Helvetica, Arial, "Liberation Sans", sans-serif;
+  --ps2-primary: #ffe14a;
+  --ps2-secondary: #f0d35c;
+  --ps2-body: #f4f4f4;
+  --ps2-selected: #4ec8f0;
+  --ps2-selected-glow: rgba(78, 200, 240, 0.85);
+  --ps2-deselected: #3a3a3a;
+  --ps2-muted: rgba(244, 244, 244, 0.72);
+  --ps2-edge: 0 1px 0 #000, 0 -1px 0 #000, 1px 0 0 #000, -1px 0 0 #000;
+  --ps2-field-browser:
+    linear-gradient(to bottom, #000000 0%, #36382e 100%),
+    linear-gradient(to right, #979d9e 0%, #363d2e 100%);
+  --ps2-field:
+    radial-gradient(ellipse 75% 58% at 0% 0%, #c85a32 0%, rgba(200, 90, 50, 0) 62%),
+    radial-gradient(ellipse 55% 42% at 48% 0%, #8a9428 0%, rgba(138, 148, 40, 0) 64%),
+    radial-gradient(ellipse 62% 52% at 100% 0%, #3f9a30 0%, rgba(63, 154, 48, 0) 60%),
+    radial-gradient(ellipse 48% 42% at 0% 46%, #6a2848 0%, rgba(106, 40, 72, 0) 62%),
+    radial-gradient(ellipse 50% 46% at 100% 50%, #3e8c3c 0%, rgba(62, 140, 60, 0) 58%),
+    radial-gradient(ellipse 72% 58% at 0% 100%, #1a1c96 0%, rgba(26, 28, 150, 0) 64%),
+    radial-gradient(ellipse 58% 48% at 52% 100%, #2a3c72 0%, rgba(42, 60, 114, 0) 70%),
+    radial-gradient(ellipse 55% 50% at 100% 100%, #6a8074 0%, rgba(106, 128, 116, 0) 62%),
+    linear-gradient(168deg, #a84830 0%, #4a681c 34%, #1a3048 68%, #161e68 100%);
+
+  cursor: auto;
+  background-color: #1a2848;
+  background-image: var(--ps2-field);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+html[data-ps2="collection"] {
+  background-color: #050b00;
+  background-image: var(--ps2-field-browser);
+  background-blend-mode: difference, normal;
+}
+
+html[data-ps2="item"] {
+  background-color: #000;
+  background-image: var(--ps2-icon-bg, none);
+  background-blend-mode: normal;
+}
+
+html[data-ps2] body {
+  font-family: var(--ps2-font);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--ps2-body);
+  background-color: transparent;
+  background-image: none;
+}
+
+html[data-ps2] body * {
+  text-shadow: var(--ps2-edge);
+}
+
+html[data-ps2] h1,
+html[data-ps2] h2,
+html[data-ps2] h3,
+html[data-ps2] .yelling {
+  color: var(--ps2-primary);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  text-shadow: var(--ps2-edge);
+}
+
+html[data-ps2] #page-header h1 a,
+html[data-ps2] h1 .index,
+html[data-ps2] h1 .size,
+html[data-ps2] h1 .count {
+  color: var(--ps2-body);
+  text-shadow: var(--ps2-edge);
+}
+
+html[data-ps2] .description,
+html[data-ps2] .ugc,
+html[data-ps2] dt,
+html[data-ps2] dt abbr {
+  color: var(--ps2-secondary);
+  font-family: var(--ps2-font);
+  font-style: normal;
+  font-weight: 700;
+}
+
+html[data-ps2] dd,
+html[data-ps2] p,
+html[data-ps2] li,
+html[data-ps2] small {
+  color: var(--ps2-body);
+  font-family: var(--ps2-font);
+}
+
+html[data-ps2] .index,
+html[data-ps2] .count,
+html[data-ps2] .size {
+  color: var(--ps2-muted);
+}
+
+html[data-ps2] dd:empty::after,
+html[data-ps2] dd:empty.list::after {
+  opacity: 1;
+  color: var(--ps2-deselected);
+}
+
+html[data-ps2] .item-cards li {
+  border-left-color: transparent !important;
+}
+
+html[data-ps2] a {
+  color: var(--ps2-body);
+  text-decoration: none;
+}
+
+html[data-ps2] a:hover,
+html[data-ps2] a:focus-visible,
+html[data-ps2] a:hover:visited {
+  background-color: transparent;
+  color: var(--ps2-selected);
+  text-decoration: none;
+  text-shadow: 0 0 8px var(--ps2-selected-glow), 0 0 16px rgba(78, 200, 240, 0.45);
+}
+
+html[data-ps2] a:active {
+  background-color: transparent !important;
+  color: var(--ps2-primary) !important;
+}
+
+html[data-ps2] .pagination b {
+  color: var(--ps2-selected);
+  font-weight: 700;
+  text-shadow: 0 0 8px var(--ps2-selected-glow);
+}
+
+html[data-ps2] .yelling .card span {
+  color: var(--ps2-primary);
+  text-shadow: var(--ps2-edge);
+}
+
+html[data-ps2] .header-actions a,
+html[data-ps2] .action-link,
+html[data-ps2] button,
+html[data-ps2] #page-header-links a {
+  color: var(--ps2-deselected);
+  font-weight: 700;
+  text-shadow: none;
+}
+
+html[data-ps2] .header-actions a:hover,
+html[data-ps2] .header-actions a:focus-visible,
+html[data-ps2] .action-link:hover,
+html[data-ps2] .action-link:focus-visible,
+html[data-ps2] button:hover,
+html[data-ps2] button:focus-visible,
+html[data-ps2] #page-header-links a:hover,
+html[data-ps2] #page-header-links a:focus-visible {
+  background-color: transparent;
+  color: var(--ps2-selected);
+  text-shadow: 0 0 8px var(--ps2-selected-glow);
+  transform: none;
+  box-shadow: none;
+}
+
+html[data-ps2] .action-link {
+  text-decoration: none;
+}
+
+html[data-ps2] .action-link::before,
+html[data-ps2] .action-link::after {
+  content: none;
+}
+
+html[data-ps2] s,
+html[data-ps2] s abbr {
+  color: var(--ps2-deselected);
+  text-decoration: none;
+}
+
+html[data-ps2] button {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  cursor: pointer;
+}
+
+html[data-ps2] button:active {
+  transform: none;
+  box-shadow: none;
+}
+
+html[data-ps2] .header-content:has(.description) .header-actions,
+html[data-ps2] .bento #description:not(:empty),
+html[data-ps2] .collection-row #item-cards-wrapper,
+html[data-ps2] code,
+html[data-ps2] .qrcode.web,
+html[data-ps2] hr.break {
+  border-color: transparent;
+}
+
+html[data-ps2] .model-viewer-wrapper,
+html[data-ps2] .a-scene-wrapper,
+html[data-ps2] .model-viewer-wrapper:hover,
+html[data-ps2] .a-scene-wrapper:hover {
+  border-color: transparent;
+}
+
+html[data-ps2] .model-viewer-wrapper:hover,
+html[data-ps2] .a-scene-wrapper:hover {
+  filter: drop-shadow(0 0 8px rgba(78, 200, 240, 0.55));
+}
+
+html[data-ps2] model-viewer {
+  background: transparent;
+  --poster-color: transparent;
+}
+
+html[data-ps2] kbd {
+  font-family: var(--ps2-font);
+  color: var(--ps2-body);
+  background: transparent;
+  border: 1px solid rgba(244, 244, 244, 0.45);
+  box-shadow: none;
+}
+
+html[data-ps2] .pill {
+  font-family: var(--ps2-font);
+  color: var(--ps2-body);
+  border-color: rgba(244, 244, 244, 0.45);
+  background: transparent;
+}
+
+html[data-ps2] .pill:hover {
+  background-color: transparent !important;
+  color: var(--ps2-selected) !important;
+}
+
+html[data-ps2] .pill:active {
+  background-color: transparent !important;
+}
+
+html[data-ps2] dl > dd a {
+  color: var(--ps2-body);
+}
+
+html[data-ps2] ::selection {
+  background: var(--ps2-selected);
+  color: #111;
+  text-shadow: none;
+}
+
+@media print {
+  html[data-ps2],
+  html[data-ps2] body {
+    background: white !important;
+    background-image: none !important;
+  }
+
+  html[data-ps2] body,
+  html[data-ps2] body * {
+    color: black !important;
+    text-shadow: none !important;
+  }
+}

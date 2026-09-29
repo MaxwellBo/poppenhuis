@@ -15,11 +15,13 @@ import { AFrameScene } from "../components/AFrameScene";
 import { Receipt } from "../components/Receipt";
 import { DescriptionList } from "../components/DescriptionList";
 import * as yaml from '../yaml.ts';
+import { usePs2Theme } from './ps2-theme';
 
 export const loader = loadItem
 
 export default function ItemPage() {
   const { item, user, collection, users, asyncUsersPromise } = useLoaderData() as Awaited<ReturnType<typeof loadItem>>;
+  usePs2Theme(collection.id, 'item', item.storageLocation);
   const [asyncUsers, setAsyncUsers] = useState<User[] | null>(null);
   const modelViewerRef = useRef<HTMLElement>(null);
 
