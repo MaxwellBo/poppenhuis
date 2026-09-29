@@ -2,6 +2,14 @@ import { Item } from '../manifest';
 import '@google/model-viewer'
 import React from 'react';
 
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      'model-viewer': any;
+    }
+  }
+}
+
 /**
  * model-viewer orbit: azimuth, polar angle, radius.
  * Polar 0° is straight down and 90° is level. Azimuth 0° is model-viewer's front.
@@ -60,7 +68,6 @@ export function ModelViewerWrapper(props: { item: Item; size?: ModelSize; modelV
       {props.size !== 'small' && <div className='camera-keys'>
         <kbd>SHIFT</kbd> <kbd>←</kbd> <kbd>↑</kbd> <kbd>↓</kbd> <kbd>→</kbd>
       </div>}
-      {/* @ts-ignore */}
       <model-viewer
         ref={setViewer}
         key={props.item.model}
