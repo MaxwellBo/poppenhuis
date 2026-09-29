@@ -499,6 +499,14 @@ form.table-form label {
   opacity: 0;
 }
 
+/* The route spinner is on screen while a loader resolves, which is exactly
+   when the old snapshot is taken. Keep it out of the crossfade. */
+::view-transition-old(loading-status),
+::view-transition-new(loading-status) {
+  animation: none;
+  opacity: 0;
+}
+
 ::view-transition-group(root),
 ::view-transition-old(root),
 ::view-transition-new(root) {
@@ -762,6 +770,7 @@ input[type="checkbox"] {
 }
 
 .loading-status {
+  view-transition-name: loading-status;
   position: fixed;
   font-family: 'Fira Code', monospace;
   background-color: red;
