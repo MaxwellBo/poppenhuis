@@ -68,7 +68,6 @@ export function ModelViewerWrapper(props: { item: Item; size?: ModelSize; modelV
         alt={props.item.alt}
         src={props.item.model}
         interaction-prompt=""
-        progress-bar=""
         loading="auto"
         // poster={props.size !== 'responsive-big' ? props.item.poster : undefined}
         camera-orbit={props.camera?.orbit}
@@ -78,7 +77,10 @@ export function ModelViewerWrapper(props: { item: Item; size?: ModelSize; modelV
         camera-controls
         auto-rotate={spin ? true : undefined}
         autoplay
-        touch-action="pan-y" />
+        touch-action="pan-y">
+        {/* Replaces the built-in loading bar. */}
+        <div slot="progress-bar" />
+      </model-viewer>
     </div>
   );
 }
