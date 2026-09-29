@@ -474,7 +474,9 @@ form.table-form label {
 /* Shared-element morph for a model moving between homepage, collection, and item.
    The group resizes from the old box to the new one, so the same snapshot grows
    or shrinks. Only the outgoing frame is shown: the incoming model-viewer is a
-   fresh WebGL canvas and is often still blank when the new snapshot is taken. */
+   fresh WebGL canvas and is often still blank when the new snapshot is taken.
+   Its camera and turntable are set to the outgoing pose before this snapshot
+   is removed, so the live model continues from the same angle. */
 ::view-transition-group(.model) {
   animation-duration: 500ms;
   animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
