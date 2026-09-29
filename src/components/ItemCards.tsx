@@ -54,7 +54,7 @@ export function ItemCards(props: {
       </ul>
       {showSeeMore &&
         <div className='center see-more'>
-          <QueryPreservingLink to={`/${user.id}/${collection.id}`}>see all <span className='count'>({collection.items.length})</span> {collection.name} →</QueryPreservingLink>
+          <QueryPreservingLink to={`/${user.id}/${collection.id}`}><span className="ui">See all</span> <span className='count'>({collection.items.length})</span> {collection.name} →</QueryPreservingLink>
         </div>}
     </>
   );
@@ -69,8 +69,9 @@ export function GlobalItemCards(props: {
   allItems: FlatItem[];
   highlighted: number;
   limit: number;
+  camera?: ModelCamera;
 }) {
-  const { allItems, highlighted, limit } = props;
+  const { allItems, highlighted, limit, camera } = props;
   
   const start = Math.floor(highlighted / limit) * limit;
   const end = start + limit;
@@ -94,7 +95,7 @@ export function GlobalItemCards(props: {
             className={isHighlighted ? 'yelling highlight-model-viewer' : undefined}
             style={needsDivider ? { borderLeft: '1px dotted #ccc' } : undefined}
           >
-            <ItemCard item={item} collection={itemCollection} user={itemUser} showIndex={true} selected={isHighlighted} />
+            <ItemCard item={item} collection={itemCollection} user={itemUser} showIndex={true} selected={isHighlighted} camera={camera} />
           </li>
         );
       })}

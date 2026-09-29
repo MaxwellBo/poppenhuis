@@ -5,7 +5,7 @@ import { USER_FIELD_SCHEMAS } from "../manifest";
 import { useFirebaseForm } from "../hooks/useFirebaseForm";
 import { useFirebaseSubmit } from "../hooks/useFirebaseSubmit";
 import { useAuth } from "../hooks/useAuth";
-import { PageHeader } from "../components/PageHeader";
+import { CrumbSep, PageHeader } from "../components/PageHeader";
 import { QueryPreservingLink } from "../components/QueryPreservingLink";
 
 export default function NewUserPage() {
@@ -31,7 +31,7 @@ export default function NewUserPage() {
     <article>
       <Helmet><title>create user - poppenhuis</title></Helmet>
       <PageHeader>
-        <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / create a new user
+        <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink><CrumbSep />create a new user
       </PageHeader>
       {loading && <p>Loading authentication status...</p>}
       {!loading && !isAuthenticated && (

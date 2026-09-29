@@ -6,7 +6,7 @@ import { COLLECTION_FIELD_SCHEMAS, loadUser } from "../manifest";
 import { useFirebaseForm } from "../hooks/useFirebaseForm";
 import { useFirebaseSubmit } from "../hooks/useFirebaseSubmit";
 import { QueryPreservingLink } from "../components/QueryPreservingLink";
-import { PageHeader } from "../components/PageHeader";
+import { CrumbSep, PageHeader } from "../components/PageHeader";
 
 export const loader = loadUser;
 
@@ -33,7 +33,7 @@ export default function NewCollectionPage() {
     <article>
       <Helmet><title>create collection - poppenhuis</title></Helmet>
       <PageHeader>
-        <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / create a new collection
+        <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink><CrumbSep /><QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink><CrumbSep />create a new collection
       </PageHeader>
       <FirebaseForm
         formData={formData}
