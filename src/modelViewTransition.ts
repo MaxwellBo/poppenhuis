@@ -12,13 +12,13 @@ export function modelViewTransitionName(userId: string, collectionId: string, it
 }
 
 /**
- * Active only while a view transition is running between the two screens that
+ * Active only while a view transition is running between two screens that
  * show this model, so unrelated models stay part of the page crossfade.
  *
  * `home` — homepage preview of a collection's first item, and that same item
  * on the collection page (transitions between `/` and the collection).
- * `item` — a collection card and the item page (transitions between the
- * collection and that item).
+ * `item` — this item's URL is either side of the navigation. That covers a
+ * collection card and the item page, and previous/next on the item page.
  */
 export function useModelViewTransitionName(
   ids: { userId: string; collectionId: string; itemId: string },
@@ -31,7 +31,7 @@ export function useModelViewTransitionName(
   const itemActive = useViewTransitionState(itemPath);
 
   const withHome = Boolean(opts.home) && homeActive && collectionActive;
-  const withItem = Boolean(opts.item) && itemActive && collectionActive;
+  const withItem = Boolean(opts.item) && itemActive;
   if (!withHome && !withItem) return undefined;
   return modelViewTransitionName(ids.userId, ids.collectionId, ids.itemId);
 }

@@ -16,7 +16,7 @@ export function ItemCard(props: {
   size?: ModelSize; 
   triggerKey?: string;
   selected?: boolean;
-  /** Grow/shrink this model when opening or leaving the item page. */
+  /** Grow/shrink this model when opening, leaving, or moving between item pages. */
   modelTransition?: boolean;
   /** Also share the model with the homepage preview (collection's first item). */
   transitionWithHome?: boolean;

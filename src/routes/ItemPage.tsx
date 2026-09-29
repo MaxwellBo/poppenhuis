@@ -75,6 +75,14 @@ export default function ItemPage() {
     { userId: user.id, collectionId: collection.id, itemId: item.id },
     { item: !renderAFrameScene }
   );
+  const heroKey = `${user.id}/${collection.id}/${item.id}`;
+  const previousKey = `${previousUser.id}/${previousCollection.id}/${previousItem.id}`;
+  const nextKey = `${nextUser.id}/${nextCollection.id}/${nextItem.id}`;
+  // One name per item. A side card that repeats the hero, or the other side
+  // card, would duplicate that name (one- and two-item catalogs).
+  const sideCardsShareAnItem = previousKey === nextKey;
+  const previousCanTransition = !renderAFrameScene && previousKey !== heroKey && !sideCardsShareAnItem;
+  const nextCanTransition = !renderAFrameScene && nextKey !== heroKey && !sideCardsShareAnItem;
   const itemIndex = collection.items.indexOf(item);
   const collectionPage = itemIndex > 0 ? Math.floor(itemIndex / ITEMS_PER_PAGE) : 0;
 
@@ -109,7 +117,8 @@ export default function ItemPage() {
             user={previousUser}
             triggerKey="h"
             altName={previousItemIsLast ? "↻ go to end" : "← previous"}
-            size='small' />
+            size='small'
+            modelTransition={previousCanTransition} />
         </div>
         <div id="model">
           {renderAFrameScene
@@ -165,7 +174,8 @@ export default function ItemPage() {
             showIndex={true}
             user={nextUser} triggerKey="l"
             altName={nextItemIsFirst ? "back to start ↺" : "next →"}
-            size='small' />
+            size='small'
+            modelTransition={nextCanTransition} />
         </div>
         <div id="cards">
           <GlobalItemCards 
