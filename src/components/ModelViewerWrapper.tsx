@@ -17,8 +17,38 @@ export const PS2_BROWSER_CAMERA: ModelCamera = {
   autoRotate: false,
 };
 
-export function ModelViewerWrapper(props: { item: Item; size?: ModelSize; modelViewerRef?: React.RefObject<HTMLElement>; camera?: ModelCamera; }) {
+type ModelViewerElement = HTMLElement & {
+  cameraOrbit: string;
+  jumpCameraToGoal: () => void;
+  loaded: boolean;
+};
+
+export function ModelViewerWrapper(props: { item: Item; size?: ModelSize; modelViewerRef?: React.RefObject<HTMLElement | null>; camera?: ModelCamera; }) {
   const spin = props.camera?.autoRotate !== false;
+  const viewerRef = React.useRef<ModelViewerElement | null>(null);
+
+  const setViewer = (node: HTMLElement | null) => {
+    viewerRef.current = node as ModelViewerElement | null;
+    if (props.modelViewerRef) {
+      props.modelViewerRef.current = node;
+    }
+  };
+
+  React.useEffect(() => {
+    const viewer = viewerRef.current;
+    const camera = props.camera;
+    if (!viewer || !camera) return;
+    // Framing on load keeps the current polar angle and only updates distance,
+    // which leaves the camera level. Reapply the orbit once the model is in.
+    const apply = () => {
+      viewer.cameraOrbit = camera.orbit;
+      viewer.jumpCameraToGoal();
+    };
+    viewer.addEventListener('load', apply);
+    if (viewer.loaded) apply();
+    return () => viewer.removeEventListener('load', apply);
+  }, [props.camera, props.item.model]);
+
   return (
     <div className='model-viewer-wrapper'>
       {props.size !== 'small' && <div className='camera-keys'>
@@ -26,7 +56,7 @@ export function ModelViewerWrapper(props: { item: Item; size?: ModelSize; modelV
       </div>}
       {/* @ts-ignore */}
       <model-viewer
-        ref={props.modelViewerRef}
+        ref={setViewer}
         key={props.item.model}
         style={getStyleForModelSize(props.size)}
         alt={props.item.alt}
