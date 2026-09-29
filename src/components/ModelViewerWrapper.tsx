@@ -4,7 +4,7 @@ import React from 'react';
 
 /**
  * model-viewer orbit: azimuth, polar angle, radius.
- * Polar 0° is straight down and 90° is level. Azimuth 0° faces the front.
+ * Polar 0° is straight down and 90° is level. Azimuth 0° is model-viewer's front.
  */
 export type ModelCamera = {
   orbit: string;
@@ -13,8 +13,14 @@ export type ModelCamera = {
 
 /** Memory-card browser: look down the front at 45°, and hold still. */
 export const PS2_BROWSER_CAMERA: ModelCamera = {
-  orbit: '0deg 45deg auto',
+  orbit: '180deg 45deg auto',
   autoRotate: false,
+};
+
+/** Open save: same facing, free to spin. */
+export const PS2_ITEM_CAMERA: ModelCamera = {
+  orbit: '180deg 75deg auto',
+  autoRotate: true,
 };
 
 type ModelViewerElement = HTMLElement & {

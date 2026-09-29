@@ -13,7 +13,7 @@ import {
 } from 'firebase/auth';
 import { Helmet } from 'react-helmet';
 import { auth } from '../firebase';
-import { PageHeader } from '../components/PageHeader';
+import { CrumbSep, PageHeader } from '../components/PageHeader';
 import { QueryPreservingLink } from '../components/QueryPreservingLink';
 import { Size } from '../components/Size';
 import { ModelViewerWrapper } from '../components/ModelViewerWrapper';
@@ -187,7 +187,7 @@ export default function AuthPage() {
       <div>
         <Helmet><title>auth - poppenhuis</title></Helmet>
         <PageHeader>
-          <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / loading...
+          <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink><CrumbSep />loading...
         </PageHeader>
       </div>
     );
@@ -199,7 +199,7 @@ export default function AuthPage() {
       <div>
         <Helmet><title>account - poppenhuis</title></Helmet>
         <PageHeader>
-          <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / account
+          <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink><CrumbSep />account
         </PageHeader>
         {message && <span style={{ padding: '1ch', margin: '1ch', border: "1px dotted black"}}>{message}</span>}
         {error && <pre style={{ padding: '1ch', margin: '1ch', border: "1px dotted black"}}>{error}</pre>}
@@ -255,7 +255,7 @@ export default function AuthPage() {
     <div>
       <Helmet><title>auth - poppenhuis</title></Helmet>
       <PageHeader>
-        <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / auth
+        <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink><CrumbSep />auth
       </PageHeader>
 
       <form onSubmit={handleSubmit} className="table-form">

@@ -7,7 +7,7 @@ import { Size } from '../components/Size';
 import { DEFAULT_META } from "../meta";
 import { HelmetMeta } from "../components/HelmetMeta";
 import { QueryPreservingLink } from "../components/QueryPreservingLink";
-import { PageHeader } from "../components/PageHeader";
+import { CrumbSep, PageHeader } from "../components/PageHeader";
 import { ModelViewerWrapper } from "../components/ModelViewerWrapper";
 
 const EXAMPLE_MANIFEST_URL = 'https://raw.githubusercontent.com/MaxwellBo/maxwellbo.github.io/master/poppenhuis-manifest.json'
@@ -21,7 +21,7 @@ export default function UsersPage() {
     <article>
       <HelmetMeta meta={DEFAULT_META} />
       <PageHeader>
-        poppenhuis / <span>⌂</span>
+        poppenhuis<CrumbSep /><span>⌂</span>
       </PageHeader>
       <div id="homepage-columns">
         <section>

@@ -10,7 +10,7 @@ declare global {
   }
 }
 
-import { PageHeader } from '../components/PageHeader';
+import { CrumbSep, PageHeader } from '../components/PageHeader';
 import { QueryPreservingLink } from '../components/QueryPreservingLink';
 import { useEffect, useState } from 'react';
 import { DSStoreParser, DSStoreRecord, formatDSStoreValue, getFieldName } from '../utils/dsstore-parser';
@@ -62,7 +62,7 @@ export default function DebugPage() {
   return (
     <article>
       <PageHeader>
-        <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / debug
+        <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink><CrumbSep />debug
       </PageHeader>
 
       <section style={{ marginTop: '2rem' }}>

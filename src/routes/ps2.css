@@ -17,7 +17,7 @@
  *   primary    yellow title          (RESIDENT EVIL, Indigo Prophecy)
  *   secondary  smaller yellow        (Jill 00/Mansion)
  *   body       white                 (Memory Card path, date, size)
- *   selected   cyan, glowing         (Copy)
+ *   selected   blue, black outline   (Copy)
  *   deselected charcoal              (Delete)
  *
  * The collection page uses the memory-card browser field. Sampled across
@@ -38,7 +38,6 @@ html[data-ps2] {
   --ps2-secondary: #f0d35c;
   --ps2-body: #f4f4f4;
   --ps2-selected: #4ec8f0;
-  --ps2-selected-glow: rgba(78, 200, 240, 0.85);
   --ps2-deselected: #3a3a3a;
   --ps2-muted: rgba(244, 244, 244, 0.72);
   --ps2-edge: 0 1px 0 #000, 0 -1px 0 #000, 1px 0 0 #000, -1px 0 0 #000;
@@ -108,6 +107,14 @@ html[data-ps2] h1 .count {
   text-shadow: var(--ps2-edge);
 }
 
+html[data-ps2] #page-header h1 .crumb-sep {
+  color: var(--ps2-body);
+}
+
+html[data-ps2] .ui {
+  text-transform: none;
+}
+
 html[data-ps2] .description,
 html[data-ps2] .ugc,
 html[data-ps2] dt,
@@ -153,7 +160,7 @@ html[data-ps2] a:hover:visited {
   background-color: transparent;
   color: var(--ps2-selected);
   text-decoration: none;
-  text-shadow: 0 0 8px var(--ps2-selected-glow), 0 0 16px rgba(78, 200, 240, 0.45);
+  text-shadow: var(--ps2-edge);
 }
 
 html[data-ps2] a:active {
@@ -164,7 +171,7 @@ html[data-ps2] a:active {
 html[data-ps2] .pagination b {
   color: var(--ps2-selected);
   font-weight: 700;
-  text-shadow: 0 0 8px var(--ps2-selected-glow);
+  text-shadow: var(--ps2-edge);
 }
 
 html[data-ps2] .yelling .card span {
@@ -191,7 +198,7 @@ html[data-ps2] #page-header-links a:hover,
 html[data-ps2] #page-header-links a:focus-visible {
   background-color: transparent;
   color: var(--ps2-selected);
-  text-shadow: 0 0 8px var(--ps2-selected-glow);
+  text-shadow: var(--ps2-edge);
   transform: none;
   box-shadow: none;
 }
