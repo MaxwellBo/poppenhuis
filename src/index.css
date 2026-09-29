@@ -289,10 +289,10 @@ pre {
   font-weight: bold;
 }
 
-/* Sentence-case UI labels. Uppercase on the rest of the site; the PS2
+/* Sentence-case UI labels. Lowercase on the rest of the site; the PS2
    browser turns this off so they stay as written. */
 .ui {
-  text-transform: uppercase;
+  text-transform: lowercase;
 }
 
 .truncate {
