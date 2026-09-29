@@ -21,7 +21,7 @@ export default function App() {
         <footer className='no-print'>
             <small style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
               <div>
-                🎎&ensp;c. 2026&ensp;<a href="https://maxbo.me">Max Bo</a>&ensp;<a className="ui" href="https://github.com/MaxwellBo/poppenhuis">Source code</a>&ensp;<a className="ui" href="https://dashboard.simpleanalytics.com/poppenhu.is">Analytics</a>
+                🎎&ensp;since 2024&ensp;<a href="https://maxbo.me">Max Bo</a>&ensp;<a className="ui" href="https://github.com/MaxwellBo/poppenhuis">Source code</a>&ensp;<a className="ui" href="https://dashboard.simpleanalytics.com/poppenhu.is">Analytics</a>
                 <VelocityDesignComfort />
               </div>
               <div>
