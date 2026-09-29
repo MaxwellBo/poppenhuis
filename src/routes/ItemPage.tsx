@@ -21,7 +21,7 @@ export const loader = loadItem
 
 export default function ItemPage() {
   const { item, user, collection, users, asyncUsersPromise } = useLoaderData() as Awaited<ReturnType<typeof loadItem>>;
-  usePs2Theme(collection.id, 'item');
+  usePs2Theme(collection.id, 'item', item.storageLocation);
   const [asyncUsers, setAsyncUsers] = useState<User[] | null>(null);
   const modelViewerRef = useRef<HTMLElement>(null);
 

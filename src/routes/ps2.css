@@ -27,8 +27,9 @@
  * as dark as the top-right. The photo does not: the left edge is still
  * medium gray at the bottom. Two axis-aligned gradients blended with
  * difference reproduce that field at any viewport shape.
- * An open save keeps the icon.sys four-corner gradient (red-orange, green,
- * blue, gray-green), lifted so the type still holds.
+ * An open save paints that save's icon.sys background: four corner colors
+ * on a full-screen quad, with 0x80 as full intensity and the file's opacity
+ * over black. Opacity 0 leaves the page black.
  */
 
 html[data-ps2] {
@@ -67,6 +68,12 @@ html[data-ps2="collection"] {
   background-color: #050b00;
   background-image: var(--ps2-field-browser);
   background-blend-mode: difference, normal;
+}
+
+html[data-ps2="item"] {
+  background-color: #000;
+  background-image: var(--ps2-icon-bg, none);
+  background-blend-mode: normal;
 }
 
 html[data-ps2] body {
