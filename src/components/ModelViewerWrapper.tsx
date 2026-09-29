@@ -2,9 +2,15 @@ import { Item } from '../manifest';
 import '@google/model-viewer'
 import React from 'react';
 
-export function ModelViewerWrapper(props: { item: Item; size?: ModelSize; modelViewerRef?: React.RefObject<HTMLElement>; }) {
+export function ModelViewerWrapper(props: { item: Item; size?: ModelSize; modelViewerRef?: React.RefObject<HTMLElement>; viewTransitionName?: string; }) {
+  const transitionStyle = props.viewTransitionName
+    ? ({
+        viewTransitionName: props.viewTransitionName,
+        viewTransitionClass: "model",
+      } as React.CSSProperties)
+    : undefined;
   return (
-    <div className='model-viewer-wrapper'>
+    <div className='model-viewer-wrapper' style={transitionStyle}>
       {props.size !== 'small' && <div className='camera-keys'>
         <kbd>SHIFT</kbd> <kbd>←</kbd> <kbd>↑</kbd> <kbd>↓</kbd> <kbd>→</kbd>
       </div>}

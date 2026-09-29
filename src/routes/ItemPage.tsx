@@ -15,6 +15,8 @@ import { AFrameScene } from "../components/AFrameScene";
 import { Receipt } from "../components/Receipt";
 import { DescriptionList } from "../components/DescriptionList";
 import * as yaml from '../yaml.ts';
+import { useModelViewTransitionName } from "../modelViewTransition";
+import { ITEMS_PER_PAGE } from "../pagination";
 
 export const loader = loadItem
 
@@ -69,6 +71,12 @@ export default function ItemPage() {
   const vrMode = searchParams.get("vr") || "";
   const renderAFrameScene = vrMode === "auto" || vrMode === "dsstore";
   const positioningMode = vrMode === "dsstore" ? "dsstore" : "auto";
+  const modelViewTransitionName = useModelViewTransitionName(
+    { userId: user.id, collectionId: collection.id, itemId: item.id },
+    { item: !renderAFrameScene }
+  );
+  const itemIndex = collection.items.indexOf(item);
+  const collectionPage = itemIndex > 0 ? Math.floor(itemIndex / ITEMS_PER_PAGE) : 0;
 
   const handleVRToggle = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newSearchParams = new URLSearchParams(searchParams);
@@ -90,7 +98,7 @@ export default function ItemPage() {
     <article className='item-page'>
       <HelmetMeta meta={metaForItem(item, collection, user)} />
       <PageHeader>
-        <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}/${collection.id}`}>{collection.name}</QueryPreservingLink> / {item.name} <span className='index'>({collection.items.indexOf(item) + 1})</span>
+        <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}/${collection.id}`} viewTransition pushParam={collectionPage > 0 ? new Map([["page", String(collectionPage)]]) : undefined}>{collection.name}</QueryPreservingLink> / {item.name} <span className='index'>({itemIndex + 1})</span>
       </PageHeader>
       <div className='bento'>
         <div id="previous">
@@ -106,7 +114,7 @@ export default function ItemPage() {
         <div id="model">
           {renderAFrameScene
             ? <AFrameScene users={allUsers} startingItem={item} positioningMode={positioningMode} />
-            : <ModelViewerWrapper modelViewerRef={modelViewerRef} item={item} size='responsive-big' />
+            : <ModelViewerWrapper modelViewerRef={modelViewerRef} item={item} size='responsive-big' viewTransitionName={modelViewTransitionName} />
           }
           <div className="vr-controls" style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
             <label className="vr-toggle">

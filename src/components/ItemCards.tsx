@@ -15,8 +15,10 @@ export function ItemCards(props: {
   limit?: number;
   /** 0-based start index for displayed items (e.g. currentPage * ITEMS_PER_PAGE); makes indexes page-aware */
   startIndex?: number;
+  /** Morph each model into the item page, and the first item into the homepage preview. */
+  modelTransition?: boolean;
 }) {
-  const { highlighted, limit, collection, user, startIndex } = props;
+  const { highlighted, limit, collection, user, startIndex, modelTransition } = props;
   const { items } = collection;
   const showSeeMore = limit && items.length > limit;
 
@@ -46,7 +48,16 @@ export function ItemCards(props: {
       <ul className='item-cards'>
         {truncatedItems.map((item, i) => (
           <li key={item.id} className={item.id === highlighted ? 'yelling highlight-model-viewer' : undefined}>
-            <ItemCard item={item} collection={collection} user={user} showIndex={true} index={offset + i + 1} selected={item.id === highlighted} />
+            <ItemCard
+              item={item}
+              collection={collection}
+              user={user}
+              showIndex={true}
+              index={offset + i + 1}
+              selected={item.id === highlighted}
+              modelTransition={modelTransition}
+              transitionWithHome={Boolean(modelTransition) && offset + i === 0}
+            />
           </li>
         ))}
       </ul>

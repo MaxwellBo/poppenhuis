@@ -10,7 +10,9 @@ export function QueryPreservingLink(props: {
   children: React.ReactNode, 
   triggerKey?: string,
   pushParam?: Map<string, string>,
-  popParam?: Set<string> }) {
+  popParam?: Set<string>,
+  /** Runs document.startViewTransition for this navigation (View Transition API). */
+  viewTransition?: boolean }) {
   const [searchParams] = useSearchParams();
   const linkRef = useRef<HTMLAnchorElement>(null);
 
@@ -50,6 +52,7 @@ export function QueryPreservingLink(props: {
     <NavLink 
       ref={linkRef} 
       id={props.id}
+      viewTransition={props.viewTransition}
         className={({ isActive, isPending }) => {
           return isPending 
             ? `${props.className} pending` 

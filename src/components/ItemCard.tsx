@@ -2,6 +2,7 @@ import { Item, Collection, User } from '../manifest';
 import { ModelSize } from './ModelViewerWrapper';
 import { ModelViewerWrapper } from './ModelViewerWrapper';
 import { QueryPreservingLink } from './QueryPreservingLink';
+import { useModelViewTransitionName } from '../modelViewTransition';
 
 
 export function ItemCard(props: { 
@@ -15,18 +16,26 @@ export function ItemCard(props: {
   size?: ModelSize; 
   triggerKey?: string;
   selected?: boolean;
+  /** Grow/shrink this model when opening or leaving the item page. */
+  modelTransition?: boolean;
+  /** Also share the model with the homepage preview (collection's first item). */
+  transitionWithHome?: boolean;
 }) {
-  const { item, collection, user, altName, size, triggerKey, showIndex, index, selected } = props;
+  const { item, collection, user, altName, size, triggerKey, showIndex, index, selected, modelTransition, transitionWithHome } = props;
   const name = altName ?? item.name;
   const displayIndex = index ?? collection.items.indexOf(item) + 1;
+  const viewTransitionName = useModelViewTransitionName(
+    { userId: user.id, collectionId: collection.id, itemId: item.id },
+    { home: Boolean(transitionWithHome) && !selected, item: Boolean(modelTransition) && !selected }
+  );
   return (
     <div className="card">
       <div className='center'>
-        <ModelViewerWrapper item={item} size={size ?? 'normal'} />
+        <ModelViewerWrapper item={item} size={size ?? 'normal'} viewTransitionName={viewTransitionName} />
         {selected ? (
           <span>{name}</span>
         ) : (
-          <QueryPreservingLink to={`/${user.id}/${collection.id}/${item.id}`} triggerKey={triggerKey}>
+          <QueryPreservingLink to={`/${user.id}/${collection.id}/${item.id}`} triggerKey={triggerKey} viewTransition={modelTransition}>
             {name}
           </QueryPreservingLink>
         )}

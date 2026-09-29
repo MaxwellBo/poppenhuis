@@ -9,6 +9,7 @@ import { HelmetMeta } from "../components/HelmetMeta";
 import { QueryPreservingLink } from "../components/QueryPreservingLink";
 import { PageHeader } from "../components/PageHeader";
 import { ModelViewerWrapper } from "../components/ModelViewerWrapper";
+import { useModelViewTransitionName } from "../modelViewTransition";
 
 const EXAMPLE_MANIFEST_URL = 'https://raw.githubusercontent.com/MaxwellBo/maxwellbo.github.io/master/poppenhuis-manifest.json'
 
@@ -187,17 +188,31 @@ function UserListEntry(props: { user: User }) {
       <ul>
         {
           user.collections.map((collection) =>
-            <li key={collection.id}>
-              <QueryPreservingLink to={`${user.id}/${collection.id}`}>{collection.name}</QueryPreservingLink> <Size ts={collection.items} t="item" />
-              <div>
-                {collection.items[0] && <ModelViewerWrapper item={collection.items[0]} size="small" />}
-              </div>
-            </li>
+            <HomeCollectionEntry key={collection.id} user={user} collection={collection} />
           )
         }
       </ul>
     </li>
   )
+}
+
+function HomeCollectionEntry(props: { user: User; collection: User["collections"][number] }) {
+  const { user, collection } = props;
+  const hero = collection.items[0];
+  const collectionPath = `/${user.id}/${collection.id}`;
+  const viewTransitionName = useModelViewTransitionName(
+    { userId: user.id, collectionId: collection.id, itemId: hero?.id ?? "empty" },
+    { home: hero != null }
+  );
+
+  return (
+    <li>
+      <QueryPreservingLink to={collectionPath} viewTransition={hero != null}>{collection.name}</QueryPreservingLink> <Size ts={collection.items} t="item" />
+      <div>
+        {hero && <ModelViewerWrapper item={hero} size="small" viewTransitionName={viewTransitionName} />}
+      </div>
+    </li>
+  );
 }
 
 function ThirdPartyManifestLoader() {

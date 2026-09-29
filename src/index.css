@@ -471,6 +471,49 @@ form.table-form label {
   z-index: 10;
 }
 
+/* Shared-element morph for a model moving between homepage, collection, and item.
+   The group resizes from the old box to the new one, so the same snapshot grows
+   or shrinks. Only the outgoing frame is shown: the incoming model-viewer is a
+   fresh WebGL canvas and is often still blank when the new snapshot is taken. */
+::view-transition-group(.model) {
+  animation-duration: 500ms;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  z-index: 10;
+}
+
+::view-transition-image-pair(.model) {
+  isolation: auto;
+}
+
+::view-transition-old(.model),
+::view-transition-new(.model) {
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
+  object-position: center;
+  mix-blend-mode: normal;
+  animation: none;
+}
+
+::view-transition-new(.model) {
+  opacity: 0;
+}
+
+::view-transition-group(root),
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 500ms;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation-duration: 0.01ms !important;
+  }
+}
+
 .a-scene-wrapper .camera-keys,
 .model-viewer-wrapper .camera-keys {
   display: none;
