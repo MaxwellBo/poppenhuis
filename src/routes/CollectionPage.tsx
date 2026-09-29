@@ -9,6 +9,7 @@ import { QueryPreservingLink } from '../components/QueryPreservingLink';
 import { PageHeader } from '../components/PageHeader';
 import * as yaml from '../yaml.ts';
 import { visiblePageTokens } from '../pagination';
+import { usePs2Theme } from './ps2-theme';
 
 const ITEMS_PER_PAGE = 30;
 
@@ -70,6 +71,7 @@ function CollectionPagination(props: {
 
 export default function CollectionPage() {
   const { collection, user } = useLoaderData() as Awaited<ReturnType<typeof loader>>;
+  usePs2Theme(collection.id);
   const [searchParams] = useSearchParams();
   const pageParam = searchParams.get('page');
   const page = Math.max(0, parseInt(pageParam ?? '0', 10) || 0);
