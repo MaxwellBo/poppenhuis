@@ -236,15 +236,58 @@ html[data-ps2] .model-viewer-wrapper,
 html[data-ps2] .a-scene-wrapper,
 html[data-ps2] .model-viewer-wrapper:hover,
 html[data-ps2] .a-scene-wrapper:hover {
+  position: relative;
   border-color: transparent;
 }
 
-html[data-ps2] .model-viewer-wrapper:hover,
-html[data-ps2] .a-scene-wrapper:hover {
-  filter: drop-shadow(0 0 8px rgba(78, 200, 240, 0.55));
+/*
+ * The memory-card browser marks the icon under the cursor with a white
+ * spotlight: a soft radial pool of light, not a coloured outline of the
+ * mesh. inset stretches the layer to the viewer box — a percentage height
+ * would collapse, because the wrapper's height comes from its content.
+ * The pool sits behind the mesh. A lighter screen pass lights the icon
+ * itself without tracing its silhouette.
+ */
+html[data-ps2] .model-viewer-wrapper:hover::before,
+html[data-ps2] .a-scene-wrapper:hover::before,
+html[data-ps2] .model-viewer-wrapper:focus-within::before,
+html[data-ps2] .a-scene-wrapper:focus-within::before,
+html[data-ps2] .model-viewer-wrapper:hover::after,
+html[data-ps2] .a-scene-wrapper:hover::after,
+html[data-ps2] .model-viewer-wrapper:focus-within::after,
+html[data-ps2] .a-scene-wrapper:focus-within::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    circle closest-side at 50% 50%,
+    #ffffff 0%,
+    rgba(255, 255, 255, 0.92) 22%,
+    rgba(255, 255, 255, 0.45) 50%,
+    rgba(255, 255, 255, 0) 78%
+  );
+}
+
+html[data-ps2] .model-viewer-wrapper:hover::before,
+html[data-ps2] .a-scene-wrapper:hover::before,
+html[data-ps2] .model-viewer-wrapper:focus-within::before,
+html[data-ps2] .a-scene-wrapper:focus-within::before {
+  z-index: 0;
+}
+
+html[data-ps2] .model-viewer-wrapper:hover::after,
+html[data-ps2] .a-scene-wrapper:hover::after,
+html[data-ps2] .model-viewer-wrapper:focus-within::after,
+html[data-ps2] .a-scene-wrapper:focus-within::after {
+  z-index: 2;
+  mix-blend-mode: screen;
+  opacity: 0.55;
 }
 
 html[data-ps2] model-viewer {
+  position: relative;
+  z-index: 1;
   background: transparent;
   --poster-color: transparent;
 }
