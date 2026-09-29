@@ -71,7 +71,7 @@ function CollectionPagination(props: {
 
 export default function CollectionPage() {
   const { collection, user } = useLoaderData() as Awaited<ReturnType<typeof loader>>;
-  usePs2Theme(collection.id);
+  usePs2Theme(collection.id, 'collection');
   const [searchParams] = useSearchParams();
   const pageParam = searchParams.get('page');
   const page = Math.max(0, parseInt(pageParam ?? '0', 10) || 0);

@@ -20,9 +20,10 @@
  *   selected   cyan, glowing         (Copy)
  *   deselected charcoal              (Delete)
  *
- * The field is the icon.sys four-corner gradient from a save's options
- * screen: red-orange top-left, green top-right, blue bottom-left, gray-green
- * bottom-right. Sampled hues, lifted so the type still holds.
+ * The collection page uses the memory-card browser field: a gray gradient,
+ * lighter at the top and darker toward the bottom, sampled from that screen.
+ * An open save keeps the icon.sys four-corner gradient (red-orange, green,
+ * blue, gray-green), lifted so the type still holds.
  */
 
 html[data-ps2] {
@@ -35,6 +36,9 @@ html[data-ps2] {
   --ps2-deselected: #3a3a3a;
   --ps2-muted: rgba(244, 244, 244, 0.72);
   --ps2-edge: 0 1px 0 #000, 0 -1px 0 #000, 1px 0 0 #000, -1px 0 0 #000;
+  --ps2-field-browser:
+    radial-gradient(ellipse 110% 70% at 50% 0%, #8c918d 0%, rgba(140, 145, 141, 0) 58%),
+    linear-gradient(180deg, #7a807c 0%, #5c625e 42%, #3c423e 72%, #262b27 100%);
   --ps2-field:
     radial-gradient(ellipse 75% 58% at 0% 0%, #c85a32 0%, rgba(200, 90, 50, 0) 62%),
     radial-gradient(ellipse 55% 42% at 48% 0%, #8a9428 0%, rgba(138, 148, 40, 0) 64%),
@@ -52,6 +56,11 @@ html[data-ps2] {
   background-attachment: fixed;
   background-repeat: no-repeat;
   background-size: cover;
+}
+
+html[data-ps2="collection"] {
+  background-color: #262b27;
+  background-image: var(--ps2-field-browser);
 }
 
 html[data-ps2] body {
