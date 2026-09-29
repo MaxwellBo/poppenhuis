@@ -10,8 +10,8 @@
  * replacements substitute (Roboto, in the BIOS font contest).
  *
  * Arimo is the OFL metric-compatible Arial, so this route can set that Latin
- * without embedding Rodin. Helvetica Neue / Arial stay in the stack where the
- * system already has them.
+ * without embedding Rodin. The theme hook loads Arimo at 700; Helvetica Neue
+ * and Arial stay in the stack where the system already has them.
  *
  * Color roles follow the save screen:
  *   primary    yellow title          (RESIDENT EVIL, Indigo Prophecy)
@@ -24,8 +24,6 @@
  * screen: red-orange top-left, green top-right, blue bottom-left, gray-green
  * bottom-right. Sampled hues, lifted so the type still holds.
  */
-
-@import url('https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&display=swap');
 
 html[data-ps2] {
   --ps2-font: Arimo, "Helvetica Neue", Helvetica, Arial, "Liberation Sans", sans-serif;
@@ -66,7 +64,7 @@ html[data-ps2] body {
 }
 
 html[data-ps2] body * {
-  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.55);
+  text-shadow: var(--ps2-edge);
 }
 
 html[data-ps2] h1,
@@ -116,6 +114,16 @@ html[data-ps2] .index,
 html[data-ps2] .count,
 html[data-ps2] .size {
   color: var(--ps2-muted);
+}
+
+html[data-ps2] dd:empty::after,
+html[data-ps2] dd:empty.list::after {
+  opacity: 1;
+  color: var(--ps2-deselected);
+}
+
+html[data-ps2] .item-cards li {
+  border-left-color: transparent !important;
 }
 
 html[data-ps2] a {
