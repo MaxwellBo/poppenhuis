@@ -2,6 +2,14 @@ import { Item } from '../manifest';
 import '@google/model-viewer'
 import React from 'react';
 
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      'model-viewer': any;
+    }
+  }
+}
+
 /**
  * model-viewer orbit: azimuth, polar angle, radius.
  * Polar 0° is straight down and 90° is level. Azimuth 0° is model-viewer's front.
@@ -32,6 +40,7 @@ type ModelViewerElement = HTMLElement & {
 export function ModelViewerWrapper(props: { item: Item; size?: ModelSize; modelViewerRef?: { current: HTMLElement | null }; camera?: ModelCamera; }) {
   const spin = props.camera?.autoRotate !== false;
   const viewerRef = React.useRef<ModelViewerElement | null>(null);
+  const [loading, setLoading] = React.useState(true);
 
   const setViewer = (node: HTMLElement | null) => {
     viewerRef.current = node as ModelViewerElement | null;
@@ -39,6 +48,20 @@ export function ModelViewerWrapper(props: { item: Item; size?: ModelSize; modelV
       props.modelViewerRef.current = node;
     }
   };
+
+  React.useEffect(() => {
+    const viewer = viewerRef.current;
+    if (!viewer) return;
+    const hide = () => setLoading(false);
+    setLoading(true);
+    viewer.addEventListener('load', hide);
+    viewer.addEventListener('error', hide);
+    if (viewer.loaded) hide();
+    return () => {
+      viewer.removeEventListener('load', hide);
+      viewer.removeEventListener('error', hide);
+    };
+  }, [props.item.model]);
 
   React.useEffect(() => {
     const viewer = viewerRef.current;
@@ -60,7 +83,6 @@ export function ModelViewerWrapper(props: { item: Item; size?: ModelSize; modelV
       {props.size !== 'small' && <div className='camera-keys'>
         <kbd>SHIFT</kbd> <kbd>←</kbd> <kbd>↑</kbd> <kbd>↓</kbd> <kbd>→</kbd>
       </div>}
-      {/* @ts-ignore */}
       <model-viewer
         ref={setViewer}
         key={props.item.model}
@@ -68,7 +90,6 @@ export function ModelViewerWrapper(props: { item: Item; size?: ModelSize; modelV
         alt={props.item.alt}
         src={props.item.model}
         interaction-prompt=""
-        progress-bar=""
         loading="auto"
         // poster={props.size !== 'responsive-big' ? props.item.poster : undefined}
         camera-orbit={props.camera?.orbit}
@@ -78,7 +99,11 @@ export function ModelViewerWrapper(props: { item: Item; size?: ModelSize; modelV
         camera-controls
         auto-rotate={spin ? true : undefined}
         autoplay
-        touch-action="pan-y" />
+        touch-action="pan-y">
+        {/* Replaces the built-in loading bar. */}
+        <div slot="progress-bar" />
+      </model-viewer>
+      {loading && <div className="braille-spinner" aria-hidden="true" />}
     </div>
   );
 }
