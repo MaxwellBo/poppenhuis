@@ -149,7 +149,11 @@ html[data-ps2] .item-cards li {
   border-left-color: transparent !important;
 }
 
-html[data-ps2] a {
+/* Resting links share one color. Charcoal is reserved for unavailable
+   controls (disabled labels, buttons), not for anchors. */
+html[data-ps2] a,
+html[data-ps2] a:link,
+html[data-ps2] a:visited {
   color: var(--ps2-body);
   text-decoration: none;
 }
@@ -179,10 +183,7 @@ html[data-ps2] .yelling .card span {
   text-shadow: var(--ps2-edge);
 }
 
-html[data-ps2] .header-actions a,
-html[data-ps2] .action-link,
-html[data-ps2] button,
-html[data-ps2] #page-header-links a {
+html[data-ps2] button {
   color: var(--ps2-deselected);
   font-weight: 700;
   text-shadow: none;
