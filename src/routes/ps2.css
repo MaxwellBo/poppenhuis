@@ -243,15 +243,37 @@ html[data-ps2] .model-viewer-wrapper,
 html[data-ps2] .a-scene-wrapper,
 html[data-ps2] .model-viewer-wrapper:hover,
 html[data-ps2] .a-scene-wrapper:hover {
+  position: relative;
   border-color: transparent;
 }
 
-html[data-ps2] .model-viewer-wrapper:hover,
-html[data-ps2] .a-scene-wrapper:hover {
-  filter: drop-shadow(0 0 8px rgba(78, 200, 240, 0.55));
+/*
+ * The memory-card browser puts a white spotlight behind the icon under the
+ * cursor. inset stretches that pool to the viewer box — a percentage height
+ * would collapse, because the wrapper's height comes from its content.
+ * Nothing is painted over the mesh, so the icon keeps its own colour.
+ */
+html[data-ps2] .model-viewer-wrapper:hover::before,
+html[data-ps2] .a-scene-wrapper:hover::before,
+html[data-ps2] .model-viewer-wrapper:focus-within::before,
+html[data-ps2] .a-scene-wrapper:focus-within::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    circle closest-side at 50% 50%,
+    #ffffff 0%,
+    rgba(255, 255, 255, 0.96) 26%,
+    rgba(255, 255, 255, 0.62) 52%,
+    rgba(255, 255, 255, 0) 78%
+  );
 }
 
 html[data-ps2] model-viewer {
+  position: relative;
+  z-index: 1;
   background: transparent;
   --poster-color: transparent;
 }
