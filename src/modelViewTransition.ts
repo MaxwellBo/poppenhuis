@@ -157,6 +157,43 @@ if (typeof document !== "undefined" && typeof document.startViewTransition === "
   installModelPoseHandoff(document);
 }
 
+/** Where a copy of an item sits on the item page, aside from the large viewer. */
+export type ModelTransitionPlace = "adjacent" | "strip";
+
+let transitionPlaceHint: ModelTransitionPlace | null = null;
+
+/** Remember which copy was clicked so only that element is named. */
+export function rememberTransitionPlace(place: ModelTransitionPlace) {
+  transitionPlaceHint = place;
+}
+
+export function preferredTransitionPlace(): ModelTransitionPlace {
+  return transitionPlaceHint ?? "adjacent";
+}
+
+/**
+ * One view-transition-name per item. The large viewer wins for the open item.
+ * Previous/next and the bottom strip can show the same other item; the place
+ * that was clicked gets the name, and the other copy of the open item uses
+ * that same place so the model shrinks back into it.
+ */
+export function resolveModelTransitionPlace(
+  itemKey: string,
+  opts: {
+    heroKey: string;
+    inStrip: boolean;
+    inAdjacent: boolean;
+    preferred: ModelTransitionPlace;
+  }
+): ModelTransitionPlace | null {
+  if (itemKey === opts.heroKey) return null;
+  if (!opts.inStrip && !opts.inAdjacent) return null;
+  if (opts.preferred === "strip" && opts.inStrip) return "strip";
+  if (opts.preferred === "adjacent" && opts.inAdjacent) return "adjacent";
+  if (opts.inStrip) return "strip";
+  return "adjacent";
+}
+
 /**
  * Shared element name for one model. The same name on the outgoing and
  * incoming pages is what lets the View Transition API grow or shrink it.
@@ -175,8 +212,8 @@ export function modelViewTransitionName(userId: string, collectionId: string, it
  * `home` — homepage preview of a collection's first item, and that same item
  * on the collection page (transitions between `/` and the collection).
  * `item` — this item's URL is either side of the navigation. That covers a
- * collection card, a user-page preview card, and the item page, plus
- * previous/next on the item page.
+ * collection card, a user-page preview card, the item page, previous/next,
+ * and the strip of items along the bottom of the item page.
  */
 export function useModelViewTransitionName(
   ids: { userId: string; collectionId: string; itemId: string },

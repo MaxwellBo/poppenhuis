@@ -12,7 +12,8 @@ export function QueryPreservingLink(props: {
   pushParam?: Map<string, string>,
   popParam?: Set<string>,
   /** Runs document.startViewTransition for this navigation (View Transition API). */
-  viewTransition?: boolean }) {
+  viewTransition?: boolean;
+  onClick?: () => void; }) {
   const [searchParams] = useSearchParams();
   const linkRef = useRef<HTMLAnchorElement>(null);
 
@@ -61,6 +62,7 @@ export function QueryPreservingLink(props: {
               : props.className
         }
       }
+      onClick={props.onClick}
       to={{ pathname: props.to, search: preserved.toString() }}>
         {props.children}
       </NavLink>

@@ -8,6 +8,7 @@ import {
   ModelPoseTarget,
   peekModelPose,
   readModelPose,
+  resolveModelTransitionPlace,
 } from "./modelViewTransition";
 
 const SPINNING: ModelPose = {
@@ -53,6 +54,47 @@ function rootOf(...wrappers: HTMLElement[]): ParentNode {
     querySelectorAll: () => wrappers,
   } as unknown as ParentNode;
 }
+
+describe("item page transition place", () => {
+  const hero = "jackie/cakes/brat";
+  const other = "jackie/cakes/meringue-stack";
+
+  it("names the bottom strip when that copy was clicked", () => {
+    expect(resolveModelTransitionPlace(other, {
+      heroKey: hero,
+      inStrip: true,
+      inAdjacent: true,
+      preferred: "strip",
+    })).toBe("strip");
+  });
+
+  it("names the side thumbnail when that copy was clicked", () => {
+    expect(resolveModelTransitionPlace(other, {
+      heroKey: hero,
+      inStrip: true,
+      inAdjacent: true,
+      preferred: "adjacent",
+    })).toBe("adjacent");
+  });
+
+  it("falls back when the preferred copy is not on the page", () => {
+    expect(resolveModelTransitionPlace(other, {
+      heroKey: hero,
+      inStrip: false,
+      inAdjacent: true,
+      preferred: "strip",
+    })).toBe("adjacent");
+  });
+
+  it("does not name the open item's extra copies", () => {
+    expect(resolveModelTransitionPlace(hero, {
+      heroKey: hero,
+      inStrip: true,
+      inAdjacent: false,
+      preferred: "strip",
+    })).toBeNull();
+  });
+});
 
 describe("model pose handoff", () => {
   afterEach(() => {

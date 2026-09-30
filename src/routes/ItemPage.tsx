@@ -15,7 +15,7 @@ import { AFrameScene } from "../components/AFrameScene";
 import { Receipt } from "../components/Receipt";
 import { DescriptionList } from "../components/DescriptionList";
 import * as yaml from '../yaml.ts';
-import { useModelViewTransitionName } from "../modelViewTransition";
+import { preferredTransitionPlace, resolveModelTransitionPlace, useModelViewTransitionName } from "../modelViewTransition";
 import { ITEMS_PER_PAGE } from "../pagination";
 import { USER_PAGE_PREVIEW_LIMIT } from "./UserPage";
 
@@ -84,6 +84,20 @@ export default function ItemPage() {
   const sideCardsShareAnItem = previousKey === nextKey;
   const previousCanTransition = !renderAFrameScene && previousKey !== heroKey && !sideCardsShareAnItem;
   const nextCanTransition = !renderAFrameScene && nextKey !== heroKey && !sideCardsShareAnItem;
+  const stripLimit = 6;
+  const stripStart = currentIndex >= 0 ? Math.floor(currentIndex / stripLimit) * stripLimit : 0;
+  const stripKeys = new Set(
+    allItems.slice(stripStart, stripStart + stripLimit).map((flat) => `${flat.user.id}/${flat.collection.id}/${flat.item.id}`)
+  );
+  const adjacentKeys = new Set<string>();
+  if (previousCanTransition) adjacentKeys.add(previousKey);
+  if (nextCanTransition) adjacentKeys.add(nextKey);
+  const transitionPlaceFor = (itemKey: string) => resolveModelTransitionPlace(itemKey, {
+    heroKey,
+    inStrip: stripKeys.has(itemKey),
+    inAdjacent: adjacentKeys.has(itemKey),
+    preferred: preferredTransitionPlace(),
+  });
   const itemIndex = collection.items.indexOf(item);
   const collectionPage = itemIndex > 0 ? Math.floor(itemIndex / ITEMS_PER_PAGE) : 0;
   const userPageShowsItem = itemIndex >= 0 && itemIndex < USER_PAGE_PREVIEW_LIMIT;
@@ -120,7 +134,9 @@ export default function ItemPage() {
             triggerKey="h"
             altName={previousItemIsLast ? "↻ go to end" : "← previous"}
             size='small'
-            modelTransition={previousCanTransition} />
+            modelTransition={previousCanTransition}
+            nameTransition={transitionPlaceFor(previousKey) === "adjacent"}
+            transitionPlace="adjacent" />
         </div>
         <div id="model">
           {renderAFrameScene
@@ -177,13 +193,17 @@ export default function ItemPage() {
             user={nextUser} triggerKey="l"
             altName={nextItemIsFirst ? "back to start ↺" : "next →"}
             size='small'
-            modelTransition={nextCanTransition} />
+            modelTransition={nextCanTransition}
+            nameTransition={transitionPlaceFor(nextKey) === "adjacent"}
+            transitionPlace="adjacent" />
         </div>
         <div id="cards">
           <GlobalItemCards 
             allItems={allItems}
             highlighted={currentIndex}
-            limit={6}
+            limit={stripLimit}
+            modelTransition={!renderAFrameScene}
+            nameTransition={(itemKey) => transitionPlaceFor(itemKey) === "strip"}
           />
         </div>
       </div>

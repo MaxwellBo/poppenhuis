@@ -78,8 +78,12 @@ export function GlobalItemCards(props: {
   allItems: FlatItem[];
   highlighted: number;
   limit: number;
+  /** Morph a bottom-strip model into the item page. The highlighted item stays unnamed. */
+  modelTransition?: boolean;
+  /** True only for the strip copy that should carry the shared-element name. */
+  nameTransition?: (itemKey: string) => boolean;
 }) {
-  const { allItems, highlighted, limit } = props;
+  const { allItems, highlighted, limit, modelTransition, nameTransition } = props;
   
   const start = Math.floor(highlighted / limit) * limit;
   const end = start + limit;
@@ -91,6 +95,7 @@ export function GlobalItemCards(props: {
         const { item, collection: itemCollection, user: itemUser } = flatItem;
         const globalIndex = start + index;
         const isHighlighted = globalIndex === highlighted;
+        const itemKey = `${itemUser.id}/${itemCollection.id}/${item.id}`;
         
         // Check if we need a divider before this item
         const needsDivider = index > 0 && 
@@ -103,7 +108,16 @@ export function GlobalItemCards(props: {
             className={isHighlighted ? 'yelling highlight-model-viewer' : undefined}
             style={needsDivider ? { borderLeft: '1px dotted #ccc' } : undefined}
           >
-            <ItemCard item={item} collection={itemCollection} user={itemUser} showIndex={true} selected={isHighlighted} />
+            <ItemCard
+              item={item}
+              collection={itemCollection}
+              user={itemUser}
+              showIndex={true}
+              selected={isHighlighted}
+              modelTransition={Boolean(modelTransition) && !isHighlighted}
+              nameTransition={Boolean(nameTransition?.(itemKey))}
+              transitionPlace="strip"
+            />
           </li>
         );
       })}
