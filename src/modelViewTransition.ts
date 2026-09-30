@@ -177,12 +177,12 @@ export function isViewTransitionExpected() {
 }
 
 /**
- * The red corner badge is for a load that is actually taking a while.
- * A view transition already moves the model, so the badge stays hidden,
- * including for the moment before that transition starts.
+ * On a normal navigation the loading state ends before the browser paints,
+ * so this badge never shows. A view transition holds that loading state until
+ * the snapshot, which is long enough to paint it. The morph doesn't need it.
  */
-export function shouldShowRouteSpinner(loading: boolean, viewTransition: boolean, waited: boolean) {
-  return loading && !viewTransition && waited;
+export function shouldShowRouteSpinner(loading: boolean, viewTransition: boolean) {
+  return loading && !viewTransition;
 }
 
 /** Remember which copy was clicked so only that element is named. */

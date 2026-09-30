@@ -58,16 +58,15 @@ function rootOf(...wrappers: HTMLElement[]): ParentNode {
 
 describe("route spinner", () => {
   it("stays hidden during a view transition", () => {
-    expect(shouldShowRouteSpinner(true, true, true)).toBe(false);
+    expect(shouldShowRouteSpinner(true, true)).toBe(false);
   });
 
-  it("stays hidden until a non-transition load has waited", () => {
-    expect(shouldShowRouteSpinner(true, false, false)).toBe(false);
-    expect(shouldShowRouteSpinner(true, false, true)).toBe(true);
+  it("still shows for a normal load", () => {
+    expect(shouldShowRouteSpinner(true, false)).toBe(true);
   });
 
   it("hides once navigation is idle", () => {
-    expect(shouldShowRouteSpinner(false, false, true)).toBe(false);
+    expect(shouldShowRouteSpinner(false, false)).toBe(false);
   });
 });
 

@@ -96,8 +96,10 @@ function LoadingStatus() {
   const navigation = useNavigation();
   const loading = navigation.state === "loading";
   const nextPath = navigation.location?.pathname ?? "/";
+  // A view transition keeps navigation.state at "loading" until the snapshot,
+  // which is long enough for this badge to paint. A normal navigation returns
+  // to idle before paint, so the same check shows nothing there.
   const viewTransitioning = useViewTransitionState(nextPath) || isViewTransitionExpected();
-  const [waited, setWaited] = React.useState(false);
   const stateRef = React.useRef(navigation.state);
   stateRef.current = navigation.state;
 
@@ -113,16 +115,10 @@ function LoadingStatus() {
   }, []);
 
   React.useEffect(() => {
-    if (!loading) {
-      clearViewTransitionExpectation();
-      setWaited(false);
-      return;
-    }
-    const id = window.setTimeout(() => setWaited(true), 400);
-    return () => window.clearTimeout(id);
-  }, [loading, navigation.location?.key]);
+    if (!loading) clearViewTransitionExpectation();
+  }, [loading]);
 
-  if (!shouldShowRouteSpinner(loading, viewTransitioning, waited)) return null;
+  if (!shouldShowRouteSpinner(loading, viewTransitioning)) return null;
   return <Spinner />;
 }
 
