@@ -1,9 +1,19 @@
 import { describe, it, expect } from 'vitest';
 import { existsSync } from 'fs';
+import { COLLECTION_DESCRIPTION } from '../scripts/ps2-icon-meta';
 import { PS2_SAVE_ICONS_COLLECTION } from './ps2-archive';
 import { ps2iodbSlugFromStorage } from './utils/ps2iodb-attribution';
 
 describe('PS2 save-icon archive', () => {
+  it('says the icons are sourced from PS2IODB and titles the reference links', () => {
+    expect(COLLECTION_DESCRIPTION).toBe(
+      "Sourced from [PS2IODB](https://ps2iodb.com).\n\n" +
+      "[Looking Through My PS1 And PS2 Memory Card](https://www.youtube.com/watch?v=AIcuALGM1TI&t=40s)\n\n" +
+      "[Never knew the PS2 could do this](https://vt.tiktok.com/ZSqNJo4Nn/)",
+    );
+    expect(PS2_SAVE_ICONS_COLLECTION.description).toBe(COLLECTION_DESCRIPTION);
+  });
+
   it('lists items alphabetically by name', () => {
     const names = PS2_SAVE_ICONS_COLLECTION.items.map((item) => item.name);
     expect(names).toEqual([...names].sort((a, b) => a.localeCompare(b)));
