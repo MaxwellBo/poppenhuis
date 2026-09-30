@@ -1,5 +1,6 @@
 import { Collection, User, Item } from '../manifest';
 import { ItemCard } from './ItemCard';
+import { ModelCamera } from './ModelViewerWrapper';
 import { QueryPreservingLink } from './QueryPreservingLink';
 
 export type FlatItem = { item: Item; collection: Collection; user: User };
@@ -22,8 +23,9 @@ export function ItemCards(props: {
    * row and the collection page. Both pages have to be showing that item.
    */
   userRowLimit?: number;
+  camera?: ModelCamera;
 }) {
-  const { highlighted, limit, collection, user, startIndex, modelTransition, userRowLimit } = props;
+  const { highlighted, limit, collection, user, startIndex, modelTransition, userRowLimit, camera } = props;
   const { items } = collection;
   const showSeeMore = limit && items.length > limit;
 
@@ -60,6 +62,7 @@ export function ItemCards(props: {
               showIndex={true}
               index={offset + i + 1}
               selected={item.id === highlighted}
+              camera={camera}
               modelTransition={modelTransition}
               transitionWithHome={Boolean(modelTransition) && offset + i === 0}
               transitionWithUserRow={userRowLimit != null && offset + i < userRowLimit}
@@ -69,7 +72,7 @@ export function ItemCards(props: {
       </ul>
       {showSeeMore &&
         <div className='center see-more'>
-          <QueryPreservingLink to={`/${user.id}/${collection.id}`} viewTransition={Boolean(modelTransition) && collection.items.length > 0}>see all <span className='count'>({collection.items.length})</span> {collection.name} →</QueryPreservingLink>
+          <QueryPreservingLink to={`/${user.id}/${collection.id}`} viewTransition={Boolean(modelTransition) && collection.items.length > 0}><span className="ui">See all</span> <span className='count'>({collection.items.length})</span> {collection.name} →</QueryPreservingLink>
         </div>}
     </>
   );
@@ -88,8 +91,9 @@ export function GlobalItemCards(props: {
   modelTransition?: boolean;
   /** True only for the strip copy that should carry the shared-element name. */
   nameTransition?: (itemKey: string) => boolean;
+  camera?: ModelCamera;
 }) {
-  const { allItems, highlighted, limit, modelTransition, nameTransition } = props;
+  const { allItems, highlighted, limit, modelTransition, nameTransition, camera } = props;
   
   const start = Math.floor(highlighted / limit) * limit;
   const end = start + limit;
@@ -120,6 +124,7 @@ export function GlobalItemCards(props: {
               user={itemUser}
               showIndex={true}
               selected={isHighlighted}
+              camera={camera}
               modelTransition={Boolean(modelTransition) && !isHighlighted}
               nameTransition={Boolean(nameTransition?.(itemKey))}
               transitionPlace="strip"

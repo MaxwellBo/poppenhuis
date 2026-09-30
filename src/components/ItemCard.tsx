@@ -1,5 +1,5 @@
 import { Item, Collection, User } from '../manifest';
-import { ModelSize } from './ModelViewerWrapper';
+import { ModelCamera, ModelSize } from './ModelViewerWrapper';
 import { ModelViewerWrapper } from './ModelViewerWrapper';
 import { QueryPreservingLink } from './QueryPreservingLink';
 import { ModelTransitionPlace, rememberTransitionPlace, useModelViewTransitionName } from '../modelViewTransition';
@@ -13,7 +13,8 @@ export function ItemCard(props: {
   /** 1-based index when pagination is used; otherwise derived from collection.items */
   index?: number;
   altName?: string; 
-  size?: ModelSize; 
+  size?: ModelSize;
+  camera?: ModelCamera;
   triggerKey?: string;
   selected?: boolean;
   /** Grow/shrink this model when opening, leaving, or moving between item pages. */
@@ -31,8 +32,7 @@ export function ItemCard(props: {
   /** Also share the model between the user-page row and the collection page. */
   transitionWithUserRow?: boolean;
 }) {
-  const { item, collection, user, altName, size, triggerKey, showIndex, index, selected, modelTransition, nameTransition, transitionPlace, transitionWithHome, transitionWithUserRow } = props;
-  const name = altName ?? item.name;
+  const { item, collection, user, altName, size, camera, triggerKey, showIndex, index, selected, modelTransition, nameTransition, transitionPlace, transitionWithHome, transitionWithUserRow } = props;
   const displayIndex = index ?? collection.items.indexOf(item) + 1;
   const named = (nameTransition ?? modelTransition) && !selected;
   const viewTransitionName = useModelViewTransitionName(
@@ -49,12 +49,12 @@ export function ItemCard(props: {
   return (
     <div className="card">
       <div className='center'>
-        <ModelViewerWrapper item={item} size={size ?? 'normal'} viewTransitionName={viewTransitionName} />
+        <ModelViewerWrapper item={item} size={size ?? 'normal'} camera={camera} viewTransitionName={viewTransitionName} />
         {selected ? (
-          <span>{name}</span>
+          <span>{altName ? <span className="ui">{altName}</span> : item.name}</span>
         ) : (
           <QueryPreservingLink to={`/${user.id}/${collection.id}/${item.id}`} triggerKey={triggerKey} viewTransition={modelTransition} onClick={rememberPlace}>
-            {name}
+            {altName ? <span className="ui">{altName}</span> : item.name}
           </QueryPreservingLink>
         )}
         {showIndex && <div className='index'>({displayIndex})</div>}

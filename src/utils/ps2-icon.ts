@@ -785,12 +785,19 @@ export function parsePsu(data: Uint8Array): PsuFile[] {
   return files;
 }
 
+/** One icon.sys corner, raw R, G, B. Sony's full intensity is 0x80. */
+export type IconSysRgb = [number, number, number];
+
 export interface IconSysMeta {
   titleRaw: Uint8Array;
   titleLineOffset: number;
   normal: string;
   copy: string;
   delete: string;
+  /** Raw background opacity. 0 is clear, 0x80 is opaque. */
+  backgroundOpacity: number;
+  /** Corner colors in icon.sys order: top-left, top-right, bottom-left, bottom-right. */
+  background: [IconSysRgb, IconSysRgb, IconSysRgb, IconSysRgb];
 }
 
 function cString(bytes: Uint8Array): string {
@@ -807,14 +814,23 @@ export function parseIconSys(data: Uint8Array): IconSysMeta {
     throw new Ps2IconError('Not an icon.sys file');
   }
   const view = new DataView(data.buffer, data.byteOffset, data.byteLength);
+  const rgb = (offset: number): IconSysRgb => [
+    view.getUint32(offset, true),
+    view.getUint32(offset + 4, true),
+    view.getUint32(offset + 8, true),
+  ];
   return {
     titleRaw: data.subarray(0xc0, 0x100),
     titleLineOffset: view.getUint16(6, true),
     normal: cString(data.subarray(0x104, 0x144)),
     copy: cString(data.subarray(0x144, 0x184)),
     delete: cString(data.subarray(0x184, 0x1c4)),
+    backgroundOpacity: view.getUint32(0x0c, true),
+    background: [rgb(0x10), rgb(0x20), rgb(0x30), rgb(0x40)],
   };
 }
+
+export { iconSysChannel } from './ps2-icon-background';
 
 /** ASCII-only fallback for Shift-JIS titles (full decode is done in the CLI). */
 export function asciiTitle(titleRaw: Uint8Array, lineOffset: number): string {

@@ -13,6 +13,10 @@ interface PageHeaderProps {
   children: React.ReactNode;
 }
 
+export function CrumbSep() {
+  return <span className="crumb-sep"> / </span>;
+}
+
 export const PageHeader: React.FC<PageHeaderProps> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(cachedCurrentUser);
   const [loading, setLoading] = useState(cachedLoading);
@@ -83,22 +87,22 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ children }) => {
     <header id="page-header">
       <div id="page-header-auth">
         {loading ? (
-          <span>loading</span>
+          <span className="ui">Loading</span>
         ) : (
           <span id="page-header-links">
             {currentUser ? (
               <>
                 {getNewItemLink() ? (
-                  <QueryPreservingLink to={getNewItemLink()!}>+ new item</QueryPreservingLink>
+                  <QueryPreservingLink className="ui" to={getNewItemLink()!}>+ New item</QueryPreservingLink>
                 ) : totalCollections === 0 ? (
-                  <abbr title="create a collection first"><s>+ new item</s></abbr>
+                  <abbr title="create a collection first"><s className="ui">+ New item</s></abbr>
                 ) : (
-                  <abbr title="more than one collection"><s>+ new item</s></abbr>
+                  <abbr title="more than one collection"><s className="ui">+ New item</s></abbr>
                 )}
                 {accountUsers.length === 1 ? (
-                  <QueryPreservingLink to={getNewCollectionLink()}>+ new collection</QueryPreservingLink>
+                  <QueryPreservingLink className="ui" to={getNewCollectionLink()}>+ New collection</QueryPreservingLink>
                 ) : (
-                  <abbr title="more than one user"><s>+ new collection</s></abbr>
+                  <abbr title="more than one user"><s className="ui">+ New collection</s></abbr>
                 )}
                 {accountUsers.length > 0 && (
                   <>
@@ -109,14 +113,14 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ children }) => {
                     ))}
                   </>
                 )}
-                <QueryPreservingLink to="/auth">account?</QueryPreservingLink>
+                <QueryPreservingLink className="ui" to="/auth">Account?</QueryPreservingLink>
               </>
             ) : (
               <>
-                <abbr title="sign in to create an item"><s>+ new item</s></abbr>
-                <abbr title="sign in to create a collection"><s>+ new collection</s></abbr>
+                <abbr title="sign in to create an item"><s className="ui">+ New item</s></abbr>
+                <abbr title="sign in to create a collection"><s className="ui">+ New collection</s></abbr>
                 <span>→</span>
-                <QueryPreservingLink to="/auth">sign in?</QueryPreservingLink>
+                <QueryPreservingLink className="ui" to="/auth">Sign in?</QueryPreservingLink>
               </>
             )}
           </span>

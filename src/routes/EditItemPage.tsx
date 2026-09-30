@@ -7,7 +7,7 @@ import { useFirebaseForm } from "../hooks/useFirebaseForm";
 import { useFirebaseSubmit } from "../hooks/useFirebaseSubmit";
 import { loadItem } from "../manifest";
 import { QueryPreservingLink } from "../components/QueryPreservingLink";
-import { PageHeader } from "../components/PageHeader";
+import { CrumbSep, PageHeader } from "../components/PageHeader";
 
 export const loader = loadItem;
 
@@ -42,7 +42,7 @@ export default function EditItemPage() {
     <article>
       <Helmet><title>edit {item.id} - poppenhuis</title></Helmet>
       <PageHeader>
-        <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}/${collection.id}`}>{collection.name}</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}/${collection.id}/${item.id}`}>{item.name}</QueryPreservingLink> / edit
+        <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink><CrumbSep /><QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink><CrumbSep /><QueryPreservingLink to={`/${user.id}/${collection.id}`}>{collection.name}</QueryPreservingLink><CrumbSep /><QueryPreservingLink to={`/${user.id}/${collection.id}/${item.id}`}>{item.name}</QueryPreservingLink><CrumbSep />edit
       </PageHeader>
       
       <FirebaseForm

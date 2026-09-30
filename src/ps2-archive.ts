@@ -3,7 +3,7 @@ export const PS2_SAVE_ICONS_COLLECTION = {
   id: "ps2-save-icons",
   name: "PS2 save icons",
   og: "/assets/derived/mbo_ps2-save-icons_og.png",
-  description: "[https://www.youtube.com/watch?v=AIcuALGM1TI&t=40s](https://www.youtube.com/watch?v=AIcuALGM1TI&t=40s)\n\n[https://vt.tiktok.com/ZSqNJo4Nn/](https://vt.tiktok.com/ZSqNJo4Nn/)",
+  description: "Sourced from [PS2IODB](https://ps2iodb.com).\n\n[Looking Through My PS1 And PS2 Memory Card](https://www.youtube.com/watch?v=AIcuALGM1TI&t=40s)\n\n[Never knew the PS2 could do this](https://vt.tiktok.com/ZSqNJo4Nn/)",
   items: [
       {
         id: "_summer",

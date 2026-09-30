@@ -7,7 +7,7 @@ import { useFirebaseForm } from "../hooks/useFirebaseForm";
 import { useFirebaseSubmit } from "../hooks/useFirebaseSubmit";
 import { loadCollection } from "../manifest";
 import { QueryPreservingLink } from "../components/QueryPreservingLink";
-import { PageHeader } from "../components/PageHeader";
+import { CrumbSep, PageHeader } from "../components/PageHeader";
 
 export const loader = loadCollection;
 
@@ -37,7 +37,7 @@ export default function EditCollectionPage() {
     <article>
       <Helmet><title>edit {collection.id} - poppenhuis</title></Helmet>
       <PageHeader>
-        <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}/${collection.id}`}>{collection.name}</QueryPreservingLink> / edit
+        <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink><CrumbSep /><QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink><CrumbSep /><QueryPreservingLink to={`/${user.id}/${collection.id}`}>{collection.name}</QueryPreservingLink><CrumbSep />edit
       </PageHeader>
       <FirebaseForm
         formData={formData}

@@ -7,7 +7,7 @@ import { metaForUser } from "../meta";
 import Markdown from "react-markdown";
 import { QueryPreservingLink } from "../components/QueryPreservingLink";
 import { HelmetMeta } from "../components/HelmetMeta";
-import { PageHeader } from "../components/PageHeader";
+import { CrumbSep, PageHeader } from "../components/PageHeader";
 import * as yaml from '../yaml.ts';
 
 export const loader = loadUser;
@@ -25,23 +25,23 @@ export default function UserPage() {
     <article>
       <HelmetMeta meta={meta} />
       <PageHeader>
-        <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / {user.name} / <Size ts={user.collections} t="collection" />
+        <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink><CrumbSep />{user.name}<CrumbSep /><Size ts={user.collections} t="collection" />
       </PageHeader>
       <div className="header-content">
         {(user.source === undefined || user.source === 'firebase') && (
-          <div className="header-actions">
+          <div className="header-actions ui">
             {user.source === undefined && (
               <>
-                <a href={`https://github.com/MaxwellBo/poppenhuis/issues/new?template=put-collection.yml&user-id=${user.id}`}>+ add collection</a>
-                <a href={`https://github.com/MaxwellBo/poppenhuis/issues/new?template=put-user.yml&yaml-template=${encodeURIComponent(userYaml)}`}>edit?</a>
-                <a href={meta.image}>og image</a>
+                <a href={`https://github.com/MaxwellBo/poppenhuis/issues/new?template=put-collection.yml&user-id=${user.id}`}>+ Add collection</a>
+                <a href={`https://github.com/MaxwellBo/poppenhuis/issues/new?template=put-user.yml&yaml-template=${encodeURIComponent(userYaml)}`}>Edit?</a>
+                <a href={meta.image}>OG image</a>
               </>
             )}
             {user.source === 'firebase' && (
               <>
-                <QueryPreservingLink to={`/${user.id}/new`}>+ new collection</QueryPreservingLink>
-                <QueryPreservingLink to={`/${user.id}/edit`}>edit?</QueryPreservingLink>
-                <a href={meta.image}>og image</a>
+                <QueryPreservingLink to={`/${user.id}/new`}>+ New collection</QueryPreservingLink>
+                <QueryPreservingLink to={`/${user.id}/edit`}>Edit?</QueryPreservingLink>
+                <a href={meta.image}>OG image</a>
               </>
             )}
           </div>

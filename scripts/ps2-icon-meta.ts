@@ -1,7 +1,9 @@
 /** Per-game studio, city, and first PlayStation 2 release. */
 
 export const COLLECTION_DESCRIPTION =
-  "[https://www.youtube.com/watch?v=AIcuALGM1TI&t=40s](https://www.youtube.com/watch?v=AIcuALGM1TI&t=40s)\n\n[https://vt.tiktok.com/ZSqNJo4Nn/](https://vt.tiktok.com/ZSqNJo4Nn/)";
+  "Sourced from [PS2IODB](https://ps2iodb.com).\n\n" +
+  "[Looking Through My PS1 And PS2 Memory Card](https://www.youtube.com/watch?v=AIcuALGM1TI&t=40s)\n\n" +
+  "[Never knew the PS2 could do this](https://vt.tiktok.com/ZSqNJo4Nn/)";
 
 export interface GameMeta {
   manufacturer: string;

@@ -6,10 +6,12 @@ import { metaForCollection } from "../meta";
 import Markdown from "react-markdown";
 import { HelmetMeta } from '../components/HelmetMeta';
 import { QueryPreservingLink } from '../components/QueryPreservingLink';
-import { PageHeader } from '../components/PageHeader';
+import { CrumbSep, PageHeader } from '../components/PageHeader';
 import * as yaml from '../yaml.ts';
 import { ITEMS_PER_PAGE, visiblePageTokens } from '../pagination';
 import { USER_PAGE_PREVIEW_LIMIT } from './UserPage';
+import { PS2_COLLECTION_ID, usePs2Theme } from './ps2-theme';
+import { PS2_BROWSER_CAMERA } from '../components/ModelViewerWrapper';
 
 export const loader = loadCollection;
 
@@ -34,13 +36,13 @@ function CollectionPagination(props: {
   const prevIsWrap = currentPage === 0;
   const nextIsWrap = currentPage === totalPages - 1;
   return (
-    <div className="pagination">
+    <div className="pagination ui">
       <QueryPreservingLink
         to={basePath}
         pushParam={prevPage > 0 ? new Map([['page', String(prevPage)]]) : undefined}
         triggerKey="h"
       >
-        {prevIsWrap ? '↻ go to end' : '← prev'}
+        {prevIsWrap ? '↻ Go to end' : '← Prev'}
       </QueryPreservingLink>
       {' · '}
       {visiblePageTokens(currentPage, totalPages).map((token, index) => (
@@ -61,7 +63,7 @@ function CollectionPagination(props: {
         pushParam={nextPage > 0 ? new Map([['page', String(nextPage)]]) : undefined}
         triggerKey="l"
       >
-        {nextIsWrap ? 'back to start ↺' : 'next →'}
+        {nextIsWrap ? 'Back to start ↺' : 'Next →'}
       </QueryPreservingLink>
     </div>
   );
@@ -69,6 +71,7 @@ function CollectionPagination(props: {
 
 export default function CollectionPage() {
   const { collection, user } = useLoaderData() as Awaited<ReturnType<typeof loader>>;
+  usePs2Theme(collection.id, 'collection');
   const [searchParams] = useSearchParams();
   const pageParam = searchParams.get('page');
   const page = Math.max(0, parseInt(pageParam ?? '0', 10) || 0);
@@ -85,23 +88,23 @@ export default function CollectionPage() {
   return <article>
     <HelmetMeta meta={meta} />
     <PageHeader>
-        <QueryPreservingLink to="/" viewTransition={currentPage === 0 && collection.items.length > 0}>poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`} viewTransition={currentPage === 0 && collection.items.length > 0}>{user.name}</QueryPreservingLink> / {collection.name} / <Size ts={collection.items} t="item" />
+        <QueryPreservingLink to="/" viewTransition={currentPage === 0 && collection.items.length > 0}>poppenhuis</QueryPreservingLink><CrumbSep /><QueryPreservingLink to={`/${user.id}`} viewTransition={currentPage === 0 && collection.items.length > 0}>{user.name}</QueryPreservingLink><CrumbSep />{collection.name}<CrumbSep /><Size ts={collection.items} t="item" />
     </PageHeader>
     <div className="header-content">
       {(user.source === undefined || user.source === 'firebase') && (
-        <div className="header-actions">
+          <div className="header-actions ui">
           {user.source === undefined && (
             <>
-              <a href={`https://github.com/MaxwellBo/poppenhuis/issues/new?template=put-item.yml&user-id=${user.id}&collection-id=${collection.id}`}>+ add item</a>
-              <a href={`https://github.com/MaxwellBo/poppenhuis/issues/new?template=put-collection.yml&user-id=${user.id}&yaml-template=${encodeURIComponent(collectionYaml)}`}>edit?</a>
-              <a href={meta.image}>og image</a>
+              <a href={`https://github.com/MaxwellBo/poppenhuis/issues/new?template=put-item.yml&user-id=${user.id}&collection-id=${collection.id}`}>+ Add item</a>
+              <a href={`https://github.com/MaxwellBo/poppenhuis/issues/new?template=put-collection.yml&user-id=${user.id}&yaml-template=${encodeURIComponent(collectionYaml)}`}>Edit?</a>
+              <a href={meta.image}>OG image</a>
             </>
           )}
           {user.source === 'firebase' && (
             <>
-              <QueryPreservingLink to={`/${user.id}/${collection.id}/new`}>+ new item</QueryPreservingLink>
-              <QueryPreservingLink to={`/${user.id}/${collection.id}/edit`}>edit?</QueryPreservingLink>
-              <a href={meta.image}>og image</a>
+              <QueryPreservingLink to={`/${user.id}/${collection.id}/new`}>+ New item</QueryPreservingLink>
+              <QueryPreservingLink to={`/${user.id}/${collection.id}/edit`}>Edit?</QueryPreservingLink>
+              <a href={meta.image}>OG image</a>
             </>
             )}
           </div>
@@ -117,7 +120,14 @@ export default function CollectionPage() {
         totalPages={totalPages}
       />
     </div>
-    <ItemCards collection={paginatedCollection} user={user} startIndex={start} modelTransition userRowLimit={currentPage === 0 ? USER_PAGE_PREVIEW_LIMIT : undefined} />
+    <ItemCards
+      collection={paginatedCollection}
+      user={user}
+      startIndex={start}
+      modelTransition
+      userRowLimit={currentPage === 0 ? USER_PAGE_PREVIEW_LIMIT : undefined}
+      camera={collection.id === PS2_COLLECTION_ID ? PS2_BROWSER_CAMERA : undefined}
+    />
     <div style={{ marginTop: '3ch', display: 'flex', justifyContent: 'center', width: '100%' }}>
       <CollectionPagination
         basePath={basePath}

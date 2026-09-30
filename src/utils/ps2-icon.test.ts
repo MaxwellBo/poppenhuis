@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'fs';
 import { join } from 'path';
-import { parsePs2Icon, parsePsu, parseIconSys, ps2IconToGlb, ps2VertexColor, ps2VertexColorScale, ps2IconXform, ps2iodbObjUvToGltf, ps2iodbBlendMorphWeights, ps2iodbAnimClip, PS2IODB_V1_SECONDS_PER_FRAME } from './ps2-icon';
+import { parsePs2Icon, parsePsu, parseIconSys, ps2IconToGlb, ps2VertexColor, ps2VertexColorScale, ps2IconXform, ps2iodbObjUvToGltf, ps2iodbBlendMorphWeights, ps2iodbAnimClip, PS2IODB_V1_SECONDS_PER_FRAME, iconSysChannel } from './ps2-icon';
 
 const fixture = (...parts: string[]) =>
   join(process.cwd(), 'src/utils/testdata/ps2-icon', ...parts);
@@ -70,6 +70,39 @@ describe('parsePsu', () => {
   it('reads icon.sys metadata for Rez', () => {
     const sys = parseIconSys(readFileSync(fixture('rez.icon.sys')));
     expect(sys.normal.toLowerCase()).toBe('rez.ico');
+  });
+
+  it('reads the four background corners after the PS2D header', () => {
+    const data = new Uint8Array(964);
+    data.set([0x50, 0x53, 0x32, 0x44], 0); // PS2D
+    const view = new DataView(data.buffer);
+    view.setUint32(0x0c, 0x60, true);
+    const write = (offset: number, rgb: [number, number, number]) => {
+      view.setUint32(offset, rgb[0], true);
+      view.setUint32(offset + 4, rgb[1], true);
+      view.setUint32(offset + 8, rgb[2], true);
+    };
+    write(0x10, [0x80, 0, 0]);
+    write(0x20, [0, 0x80, 0]);
+    write(0x30, [0, 0, 0x80]);
+    write(0x40, [0x80, 0x80, 0x80]);
+    const sys = parseIconSys(data);
+    expect(sys.backgroundOpacity).toBe(0x60);
+    expect(sys.background).toEqual([
+      [0x80, 0, 0],
+      [0, 0x80, 0],
+      [0, 0, 0x80],
+      [0x80, 0x80, 0x80],
+    ]);
+  });
+});
+
+describe('iconSysChannel', () => {
+  it('maps 0x80 to full intensity and saturates anything brighter', () => {
+    expect(iconSysChannel(0)).toBe(0);
+    expect(iconSysChannel(0x80)).toBe(255);
+    expect(iconSysChannel(0x40)).toBe(128);
+    expect(iconSysChannel(0xc8)).toBe(255);
   });
 });
 

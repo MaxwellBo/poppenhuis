@@ -6,7 +6,7 @@ import { ITEM_FIELD_SCHEMAS, loadCollection } from "../manifest";
 import { useFirebaseForm } from "../hooks/useFirebaseForm";
 import { useFirebaseSubmit } from "../hooks/useFirebaseSubmit";
 import { QueryPreservingLink } from "../components/QueryPreservingLink";
-import { PageHeader } from "../components/PageHeader";
+import { CrumbSep, PageHeader } from "../components/PageHeader";
 
 export const loader = loadCollection;
 
@@ -42,7 +42,7 @@ export default function NewItemPage() {
     <article>
       <Helmet><title>create item - poppenhuis</title></Helmet>
       <PageHeader>
-        <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}/${collection.id}`}>{collection.name}</QueryPreservingLink> / create a new item
+        <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink><CrumbSep /><QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink><CrumbSep /><QueryPreservingLink to={`/${user.id}/${collection.id}`}>{collection.name}</QueryPreservingLink><CrumbSep />create a new item
       </PageHeader>
       
       <FirebaseForm
