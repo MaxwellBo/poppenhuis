@@ -256,6 +256,11 @@ html[data-ps2] model-viewer {
   --poster-color: transparent;
 }
 
+html[data-ps2] .braille-spinner::before {
+  color: var(--ps2-body);
+  text-shadow: var(--ps2-edge);
+}
+
 html[data-ps2] kbd {
   font-family: var(--ps2-font);
   color: var(--ps2-body);
