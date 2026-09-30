@@ -40,9 +40,7 @@ type ModelViewerElement = HTMLElement & {
 export function ModelViewerWrapper(props: { item: Item; size?: ModelSize; modelViewerRef?: { current: HTMLElement | null }; camera?: ModelCamera; }) {
   const spin = props.camera?.autoRotate !== false;
   const viewerRef = React.useRef<ModelViewerElement | null>(null);
-  // Save-icon grids and open saves: a braille spinner sits in the icon while it loads.
-  const iconContext = props.item.model.includes('ps2_save-icons');
-  const [loading, setLoading] = React.useState(iconContext);
+  const [loading, setLoading] = React.useState(true);
 
   const setViewer = (node: HTMLElement | null) => {
     viewerRef.current = node as ModelViewerElement | null;
@@ -53,7 +51,7 @@ export function ModelViewerWrapper(props: { item: Item; size?: ModelSize; modelV
 
   React.useEffect(() => {
     const viewer = viewerRef.current;
-    if (!viewer || !iconContext) return;
+    if (!viewer) return;
     const hide = () => setLoading(false);
     setLoading(true);
     viewer.addEventListener('load', hide);
@@ -63,7 +61,7 @@ export function ModelViewerWrapper(props: { item: Item; size?: ModelSize; modelV
       viewer.removeEventListener('load', hide);
       viewer.removeEventListener('error', hide);
     };
-  }, [iconContext, props.item.model]);
+  }, [props.item.model]);
 
   React.useEffect(() => {
     const viewer = viewerRef.current;
@@ -105,7 +103,7 @@ export function ModelViewerWrapper(props: { item: Item; size?: ModelSize; modelV
         {/* Replaces the built-in loading bar. */}
         <div slot="progress-bar" />
       </model-viewer>
-      {iconContext && loading && <div className="braille-spinner" aria-hidden="true" />}
+      {loading && <div className="braille-spinner" aria-hidden="true" />}
     </div>
   );
 }
