@@ -241,24 +241,19 @@ html[data-ps2] .a-scene-wrapper:hover {
 }
 
 /*
- * The memory-card browser marks the icon under the cursor with a white
- * spotlight: a soft radial pool of light, not a coloured outline of the
- * mesh. inset stretches the layer to the viewer box — a percentage height
+ * The memory-card browser puts a white spotlight behind the icon under the
+ * cursor. inset stretches that pool to the viewer box — a percentage height
  * would collapse, because the wrapper's height comes from its content.
- * The pool sits behind the mesh. A lighter screen pass lights the icon
- * itself without tracing its silhouette.
+ * Nothing is painted over the mesh, so the icon keeps its own colour.
  */
 html[data-ps2] .model-viewer-wrapper:hover::before,
 html[data-ps2] .a-scene-wrapper:hover::before,
 html[data-ps2] .model-viewer-wrapper:focus-within::before,
-html[data-ps2] .a-scene-wrapper:focus-within::before,
-html[data-ps2] .model-viewer-wrapper:hover::after,
-html[data-ps2] .a-scene-wrapper:hover::after,
-html[data-ps2] .model-viewer-wrapper:focus-within::after,
-html[data-ps2] .a-scene-wrapper:focus-within::after {
+html[data-ps2] .a-scene-wrapper:focus-within::before {
   content: "";
   position: absolute;
   inset: 0;
+  z-index: 0;
   pointer-events: none;
   background: radial-gradient(
     circle closest-side at 50% 50%,
@@ -267,21 +262,6 @@ html[data-ps2] .a-scene-wrapper:focus-within::after {
     rgba(255, 255, 255, 0.62) 52%,
     rgba(255, 255, 255, 0) 78%
   );
-}
-
-html[data-ps2] .model-viewer-wrapper:hover::before,
-html[data-ps2] .a-scene-wrapper:hover::before,
-html[data-ps2] .model-viewer-wrapper:focus-within::before,
-html[data-ps2] .a-scene-wrapper:focus-within::before {
-  z-index: 0;
-}
-
-html[data-ps2] .model-viewer-wrapper:hover::after,
-html[data-ps2] .a-scene-wrapper:hover::after,
-html[data-ps2] .model-viewer-wrapper:focus-within::after,
-html[data-ps2] .a-scene-wrapper:focus-within::after {
-  z-index: 2;
-  mix-blend-mode: screen;
 }
 
 html[data-ps2] model-viewer {
