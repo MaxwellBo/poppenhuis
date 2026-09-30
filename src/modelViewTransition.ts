@@ -229,27 +229,46 @@ export function modelViewTransitionName(userId: string, collectionId: string, it
 }
 
 /**
- * Active only while a view transition is running between two screens that
- * show this model, so unrelated models stay part of the page crossfade.
+ * Whether this model should be a shared element for the transition that is
+ * running. Each flag is the role this copy can play; the `*Active` flags are
+ * which URLs are the two ends of the current transition.
  *
  * `home` — homepage preview of a collection's first item, and that same item
- * on the collection page (transitions between `/` and the collection).
- * `item` — this item's URL is either side of the navigation. That covers a
- * collection card, a user-page preview card, the item page, previous/next,
- * and the strip of items along the bottom of the item page.
+ * on the collection page.
+ * `userRow` — a preview in the user-page collection row, and the same item on
+ * that collection's first page. Every such pair is named, so they move together.
+ * `item` — this item's own URL is either end. That covers a collection card,
+ * a user-page preview, the item page, previous/next, and the bottom strip.
  */
+export function sharedModelTransitionActive(opts: {
+  home?: boolean;
+  userRow?: boolean;
+  item?: boolean;
+  homeActive: boolean;
+  userActive: boolean;
+  collectionActive: boolean;
+  itemActive: boolean;
+}): boolean {
+  const withHome = Boolean(opts.home) && opts.homeActive && opts.collectionActive;
+  const withUserRow = Boolean(opts.userRow) && opts.userActive && opts.collectionActive;
+  const withItem = Boolean(opts.item) && opts.itemActive;
+  return withHome || withUserRow || withItem;
+}
+
 export function useModelViewTransitionName(
   ids: { userId: string; collectionId: string; itemId: string },
-  opts: { home?: boolean; item?: boolean }
+  opts: { home?: boolean; userRow?: boolean; item?: boolean }
 ): string | undefined {
+  const userPath = `/${ids.userId}`;
   const collectionPath = `/${ids.userId}/${ids.collectionId}`;
   const itemPath = `/${ids.userId}/${ids.collectionId}/${ids.itemId}`;
-  const homeActive = useViewTransitionState("/");
-  const collectionActive = useViewTransitionState(collectionPath);
-  const itemActive = useViewTransitionState(itemPath);
-
-  const withHome = Boolean(opts.home) && homeActive && collectionActive;
-  const withItem = Boolean(opts.item) && itemActive;
-  if (!withHome && !withItem) return undefined;
+  const active = sharedModelTransitionActive({
+    ...opts,
+    homeActive: useViewTransitionState("/"),
+    userActive: useViewTransitionState(userPath),
+    collectionActive: useViewTransitionState(collectionPath),
+    itemActive: useViewTransitionState(itemPath),
+  });
+  if (!active) return undefined;
   return modelViewTransitionName(ids.userId, ids.collectionId, ids.itemId);
 }

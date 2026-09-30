@@ -9,6 +9,7 @@ import {
   peekModelPose,
   readModelPose,
   resolveModelTransitionPlace,
+  sharedModelTransitionActive,
   shouldShowRouteSpinner,
 } from "./modelViewTransition";
 
@@ -67,6 +68,37 @@ describe("route spinner", () => {
 
   it("hides once navigation is idle", () => {
     expect(shouldShowRouteSpinner(false, false)).toBe(false);
+  });
+});
+
+describe("shared models on a user-to-collection transition", () => {
+  const ends = { homeActive: false, userActive: true, collectionActive: true, itemActive: false };
+
+  it("names every preview that is on both pages", () => {
+    expect(sharedModelTransitionActive({ ...ends, userRow: true })).toBe(true);
+  });
+
+  it("leaves other collections out of that transition", () => {
+    expect(sharedModelTransitionActive({ ...ends, collectionActive: false, userRow: true })).toBe(false);
+  });
+
+  it("names only the opened item when leaving the user page for an item", () => {
+    expect(sharedModelTransitionActive({
+      homeActive: false,
+      userActive: true,
+      collectionActive: false,
+      itemActive: false,
+      userRow: true,
+      item: true,
+    })).toBe(false);
+    expect(sharedModelTransitionActive({
+      homeActive: false,
+      userActive: true,
+      collectionActive: false,
+      itemActive: true,
+      userRow: true,
+      item: true,
+    })).toBe(true);
   });
 });
 

@@ -9,6 +9,7 @@ import { QueryPreservingLink } from '../components/QueryPreservingLink';
 import { PageHeader } from '../components/PageHeader';
 import * as yaml from '../yaml.ts';
 import { ITEMS_PER_PAGE, visiblePageTokens } from '../pagination';
+import { USER_PAGE_PREVIEW_LIMIT } from './UserPage';
 
 export const loader = loadCollection;
 
@@ -84,7 +85,7 @@ export default function CollectionPage() {
   return <article>
     <HelmetMeta meta={meta} />
     <PageHeader>
-        <QueryPreservingLink to="/" viewTransition={currentPage === 0 && collection.items.length > 0}>poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink> / {collection.name} / <Size ts={collection.items} t="item" />
+        <QueryPreservingLink to="/" viewTransition={currentPage === 0 && collection.items.length > 0}>poppenhuis</QueryPreservingLink> / <QueryPreservingLink to={`/${user.id}`} viewTransition={currentPage === 0 && collection.items.length > 0}>{user.name}</QueryPreservingLink> / {collection.name} / <Size ts={collection.items} t="item" />
     </PageHeader>
     <div className="header-content">
       {(user.source === undefined || user.source === 'firebase') && (
@@ -116,7 +117,7 @@ export default function CollectionPage() {
         totalPages={totalPages}
       />
     </div>
-    <ItemCards collection={paginatedCollection} user={user} startIndex={start} modelTransition />
+    <ItemCards collection={paginatedCollection} user={user} startIndex={start} modelTransition userRowLimit={currentPage === 0 ? USER_PAGE_PREVIEW_LIMIT : undefined} />
     <div style={{ marginTop: '3ch', display: 'flex', justifyContent: 'center', width: '100%' }}>
       <CollectionPagination
         basePath={basePath}

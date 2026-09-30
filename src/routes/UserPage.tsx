@@ -61,11 +61,11 @@ function CollectionRow(props: { collection: Collection, user: User }) {
   return (
     <article className='collection-row'>
       <h3>
-        <QueryPreservingLink to={`/${user.id}/${collection.id}`}>{collection.name}</QueryPreservingLink> <Size ts={collection.items} t="item" />
+        <QueryPreservingLink to={`/${user.id}/${collection.id}`} viewTransition={collection.items.length > 0}>{collection.name}</QueryPreservingLink> <Size ts={collection.items} t="item" />
       </h3>
       {collection.description && <div className='short description ugc'><Markdown>{collection.description}</Markdown></div>}
       <div id="item-cards-wrapper">
-        <ItemCards collection={collection} user={user} limit={USER_PAGE_PREVIEW_LIMIT} modelTransition />
+        <ItemCards collection={collection} user={user} limit={USER_PAGE_PREVIEW_LIMIT} modelTransition userRowLimit={USER_PAGE_PREVIEW_LIMIT} />
       </div>
     </article>
   );

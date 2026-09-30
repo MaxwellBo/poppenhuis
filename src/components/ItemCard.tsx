@@ -28,14 +28,20 @@ export function ItemCard(props: {
   transitionPlace?: ModelTransitionPlace;
   /** Also share the model with the homepage preview (collection's first item). */
   transitionWithHome?: boolean;
+  /** Also share the model between the user-page row and the collection page. */
+  transitionWithUserRow?: boolean;
 }) {
-  const { item, collection, user, altName, size, triggerKey, showIndex, index, selected, modelTransition, nameTransition, transitionPlace, transitionWithHome } = props;
+  const { item, collection, user, altName, size, triggerKey, showIndex, index, selected, modelTransition, nameTransition, transitionPlace, transitionWithHome, transitionWithUserRow } = props;
   const name = altName ?? item.name;
   const displayIndex = index ?? collection.items.indexOf(item) + 1;
   const named = (nameTransition ?? modelTransition) && !selected;
   const viewTransitionName = useModelViewTransitionName(
     { userId: user.id, collectionId: collection.id, itemId: item.id },
-    { home: Boolean(transitionWithHome) && !selected, item: Boolean(named) }
+    {
+      home: Boolean(transitionWithHome) && !selected,
+      userRow: Boolean(transitionWithUserRow) && !selected,
+      item: Boolean(named),
+    }
   );
   const rememberPlace = () => {
     if (transitionPlace) rememberTransitionPlace(transitionPlace);

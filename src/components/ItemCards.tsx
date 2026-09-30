@@ -17,8 +17,13 @@ export function ItemCards(props: {
   startIndex?: number;
   /** Morph each model into the item page. The first item also morphs to the homepage preview. */
   modelTransition?: boolean;
+  /**
+   * Items with a global index below this also morph between the user-page
+   * row and the collection page. Both pages have to be showing that item.
+   */
+  userRowLimit?: number;
 }) {
-  const { highlighted, limit, collection, user, startIndex, modelTransition } = props;
+  const { highlighted, limit, collection, user, startIndex, modelTransition, userRowLimit } = props;
   const { items } = collection;
   const showSeeMore = limit && items.length > limit;
 
@@ -57,13 +62,14 @@ export function ItemCards(props: {
               selected={item.id === highlighted}
               modelTransition={modelTransition}
               transitionWithHome={Boolean(modelTransition) && offset + i === 0}
+              transitionWithUserRow={userRowLimit != null && offset + i < userRowLimit}
             />
           </li>
         ))}
       </ul>
       {showSeeMore &&
         <div className='center see-more'>
-          <QueryPreservingLink to={`/${user.id}/${collection.id}`}>see all <span className='count'>({collection.items.length})</span> {collection.name} →</QueryPreservingLink>
+          <QueryPreservingLink to={`/${user.id}/${collection.id}`} viewTransition={Boolean(modelTransition) && collection.items.length > 0}>see all <span className='count'>({collection.items.length})</span> {collection.name} →</QueryPreservingLink>
         </div>}
     </>
   );
