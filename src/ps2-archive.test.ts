@@ -7,7 +7,7 @@ import { ps2iodbSlugFromStorage } from './utils/ps2iodb-attribution';
 describe('PS2 save-icon archive', () => {
   it('says the icons are sourced from PS2IODB and titles the reference links', () => {
     expect(COLLECTION_DESCRIPTION).toBe(
-      "We're sourcing from [PS2IODB](https://ps2iodb.com).\n\n" +
+      "Sourced from [PS2IODB](https://ps2iodb.com).\n\n" +
       "[Looking Through My PS1 And PS2 Memory Card](https://www.youtube.com/watch?v=AIcuALGM1TI&t=40s)\n\n" +
       "[Never knew the PS2 could do this](https://vt.tiktok.com/ZSqNJo4Nn/)",
     );
