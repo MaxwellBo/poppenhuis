@@ -99,7 +99,6 @@ html[data-ps2] .yelling {
   text-shadow: var(--ps2-edge);
 }
 
-html[data-ps2] #page-header h1 a,
 html[data-ps2] h1 .index,
 html[data-ps2] h1 .size,
 html[data-ps2] h1 .count {
@@ -149,13 +148,13 @@ html[data-ps2] .item-cards li {
   border-left-color: transparent !important;
 }
 
-/* Resting links share one color. Charcoal is reserved for unavailable
-   controls (disabled labels, buttons), not for anchors. */
+/* Resting links share the deselected charcoal used by unavailable controls. */
 html[data-ps2] a,
 html[data-ps2] a:link,
 html[data-ps2] a:visited {
-  color: var(--ps2-body);
+  color: var(--ps2-deselected);
   text-decoration: none;
+  text-shadow: none;
 }
 
 html[data-ps2] a:hover,
@@ -304,7 +303,7 @@ html[data-ps2] .pill:active {
 }
 
 html[data-ps2] dl > dd a {
-  color: var(--ps2-body);
+  color: var(--ps2-deselected);
 }
 
 html[data-ps2] ::selection {
