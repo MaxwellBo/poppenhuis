@@ -502,18 +502,24 @@ form.table-form label {
 }
 
 /* The route spinner is on screen while a loader resolves, which is exactly
-   when the old snapshot is taken. Keep it out of the crossfade. */
+   when the old snapshot is taken. Keep it out of the transition. */
 ::view-transition-old(loading-status),
 ::view-transition-new(loading-status) {
   animation: none;
   opacity: 0;
 }
 
+/* The rest of the page swaps in place. The default root crossfade is a
+   dissolve of both screens; the model morph does not need it. */
 ::view-transition-group(root),
 ::view-transition-old(root),
 ::view-transition-new(root) {
-  animation-duration: 500ms;
-  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  opacity: 0;
 }
 
 @media (prefers-reduced-motion: reduce) {
