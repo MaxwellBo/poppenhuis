@@ -9,6 +9,7 @@ import {
   peekModelPose,
   readModelPose,
   resolveModelTransitionPlace,
+  shouldShowRouteSpinner,
 } from "./modelViewTransition";
 
 const SPINNING: ModelPose = {
@@ -54,6 +55,21 @@ function rootOf(...wrappers: HTMLElement[]): ParentNode {
     querySelectorAll: () => wrappers,
   } as unknown as ParentNode;
 }
+
+describe("route spinner", () => {
+  it("stays hidden during a view transition", () => {
+    expect(shouldShowRouteSpinner(true, true, true)).toBe(false);
+  });
+
+  it("stays hidden until a non-transition load has waited", () => {
+    expect(shouldShowRouteSpinner(true, false, false)).toBe(false);
+    expect(shouldShowRouteSpinner(true, false, true)).toBe(true);
+  });
+
+  it("hides once navigation is idle", () => {
+    expect(shouldShowRouteSpinner(false, false, true)).toBe(false);
+  });
+});
 
 describe("item page transition place", () => {
   const hero = "jackie/cakes/brat";

@@ -1,5 +1,6 @@
 import React from "react";
-import { Outlet, useLocation, useNavigation } from "react-router";
+import { Outlet, useLocation, useNavigation, useViewTransitionState } from "react-router";
+import { clearViewTransitionExpectation, expectViewTransition, isViewTransitionExpected, shouldShowRouteSpinner } from "../modelViewTransition";
 
 
 const commit = import.meta.env.COMMIT_REF?.slice(0, 7) || "HEAD";
@@ -93,9 +94,36 @@ function ScrollToTop() {
 
 function LoadingStatus() {
   const navigation = useNavigation();
-  const isLoading = navigation.state === 'loading';
+  const loading = navigation.state === "loading";
+  const nextPath = navigation.location?.pathname ?? "/";
+  const viewTransitioning = useViewTransitionState(nextPath) || isViewTransitionExpected();
+  const [waited, setWaited] = React.useState(false);
+  const stateRef = React.useRef(navigation.state);
+  stateRef.current = navigation.state;
 
-  return isLoading ? <Spinner /> : null;
+  React.useEffect(() => {
+    const onPop = () => {
+      expectViewTransition();
+      window.setTimeout(() => {
+        if (stateRef.current === "idle") clearViewTransitionExpectation();
+      }, 50);
+    };
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
+  }, []);
+
+  React.useEffect(() => {
+    if (!loading) {
+      clearViewTransitionExpectation();
+      setWaited(false);
+      return;
+    }
+    const id = window.setTimeout(() => setWaited(true), 400);
+    return () => window.clearTimeout(id);
+  }, [loading, navigation.location?.key]);
+
+  if (!shouldShowRouteSpinner(loading, viewTransitioning, waited)) return null;
+  return <Spinner />;
 }
 
 export function Spinner() {

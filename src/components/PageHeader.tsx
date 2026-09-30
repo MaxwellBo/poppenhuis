@@ -4,9 +4,10 @@ import { onAuthStateChanged, User } from 'firebase/auth';
 import { auth } from '../firebase';
 import type { FirebaseUser, FirebaseManifest } from '../manifest';
 
-// Module-level cache to persist state across component remounts
+// Module-level cache so a remount during a view transition keeps the
+// signed-in links. Auth resolves in the background; the corner does not
+// show a loading label while that happens.
 let cachedCurrentUser: User | null = null;
-let cachedLoading = true;
 let cachedAccountUsers: FirebaseUser[] = [];
 
 interface PageHeaderProps {
@@ -15,7 +16,6 @@ interface PageHeaderProps {
 
 export const PageHeader: React.FC<PageHeaderProps> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(cachedCurrentUser);
-  const [loading, setLoading] = useState(cachedLoading);
   const [accountUsers, setAccountUsers] = useState<FirebaseUser[]>(cachedAccountUsers);
 
   const totalCollections = accountUsers.reduce((count, user) => {
@@ -43,9 +43,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ children }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       cachedCurrentUser = user;
-      cachedLoading = false;
       setCurrentUser(user);
-      setLoading(false);
     });
     return unsubscribe;
   }, []);
@@ -82,10 +80,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ children }) => {
   return (
     <header id="page-header">
       <div id="page-header-auth">
-        {loading ? (
-          <span>loading</span>
-        ) : (
-          <span id="page-header-links">
+        <span id="page-header-links">
             {currentUser ? (
               <>
                 {getNewItemLink() ? (
@@ -120,7 +115,6 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ children }) => {
               </>
             )}
           </span>
-        )}
       </div>
       <h1>{children}</h1>
     </header>

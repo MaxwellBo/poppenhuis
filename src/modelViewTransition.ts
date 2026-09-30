@@ -161,6 +161,29 @@ if (typeof document !== "undefined" && typeof document.startViewTransition === "
 export type ModelTransitionPlace = "adjacent" | "strip";
 
 let transitionPlaceHint: ModelTransitionPlace | null = null;
+let viewTransitionExpected = false;
+
+/** The next navigation was started from a view-transition link or browser back. */
+export function expectViewTransition() {
+  viewTransitionExpected = true;
+}
+
+export function clearViewTransitionExpectation() {
+  viewTransitionExpected = false;
+}
+
+export function isViewTransitionExpected() {
+  return viewTransitionExpected;
+}
+
+/**
+ * The red corner badge is for a load that is actually taking a while.
+ * A view transition already moves the model, so the badge stays hidden,
+ * including for the moment before that transition starts.
+ */
+export function shouldShowRouteSpinner(loading: boolean, viewTransition: boolean, waited: boolean) {
+  return loading && !viewTransition && waited;
+}
 
 /** Remember which copy was clicked so only that element is named. */
 export function rememberTransitionPlace(place: ModelTransitionPlace) {

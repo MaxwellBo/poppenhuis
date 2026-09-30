@@ -2,6 +2,7 @@ import React, { KeyboardEvent, useEffect, useRef } from 'react';
 import {
   NavLink,
   useSearchParams} from "react-router";
+import { expectViewTransition } from "../modelViewTransition";
 
 export function QueryPreservingLink(props: { 
   to: string, 
@@ -62,7 +63,10 @@ export function QueryPreservingLink(props: {
               : props.className
         }
       }
-      onClick={props.onClick}
+      onClick={() => {
+        if (props.viewTransition) expectViewTransition();
+        props.onClick?.();
+      }}
       to={{ pathname: props.to, search: preserved.toString() }}>
         {props.children}
       </NavLink>
