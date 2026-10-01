@@ -16,9 +16,10 @@
  * Color roles follow the save screen:
  *   primary    yellow title          (RESIDENT EVIL, Indigo Prophecy)
  *   secondary  smaller yellow        (Jill 00/Mansion)
- *   body       white                 (Memory Card path, date, size)
+ *   body       charcoal              (prose, dates, counts)
+ *   link       white, black outline
  *   selected   blue, black outline   (Copy)
- *   deselected charcoal              (Delete)
+ *   deselected charcoal              (Delete; same grey as body)
  *
  * The collection page uses the memory-card browser field. Sampled across
  * that screen, lightness falls mostly left-to-right and also top-to-bottom,
@@ -36,10 +37,11 @@ html[data-ps2] {
   --ps2-font: Arimo, "Helvetica Neue", Helvetica, Arial, "Liberation Sans", sans-serif;
   --ps2-primary: #ffe14a;
   --ps2-secondary: #f0d35c;
-  --ps2-body: #f4f4f4;
+  --ps2-body: #3a3a3a;
+  --ps2-link: #f4f4f4;
   --ps2-selected: #4ec8f0;
   --ps2-deselected: #3a3a3a;
-  --ps2-muted: rgba(244, 244, 244, 0.72);
+  --ps2-muted: #3a3a3a;
   --ps2-edge: 0 1px 0 #000, 0 -1px 0 #000, 1px 0 0 #000, -1px 0 0 #000;
   --ps2-field-browser:
     linear-gradient(to bottom, #000000 0%, #36382e 100%),
@@ -85,7 +87,7 @@ html[data-ps2] body {
 }
 
 html[data-ps2] body * {
-  text-shadow: var(--ps2-edge);
+  text-shadow: none;
 }
 
 html[data-ps2] h1,
@@ -103,7 +105,7 @@ html[data-ps2] h1 .index,
 html[data-ps2] h1 .size,
 html[data-ps2] h1 .count {
   color: var(--ps2-body);
-  text-shadow: var(--ps2-edge);
+  text-shadow: none;
 }
 
 html[data-ps2] #page-header h1 .crumb-sep {
@@ -122,6 +124,7 @@ html[data-ps2] dt abbr {
   font-family: var(--ps2-font);
   font-style: normal;
   font-weight: 700;
+  text-shadow: var(--ps2-edge);
 }
 
 html[data-ps2] dd,
@@ -148,13 +151,13 @@ html[data-ps2] .item-cards li {
   border-left-color: transparent !important;
 }
 
-/* Resting links share the deselected charcoal used by unavailable controls. */
+/* Links are white. Prose uses the charcoal those links used before. */
 html[data-ps2] a,
 html[data-ps2] a:link,
 html[data-ps2] a:visited {
-  color: var(--ps2-deselected);
+  color: var(--ps2-link);
   text-decoration: none;
-  text-shadow: none;
+  text-shadow: var(--ps2-edge);
 }
 
 html[data-ps2] a:hover,
@@ -303,7 +306,7 @@ html[data-ps2] .pill:active {
 }
 
 html[data-ps2] dl > dd a {
-  color: var(--ps2-deselected);
+  color: var(--ps2-link);
 }
 
 html[data-ps2] ::selection {
