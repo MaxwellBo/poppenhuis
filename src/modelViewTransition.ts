@@ -134,16 +134,25 @@ export function applyModelPose(el: ModelPoseTarget, pose: ModelPose): boolean {
 type PatchedStart = NonNullable<Document["startViewTransition"]> & { [PATCHED]?: boolean };
 
 /**
- * Read poses in the instant before the browser snapshots the old page, and
- * drop them when that transition finishes — unless a newer one has started.
+ * Read poses in the instant the browser snapshots the old page, and drop them
+ * when that transition finishes — unless a newer one has started.
+ *
+ * `startViewTransition` returns before that snapshot. Auto-rotate keeps
+ * spinning until the browser actually photographs the page, which on a busy
+ * frame can be long enough for a visible jump if the pose was read at the call.
+ * The update callback runs immediately after the old snapshot, while the
+ * outgoing page is still in the DOM.
  */
 export function installModelPoseHandoff(doc: Document): void {
   const start = doc.startViewTransition as PatchedStart | undefined;
   if (typeof start !== "function" || start[PATCHED]) return;
   const original = start.bind(doc);
   const patched: PatchedStart = (callback) => {
-    const generation = captureModelPoses(doc);
-    const transition = original(callback);
+    let generation = 0;
+    const transition = original(() => {
+      generation = captureModelPoses(doc);
+      if (typeof callback === "function") return callback();
+    });
     transition.finished.finally(() => {
       clearModelPoses(generation);
     });

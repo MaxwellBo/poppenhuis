@@ -59,8 +59,8 @@ export function ModelViewerWrapper(props: { item: Item; size?: ModelSize; modelV
       setHoldPose(false);
       return;
     }
-    // Poses are captured at the start of startViewTransition, before this
-    // incoming viewer exists. No pose yet means this is the outgoing viewer.
+    // Poses are captured just after the old snapshot, before this incoming
+    // viewer exists. No pose yet means this is the outgoing viewer.
     const pose = peekModelPose(name);
     if (!pose) return;
 

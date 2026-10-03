@@ -186,6 +186,26 @@ describe("model pose handoff", () => {
     expect(peekModelPose("model-b")).toBeUndefined();
   });
 
+  it("reads the pose when the old page is snapshotted, after startViewTransition returns", () => {
+    const viewer = fakeViewer(SPINNING);
+    let snapshot = () => {};
+    const doc = {
+      querySelectorAll: () => [wrapper("model-a", viewer)],
+      startViewTransition: (callback: () => void) => {
+        snapshot = callback;
+        return { finished: new Promise(() => {}) };
+      },
+    } as unknown as Document;
+
+    installModelPoseHandoff(doc);
+    doc.startViewTransition(() => {});
+    expect(peekModelPose("model-a")).toBeUndefined();
+
+    viewer.turntableRotation = 4;
+    snapshot();
+    expect(peekModelPose("model-a")?.yaw).toBe(4);
+  });
+
   it("ignores a finished transition that is older than the current capture", async () => {
     const first = deferred();
     const second = deferred();
