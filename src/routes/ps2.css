@@ -13,12 +13,11 @@
  * without embedding Rodin. The theme hook loads Arimo at 700; Helvetica Neue
  * and Arial stay in the stack where the system already has them.
  *
- * Color roles follow the save screen:
- *   primary    yellow title          (RESIDENT EVIL, Indigo Prophecy)
- *   secondary  smaller yellow        (Jill 00/Mansion)
- *   body       white                 (Memory Card path, date, size)
- *   selected   blue, black outline   (Copy)
- *   deselected charcoal              (Delete)
+ * Color roles:
+ *   body       white                 (titles, prose, dates, counts)
+ *   link       yellow
+ *   selected   blue, black outline   (hover and the current item)
+ *   deselected charcoal              (unavailable controls)
  *
  * The collection page uses the memory-card browser field. Sampled across
  * that screen, lightness falls mostly left-to-right and also top-to-bottom,
@@ -37,6 +36,7 @@ html[data-ps2] {
   --ps2-primary: #ffe14a;
   --ps2-secondary: #f0d35c;
   --ps2-body: #f4f4f4;
+  --ps2-link: #ffe14a;
   --ps2-selected: #4ec8f0;
   --ps2-deselected: #3a3a3a;
   --ps2-muted: rgba(244, 244, 244, 0.72);
@@ -92,14 +92,13 @@ html[data-ps2] h1,
 html[data-ps2] h2,
 html[data-ps2] h3,
 html[data-ps2] .yelling {
-  color: var(--ps2-primary);
+  color: var(--ps2-body);
   font-weight: 700;
   letter-spacing: 0.02em;
   text-transform: none;
   text-shadow: var(--ps2-edge);
 }
 
-html[data-ps2] #page-header h1 a,
 html[data-ps2] h1 .index,
 html[data-ps2] h1 .size,
 html[data-ps2] h1 .count {
@@ -119,10 +118,11 @@ html[data-ps2] .description,
 html[data-ps2] .ugc,
 html[data-ps2] dt,
 html[data-ps2] dt abbr {
-  color: var(--ps2-secondary);
+  color: var(--ps2-body);
   font-family: var(--ps2-font);
   font-style: normal;
   font-weight: 700;
+  text-shadow: var(--ps2-edge);
 }
 
 html[data-ps2] dd,
@@ -149,9 +149,13 @@ html[data-ps2] .item-cards li {
   border-left-color: transparent !important;
 }
 
-html[data-ps2] a {
-  color: var(--ps2-body);
+/* Links are yellow. Hover, focus, and the current selection are blue. */
+html[data-ps2] a,
+html[data-ps2] a:link,
+html[data-ps2] a:visited {
+  color: var(--ps2-link);
   text-decoration: none;
+  text-shadow: var(--ps2-edge);
 }
 
 html[data-ps2] a:hover,
@@ -165,7 +169,7 @@ html[data-ps2] a:hover:visited {
 
 html[data-ps2] a:active {
   background-color: transparent !important;
-  color: var(--ps2-primary) !important;
+  color: var(--ps2-selected) !important;
 }
 
 html[data-ps2] .pagination b {
@@ -175,17 +179,14 @@ html[data-ps2] .pagination b {
 }
 
 html[data-ps2] .yelling .card span {
-  color: var(--ps2-primary);
+  color: var(--ps2-selected);
   text-shadow: var(--ps2-edge);
 }
 
-html[data-ps2] .header-actions a,
-html[data-ps2] .action-link,
-html[data-ps2] button,
-html[data-ps2] #page-header-links a {
-  color: var(--ps2-deselected);
+html[data-ps2] button {
+  color: var(--ps2-body);
   font-weight: 700;
-  text-shadow: none;
+  text-shadow: var(--ps2-edge);
 }
 
 html[data-ps2] .header-actions a:hover,
@@ -303,7 +304,7 @@ html[data-ps2] .pill:active {
 }
 
 html[data-ps2] dl > dd a {
-  color: var(--ps2-body);
+  color: var(--ps2-link);
 }
 
 html[data-ps2] ::selection {
