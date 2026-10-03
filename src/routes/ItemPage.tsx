@@ -15,6 +15,9 @@ import { AFrameScene } from "../components/AFrameScene";
 import { Receipt } from "../components/Receipt";
 import { DescriptionList } from "../components/DescriptionList";
 import * as yaml from '../yaml.ts';
+import { preferredTransitionPlace, resolveModelTransitionPlace, useModelViewTransitionName } from "../modelViewTransition";
+import { ITEMS_PER_PAGE } from "../pagination";
+import { USER_PAGE_PREVIEW_LIMIT } from "./UserPage";
 import { PS2_COLLECTION_ID, usePs2Theme } from './ps2-theme';
 
 export const loader = loadItem
@@ -71,6 +74,35 @@ export default function ItemPage() {
   const vrMode = searchParams.get("vr") || "";
   const renderAFrameScene = vrMode === "auto" || vrMode === "dsstore";
   const positioningMode = vrMode === "dsstore" ? "dsstore" : "auto";
+  const modelViewTransitionName = useModelViewTransitionName(
+    { userId: user.id, collectionId: collection.id, itemId: item.id },
+    { item: !renderAFrameScene }
+  );
+  const heroKey = `${user.id}/${collection.id}/${item.id}`;
+  const previousKey = `${previousUser.id}/${previousCollection.id}/${previousItem.id}`;
+  const nextKey = `${nextUser.id}/${nextCollection.id}/${nextItem.id}`;
+  // One name per item. A side card that repeats the hero, or the other side
+  // card, would duplicate that name (one- and two-item catalogs).
+  const sideCardsShareAnItem = previousKey === nextKey;
+  const previousCanTransition = !renderAFrameScene && previousKey !== heroKey && !sideCardsShareAnItem;
+  const nextCanTransition = !renderAFrameScene && nextKey !== heroKey && !sideCardsShareAnItem;
+  const stripLimit = 6;
+  const stripStart = currentIndex >= 0 ? Math.floor(currentIndex / stripLimit) * stripLimit : 0;
+  const stripKeys = new Set(
+    allItems.slice(stripStart, stripStart + stripLimit).map((flat) => `${flat.user.id}/${flat.collection.id}/${flat.item.id}`)
+  );
+  const adjacentKeys = new Set<string>();
+  if (previousCanTransition) adjacentKeys.add(previousKey);
+  if (nextCanTransition) adjacentKeys.add(nextKey);
+  const transitionPlaceFor = (itemKey: string) => resolveModelTransitionPlace(itemKey, {
+    heroKey,
+    inStrip: stripKeys.has(itemKey),
+    inAdjacent: adjacentKeys.has(itemKey),
+    preferred: preferredTransitionPlace(),
+  });
+  const itemIndex = collection.items.indexOf(item);
+  const collectionPage = itemIndex > 0 ? Math.floor(itemIndex / ITEMS_PER_PAGE) : 0;
+  const userPageShowsItem = itemIndex >= 0 && itemIndex < USER_PAGE_PREVIEW_LIMIT;
 
   const handleVRToggle = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newSearchParams = new URLSearchParams(searchParams);
@@ -92,7 +124,7 @@ export default function ItemPage() {
     <article className='item-page'>
       <HelmetMeta meta={metaForItem(item, collection, user)} />
       <PageHeader>
-        <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink><CrumbSep /><QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink><CrumbSep /><QueryPreservingLink to={`/${user.id}/${collection.id}`}>{collection.name}</QueryPreservingLink><CrumbSep />{item.name} <span className='index'>({collection.items.indexOf(item) + 1})</span>
+        <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink><CrumbSep /><QueryPreservingLink to={`/${user.id}`} viewTransition={userPageShowsItem}>{user.name}</QueryPreservingLink><CrumbSep /><QueryPreservingLink to={`/${user.id}/${collection.id}`} viewTransition pushParam={collectionPage > 0 ? new Map([["page", String(collectionPage)]]) : undefined}>{collection.name}</QueryPreservingLink><CrumbSep />{item.name} <span className='index'>({itemIndex + 1})</span>
       </PageHeader>
       <div className='bento'>
         <div id="previous">
@@ -104,12 +136,15 @@ export default function ItemPage() {
             triggerKey="h"
             altName={previousItemIsLast ? "↻ Go to end" : "← Previous"}
             camera={collection.id === PS2_COLLECTION_ID ? PS2_ITEM_CAMERA : undefined}
-            size='small' />
+            size='small'
+            modelTransition={previousCanTransition}
+            nameTransition={transitionPlaceFor(previousKey) === "adjacent"}
+            transitionPlace="adjacent" />
         </div>
         <div id="model">
           {renderAFrameScene
             ? <AFrameScene users={allUsers} startingItem={item} positioningMode={positioningMode} />
-            : <ModelViewerWrapper modelViewerRef={modelViewerRef} item={item} size='responsive-big' camera={collection.id === PS2_COLLECTION_ID ? PS2_ITEM_CAMERA : undefined} />
+            : <ModelViewerWrapper modelViewerRef={modelViewerRef} item={item} size='responsive-big' viewTransitionName={modelViewTransitionName} camera={collection.id === PS2_COLLECTION_ID ? PS2_ITEM_CAMERA : undefined} />
           }
           <div className="vr-controls" style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
             <label className="vr-toggle">
@@ -161,13 +196,18 @@ export default function ItemPage() {
             user={nextUser} triggerKey="l"
             altName={nextItemIsFirst ? "Back to start ↺" : "Next →"}
             camera={collection.id === PS2_COLLECTION_ID ? PS2_ITEM_CAMERA : undefined}
-            size='small' />
+            size='small'
+            modelTransition={nextCanTransition}
+            nameTransition={transitionPlaceFor(nextKey) === "adjacent"}
+            transitionPlace="adjacent" />
         </div>
         <div id="cards">
           <GlobalItemCards 
             allItems={allItems}
             highlighted={currentIndex}
-            limit={6}
+            limit={stripLimit}
+            modelTransition={!renderAFrameScene}
+            nameTransition={(itemKey) => transitionPlaceFor(itemKey) === "strip"}
             camera={collection.id === PS2_COLLECTION_ID ? PS2_ITEM_CAMERA : undefined}
           />
         </div>

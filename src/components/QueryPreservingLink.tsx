@@ -2,6 +2,7 @@ import React, { KeyboardEvent, useEffect, useRef } from 'react';
 import {
   NavLink,
   useSearchParams} from "react-router";
+import { expectViewTransition } from "../modelViewTransition";
 
 export function QueryPreservingLink(props: { 
   to: string, 
@@ -10,7 +11,10 @@ export function QueryPreservingLink(props: {
   children: React.ReactNode, 
   triggerKey?: string,
   pushParam?: Map<string, string>,
-  popParam?: Set<string> }) {
+  popParam?: Set<string>,
+  /** Runs document.startViewTransition for this navigation (View Transition API). */
+  viewTransition?: boolean;
+  onClick?: () => void; }) {
   const [searchParams] = useSearchParams();
   const linkRef = useRef<HTMLAnchorElement>(null);
 
@@ -50,6 +54,7 @@ export function QueryPreservingLink(props: {
     <NavLink 
       ref={linkRef} 
       id={props.id}
+      viewTransition={props.viewTransition}
         className={({ isActive, isPending }) => {
           return isPending 
             ? `${props.className} pending` 
@@ -58,6 +63,10 @@ export function QueryPreservingLink(props: {
               : props.className
         }
       }
+      onClick={() => {
+        if (props.viewTransition) expectViewTransition();
+        props.onClick?.();
+      }}
       to={{ pathname: props.to, search: preserved.toString() }}>
         {props.children}
       </NavLink>
