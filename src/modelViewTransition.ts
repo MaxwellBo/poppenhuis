@@ -96,18 +96,62 @@ export function clearModelPoses(generation?: number): void {
   poses.clear();
 }
 
+const ORBIT_ANGLE = /^(-?[\d.]+)(deg|rad)$/i;
+
+function parseAngle(term: string): number | undefined {
+  const match = ORBIT_ANGLE.exec(term);
+  if (!match) return undefined;
+  const value = Number(match[1]);
+  if (!Number.isFinite(value)) return undefined;
+  return match[2].toLowerCase() === "deg" ? value * Math.PI / 180 : value;
+}
+
+/** Azimuth and polar from an orbit goal such as `180deg 45deg auto`. */
+export function parseCameraOrbitAngles(orbit: string): { theta: number; phi: number } | undefined {
+  const parts = orbit.trim().split(/\s+/);
+  if (parts.length < 2) return undefined;
+  const theta = parseAngle(parts[0]);
+  const phi = parseAngle(parts[1]);
+  if (theta == null || phi == null) return undefined;
+  return { theta, phi };
+}
+
+function angleDelta(a: number, b: number): number {
+  return Math.abs(Math.atan2(Math.sin(a - b), Math.cos(a - b)));
+}
+
+function liveOrbit(pose: ModelPose): string {
+  return `${pose.theta}rad ${pose.phi}rad ${pose.radius}m`;
+}
+
 /**
- * Orbit string to copy. Auto-rotate does not move the camera, and a dragged
- * camera updates getCameraOrbit() without updating the goal attribute, which
- * stays at model-viewer's default. An explicit goal (set by the app) wins
- * when the live spherical is not ready yet.
+ * The orbit the user dragged to, when it no longer matches the goal attribute.
+ * Dragging updates getCameraOrbit() and leaves an explicit goal (the PS2
+ * preset, or model-viewer's default) unchanged. Radius is left out of the
+ * comparison: framing fills in `auto` without the user moving the camera.
+ */
+export function draggedCameraOrbit(pose: ModelPose): string | undefined {
+  const liveReady = Number.isFinite(pose.theta) && Number.isFinite(pose.phi) && pose.radius > 0;
+  if (!liveReady) return undefined;
+  const goal = pose.cameraOrbit ? parseCameraOrbitAngles(pose.cameraOrbit) : undefined;
+  if (goal) {
+    const dragged = angleDelta(pose.theta, goal.theta) > 0.02 || angleDelta(pose.phi, goal.phi) > 0.02;
+    return dragged ? liveOrbit(pose) : undefined;
+  }
+  const moved = Math.abs(pose.theta) > 0.02 || angleDelta(pose.phi, DEFAULT_PHI) > 0.02;
+  return moved ? liveOrbit(pose) : undefined;
+}
+
+/**
+ * Orbit string to copy. A dragged camera wins over the goal attribute. An
+ * explicit goal (set by the app) is kept when the live spherical is not ready
+ * yet, or when the user has not moved it.
  */
 export function modelPoseOrbit(pose: ModelPose): string | undefined {
+  const dragged = draggedCameraOrbit(pose);
+  if (dragged) return dragged;
   const goal = pose.cameraOrbit;
   if (goal && goal !== DEFAULT_CAMERA_ORBIT) return goal;
-  const liveReady = Number.isFinite(pose.theta) && Number.isFinite(pose.phi) && pose.radius > 0;
-  const moved = liveReady && (Math.abs(pose.theta) > 0.02 || Math.abs(pose.phi - DEFAULT_PHI) > 0.02);
-  if (moved) return `${pose.theta}rad ${pose.phi}rad ${pose.radius}m`;
   return undefined;
 }
 

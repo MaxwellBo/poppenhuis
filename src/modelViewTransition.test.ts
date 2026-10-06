@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it } from "vitest";
 import {
   applyModelPose,
   captureModelPoses,
+  modelPoseOrbit,
   clearModelPoses,
   installModelPoseHandoff,
   ModelPose,
@@ -168,6 +169,39 @@ describe("model pose handoff", () => {
     expect(incoming.fieldOfView).toBe("30deg");
     expect(incoming.cameraTarget).toBe("0.1m 0.2m 0.3m");
     expect(incoming.jumpCount).toBe(1);
+  });
+
+  it("keeps the PS2 preset when the camera has not been dragged", () => {
+    const pose: ModelPose = {
+      ...SPINNING,
+      theta: Math.PI,
+      phi: 45 * Math.PI / 180,
+      radius: 2,
+      cameraOrbit: "180deg 45deg auto",
+    };
+    expect(modelPoseOrbit(pose)).toBe("180deg 45deg auto");
+  });
+
+  it("copies a dragged orbit instead of the PS2 preset", () => {
+    const pose: ModelPose = {
+      ...SPINNING,
+      theta: Math.PI / 2,
+      phi: 1.1,
+      radius: 2.5,
+      cameraOrbit: "180deg 45deg auto",
+    };
+    expect(modelPoseOrbit(pose)).toBe("1.5707963267948966rad 1.1rad 2.5m");
+  });
+
+  it("treats the opposite expression of the same angle as not dragged", () => {
+    const pose: ModelPose = {
+      ...SPINNING,
+      theta: -Math.PI,
+      phi: 45 * Math.PI / 180,
+      radius: 2,
+      cameraOrbit: "180deg 45deg auto",
+    };
+    expect(modelPoseOrbit(pose)).toBe("180deg 45deg auto");
   });
 
   it("keeps an explicit camera-orbit goal when the live radius is not ready", () => {

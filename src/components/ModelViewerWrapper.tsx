@@ -1,7 +1,7 @@
 import { Item } from '../manifest';
 import '@google/model-viewer'
 import React from 'react';
-import { applyModelPose, ModelPoseTarget, peekModelPose } from '../modelViewTransition';
+import { applyModelPose, draggedCameraOrbit, ModelPoseTarget, peekModelPose } from '../modelViewTransition';
 
 declare global {
   namespace JSX {
@@ -37,6 +37,10 @@ type ViewerEl = HTMLElement & ModelPoseTarget & { loaded: boolean };
 export function ModelViewerWrapper(props: { item: Item; size?: ModelSize; modelViewerRef?: React.RefObject<HTMLElement>; viewTransitionName?: string; camera?: ModelCamera; }) {
   const viewerRef = React.useRef<ViewerEl | null>(null);
   const [holdPose, setHoldPose] = React.useState(false);
+  // A drag replaces the page's preset orbit for the life of this viewer.
+  // React would otherwise write the preset back into the attribute.
+  const [orbitHold, setOrbitHold] = React.useState<string | undefined>();
+  const orbitHoldRef = React.useRef<string | undefined>();
   const spin = props.camera?.autoRotate !== false;
   const transitionStyle = props.viewTransitionName
     ? ({
@@ -66,13 +70,21 @@ export function ModelViewerWrapper(props: { item: Item; size?: ModelSize; modelV
 
     let alive = true;
     const apply = () => {
-      if (!alive) return;
-      if (applyModelPose(el, pose)) setHoldPose(true);
-      // An explicit camera (the PS2 browser) owns the orbit. The pose copy
-      // would otherwise put the previous page's camera back on top of it.
-      if (props.camera) {
+      const ready = applyModelPose(el, pose);
+      if (alive && ready) setHoldPose(true);
+      // A dragged orbit is the one in the photograph. The page preset only
+      // applies when the user left the camera where the page put it.
+      const dragged = draggedCameraOrbit(pose);
+      if (dragged) {
+        orbitHoldRef.current = dragged;
+        el.cameraOrbit = dragged;
+        el.jumpCameraToGoal?.();
+        if (alive) setOrbitHold(dragged);
+      } else if (props.camera) {
+        orbitHoldRef.current = undefined;
         el.cameraOrbit = props.camera.orbit;
         el.jumpCameraToGoal?.();
+        if (alive) setOrbitHold(undefined);
       }
     };
     apply();
@@ -83,17 +95,25 @@ export function ModelViewerWrapper(props: { item: Item; size?: ModelSize; modelV
     return () => {
       alive = false;
       el.removeEventListener("load", apply);
-      if (el.isConnected) applyModelPose(el, pose);
+      if (el.isConnected) apply();
     };
   }, [props.viewTransitionName, props.camera]);
+
+  React.useLayoutEffect(() => {
+    const el = viewerRef.current;
+    if (!el || !orbitHold) return;
+    el.cameraOrbit = orbitHold;
+    el.jumpCameraToGoal?.();
+  }, [orbitHold]);
 
   React.useEffect(() => {
     const viewer = viewerRef.current;
     const camera = props.camera;
-    if (!viewer || !camera) return;
+    if (!viewer || !camera || orbitHoldRef.current) return;
     // Framing on load keeps the current polar angle and only updates distance,
     // which leaves the camera level. Reapply the orbit once the model is in.
     const apply = () => {
+      if (orbitHoldRef.current) return;
       viewer.cameraOrbit = camera.orbit;
       viewer.jumpCameraToGoal?.();
     };
@@ -116,8 +136,8 @@ export function ModelViewerWrapper(props: { item: Item; size?: ModelSize; modelV
         interaction-prompt=""
         loading="auto"
         // poster={props.size !== 'responsive-big' ? props.item.poster : undefined}
-        camera-orbit={props.camera?.orbit}
-        interpolation-decay={props.camera && !spin ? 0 : undefined}
+        camera-orbit={orbitHold ?? props.camera?.orbit}
+        interpolation-decay={orbitHold || (props.camera && !spin) ? 0 : undefined}
         auto-rotate-delay={spin ? '0' : undefined}
         rotation-per-second={spin ? '20deg' : undefined}
         camera-controls
