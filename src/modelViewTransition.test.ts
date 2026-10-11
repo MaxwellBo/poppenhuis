@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it } from "vitest";
 import {
   applyModelPose,
+  blitModelViewer,
   captureModelPoses,
   modelPoseOrbit,
   clearModelPoses,
@@ -218,6 +219,66 @@ describe("model pose handoff", () => {
   it("does not apply a pose captured for a different model", () => {
     captureModelPoses(rootOf(wrapper("model-a", fakeViewer(SPINNING))));
     expect(peekModelPose("model-b")).toBeUndefined();
+  });
+
+  it("paints the live model into its canvas before the browser snapshots", () => {
+    const phases: string[] = [];
+    let phase = "before";
+    const doc = {
+      querySelectorAll: () => {
+        phases.push(phase);
+        return [];
+      },
+      startViewTransition: (callback: () => void) => {
+        phase = "snapshot";
+        callback();
+        return { finished: new Promise(() => {}) };
+      },
+    } as unknown as Document;
+
+    installModelPoseHandoff(doc);
+    doc.startViewTransition(() => {});
+    expect(phases[0]).toBe("before");
+    expect(phases).toContain("snapshot");
+  });
+
+  it("draws the current scene into the element canvas", () => {
+    const calls: string[] = [];
+    const el = {} as HTMLElement;
+    const scene = {
+      element: el,
+      camera: { name: "cam" },
+      canvas: {} as HTMLCanvasElement,
+      renderShadow() {
+        calls.push("shadow");
+      },
+    };
+    const renderer = {
+      height: 10,
+      dpr: 1,
+      threeRenderer: {
+        autoClear: false,
+        setRenderTarget() {
+          calls.push("target");
+        },
+        setViewport(x: number, y: number, width: number, height: number) {
+          calls.push(`viewport ${x} ${y} ${width} ${height}`);
+        },
+        render(_scene: object, camera: { name: string }) {
+          calls.push(camera.name);
+        },
+      },
+      sceneSize: () => ({ width: 20, height: 10 }),
+      copyPixels() {
+        calls.push("copy");
+      },
+    };
+    Object.defineProperty(el, Symbol("scene"), { value: scene });
+    Object.defineProperty(el, Symbol("renderer"), { value: renderer });
+
+    expect(blitModelViewer(el)).toBe(true);
+    expect(calls).toEqual(["shadow", "target", "viewport 0 0 20 10", "cam", "copy"]);
+    expect(blitModelViewer({} as HTMLElement)).toBe(false);
   });
 
   it("reads the pose when the old page is snapshotted, after startViewTransition returns", () => {

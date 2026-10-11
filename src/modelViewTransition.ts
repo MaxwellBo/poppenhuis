@@ -177,6 +177,128 @@ export function applyModelPose(el: ModelPoseTarget, pose: ModelPose): boolean {
 
 type PatchedStart = NonNullable<Document["startViewTransition"]> & { [PATCHED]?: boolean };
 
+type BlitScene = {
+  camera?: object;
+  canvas?: HTMLCanvasElement;
+  width?: number;
+  height?: number;
+  scaleStep?: number;
+  renderShadow?: (renderer: object) => void;
+};
+
+type BlitRenderer = {
+  threeRenderer?: {
+    autoClear: boolean;
+    setRenderTarget: (target: null) => void;
+    setViewport: (x: number, y: number, width: number, height: number) => void;
+    render: (scene: object, camera: object) => void;
+  };
+  height?: number;
+  dpr?: number;
+  sceneSize?: (scene: BlitScene) => { width: number; height: number };
+  copyPixels?: (scene: BlitScene, width: number, height: number) => void;
+};
+
+type CameraControls = { jumpToGoal?: () => void; spherical?: unknown };
+
+function symbolValues(el: object): unknown[] {
+  const values: unknown[] = [];
+  const seen = new Set<symbol>();
+  let current: object | null = el;
+  // model-viewer mixes eight features onto its base class, so the renderer
+  // getter lives further down the chain than the scene.
+  for (let depth = 0; depth < 16 && current; depth++) {
+    for (const key of Object.getOwnPropertySymbols(current)) {
+      if (seen.has(key)) continue;
+      seen.add(key);
+      try {
+        const desc = Object.getOwnPropertyDescriptor(current, key);
+        if (!desc) continue;
+        values.push(desc.get ? desc.get.call(el) : desc.value);
+      } catch {
+        // Some model-viewer getters throw before the scene exists.
+      }
+    }
+    current = Object.getPrototypeOf(current);
+  }
+  return values;
+}
+
+function findScene(el: HTMLElement): BlitScene | undefined {
+  for (const value of symbolValues(el)) {
+    if (!value || typeof value !== "object") continue;
+    const scene = value as BlitScene & { element?: unknown };
+    if (scene.element === el && scene.canvas && scene.camera) return scene;
+  }
+  return undefined;
+}
+
+function findRenderer(el: HTMLElement): BlitRenderer | undefined {
+  for (const value of symbolValues(el)) {
+    if (!value || typeof value !== "object") continue;
+    const renderer = value as BlitRenderer;
+    if (renderer.threeRenderer && typeof renderer.copyPixels === "function" && typeof renderer.sceneSize === "function") {
+      return renderer;
+    }
+  }
+  return undefined;
+}
+
+function findControls(el: HTMLElement): CameraControls | undefined {
+  for (const value of symbolValues(el)) {
+    if (!value || typeof value !== "object") continue;
+    const controls = value as CameraControls;
+    if (typeof controls.jumpToGoal === "function" && controls.spherical) return controls;
+  }
+  return undefined;
+}
+
+/**
+ * Draw this viewer's current Three.js camera into its own canvas.
+ *
+ * model-viewer keeps one WebGL canvas for every model on the page. A card the
+ * user has dragged shows that live frame, while the canvas that belongs to the
+ * element can still be an earlier preset. The view transition photographs the
+ * element's canvas, so the morph starts from the preset and the model snaps.
+ */
+export function blitModelViewer(el: HTMLElement): boolean {
+  const scene = findScene(el);
+  const renderer = findRenderer(el);
+  const three = renderer?.threeRenderer;
+  if (!scene?.camera || !renderer?.sceneSize || !renderer.copyPixels || !three) return false;
+  const { width, height } = renderer.sceneSize(scene);
+  if (width < 1 || height < 1) return false;
+  try {
+    scene.renderShadow?.(three);
+    three.autoClear = true;
+    three.setRenderTarget(null);
+    const y = Math.ceil((renderer.height ?? 0) * (renderer.dpr ?? 1)) - height;
+    three.setViewport(0, y, width, height);
+    three.render(scene, scene.camera);
+    renderer.copyPixels(scene, width, height);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/** Jump the dampers to the goal orbit, then paint that frame into the canvas. */
+export function settleAndBlitModelViewer(el: HTMLElement & { loaded?: boolean }): boolean {
+  if (!el.loaded) return false;
+  const scene = findScene(el) as { jumpToGoal?: () => void } | undefined;
+  findControls(el)?.jumpToGoal?.();
+  scene?.jumpToGoal?.();
+  return blitModelViewer(el);
+}
+
+function paintNamedModelViewers(root: ParentNode): void {
+  root.querySelectorAll<HTMLElement>(".model-viewer-wrapper").forEach((wrapper) => {
+    if (!transitionNameOf(wrapper)) return;
+    const el = wrapper.querySelector("model-viewer");
+    if (el) blitModelViewer(el);
+  });
+}
+
 /**
  * Read poses in the instant the browser snapshots the old page, and drop them
  * when that transition finishes — unless a newer one has started.
@@ -186,12 +308,16 @@ type PatchedStart = NonNullable<Document["startViewTransition"]> & { [PATCHED]?:
  * frame can be long enough for a visible jump if the pose was read at the call.
  * The update callback runs immediately after the old snapshot, while the
  * outgoing page is still in the DOM.
+ *
+ * Named models are repainted before that snapshot. Otherwise the photograph is
+ * the stale element canvas rather than the frame on screen.
  */
 export function installModelPoseHandoff(doc: Document): void {
   const start = doc.startViewTransition as PatchedStart | undefined;
   if (typeof start !== "function" || start[PATCHED]) return;
   const original = start.bind(doc);
   const patched: PatchedStart = (callback) => {
+    paintNamedModelViewers(doc);
     let generation = 0;
     const transition = original(() => {
       generation = captureModelPoses(doc);

@@ -1,7 +1,7 @@
 import { Item } from '../manifest';
 import '@google/model-viewer'
 import React from 'react';
-import { applyModelPose, draggedCameraOrbit, ModelPoseTarget, peekModelPose } from '../modelViewTransition';
+import { applyModelPose, draggedCameraOrbit, ModelPoseTarget, peekModelPose, settleAndBlitModelViewer } from '../modelViewTransition';
 
 declare global {
   namespace JSX {
@@ -41,7 +41,9 @@ export function ModelViewerWrapper(props: { item: Item; size?: ModelSize; modelV
   // React would otherwise write the preset back into the attribute.
   const [orbitHold, setOrbitHold] = React.useState<string | undefined>();
   const orbitHoldRef = React.useRef<string | undefined>();
-  const spin = props.camera?.autoRotate !== false;
+  // A dragged camera stays where the user left it. The item preset only spins
+  // when they opened the model without moving it.
+  const spin = props.camera?.autoRotate !== false && !orbitHold;
   const transitionStyle = props.viewTransitionName
     ? ({
         viewTransitionName: props.viewTransitionName,
@@ -86,6 +88,13 @@ export function ModelViewerWrapper(props: { item: Item; size?: ModelSize; modelV
         el.jumpCameraToGoal?.();
         if (alive) setOrbitHold(undefined);
       }
+      // The photographed canvas has to already be this pose when the morph ends.
+      // The orbit goal lands in a microtask, so paint again after that.
+      settleAndBlitModelViewer(el);
+      queueMicrotask(() => {
+        settleAndBlitModelViewer(el);
+        requestAnimationFrame(() => settleAndBlitModelViewer(el));
+      });
     };
     apply();
     // model-viewer applies its default orbit when the model finishes loading,
