@@ -1,3 +1,6 @@
+/** Items shown on one collection page. Shared so item links can return to that page. */
+export const ITEMS_PER_PAGE = 30;
+
 /** Current page stays in this many steps of the range head before the head advances. */
 const HEAD_STRIDE = 5;
 /** Page numbers shown starting at the head, including the head. */

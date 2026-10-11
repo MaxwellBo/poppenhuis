@@ -16,9 +16,16 @@ export function ItemCards(props: {
   limit?: number;
   /** 0-based start index for displayed items (e.g. currentPage * ITEMS_PER_PAGE); makes indexes page-aware */
   startIndex?: number;
+  /** Morph each model into the item page. The first item also morphs to the homepage preview. */
+  modelTransition?: boolean;
+  /**
+   * Items with a global index below this also morph between the user-page
+   * row and the collection page. Both pages have to be showing that item.
+   */
+  userRowLimit?: number;
   camera?: ModelCamera;
 }) {
-  const { highlighted, limit, collection, user, startIndex, camera } = props;
+  const { highlighted, limit, collection, user, startIndex, modelTransition, userRowLimit, camera } = props;
   const { items } = collection;
   const showSeeMore = limit && items.length > limit;
 
@@ -48,13 +55,24 @@ export function ItemCards(props: {
       <ul className='item-cards'>
         {truncatedItems.map((item, i) => (
           <li key={item.id} className={item.id === highlighted ? 'yelling highlight-model-viewer' : undefined}>
-            <ItemCard item={item} collection={collection} user={user} showIndex={true} index={offset + i + 1} selected={item.id === highlighted} camera={camera} />
+            <ItemCard
+              item={item}
+              collection={collection}
+              user={user}
+              showIndex={true}
+              index={offset + i + 1}
+              selected={item.id === highlighted}
+              camera={camera}
+              modelTransition={modelTransition}
+              transitionWithHome={Boolean(modelTransition) && offset + i === 0}
+              transitionWithUserRow={userRowLimit != null && offset + i < userRowLimit}
+            />
           </li>
         ))}
       </ul>
       {showSeeMore &&
         <div className='center see-more'>
-          <QueryPreservingLink to={`/${user.id}/${collection.id}`}><span className="ui">See all</span> <span className='count'>({collection.items.length})</span> {collection.name} →</QueryPreservingLink>
+          <QueryPreservingLink to={`/${user.id}/${collection.id}`} viewTransition={Boolean(modelTransition) && collection.items.length > 0}><span className="ui">See all</span> <span className='count'>({collection.items.length})</span> {collection.name} →</QueryPreservingLink>
         </div>}
     </>
   );
@@ -69,9 +87,13 @@ export function GlobalItemCards(props: {
   allItems: FlatItem[];
   highlighted: number;
   limit: number;
+  /** Morph a bottom-strip model into the item page. The highlighted item stays unnamed. */
+  modelTransition?: boolean;
+  /** True only for the strip copy that should carry the shared-element name. */
+  nameTransition?: (itemKey: string) => boolean;
   camera?: ModelCamera;
 }) {
-  const { allItems, highlighted, limit, camera } = props;
+  const { allItems, highlighted, limit, modelTransition, nameTransition, camera } = props;
   
   const start = Math.floor(highlighted / limit) * limit;
   const end = start + limit;
@@ -83,6 +105,7 @@ export function GlobalItemCards(props: {
         const { item, collection: itemCollection, user: itemUser } = flatItem;
         const globalIndex = start + index;
         const isHighlighted = globalIndex === highlighted;
+        const itemKey = `${itemUser.id}/${itemCollection.id}/${item.id}`;
         
         // Check if we need a divider before this item
         const needsDivider = index > 0 && 
@@ -95,7 +118,17 @@ export function GlobalItemCards(props: {
             className={isHighlighted ? 'yelling highlight-model-viewer' : undefined}
             style={needsDivider ? { borderLeft: '1px dotted #ccc' } : undefined}
           >
-            <ItemCard item={item} collection={itemCollection} user={itemUser} showIndex={true} selected={isHighlighted} camera={camera} />
+            <ItemCard
+              item={item}
+              collection={itemCollection}
+              user={itemUser}
+              showIndex={true}
+              selected={isHighlighted}
+              camera={camera}
+              modelTransition={Boolean(modelTransition) && !isHighlighted}
+              nameTransition={Boolean(nameTransition?.(itemKey))}
+              transitionPlace="strip"
+            />
           </li>
         );
       })}

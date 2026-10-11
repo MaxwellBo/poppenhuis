@@ -8,11 +8,10 @@ import { HelmetMeta } from '../components/HelmetMeta';
 import { QueryPreservingLink } from '../components/QueryPreservingLink';
 import { CrumbSep, PageHeader } from '../components/PageHeader';
 import * as yaml from '../yaml.ts';
-import { visiblePageTokens } from '../pagination';
+import { ITEMS_PER_PAGE, visiblePageTokens } from '../pagination';
+import { USER_PAGE_PREVIEW_LIMIT } from './UserPage';
 import { PS2_COLLECTION_ID, usePs2Theme } from './ps2-theme';
 import { PS2_BROWSER_CAMERA } from '../components/ModelViewerWrapper';
-
-const ITEMS_PER_PAGE = 30;
 
 export const loader = loadCollection;
 
@@ -89,7 +88,7 @@ export default function CollectionPage() {
   return <article>
     <HelmetMeta meta={meta} />
     <PageHeader>
-        <QueryPreservingLink to="/">poppenhuis</QueryPreservingLink><CrumbSep /><QueryPreservingLink to={`/${user.id}`}>{user.name}</QueryPreservingLink><CrumbSep />{collection.name}<CrumbSep /><Size ts={collection.items} t="item" />
+        <QueryPreservingLink to="/" viewTransition={currentPage === 0 && collection.items.length > 0}>poppenhuis</QueryPreservingLink><CrumbSep /><QueryPreservingLink to={`/${user.id}`} viewTransition={currentPage === 0 && collection.items.length > 0}>{user.name}</QueryPreservingLink><CrumbSep />{collection.name}<CrumbSep /><Size ts={collection.items} t="item" />
     </PageHeader>
     <div className="header-content">
       {(user.source === undefined || user.source === 'firebase') && (
@@ -125,6 +124,8 @@ export default function CollectionPage() {
       collection={paginatedCollection}
       user={user}
       startIndex={start}
+      modelTransition
+      userRowLimit={currentPage === 0 ? USER_PAGE_PREVIEW_LIMIT : undefined}
       camera={collection.id === PS2_COLLECTION_ID ? PS2_BROWSER_CAMERA : undefined}
     />
     <div style={{ marginTop: '3ch', display: 'flex', justifyContent: 'center', width: '100%' }}>

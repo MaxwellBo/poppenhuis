@@ -1,5 +1,6 @@
 import React from "react";
-import { Outlet, useLocation, useNavigation } from "react-router";
+import { Outlet, useLocation, useNavigation, useViewTransitionState } from "react-router";
+import { clearViewTransitionExpectation, expectViewTransition, isViewTransitionExpected, shouldShowRouteSpinner } from "../modelViewTransition";
 
 
 const commit = import.meta.env.COMMIT_REF?.slice(0, 7) || "HEAD";
@@ -93,9 +94,32 @@ function ScrollToTop() {
 
 function LoadingStatus() {
   const navigation = useNavigation();
-  const isLoading = navigation.state === 'loading';
+  const loading = navigation.state === "loading";
+  const nextPath = navigation.location?.pathname ?? "/";
+  // A view transition keeps navigation.state at "loading" until the snapshot,
+  // which is long enough for this badge to paint. A normal navigation returns
+  // to idle before paint, so the same check shows nothing there.
+  const viewTransitioning = useViewTransitionState(nextPath) || isViewTransitionExpected();
+  const stateRef = React.useRef(navigation.state);
+  stateRef.current = navigation.state;
 
-  return isLoading ? <Spinner /> : null;
+  React.useEffect(() => {
+    const onPop = () => {
+      expectViewTransition();
+      window.setTimeout(() => {
+        if (stateRef.current === "idle") clearViewTransitionExpectation();
+      }, 50);
+    };
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
+  }, []);
+
+  React.useEffect(() => {
+    if (!loading) clearViewTransitionExpectation();
+  }, [loading]);
+
+  if (!shouldShowRouteSpinner(loading, viewTransitioning)) return null;
+  return <Spinner />;
 }
 
 export function Spinner() {
