@@ -155,6 +155,34 @@ export function modelPoseOrbit(pose: ModelPose): string | undefined {
   return undefined;
 }
 
+/** A drag copies the live spherical into the attribute as radians and meters. */
+function isHeldDragOrbit(orbit: string | undefined): boolean {
+  if (!orbit) return false;
+  const parts = orbit.trim().split(/\s+/);
+  return parts.length >= 3 && /rad$/i.test(parts[0]) && /m$/i.test(parts[2]);
+}
+
+/**
+ * Orbit to lock on the incoming viewer, when the page preset would change the
+ * photographed angle.
+ *
+ * Opening an undragged model onto a spinning viewer still uses that viewer's
+ * preset (the PS2 item page). A drag that was already copied onto the outgoing
+ * viewer matches its own attribute, so it has to be recognized separately.
+ * Landing on a still card — browser Back to the collection — keeps the
+ * photograph, including the item-page preset, or the model snaps to 45°.
+ */
+export function handoffOrbit(
+  pose: ModelPose,
+  destination?: { orbit: string; autoRotate: boolean }
+): string | undefined {
+  const photographed = modelPoseOrbit(pose);
+  if (!photographed) return undefined;
+  if (draggedCameraOrbit(pose) || isHeldDragOrbit(photographed)) return photographed;
+  if (destination?.autoRotate === false) return photographed;
+  return undefined;
+}
+
 /**
  * Put `pose` on `el` and stop auto-rotate so the revealed model matches the
  * frozen snapshot. Returns false if the custom element is not ready yet.

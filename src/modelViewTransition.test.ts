@@ -3,6 +3,7 @@ import {
   applyModelPose,
   blitModelViewer,
   captureModelPoses,
+  handoffOrbit,
   modelPoseOrbit,
   clearModelPoses,
   installModelPoseHandoff,
@@ -203,6 +204,42 @@ describe("model pose handoff", () => {
       cameraOrbit: "180deg 45deg auto",
     };
     expect(modelPoseOrbit(pose)).toBe("180deg 45deg auto");
+  });
+
+  it("keeps a drag that was already copied onto the outgoing viewer", () => {
+    const pose: ModelPose = {
+      ...SPINNING,
+      theta: 0.001,
+      phi: 2.749,
+      radius: 12.247,
+      cameraOrbit: "0.001rad 2.749rad 12.247m",
+    };
+    const item = { orbit: "180deg 75deg auto", autoRotate: true };
+    const card = { orbit: "180deg 45deg auto", autoRotate: false };
+    expect(handoffOrbit(pose, item)).toBe("0.001rad 2.749rad 12.247m");
+    expect(handoffOrbit(pose, card)).toBe("0.001rad 2.749rad 12.247m");
+  });
+
+  it("keeps the item-page angle when returning to a still card", () => {
+    const pose: ModelPose = {
+      ...SPINNING,
+      theta: Math.PI,
+      phi: 75 * Math.PI / 180,
+      radius: 12,
+      cameraOrbit: "180deg 75deg auto",
+    };
+    expect(handoffOrbit(pose, { orbit: "180deg 45deg auto", autoRotate: false })).toBe("180deg 75deg auto");
+  });
+
+  it("uses the spinning viewer's preset when the camera was not dragged", () => {
+    const pose: ModelPose = {
+      ...SPINNING,
+      theta: Math.PI,
+      phi: 45 * Math.PI / 180,
+      radius: 12,
+      cameraOrbit: "180deg 45deg auto",
+    };
+    expect(handoffOrbit(pose, { orbit: "180deg 75deg auto", autoRotate: true })).toBeUndefined();
   });
 
   it("keeps an explicit camera-orbit goal when the live radius is not ready", () => {

@@ -1,7 +1,7 @@
 import { Item } from '../manifest';
 import '@google/model-viewer'
 import React from 'react';
-import { applyModelPose, draggedCameraOrbit, ModelPoseTarget, peekModelPose, settleAndBlitModelViewer } from '../modelViewTransition';
+import { applyModelPose, handoffOrbit, ModelPoseTarget, peekModelPose, settleAndBlitModelViewer } from '../modelViewTransition';
 
 declare global {
   namespace JSX {
@@ -79,14 +79,16 @@ export function ModelViewerWrapper(props: { item: Item; size?: ModelSize; modelV
       if (!alive) return;
       const ready = applyModelPose(el, pose);
       if (ready) setHoldPose(true);
-      // A dragged orbit is the one in the photograph. The page preset only
-      // applies when the user left the camera where the page put it.
-      const dragged = draggedCameraOrbit(pose);
-      if (dragged) {
-        orbitHoldRef.current = dragged;
-        el.cameraOrbit = dragged;
+      // Lock the photographed orbit when the incoming preset would move it.
+      // That includes browser Back onto a still collection card, and a drag
+      // that was already written onto the outgoing viewer. An undragged open
+      // onto a spinning viewer still uses that viewer's preset.
+      const orbit = handoffOrbit(pose, props.camera);
+      if (orbit) {
+        orbitHoldRef.current = orbit;
+        el.cameraOrbit = orbit;
         el.jumpCameraToGoal?.();
-        setOrbitHold(dragged);
+        setOrbitHold(orbit);
       } else if (props.camera) {
         orbitHoldRef.current = undefined;
         el.cameraOrbit = props.camera.orbit;
