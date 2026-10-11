@@ -41,9 +41,9 @@ export function ModelViewerWrapper(props: { item: Item; size?: ModelSize; modelV
   // React would otherwise write the preset back into the attribute.
   const [orbitHold, setOrbitHold] = React.useState<string | undefined>();
   const orbitHoldRef = React.useRef<string | undefined>();
-  // A dragged camera stays where the user left it. The item preset only spins
-  // when they opened the model without moving it.
-  const spin = props.camera?.autoRotate !== false && !orbitHold;
+  // Spin whenever this viewer is meant to. A dragged orbit changes the camera,
+  // not whether the turntable runs. holdPose pauses it only for the morph.
+  const spin = props.camera?.autoRotate !== false;
   const transitionStyle = props.viewTransitionName
     ? ({
         viewTransitionName: props.viewTransitionName,
@@ -72,8 +72,13 @@ export function ModelViewerWrapper(props: { item: Item; size?: ModelSize; modelV
 
     let alive = true;
     const apply = () => {
+      // The name can clear, and this effect can be cleaned up, while a
+      // microtask or load event from this apply is still queued. Running it
+      // then sets autoRotate false after React has turned it back on, and
+      // React will not set the attribute again.
+      if (!alive) return;
       const ready = applyModelPose(el, pose);
-      if (alive && ready) setHoldPose(true);
+      if (ready) setHoldPose(true);
       // A dragged orbit is the one in the photograph. The page preset only
       // applies when the user left the camera where the page put it.
       const dragged = draggedCameraOrbit(pose);
@@ -81,12 +86,12 @@ export function ModelViewerWrapper(props: { item: Item; size?: ModelSize; modelV
         orbitHoldRef.current = dragged;
         el.cameraOrbit = dragged;
         el.jumpCameraToGoal?.();
-        if (alive) setOrbitHold(dragged);
+        setOrbitHold(dragged);
       } else if (props.camera) {
         orbitHoldRef.current = undefined;
         el.cameraOrbit = props.camera.orbit;
         el.jumpCameraToGoal?.();
-        if (alive) setOrbitHold(undefined);
+        setOrbitHold(undefined);
       }
       // The photographed canvas has to already be this pose when the morph ends.
       // The orbit goal lands in a microtask, so paint again after that.
@@ -104,9 +109,16 @@ export function ModelViewerWrapper(props: { item: Item; size?: ModelSize; modelV
     return () => {
       alive = false;
       el.removeEventListener("load", apply);
-      if (el.isConnected) apply();
     };
   }, [props.viewTransitionName, props.camera]);
+
+  React.useLayoutEffect(() => {
+    const el = viewerRef.current;
+    if (!el || holdPose || !spin) return;
+    // The pose handoff writes autoRotate = false on the element. Putting the
+    // attribute back is not enough if that write happens after React commits.
+    el.autoRotate = true;
+  }, [holdPose, spin, props.item.model]);
 
   React.useLayoutEffect(() => {
     const el = viewerRef.current;
